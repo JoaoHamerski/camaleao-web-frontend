@@ -16,6 +16,9 @@ export const mutations = {
   }
 }
 export const actions = {
+  async bootstrap () {
+    // const authUser = await AuthService.getAuthUser()
+  },
   logout ({ commit, dispatch }) {
     return AuthService.logout()
       .then(() => {
@@ -31,17 +34,14 @@ export const actions = {
       })
   },
   async getAuthUser ({ commit }) {
-    // commit('SET_LOADING', true)
-
     try {
-      const response = await AuthService.getAuthUser()
-      commit('SET_USER', response.data.data)
-      // commit('SET_LOADING', false)
-      return response.data.data
+      const { data } = await AuthService.getAuthUser()
+
+      commit('SET_USER', data.data)
+
+      return data.data
     } catch (error) {
-      commit('SET_LOADING', true)
-      commit('SET_USER', null)
-      // commit('SET_ERROR', getError(error))
+      console.error(error)
     }
   },
   setGuest (context, { value }) {
