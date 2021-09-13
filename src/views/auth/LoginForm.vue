@@ -1,6 +1,6 @@
 <script>
+import { isEmpty } from 'lodash-es'
 import AuthService from '@/services/AuthService'
-// import { getError } from '@/utils/helpers'
 import Form from '@/utils/Form'
 
 export default {
@@ -15,12 +15,23 @@ export default {
   },
   methods: {
     async onSubmit () {
-      await AuthService.login(this.form)
-      const authUser = await this.$store.dispatch('auth/getAuthUser')
+      this.form.isLoading = true
 
-      if (authUser) {
-        this.$store.dispatch('auth/setGuest', { value: 'isNotGuest' })
-        this.$router.push({ name: 'clients.index' })
+      try {
+        await AuthService.login(this.form)
+        const authUser = await this.$store.dispatch('auth/getAuthUser')
+
+        if (authUser) {
+          this.$store.dispatch('auth/setGuest', { value: 'isNotGuest' })
+          this.$router.push({ name: 'clients.index' })
+        }
+      } catch (error) {
+        if (!isEmpty(error.response.data.errors)) {
+          this.form.errors.record(error.response.data.errors)
+          this.form.password = ''
+        }
+
+        this.form.isLoading = false
       }
     }
   }
@@ -28,20 +39,25 @@ export default {
 </script>
 
 <template>
-  <form @submit.prevent="onSubmit">
+  <form
+    @submit.prevent="onSubmit"
+    @focus.capture="form.errors.clear($event.target.name)"
+  >
     <AppInput
-      id="email"
       v-model="form.email"
+      name="email"
       placeholder="Seu email..."
+      :error="form.errors.get('email')"
     >
       E-mail
     </AppInput>
 
     <AppInput
-      id="password"
       v-model="form.password"
+      name="password"
       placeholder="Sua senha..."
       type="password"
+      :error="form.errors.get('password')"
     >
       Senha
     </AppInput>
@@ -55,6 +71,7 @@ export default {
 
     <div class="d-grid">
       <AppBtn
+        :loading="form.isLoading"
         color="primary"
         btn-class="fw-bold"
       >
