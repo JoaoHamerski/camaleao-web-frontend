@@ -3,8 +3,7 @@ import store from '@/store'
 
 export const authClient = axios.create({
   baseURL: process.env.VUE_APP_API_URL,
-  withCredentials: true,
-  headers: { Accept: 'application/json' }
+  withCredentials: true
 })
 
 authClient.interceptors.response.use(
@@ -16,6 +15,7 @@ authClient.interceptors.response.use(
       && store.getters('auth/authUser')
       && !store.getters('auth/guest')
     ) {
+      console.log('deslogou')
       store.dispatch('auth/logout')
     }
 
@@ -25,7 +25,9 @@ authClient.interceptors.response.use(
 export default {
   async login (payload) {
     await authClient.get('/api/csrf-cookie')
-    // return authClient.post('/login', payload)
+    await store.dispatch('auth/getAuthUser')
+
+    return authClient.post('/login', payload)
   },
   logout () {
     return authClient.post('/logout')
