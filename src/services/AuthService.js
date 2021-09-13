@@ -12,10 +12,9 @@ authClient.interceptors.response.use(
     if (
       error.response
       && [401, 419].includes(error.response.status)
-      && store.getters('auth/authUser')
-      && !store.getters('auth/guest')
+      && store.getters['auth/authUser']
+      && !store.getters['auth/guest']
     ) {
-      console.log('deslogou')
       store.dispatch('auth/logout')
     }
 
@@ -25,7 +24,6 @@ authClient.interceptors.response.use(
 export default {
   async login (payload) {
     await authClient.get('/api/csrf-cookie')
-    await store.dispatch('auth/getAuthUser')
 
     return authClient.post('/login', payload)
   },

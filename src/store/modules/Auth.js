@@ -16,22 +16,18 @@ export const mutations = {
   }
 }
 export const actions = {
-  async bootstrap () {
-    // const authUser = await AuthService.getAuthUser()
-  },
-  logout ({ commit, dispatch }) {
-    return AuthService.logout()
-      .then(() => {
-        commit('SET_USER', null)
-        dispatch('setGuest', { value: 'isGuest' })
+  async logout ({ commit, dispatch }) {
+    try {
+      await AuthService.logout()
+      commit('SET_USER', null)
+      dispatch('setGuest', { value: 'isGuest' })
 
-        if (router.currentRoute.name !== 'login') {
-          router.push({ path: 'login' })
-        }
-      })
-      .catch(error => {
-        commit('SET_ERROR', getError(error))
-      })
+      if (router.currentRoute.name !== 'login') {
+        router.push({ path: 'entrar' })
+      }
+    } catch (error) {
+      commit('SET_ERROR', getError(error))
+    }
   },
   async getAuthUser ({ commit }) {
     try {
