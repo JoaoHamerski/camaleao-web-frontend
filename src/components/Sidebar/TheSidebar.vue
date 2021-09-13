@@ -1,26 +1,31 @@
 <script>
-import { mapGetters } from 'vuex'
-
-import SidebarItem from './SidebarItem.vue'
+import { mapGetters, mapActions } from 'vuex'
 import {
   faList,
-  faUserCircle
+  faSignOutAlt
 } from '@fortawesome/free-solid-svg-icons'
+
+import SidebarItem from './SidebarItem'
+import SidebarHeader from './SidebarHeader'
 
 export default {
   components: {
+    SidebarHeader,
     SidebarItem
   },
   data () {
     return {
       icons: {
         faList,
-        faUserCircle
+        faSignOutAlt
       }
     }
   },
   computed: {
-    ...mapGetters('auth', { user: 'authUser' })
+    ...mapGetters('sidebar', ['isSidebarActive'])
+  },
+  methods: {
+    ...mapActions('auth', ['logout'])
   }
 }
 </script>
@@ -28,25 +33,26 @@ export default {
 <template>
   <nav
     id="sidebar"
-    class="active"
+    :class="isSidebarActive && 'active'"
   >
-    <div class="text-center my-4">
-      <FontAwesomeIcon
-        :icon="icons.faUserCircle"
-        class="text-white"
-        size="3x"
-      />
-      <h5 class="text-white mt-3">
-        {{ user.name }}
-      </h5>
-    </div>
+    <SidebarHeader />
     <hr class="bg-light">
+
     <ul class="list-group list-group-flush">
       <SidebarItem
         :icon="icons.faList"
         :to="{name: 'clients.index'}"
       >
         Clientes
+      </SidebarItem>
+
+      <SidebarItem
+        to="/sair"
+        :icon="icons.faSignOutAlt"
+        disabled-redirect
+        @click.native="logout"
+      >
+        Sair
       </SidebarItem>
     </ul>
   </nav>
