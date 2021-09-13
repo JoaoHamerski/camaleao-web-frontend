@@ -17,7 +17,6 @@ function MaskedInputPassword (h, context) {
       { MaskedInputElement(h, context) }
 
       <button
-        tabindex="-1"
         class={'btn btn-outline-primary ' + (context.isDisabled && 'cursor-disabled')}
         disabled={context.isDisabled}
         vOn:click_prevent={context.togglePassord}
