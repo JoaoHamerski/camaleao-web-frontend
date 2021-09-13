@@ -8,6 +8,19 @@ export default {
     to: {
       type: [String, Object],
       default: ''
+    },
+    disabledRedirect: {
+      type: Boolean,
+      default: false
+    }
+  },
+  methods: {
+    redirect (event, navigate) {
+      if (this.disabledRedirect) {
+        return
+      }
+
+      navigate(event)
     }
   }
 }
@@ -22,7 +35,7 @@ export default {
     <li
       class="list-group-item list-sidebar-item px-4 clickable"
       :class="{'active': isExactActive}"
-      @click="navigate"
+      @click="e => redirect(e, navigate)"
     >
       <FontAwesomeIcon
         v-if="icon"
