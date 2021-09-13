@@ -3,7 +3,7 @@ import { isEmpty } from 'lodash-es'
 import classNames from 'classnames'
 
 function renderIsLoading (h, context) {
-  if (context.isLoading) {
+  if (context.loading) {
     return (
       <span>
         <span
@@ -52,7 +52,7 @@ export default {
       type: Boolean,
       default: false
     },
-    isLoading: {
+    loading: {
       type: Boolean,
       default: false
     },
@@ -81,7 +81,7 @@ export default {
       ])
     },
     isDisabled () {
-      return this.isLoading || this.disabled
+      return this.loading || this.disabled
     },
     tippyConfig () {
       return {
