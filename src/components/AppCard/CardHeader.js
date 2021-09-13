@@ -1,7 +1,7 @@
 
 function normalCardHeader (h, context) {
   return (
-    <div class={`card-header bg-${context.color}`}>
+    <div class={`card-header text-white bg-${context.color}`}>
       { context.$slots.header}
     </div>
   )
@@ -11,7 +11,7 @@ function collapsibleCardHeader (h, context) {
   return (
     <div
       ref="collapse"
-      class={`card-header card-collapsible bg-${context.color}`}
+      class={`card-header text-white card-collapsible bg-${context.color}`}
       data-bs-toggle="collapse"
       href={`#${context.collapseId}`}
       role="button"
