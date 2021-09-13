@@ -35,12 +35,10 @@ export const renderDisabledMessage = function (h, context, element) {
 }
 
 export const renderInput = function (h, context) {
-  let element = null
+  let element = MaskedInputElement(h, context)
 
   if (context.type === 'password') {
     element = MaskedInputPassword(h, context)
-  } else {
-    element = MaskedInputElement(h, context)
   }
 
   return context.shouldRenderDisabledMessage
