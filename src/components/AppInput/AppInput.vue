@@ -10,7 +10,7 @@ import {
 export default {
   inheritAttrs: false,
   props: {
-    id: {
+    name: {
       type: [String, Number],
       required: true
     },
@@ -79,7 +79,7 @@ export default {
     },
     hintId () {
       return !isEmpty(this.hint)
-        ? this.hint + 'Hint'
+        ? this.name + 'Hint'
         : null
     }
   },

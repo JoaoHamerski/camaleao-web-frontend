@@ -8,7 +8,7 @@ function MaskedInputElement (h, context) {
       class={classNames(['form-control', {
         'is-invalid': context.hasError
       }])}
-      id={context.id}
+      name={context.name}
       type={context.inputType}
       mask={context.mask}
       value={context.value}
