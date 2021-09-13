@@ -1,5 +1,11 @@
 $sidebar-width: 250px;
 $sidebar-bg-color: lighten($dark, 10%);
+$transition-duration: .15s;
+
+#sidebar,
+#content {
+  transition: margin-left $transition-duration;
+}
 
 #sidebar.active + #content {
   margin-left: $sidebar-width;
