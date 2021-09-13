@@ -1,29 +1,17 @@
 <script>
-// import AuthService from '@/services/AuthService'
 import { faUserCircle } from '@fortawesome/free-solid-svg-icons'
-
-import axios from 'axios'
-
-axios.defaults.withCredentials = true
-axios.defaults.baseURL = 'http://localhost:8000'
+import LoginForm from './LoginForm.vue'
 
 export default {
+  metaInfo: {
+    title: 'Entre com sua conta'
+  },
+  components: {
+    LoginForm
+  },
   data () {
     return {
-      faUserCircle,
-      form: {
-        email: '',
-        password: '',
-        remember: false
-      }
-    }
-  },
-  methods: {
-    onSubmit () {
-      axios.get('/sanctum/csrf-cookie')
-        .then(response => {
-          console.log(response)
-        })
+      faUserCircle
     }
   }
 }
@@ -47,40 +35,7 @@ export default {
           />
         </div>
 
-        <form @submit.prevent="onSubmit">
-          <AppInput
-            id="email"
-            v-model="form.email"
-            placeholder="Seu email..."
-          >
-            E-mail
-          </AppInput>
-
-          <AppInput
-            id="password"
-            v-model="form.password"
-            placeholder="Sua senha..."
-            type="password"
-          >
-            Senha
-          </AppInput>
-
-          <AppCheckbox
-            id="remember"
-            v-model="form.remember"
-          >
-            Lembre-se de mim
-          </AppCheckbox>
-
-          <div class="d-grid">
-            <AppBtn
-              color="primary"
-              btn-class="fw-bold"
-            >
-              ENTRAR
-            </AppBtn>
-          </div>
-        </form>
+        <LoginForm />
       </template>
     </AppCard>
   </div>
