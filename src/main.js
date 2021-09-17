@@ -9,6 +9,8 @@ import store from './store'
 Vue.use(VueMeta)
 Vue.config.productionTip = false
 
+store.dispatch('sidebar/bootstrap')
+
 new Vue({
   router,
   store,

@@ -22,15 +22,19 @@ export const state = {
 
 export const getters = {
   isSidebarActive (state) {
-    if (!hasSidebarCookie()) {
-      return DEFAULT_SIDEBAR_STATE
-    }
-
     if (!hasSidebarState(state)) {
       return getSidebarCookie()
     }
 
     return state.isSidebarActive
+  }
+}
+
+export const actions = {
+  bootstrap ({ state, commit }) {
+    if (!hasSidebarCookie()) {
+      commit('SET_SIDEBAR_STATE', DEFAULT_SIDEBAR_STATE)
+    }
   }
 }
 
