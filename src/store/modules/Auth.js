@@ -1,6 +1,5 @@
 import AuthService from '@/services/AuthService'
 import router from '@/router'
-import { getError } from '@/utils/helpers'
 
 export const namespaced = true
 
@@ -26,7 +25,7 @@ export const actions = {
         router.push({ path: 'entrar' })
       }
     } catch (error) {
-      commit('SET_ERROR', getError(error))
+      console.error(error)
     }
   },
   async getAuthUser ({ commit }) {
