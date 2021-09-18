@@ -1,6 +1,12 @@
+import classNames from 'classnames'
+
 function normalCardBody (h, context) {
   return (
-    <div class="card-body">
+    <div
+      class={classNames(['card-body', {
+        'px-0': !context.hasBodyPadding
+      }])}
+    >
       { context.$slots.body}
     </div>
   )
