@@ -1,6 +1,10 @@
 $sidebar-width: 250px;
-$sidebar-bg-color: lighten($dark, 10%);
+$sidebar-bg-color: $gray-800;
 $transition-duration: .15s;
+
+#content {
+  padding-top: $headerbar-height;
+}
 
 #sidebar,
 #content {
@@ -16,13 +20,15 @@ $transition-duration: .15s;
 }
 
 #sidebar {
+  top: $headerbar-height;
+  height: 100vh;
   display: block;
   background-color: $sidebar-bg-color;
   z-index: 10;
-  height: 100vh;
   max-width: $sidebar-width;
   min-width: $sidebar-width;
   position: fixed;
+  box-shadow: 0 0 5px rgba(0, 0, 0, .3);
 
   .list-sidebar-item {
     font-size: .95rem;

@@ -1,6 +1,14 @@
-@import "variables";
+@import "variables/all";
 @import "helpers";
 @import "libs";
 @import "sidebar";
 @import "headerbar";
+
+.table > :not(:last-child) > :last-child > * {
+  border-bottom: 2px solid $gray-300;
+}
+
+.table {
+  font-size: .9rem;
+}
 

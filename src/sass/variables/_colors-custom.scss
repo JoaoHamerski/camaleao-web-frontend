@@ -1,0 +1,7 @@
+$camaleao: #ff4e00;
+
+$custom-colors: (
+  'camaleao': $camaleao
+);
+
+$theme-colors: map-merge($theme-colors, $custom-colors);

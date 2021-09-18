@@ -1,5 +1,10 @@
 #headerbar {
-  background-color: lighten($dark, 5%);
+  top: 0;
+  height: $headerbar-height;
+  position: fixed;
+  width: 100%;
+  z-index: 100;
+  background-color: $gray-800;
   box-shadow: 0px 0px 5px rgba(0, 0, 0, .3);
 
   .hamburger-inner {
