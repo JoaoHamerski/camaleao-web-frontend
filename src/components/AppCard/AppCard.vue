@@ -86,6 +86,7 @@ export default {
   render: function (h) {
     return (
       <div class="card" ref="card">
+        { this.$slots.default }
         { renderCardHeader(h, this) }
         { renderCardBody(h, this)}
         { renderCardFooter(h, this) }
