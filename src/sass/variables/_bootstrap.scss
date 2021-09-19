@@ -1,4 +1,10 @@
 /// Bootstrap replacement variables
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap');
+
+$font-family-base: 'Inter', system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", "Liberation Sans", sans-serif, "Apple Color Emoji",  "Segoe UI Emoji",  "Segoe UI Symbol",  "Noto Color Emoji", sans-serif;
+
+// Colors config
+$min-contrast-ratio:   3;
 
 // General
 $small-font-size: .8rem;
@@ -20,3 +26,8 @@ $border-radius-lg:            calc(.3rem / 1.5);
 
 // Cards
 $card-cap-padding-y:  .85rem;
+
+// Buttons
+$btn-font-size: .9rem;
+
+$input-font-size: .9rem;
