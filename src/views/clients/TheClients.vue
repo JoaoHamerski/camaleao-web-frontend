@@ -1,5 +1,5 @@
 <script>
-import { faList } from '@fortawesome/free-solid-svg-icons'
+import { faList, faUserPlus } from '@fortawesome/free-solid-svg-icons'
 import { maskPhone } from '@/utils/masks'
 
 export default {
@@ -7,20 +7,32 @@ export default {
     title: 'Clientes'
   },
   chimera: {
-    clients: '/api/clients',
-    params () { return { page: this.page } }
+    _clients () {
+      return {
+        url: '/api/clients',
+        params: {
+          page: this.page
+        }
+      }
+    }
   },
   data () {
     return {
+      icons: {
+        faList,
+        faUserPlus
+      },
       maskPhone,
-      faList,
-      isLoading: false,
-      clients: [],
-      pagination: {},
       page: 2
     }
   },
   computed: {
+    clients () {
+      return this.$chimera._clients?.data?.data || []
+    },
+    pagination () {
+      return this.$chimera._clients?.data?.meta || ({})
+    },
     headers () {
       return [
         { value: 'name', text: 'Nome' },
@@ -28,36 +40,69 @@ export default {
         { value: 'city', text: 'Cidade' }
       ]
     }
-  },
-  methods: {
-    paginate (page) {
-      this.page = page
-    }
   }
 }
 </script>
 
 <template>
-  <div class="col-10 mx-auto">
+  <div class="col-10 mx-auto mt-5">
+    <div class="d-flex justify-content-between">
+      <AppButton class="fw-bold">
+        <FontAwesomeIcon
+          class="fa-fw mr-2"
+          :icon="icons.faUserPlus"
+        />
+        Novo cliente
+      </AppButton>
+
+      <AppInput
+        name="search"
+        :default-margin="false"
+        placeholder="Nome ou número..."
+      >
+        <template #prepend>
+          <select
+            class="form-select"
+            aria-label="Opção de busca"
+          >
+            <option selected>
+              Nome
+            </option>
+            <option value="1">
+              Cidade
+            </option>
+            <option value="2">
+              Telefone
+            </option>
+          </select>
+        </template>
+        <template #append>
+          <AppButton outlined>
+            Buscar
+          </AppButton>
+        </template>
+      </AppInput>
+    </div>
+
     <AppCard
       :has-body-padding="false"
-      color="camaleao"
-      class="mt-5"
+      color="primary"
+      class="mt-2"
     >
+      <AppLoading v-if="$chimera._clients.loading" />
       <template #header>
         <h6 class="fw-bold mb-0">
           <FontAwesomeIcon
-            :icon="faList"
+            :icon="icons.faList"
             fixed-width
             class="me-1"
           />
-          Lista de clientes
+          Clientes
         </h6>
       </template>
 
       <template #body>
         <AppTable
-          v-if="clients.length"
           :headers="headers"
           :items="clients"
         >
@@ -69,26 +114,13 @@ export default {
             {{ maskPhone(item.phone) }}
           </template>
         </AppTable>
-
-        <nav aria-label="...">
-          <ul class="pagination">
-            <li
-              v-for="(link, index) in pagination.links"
-              :key="index"
-              class="page-item"
-              :class="{
-                'active': link.active,
-                'disabled': link.url === null
-              }"
-            >
-              <a
-                class="page-link clickable"
-                @click="paginate(link.label)"
-              >{{ link.label }}</a>
-            </li>
-          </ul>
-        </nav>
       </template>
     </AppCard>
+
+    <AppPaginator
+      class="mt-2"
+      :pagination="pagination"
+      :page.sync="page"
+    />
   </div>
 </template>
