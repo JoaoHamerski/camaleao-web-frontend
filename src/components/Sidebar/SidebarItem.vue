@@ -41,7 +41,7 @@ export default {
         v-if="icon"
         :icon="icon"
         fixed-width
-        class="me-1 text-camaleao"
+        class="me-1 text-primary"
       />
 
       <slot />
