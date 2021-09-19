@@ -46,7 +46,7 @@ export default {
   props: {
     color: {
       type: String,
-      default: ''
+      default: 'primary'
     },
     outlined: {
       type: Boolean,
