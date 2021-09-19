@@ -1,4 +1,5 @@
 <script>
+import classNames from 'classnames'
 import { isEmpty } from 'lodash-es'
 import {
   renderInput,
@@ -49,6 +50,10 @@ export default {
     hint: {
       type: String,
       default: null
+    },
+    defaultMargin: {
+      type: Boolean,
+      default: true
     }
   },
   data () {
@@ -70,6 +75,9 @@ export default {
     },
     inputLabel () {
       return this.$slots.default || this.label
+    },
+    isInputGroup () {
+      return this.$slots.append || this.$slots.prepend
     },
     shouldRenderDisabledMessage () {
       return !isEmpty(this.disabledMessage)
@@ -103,7 +111,7 @@ export default {
   },
   render: function (h) {
     return (
-      <div class="mb-3">
+      <div class={classNames({ 'mt-3': this.defaultMargin })}>
         { renderInputLabel(h, this) }
         { renderInput(h, this) }
         { renderErrorMessage(h, this) }

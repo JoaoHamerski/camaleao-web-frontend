@@ -1,23 +1,23 @@
 import { isEmpty, isBoolean } from 'lodash-es'
 import MaskedInputElement from './MaskedInput'
-import MaskedInputPassword from './MaskedInputPassword'
+import { MaskedInputPassword, renderPasswordToggleButton } from './MaskedInputPassword'
+
+function renderOptionalLabel (h, context) {
+  if (context.optional) {
+    return (
+      <span class="small text-secondary"> (opcional)</span>
+    )
+  }
+}
 
 export const renderInputLabel = function (h, context) {
-  function renderOptional (h, context) {
-    if (context.optional) {
-      return (
-        <span class="small text-secondary"> (opcional)</span>
-      )
-    }
-  }
-
   if (context.inputLabel) {
     return (
       <label for={context.id}
         class="fw-bold form-label"
       >
         {context.inputLabel}
-        { renderOptional(h, context) }
+        { renderOptionalLabel(h, context) }
       </label>
     )
   }
@@ -34,16 +34,15 @@ export const renderDisabledMessage = function (h, context, element) {
   )
 }
 
-export const renderInput = function (h, context) {
-  let element = MaskedInputElement(h, context)
-
-  if (context.type === 'password') {
-    element = MaskedInputPassword(h, context)
-  }
-
-  return context.shouldRenderDisabledMessage
-    ? renderDisabledMessage(h, context, element)
-    : element
+export const MaskedInputGroup = function (h, context) {
+  return (
+    <div class="input-group">
+      { context.$slots.prepend }
+      { MaskedInputElement(h, context) }
+      { context.$slots.append }
+      { context.type === 'password' && renderPasswordToggleButton(h, context)}
+    </div>
+  )
 }
 
 export const renderErrorMessage = function (h, context) {
@@ -67,4 +66,20 @@ export const renderHintMessage = function (h, context) {
       </small>
     )
   }
+}
+
+export const renderInput = function (h, context) {
+  let element = MaskedInputElement(h, context)
+
+  if (context.type === 'password') {
+    element = MaskedInputPassword(h, context)
+  }
+
+  if (context.isInputGroup) {
+    element = MaskedInputGroup(h, context)
+  }
+
+  return context.shouldRenderDisabledMessage
+    ? renderDisabledMessage(h, context, element)
+    : element
 }

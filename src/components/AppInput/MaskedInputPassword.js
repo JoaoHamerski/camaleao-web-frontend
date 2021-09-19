@@ -3,8 +3,8 @@ import { faEyeSlash, faEye } from '@fortawesome/free-solid-svg-icons'
 
 import MaskedInputElement from './MaskedInput'
 
-function MaskedInputPassword (h, context) {
-  function getEyeStateIcon (isTypePassword) {
+export const renderPasswordToggleButton = function (h, context) {
+  function renderEyeStateIcon (isTypePassword) {
     if (isTypePassword) {
       return (<FontAwesomeIcon icon={faEyeSlash} fixed-width />)
     }
@@ -13,18 +13,21 @@ function MaskedInputPassword (h, context) {
   }
 
   return (
-    <div class="input-group">
-      { MaskedInputElement(h, context) }
-
-      <button
-        class={'btn btn-outline-primary ' + (context.isDisabled && 'cursor-disabled')}
-        disabled={context.isDisabled}
-        vOn:click_prevent={context.togglePassord}
-      >
-        { getEyeStateIcon(context.isTypePassword)}
-      </button>
-    </div>
+    <button
+      class={'btn btn-outline-primary ' + (context.isDisabled && 'cursor-disabled')}
+      disabled={context.isDisabled}
+      vOn:click_prevent={context.togglePassord}
+    >
+      { renderEyeStateIcon(context.isTypePassword)}
+    </button>
   )
 }
 
-export default MaskedInputPassword
+export const MaskedInputPassword = function (h, context) {
+  return (
+    <div class="input-group">
+      { MaskedInputElement(h, context) }
+      { renderPasswordToggleButton(h, context)}
+    </div>
+  )
+}
