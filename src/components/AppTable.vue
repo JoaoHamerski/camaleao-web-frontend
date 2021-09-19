@@ -20,7 +20,10 @@ export default {
 
 <template>
   <div class="table-responsive">
-    <table class="table">
+    <table
+      v-if="items.length"
+      class="table"
+    >
       <thead>
         <tr>
           <th
@@ -53,5 +56,11 @@ export default {
         </tr>
       </tbody>
     </table>
+    <div
+      v-else
+      class="text-center text-secondary mb-3 mt-4"
+    >
+      Nenhum item para exibir
+    </div>
   </div>
 </template>
