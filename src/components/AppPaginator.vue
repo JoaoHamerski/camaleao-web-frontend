@@ -23,6 +23,11 @@ export default {
       }
     }
   },
+  computed: {
+    hasPagination () {
+      return this.pagination.total > this.pagination.per_page
+    }
+  },
   methods: {
     paginate (link, isNext) {
       const page = parseInt(this.page)
@@ -50,7 +55,10 @@ export default {
 </script>
 
 <template>
-  <nav aria-label="Paginação">
+  <nav
+    v-show="hasPagination"
+    aria-label="Paginação"
+  >
     <ul class="pagination">
       <li
         v-for="(link, index) in pagination.links"
