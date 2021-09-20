@@ -20,6 +20,7 @@ function renderIsLoading (h, context) {
 function renderBtn (h, context) {
   return (
     <button
+      on={context.$listeners}
       disabled={context.isDisabled}
       class={context.btnClasses}
     >
