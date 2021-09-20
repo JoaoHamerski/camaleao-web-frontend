@@ -25,7 +25,7 @@ export const actions = {
         router.push({ path: 'entrar' })
       }
     } catch (error) {
-      console.error(error)
+      console.error(error.response)
     }
   },
   async getAuthUser ({ commit }) {
