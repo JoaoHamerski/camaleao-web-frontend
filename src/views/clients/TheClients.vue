@@ -23,7 +23,11 @@ export default {
         faUserPlus
       },
       maskPhone,
-      page: 2
+      page: 1,
+      form: {
+        option: 'name',
+        search: ''
+      }
     }
   },
   computed: {
@@ -33,12 +37,24 @@ export default {
     pagination () {
       return this.$chimera._clients?.data?.meta || ({})
     },
+    isLoading () {
+      return this.$chimera._clients.loading
+    },
     headers () {
       return [
-        { value: 'name', text: 'Nome' },
-        { value: 'phone', text: 'Telefone' },
-        { value: 'city', text: 'Cidade' }
+        { text: 'Nome', value: 'name' },
+        { text: 'Telefone', value: 'phone' },
+        { text: 'Cidade', value: 'city' }
       ]
+    }
+  },
+  methods: {
+    handleSearch () {
+      const { option, search } = this.form
+
+      this.$chimera._clients.fetch(true, {
+        params: { option, search }
+      })
     }
   }
 }
@@ -55,41 +71,42 @@ export default {
         Novo cliente
       </AppButton>
 
-      <AppInput
-        name="search"
-        :default-margin="false"
-        placeholder="Nome ou número..."
-      >
-        <template #prepend>
-          <select
-            class="form-select"
-            aria-label="Opção de busca"
-          >
-            <option selected>
-              Nome
-            </option>
-            <option value="1">
-              Cidade
-            </option>
-            <option value="2">
-              Telefone
-            </option>
-          </select>
-        </template>
-        <template #append>
-          <AppButton outlined>
-            Buscar
-          </AppButton>
-        </template>
-      </AppInput>
+      <div class="col-5">
+        <AppInput
+          v-model="form.search"
+          name="search"
+          :default-margin="false"
+          placeholder="Digite a busca..."
+          @keypress.enter="handleSearch"
+        >
+          <template #prepend>
+            <AppSelect
+              v-model="form.option"
+              :options="[
+                { text: 'Nome', value: 'name' },
+                { text: 'Cidade', value: 'city' },
+                { text: 'Telefone', value: 'phone' },
+              ]"
+            />
+          </template>
+          <template #append>
+            <AppButton
+              outlined
+              @click="handleSearch"
+            >
+              Buscar
+            </AppButton>
+          </template>
+        </AppInput>
+      </div>
     </div>
 
     <AppCard
+      :is-loading="isLoading"
       :has-body-padding="false"
       color="primary"
       class="mt-2"
     >
-      <AppLoading v-if="$chimera._clients.loading" />
       <template #header>
         <h6 class="fw-bold mb-0">
           <FontAwesomeIcon
