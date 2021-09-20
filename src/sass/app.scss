@@ -38,3 +38,8 @@
     font-size: .9rem;
   }
 }
+
+.input-group > .form-select {
+  width: fit-content;
+  flex-grow: 0;
+}
