@@ -41,6 +41,7 @@ export default {
 <template>
   <form
     @submit.prevent="onSubmit"
+    @keypress.enter.capture.prevent="onSubmit"
     @focus.capture="form.errors.clear($event.target.name)"
   >
     <AppInput
@@ -56,6 +57,7 @@ export default {
       v-model="form.password"
       name="password"
       placeholder="Sua senha..."
+      autocomplete="password"
       type="password"
       :error="form.errors.get('password')"
     >
@@ -70,13 +72,13 @@ export default {
     </AppCheckbox>
 
     <div class="d-grid">
-      <AppBtn
+      <AppButton
         :loading="form.isLoading"
         color="primary"
         btn-class="fw-bold"
       >
         ENTRAR
-      </AppBtn>
+      </AppButton>
     </div>
   </form>
 </template>
