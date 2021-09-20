@@ -1,13 +1,10 @@
-import classNames from 'classnames'
 import MaskedInput from 'vue-text-mask'
 
 function MaskedInputElement (h, context) {
   return (
     <MaskedInput
       ref="input"
-      class={classNames(['form-control', {
-        'is-invalid': context.hasError
-      }])}
+      class={context.inputClasses}
       name={context.name}
       type={context.inputType}
       mask={context.mask}
@@ -15,6 +12,7 @@ function MaskedInputElement (h, context) {
       disabled={context.isDisabled}
       onInput={e => { context.$emit('input', e) }}
       aria-describedby={context.hintId}
+      on={context.$listeners}
       {...{ attrs: context.$attrs }}
     />
   )

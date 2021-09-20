@@ -31,6 +31,10 @@ export default {
       type: String,
       default: 'text'
     },
+    inputClass: {
+      type: String,
+      default: ''
+    },
     disabled: {
       type: Boolean,
       default: false
@@ -67,6 +71,15 @@ export default {
     }
   },
   computed: {
+    inputClasses () {
+      return classNames([
+        'form-control',
+        this.inputClass,
+        {
+          'is-invalid': this.hasError
+        }
+      ])
+    },
     isDisabled () {
       return this.disabled || !isEmpty(this.disabledMessage)
     },
@@ -111,7 +124,7 @@ export default {
   },
   render: function (h) {
     return (
-      <div class={classNames({ 'mt-3': this.defaultMargin })}>
+      <div class={classNames({ 'mb-3': this.defaultMargin })}>
         { renderInputLabel(h, this) }
         { renderInput(h, this) }
         { renderErrorMessage(h, this) }
