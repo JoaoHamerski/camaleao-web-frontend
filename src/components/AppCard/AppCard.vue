@@ -2,11 +2,15 @@
 import { camelCase } from 'lodash-es'
 import classNames from 'classnames'
 
+import AppLoading from '@/components/AppLoading'
 import renderCardHeader from './CardHeader'
 import renderCardBody from './CardBody'
 import renderCardFooter from './CardFooter'
 
 export default {
+  components: {
+    AppLoading
+  },
   props: {
     id: {
       type: [String, Number],
@@ -15,6 +19,10 @@ export default {
     color: {
       type: String,
       default: 'primary'
+    },
+    isLoading: {
+      type: Boolean,
+      default: false
     },
     hasBodyPadding: {
       type: Boolean,
@@ -86,10 +94,10 @@ export default {
   render: function (h) {
     return (
       <div class="card" ref="card">
-        { this.$slots.default }
         { renderCardHeader(h, this) }
         { renderCardBody(h, this)}
         { renderCardFooter(h, this) }
+        { this.isLoading && (<AppLoading />) }
       </div>
     )
   }
