@@ -24,8 +24,11 @@ export default {
       class="text-white"
       size="3x"
     />
-    <h5 class="text-white mt-3">
+    <h5 class="text-white mt-3 mb-0">
       {{ user.name }}
     </h5>
+    <b class="small text-light">
+      {{ user.role.name }}
+    </b>
   </div>
 </template>
