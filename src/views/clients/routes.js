@@ -1,12 +1,19 @@
 import Layout from './Layout'
 
+import role from '@/middleware/role'
+import roles from '@/constants/roles'
+
 import TheClients from './TheClients'
 
 const children = [
   {
     name: 'clients.index',
     path: '/clientes',
-    component: TheClients
+    component: TheClients,
+    meta: {
+      middleware: [role],
+      roles: [roles.ATENDIMENTO, roles.GERENCIA]
+    }
   }
 ]
 
@@ -15,7 +22,6 @@ export default [
     name: 'clients',
     path: '/',
     component: Layout,
-    meta: { requiresAuth: true },
     children
   }
 ]
