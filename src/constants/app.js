@@ -1,0 +1,3 @@
+/**
+ * @file Constantes da aplicação
+ */
