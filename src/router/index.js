@@ -1,6 +1,7 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
-import store from '@/store'
+import auth from '@/middleware/auth'
+import middlewarePipeline from '@/router/middlewarePipeline'
 
 import authRoutes from '@/views/auth/routes'
 import clientsRoutes from '@/views/clients/routes'
@@ -10,6 +11,9 @@ Vue.use(VueRouter)
 const routes = [
   {
     path: '/',
+    meta: {
+      middleware: [auth]
+    },
     beforeEnter: (to, from, next) => next('/clientes')
   },
   ...authRoutes,
@@ -22,21 +26,16 @@ const router = new VueRouter({
 })
 
 router.beforeEach((to, from, next) => {
-  const authUser = store.getters['auth/authUser']
-  const requiresAuth = to.matched.some(record => record.meta.requiresAuth)
-  const loginQuery = { path: '/entrar' }
+  const { middleware, roles } = to.meta
+  const context = { from, next, roles }
 
-  if (requiresAuth && !authUser) {
-    store.dispatch('auth/getAuthUser').then(() => {
-      if (!store.getters['auth/authUser']) {
-        next(loginQuery)
-      } else {
-        next()
-      }
-    })
-  } else {
-    next()
+  if (!middleware) {
+    return next()
   }
+
+  middleware[0](
+    middlewarePipeline(context, middleware, 1)
+  )
 })
 
 export default router
