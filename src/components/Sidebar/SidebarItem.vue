@@ -28,13 +28,13 @@ export default {
 
 <template>
   <router-link
-    v-slot="{ navigate, isExactActive }"
+    v-slot="{ navigate, isActive }"
     custom
     :to="to"
   >
     <li
       class="list-group-item list-sidebar-item px-4 clickable"
-      :class="{'active': isExactActive}"
+      :class="{'active': isActive}"
       @click="e => redirect(e, navigate)"
     >
       <FontAwesomeIcon
