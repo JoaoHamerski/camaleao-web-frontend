@@ -4,12 +4,22 @@ import role from '@/middleware/role'
 import roles from '@/constants/roles'
 
 import TheClients from './TheClients'
+import TheClient from './show/TheClient'
 
 const children = [
   {
     name: 'clients.index',
     path: '/clientes',
     component: TheClients,
+    meta: {
+      middleware: [role],
+      roles: [roles.ATENDIMENTO, roles.GERENCIA]
+    }
+  },
+  {
+    name: 'clients.show',
+    path: '/clientes/:client/pedidos',
+    component: TheClient,
     meta: {
       middleware: [role],
       roles: [roles.ATENDIMENTO, roles.GERENCIA]
