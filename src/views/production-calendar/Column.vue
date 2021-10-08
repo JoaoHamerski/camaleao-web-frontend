@@ -25,7 +25,6 @@ export default {
           return
         }
 
-        console.log(event.target)
         if (event.target.contains(document.querySelector('.viewer-move'))
             || event.target.contains(document.querySelector('.viewer-close'))) {
           return

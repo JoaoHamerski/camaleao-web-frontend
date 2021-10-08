@@ -1,6 +1,6 @@
 <script>
 import { faList, faUserPlus } from '@fortawesome/free-solid-svg-icons'
-import { maskPhone } from '@/utils/masks'
+import { formatPhone } from '@/utils/formatters'
 
 export default {
   metaInfo: {
@@ -22,7 +22,6 @@ export default {
         faList,
         faUserPlus
       },
-      maskPhone,
       page: 1,
       form: {
         option: 'name',
@@ -49,12 +48,22 @@ export default {
     }
   },
   methods: {
+    formatPhone,
+    redirectToClient (client) {
+      this.$router.push({
+        name: 'clients.show',
+        params: { client: client.id }
+      })
+    },
     handleSearch () {
       const { option, search } = this.form
 
       this.$chimera._clients.fetch(true, {
         params: { option, search }
       })
+    },
+    clearSearch () {
+      this.$chimera._clients.reload()
     }
   }
 }
@@ -89,6 +98,7 @@ export default {
               ]"
             />
           </template>
+
           <template #append>
             <AppButton
               outlined
@@ -122,13 +132,14 @@ export default {
         <AppTable
           :headers="headers"
           :items="clients"
+          @click:item="redirectToClient"
         >
           <template #[`items.city`]="{ item }">
             {{ $helpers.fallback(item.city, 'name') }}
           </template>
 
-          <template #[`items.phone`]="{item}">
-            {{ maskPhone(item.phone) }}
+          <template #[`items.phone`]="{ item }">
+            {{ formatPhone(item.phone) }}
           </template>
         </AppTable>
       </template>
