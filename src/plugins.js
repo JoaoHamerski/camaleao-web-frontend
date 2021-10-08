@@ -12,7 +12,6 @@ const custom = {
 
 Vue.use(VueMeta)
 Vue.use(custom)
-
 Vue.use(VueChimera, {
   axios: client
 })
