@@ -13,10 +13,11 @@ function renderOptionalLabel (h, context) {
 export const renderInputLabel = function (h, context) {
   if (context.inputLabel) {
     return (
-      <label for={context.id}
-        class="fw-bold form-label"
+      <label
+        for={context.$attrs.id}
+        class="form-label"
       >
-        {context.inputLabel}
+        <span class="fw-bold">{context.inputLabel}</span>
         { renderOptionalLabel(h, context) }
       </label>
     )
