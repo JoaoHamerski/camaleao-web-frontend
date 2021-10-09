@@ -1,6 +1,19 @@
 <script>
+import Multiselect from 'vue-multiselect'
+
 export default {
+  components: {
+    Multiselect
+  },
   props: {
+    placeholder: {
+      type: String,
+      default: 'Selecione uma opção'
+    },
+    optional: {
+      type: Boolean,
+      default: false
+    },
     options: {
       type: Array,
       default: () => []
@@ -10,18 +23,29 @@ export default {
 </script>
 
 <template>
-  <select
-    class="form-select"
-    v-bind="$attrs"
-    @change="$emit('input', $event.target.value)"
-    v-on="$listeners"
-  >
-    <option
-      v-for="(option, index) in options"
-      :key="index"
-      :value="option.value ? option.value : option.text.toLowerCase()"
+  <div>
+    <label
+      class="form-label"
     >
-      {{ option.text }}
-    </option>
-  </select>
+      <span class="fw-bold"><slot /></span>
+      <span
+        v-if="optional"
+        class="small text-secondary"
+      >(opcional)</span>
+    </label>
+
+    <Multiselect
+      :placeholder="placeholder"
+      :options="options"
+      v-on="$listeners"
+    >
+      <template #noOptions>
+        Lista está vazia.
+      </template>
+
+      <template #noResult>
+        Nenhum resultado encontrado.
+      </template>
+    </Multiselect>
+  </div>
 </template>
