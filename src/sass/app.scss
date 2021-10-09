@@ -1,45 +1,12 @@
+/// Keep on top
 @import "variables/all";
-@import "helpers";
 @import "libs";
+
+/// Custom styles
+@import "general";
+@import "helpers";
 @import "sidebar";
 @import "headerbar";
+@import "multiselect";
+@import "bootstrap";
 
-.table > :not(:last-child) > :last-child > * {
-  border-bottom: 2px solid $gray-300;
-}
-
-.table {
-  font-size: .9rem;
-}
-
-.loading {
-  position: absolute;
-  z-index: 50;
-  overflow: visible;
-  margin: auto;
-  top: 0;
-  left: 0;
-  bottom: 0;
-  right: 0;
-  background-color: rgba(255, 255, 255, .4);
-
-  [class*="spinner"] {
-  	position: absolute;
-  	top: 0;
-  	left: 0;
-  	bottom: 0;
-  	right: 0;
-  	margin: auto;
-  }
-}
-
-.pagination {
-  .page-link {
-    font-size: .9rem;
-  }
-}
-
-.input-group > .form-select {
-  width: fit-content;
-  flex-grow: 0;
-}
