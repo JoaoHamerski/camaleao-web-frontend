@@ -2,7 +2,12 @@
 import { faList, faUserPlus } from '@fortawesome/free-solid-svg-icons'
 import { formatPhone } from '@/utils/formatters'
 
+import ClientModalNew from './ClientModalNew'
+
 export default {
+  components: {
+    ClientModalNew
+  },
   metaInfo: {
     title: 'Clientes'
   },
@@ -72,13 +77,18 @@ export default {
 <template>
   <div class="col-10 mx-auto mt-5">
     <div class="d-flex justify-content-between">
-      <AppButton class="fw-bold">
+      <AppButton
+        class="fw-bold"
+        data-bs-toggle="modal"
+        data-bs-target="#clientModalNew"
+      >
         <FontAwesomeIcon
           class="fa-fw mr-2"
           :icon="icons.faUserPlus"
         />
         Novo cliente
       </AppButton>
+      <ClientModalNew />
 
       <div class="col-5">
         <AppInput
@@ -89,7 +99,7 @@ export default {
           @keypress.enter="handleSearch"
         >
           <template #prepend>
-            <AppSelect
+            <AppSimpleSelect
               v-model="form.option"
               :options="[
                 { text: 'Nome', value: 'name' },
