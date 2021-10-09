@@ -1,6 +1,7 @@
 import './sass/app.scss'
 import '@/components'
 import './plugins'
+import 'bootstrap'
 import Vue from 'vue'
 import App from './App.vue'
 import router from './router'
