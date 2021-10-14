@@ -1,11 +1,23 @@
 <script>
 import { faTimesCircle } from '@fortawesome/free-solid-svg-icons'
+import { Modal } from 'bootstrap'
+
+const EVENTS_EMITTED = [
+  'show',
+  'shown',
+  'hide',
+  'hidden'
+]
 
 export default {
   props: {
     id: {
       type: String,
       required: true
+    },
+    value: {
+      type: Boolean,
+      default: false
     },
     titleSize: {
       type: String,
@@ -26,6 +38,7 @@ export default {
   },
   data () {
     return {
+      modal: null,
       icons: {
         faTimesCircle
       }
@@ -38,6 +51,58 @@ export default {
         'modal-dialog-centered': this.centered
       }
     }
+  },
+  watch: {
+    value: {
+      handler (val) {
+        if (!this.modal) {
+          return
+        }
+
+        if (val === true) {
+          this.modal.show()
+        }
+
+        if (val === false) {
+          this.modal.hide()
+        }
+      },
+      immediate: true
+    }
+  },
+  mounted () {
+    this.modal = new Modal(this.$refs.modal)
+    if (this.$refs.modal) {
+      EVENTS_EMITTED.forEach(event => {
+        this.$refs.modal.addEventListener(
+          `${event}.bs.modal`,
+          this.emitter(event)
+        )
+      })
+    }
+  },
+  beforeDestroy () {
+    EVENTS_EMITTED.forEach(event => {
+      this.$refs.modal.removeEventListener(
+        event,
+        this.emitter
+      )
+    })
+  },
+  methods: {
+    emitter (name) {
+      return () => {
+        if (name === 'hidden') {
+          this.$emit('input', false)
+        }
+
+        if (name === 'shown') {
+          this.$emit('input', true)
+        }
+
+        this.$emit(name)
+      }
+    }
   }
 }
 </script>
@@ -45,6 +110,7 @@ export default {
 <template>
   <div
     :id="id"
+    ref="modal"
     class="modal fade"
     tabindex="-1"
     :aria-labelledby="`${id}Label`"
