@@ -5,6 +5,7 @@ import middlewarePipeline from '@/router/middlewarePipeline'
 
 import authRoutes from '@/views/auth/routes'
 import clientsRoutes from '@/views/clients/routes'
+import ordersRoutes from '@/views/orders/routes'
 
 Vue.use(VueRouter)
 
@@ -17,7 +18,8 @@ const routes = [
     beforeEnter: (to, from, next) => next('/clientes')
   },
   ...authRoutes,
-  ...clientsRoutes
+  ...clientsRoutes,
+  ...ordersRoutes
 ]
 
 const router = new VueRouter({
