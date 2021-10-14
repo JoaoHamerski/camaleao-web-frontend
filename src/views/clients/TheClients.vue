@@ -2,7 +2,7 @@
 import { faList, faUserPlus } from '@fortawesome/free-solid-svg-icons'
 import { formatPhone } from '@/utils/formatters'
 
-import ClientModalNew from './ClientModalNew'
+import ClientModalNew from './index/ClientModalNew'
 
 export default {
   components: {
@@ -54,6 +54,9 @@ export default {
   },
   methods: {
     formatPhone,
+    refresh () {
+      this.$chimera._clients.reload()
+    },
     redirectToClient (client) {
       this.$router.push({
         name: 'clients.show',
@@ -64,7 +67,7 @@ export default {
       const { option, search } = this.form
 
       this.$chimera._clients.fetch(true, {
-        params: { option, search }
+        params: { option, search, page: 1 }
       })
     },
     clearSearch () {
@@ -88,7 +91,7 @@ export default {
         />
         Novo cliente
       </AppButton>
-      <ClientModalNew />
+      <ClientModalNew @refresh="refresh" />
 
       <div class="col-5">
         <AppInput
@@ -149,7 +152,7 @@ export default {
           </template>
 
           <template #[`items.phone`]="{ item }">
-            {{ formatPhone(item.phone) }}
+            {{ $helpers.fallback(formatPhone(item.phone)) }}
           </template>
         </AppTable>
       </template>
