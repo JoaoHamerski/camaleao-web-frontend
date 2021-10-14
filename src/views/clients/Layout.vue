@@ -3,8 +3,14 @@ import TheLayout from '../TheLayout'
 
 export default {
   name: 'ClientsLayout',
-  render (h) {
-    return h(TheLayout, [h('router-view')])
+  components: {
+    TheLayout
   }
 }
 </script>
+
+<template>
+  <TheLayout>
+    <router-view />
+  </TheLayout>
+</template>
