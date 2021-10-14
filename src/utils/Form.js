@@ -3,9 +3,9 @@ import axios from 'axios'
 
 class Form {
   constructor (data) {
-    this.isLoading = false
     this.originalData = data
     this.errors = new Errors()
+    this.fields = []
 
     for (const field in data) {
       this[field] = data[field]
@@ -52,10 +52,6 @@ class Form {
           reject(error.response)
         })
     })
-  }
-
-  onSuccess () {
-
   }
 
   onFail (error) {
