@@ -11,14 +11,14 @@ export default {
   chimera: {
     _client () {
       return {
-        url: `/api/clients/${this.clientId}`
+        url: `/api/clients/${this.id}`
       }
     }
   },
   props: {
     clientId: {
       type: [String, Number],
-      required: true
+      default: null
     }
   },
   data () {
@@ -29,6 +29,9 @@ export default {
     }
   },
   computed: {
+    id () {
+      return this.clientId || this.$route.params.client
+    },
     client () {
       return this.$chimera._client?.data?.data
     },
@@ -60,49 +63,61 @@ export default {
 </script>
 
 <template>
-  <AppCard
-    v-if="client"
-    color="success"
-  >
-    <template #header>
-      <h6 class="mb-0 fw-bold">
-        <FontAwesomeIcon
-          class="fa-fw"
-          :icon="icons.faUser"
-        /> Cliente
-      </h6>
-    </template>
-    <template #body>
-      <ClientCardItem
-        label="Nome"
-        :text="client.name"
-      />
-      <hr>
-      <ClientCardItem
-        label="Telefone/Celular"
-        :text="formatPhone(client.phone)"
-      />
-      <hr>
-      <ClientCardItem
-        label="Cidade"
-        :text="clientCityInfo"
-      />
-      <hr>
-      <ClientCardItem
-        label="Filial"
-        :text="clientBranchInfo"
-      />
-      <hr>
-      <ClientCardItem
-        label="Transportadora"
-        :text="$helpers.fallback(client.shipping_company, 'name')"
-      />
-      <hr>
-      <ClientCardItem
-        :color="client.total_owing > 0 ? 'danger' : 'success'"
-        label="Total devendo"
-        :text="$helpers.toBRL(client.total_owing)"
-      />
-    </template>
-  </AppCard>
+  <keep-alive>
+    <AppCard
+      color="success"
+    >
+      <template #header>
+        <h6 class="mb-0 fw-bold">
+          <FontAwesomeIcon
+            class="fa-fw"
+            :icon="icons.faUser"
+          /> Cliente
+        </h6>
+      </template>
+      <template
+        v-if="client"
+        #body
+      >
+        <ClientCardItem
+          label="Nome"
+          :text="client.name"
+        />
+        <hr>
+        <ClientCardItem
+          label="Telefone/Celular"
+          :text="formatPhone(client.phone)"
+        />
+        <hr>
+        <ClientCardItem
+          label="Cidade"
+          :text="clientCityInfo"
+        />
+        <hr>
+        <ClientCardItem
+          label="Filial"
+          :text="clientBranchInfo"
+        />
+        <hr>
+        <ClientCardItem
+          label="Transportadora"
+          :text="$helpers.fallback(client.shipping_company, 'name')"
+        />
+        <hr>
+        <ClientCardItem
+          :color="client.total_owing > 0 ? 'danger' : 'success'"
+          label="Total devendo"
+          :text="$helpers.toBRL(client.total_owing)"
+        />
+      </template>
+      <template
+        v-else
+        #body
+      >
+        <div class="py-5">
+          <AppLoading />
+        </div>
+      </template>
+    </AppCard>
+  </keep-alive>
 </template>
