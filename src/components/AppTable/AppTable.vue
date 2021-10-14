@@ -60,6 +60,7 @@ const renderTableBody = (h, context) => {
           return (
             <tr
               key={index}
+              class={context.rowClass(item)}
               vOn:click_prevent={() => { context.rowClicked(item) }}
             >
               { renderTableCell(h, context, item) }
@@ -89,6 +90,10 @@ export default {
     TableCell
   },
   props: {
+    rowClass: {
+      type: Function,
+      default: () => {}
+    },
     tableClass: {
       type: String,
       default: ''
