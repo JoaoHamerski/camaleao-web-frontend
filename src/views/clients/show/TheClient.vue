@@ -45,9 +45,6 @@ export default {
     }
   },
   methods: {
-    redirectToOrder () {
-
-    },
     handleSearch (code) {
       this.code = code
 
