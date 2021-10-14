@@ -1,4 +1,4 @@
-import { isEmpty, isBoolean } from 'lodash-es'
+import { isBoolean } from 'lodash-es'
 import MaskedInputElement from './MaskedInput'
 import { MaskedInputPassword, renderPasswordToggleButton } from './MaskedInputPassword'
 
@@ -49,7 +49,7 @@ export const MaskedInputGroup = function (h, context) {
 export const renderErrorMessage = function (h, context) {
   if (context.hasError && !isBoolean(context.error)) {
     return (
-      <div class="small text-danger">
+      <div class="small text-danger mb-n1">
         { context.error }
       </div>
     )
@@ -57,13 +57,13 @@ export const renderErrorMessage = function (h, context) {
 }
 
 export const renderHintMessage = function (h, context) {
-  if (!isEmpty(context.hint)) {
+  if (context.hasHint) {
     return (
       <small
         class="form-text"
         id={context.hintId}
       >
-        { context.hint }
+        { context.hint || context.$slots.hint }
       </small>
     )
   }
