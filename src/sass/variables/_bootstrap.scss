@@ -6,9 +6,12 @@ $font-family-base: 'Inter', system-ui, -apple-system, "Segoe UI", Roboto, "Helve
 // Colors config
 $min-contrast-ratio:   3;
 
+$enable-negative-margins: true;
+
 // General
 $small-font-size: .8rem;
-$modal-fade-transform: scale(.8);
+$modal-fade-transform: scale(.6);
+$modal-transition: transform .1s ease-out;
 $body-bg: $light;
 
 // Typography
