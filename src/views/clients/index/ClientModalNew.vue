@@ -1,0 +1,48 @@
+<script>
+import { faUserPlus } from '@fortawesome/free-solid-svg-icons'
+import ClientForm from './ClientForm'
+
+export default {
+  components: {
+    ClientForm
+  },
+  data () {
+    return {
+      modal: false,
+      icons: {
+        faUserPlus
+      }
+    }
+  },
+  methods: {
+    submitted () {
+      this.$toast.success('Cadastrado com sucesso!')
+      this.modal = false
+      this.$emit('refresh')
+    }
+  }
+}
+</script>
+
+<template>
+  <div>
+    <AppModal
+      id="clientModalNew"
+      v-model="modal"
+      centered
+    >
+      <template #title>
+        <FontAwesomeIcon
+          :icon="icons.faUserPlus"
+          class="me-1"
+          fixed-width
+        />Novo cliente
+      </template>
+      <template #body>
+        <ClientForm
+          @submitted="submitted"
+        />
+      </template>
+    </AppModal>
+  </div>
+</template>
