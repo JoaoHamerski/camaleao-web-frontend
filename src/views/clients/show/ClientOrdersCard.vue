@@ -6,12 +6,22 @@ import {
 import { TippyComponent } from 'vue-tippy'
 import ClientOrdersCardLegend from './ClientOrdersCardLegend'
 
+const STATE_CLASSES = {
+  PAID: 'table-success',
+  CLOSED: 'table-secondary',
+  'PRE-REGISTERED': 'table-warning'
+}
+
 export default {
   components: {
     ClientOrdersCardLegend,
     tippy: TippyComponent
   },
   props: {
+    isLoading: {
+      type: Boolean,
+      default: false
+    },
     orders: {
       type: Array,
       default: () => []
@@ -36,18 +46,35 @@ export default {
         { text: 'Data de entrega', value: 'delivery_date', align: 'center' }
       ]
     }
+  },
+  methods: {
+    rowClass (order) {
+      return STATE_CLASSES[order.state] || false
+    },
+    redirectToOrder (order) {
+      this.$router.push({
+        name: 'orders.show',
+        params: {
+          client: this.$route.params.client,
+          order: order.code
+        }
+      })
+    }
   }
 }
 </script>
 
 <template>
-  <AppCard :has-body-padding="false">
+  <AppCard
+    :has-body-padding="false"
+    :is-loading="isLoading"
+  >
     <template #header>
-      <h6 class="mb-0 fw-bold d-flex  justify-content-between">
+      <h6 class="mb-0 fw-bold d-flex justify-content-between">
         <div>
           <FontAwesomeIcon
             :icon="icons.faBoxes"
-            class="fa-fw"
+            class="fa-fw fw-bold"
           />
           Pedidos
         </div>
@@ -72,6 +99,8 @@ export default {
       <AppTable
         :headers="headers"
         :items="orders"
+        :row-class="rowClass"
+        @click:item="redirectToOrder"
       />
     </template>
   </AppCard>
