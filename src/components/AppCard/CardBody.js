@@ -7,7 +7,7 @@ function normalCardBody (h, context) {
         'px-0': !context.hasBodyPadding
       }])}
     >
-      { context.$slots.body}
+      { context.$slots.body }
     </div>
   )
 }
@@ -18,7 +18,7 @@ function collapsibleCardBody (h, context) {
       id={context.collapseId}
       class={context.collapsibleCardBodyClass}
     >
-      { normalCardBody(h, context)}
+      { normalCardBody(h, context) }
     </div>
   )
 }
