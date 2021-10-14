@@ -41,6 +41,7 @@ export default {
           :default-margin="false"
           name="code"
           placeholder="Buscar por código..."
+          @keypress.enter="$emit('search', search)"
         >
           <template #append>
             <AppButton
