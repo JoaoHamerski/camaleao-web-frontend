@@ -1,6 +1,8 @@
 <script>
 import classNames from 'classnames'
 import { isEmpty } from 'lodash-es'
+import Cleave from 'cleave.js'
+
 import {
   renderInput,
   renderInputLabel,
@@ -9,6 +11,25 @@ import {
 } from './renders'
 
 export default {
+  directives: {
+    cleave: {
+      inserted: (el, binding, vnode) => {
+        if (vnode.context.mask !== undefined) {
+          el.cleave = new Cleave(el, binding.value || {})
+        }
+      },
+      update: (el, binding, vnode) => {
+        const event = new Event('input', { bubbles: true })
+
+        if (vnode.context.mask !== undefined) {
+          setTimeout(function () {
+            el.value = el.cleave.properties.result
+            el.dispatchEvent(event)
+          }, 100)
+        }
+      }
+    }
+  },
   inheritAttrs: false,
   props: {
     name: {
@@ -19,12 +40,9 @@ export default {
       type: [String, Number],
       default: undefined
     },
-    mask: {
-      type: Boolean,
-      default: false
-    },
+    mask: undefined,
     value: {
-      type: [Number, String],
+      type: [String, Number],
       default: ''
     },
     type: {
@@ -99,9 +117,12 @@ export default {
       return !!this.error
     },
     hintId () {
-      return !isEmpty(this.hint)
+      return this.hasHint
         ? this.name + 'Hint'
         : null
+    },
+    hasHint () {
+      return !!(this.hint || this.$slots.hint)
     }
   },
   methods: {

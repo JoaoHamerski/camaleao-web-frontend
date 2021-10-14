@@ -1,18 +1,15 @@
-import MaskedInput from 'vue-text-mask'
-
 function MaskedInputElement (h, context) {
   return (
-    <MaskedInput
-      ref="input"
+    <input
       class={context.inputClasses}
+      value={context.value}
       name={context.name}
       type={context.inputType}
-      mask={context.mask}
-      value={context.value}
       disabled={context.isDisabled}
-      onInput={e => { context.$emit('input', e) }}
       aria-describedby={context.hintId}
-      on={context.$listeners}
+      on={{ ...context.$listeners, input: null }}
+      vCleave={context.mask}
+      vOn:input={event => { context.$emit('input', event.target.value) }}
       {...{ attrs: context.$attrs }}
     />
   )
