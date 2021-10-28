@@ -68,6 +68,9 @@ const renderTableBody = (h, context) => {
           )
         })
       }
+      {
+        context.$slots.bodyAppend
+      }
     </tbody>
   )
 }
