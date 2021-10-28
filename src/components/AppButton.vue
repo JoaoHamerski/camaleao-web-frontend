@@ -1,8 +1,9 @@
 <script>
 import { isEmpty } from 'lodash-es'
 import classNames from 'classnames'
+import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 
-function renderIsLoading (h, context) {
+function renderIsLoadingIcon (h, context) {
   if (context.loading) {
     return (
       <span>
@@ -17,6 +18,24 @@ function renderIsLoading (h, context) {
   }
 }
 
+function renderIcon (h, context) {
+  if (!context.loading && context.icon) {
+    return (
+      <FontAwesomeIcon icon={context.icon} />
+    )
+  }
+}
+
+function renderIconWrapper (h, context) {
+  if (context.isLoading || context.icon) {
+    return (
+      <div class="fa-fw d-inline-block">
+        { renderIcon(h, context) }
+        { renderIsLoadingIcon(h, context) }
+      </div>
+    )
+  }
+}
 function renderBtn (h, context) {
   return (
     <button
@@ -24,7 +43,7 @@ function renderBtn (h, context) {
       disabled={context.isDisabled}
       class={context.btnClasses}
     >
-      { renderIsLoading(h, context) }
+      { renderIconWrapper(h, context) }
       { context.$slots.default }
     </button>
   )
@@ -45,6 +64,10 @@ function renderDisabledMessageBtn (h, context) {
 
 export default {
   props: {
+    icon: {
+      type: Object,
+      default: null
+    },
     color: {
       type: String,
       default: 'primary'
