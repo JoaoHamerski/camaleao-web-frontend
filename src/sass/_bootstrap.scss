@@ -32,3 +32,16 @@
 .table > :not(:last-child) > :last-child > * {
   border-bottom: 2px solid $gray-300;
 }
+
+
+
+.input-group {
+  .form-select-wrapper {
+    z-index: 1;
+    
+    .form-select {
+      border-top-right-radius: 0;
+      border-bottom-right-radius: 0;
+    }
+  }
+}

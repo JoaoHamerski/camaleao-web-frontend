@@ -35,3 +35,11 @@
   }
 }
 
+input[disabled="disabled"],
+select[disabled="disabled"] {
+  cursor: not-allowed;
+}
+
+.minus:before {
+  content: '- '
+}
