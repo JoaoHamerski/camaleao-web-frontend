@@ -1,4 +1,5 @@
 import { isNil } from 'lodash-es'
+import { DateTime } from 'luxon'
 
 export const format = (str, pattern) => {
   let i = 0
@@ -30,11 +31,28 @@ export const formatPhone = (str) => {
   return format(str, patterns[str.length])
 }
 
-export const formatMoney = (str) => {
-  return new Intl.NumberFormat('pt-BR', {
+export const formatMoney = (str, highlightNumerator = false) => {
+  const formatted = new Intl.NumberFormat('pt-BR', {
     style: 'currency',
     currency: 'BRL'
   }).format(str)
+
+  if (highlightNumerator) {
+    const numerator = formatted.split(',')[0]
+    const denominator = formatted.split(',')[1]
+    const highlighted = `<b>${numerator}</b>,${denominator}`
+
+    return highlighted
+  }
+
+  return formatted
+}
+
+export const formatDate = (str, format = 'dd/MM/y') => {
+  return DateTime
+    .fromISO(str)
+    .setLocale('pt-br')
+    .toFormat(format)
 }
 
 export default {
