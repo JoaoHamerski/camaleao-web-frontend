@@ -4,6 +4,10 @@ import { isEmpty } from 'lodash-es'
 export default {
   props: {
     id: undefined,
+    removeDefaultMargin: {
+      type: Boolean,
+      default: false
+    },
     hideDefaultOption: {
       type: Boolean,
       default: false
@@ -51,7 +55,10 @@ export default {
 </script>
 
 <template>
-  <div class="form-select-wrapper">
+  <div
+    class="form-select-wrapper"
+    :class="!removeDefaultMargin && 'mb-3'"
+  >
     <label
       v-if="hasLabel"
       class="form-label"

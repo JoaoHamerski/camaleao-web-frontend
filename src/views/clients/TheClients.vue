@@ -104,6 +104,7 @@ export default {
           <template #prepend>
             <AppSimpleSelect
               v-model="form.option"
+              remove-default-margin
               name="option"
               hide-default-option
               value-prop="value"
