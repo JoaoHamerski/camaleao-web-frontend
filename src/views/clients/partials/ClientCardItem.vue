@@ -33,7 +33,7 @@ export default {
     </div>
 
     <div
-      class="small"
+      class="text-subtitle"
       :class="`text-${color}`"
     >
       <slot

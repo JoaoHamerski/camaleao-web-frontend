@@ -11,7 +11,12 @@ export default {
   chimera: {
     _client () {
       return {
-        url: `/api/clients/${this.id}`
+        url: `/api/clients/${this.id}`,
+        on: {
+          success ({ data }) {
+            this.$emit('client', data.data)
+          }
+        }
       }
     }
   },
@@ -107,8 +112,12 @@ export default {
         <ClientCardItem
           :color="client.total_owing > 0 ? 'danger' : 'success'"
           label="Total devendo"
-          :text="$helpers.toBRL(client.total_owing)"
-        />
+        >
+          <template #text>
+            <!-- eslint-disable-next-line vue/no-v-html -->
+            <span v-html="$helpers.toBRL(client.total_owing, true)" />
+          </template>
+        </ClientCardItem>
       </template>
       <template
         v-else
