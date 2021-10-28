@@ -23,7 +23,6 @@ export default {
 
         if (vnode.context.mask !== undefined) {
           setTimeout(function () {
-            el.value = el.cleave.properties.result
             el.dispatchEvent(event)
           }, 100)
         }
