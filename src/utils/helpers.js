@@ -13,8 +13,8 @@ const fallback = (object, prop, fallbackString = 'N/A') => {
   return isNil(object) ? fallbackString : object[prop]
 }
 
-const toBRL = (str) => {
-  return formatMoney(str)
+const toBRL = (str, highlightNumerator = false) => {
+  return formatMoney(str, highlightNumerator)
 }
 
 export default {
