@@ -1,6 +1,6 @@
 <script>
 import classNames from 'classnames'
-import { capitalize, isNil } from 'lodash-es'
+import { upperFirst, isNil } from 'lodash-es'
 import format from '@/utils/formatters'
 
 /**
@@ -8,13 +8,13 @@ import format from '@/utils/formatters'
  * @see { @link /src/utils/formatters.js}
  */
 const VALID_FORMATTERS = [
-  'money',
+  'currencyBRL',
   'phone',
   'date'
 ]
 
 function renderValue (h, context) {
-  const functionName = 'format' + capitalize(context.format)
+  const functionName = 'format' + upperFirst(context.format)
 
   if (context.isUsingSlot) {
     return context.$slots.default
