@@ -73,9 +73,9 @@ export default {
     },
     onClothingTypesLoaded (clothingTypes) {
       for (const type of clothingTypes) {
-        this.$set(this.form, `value_${type.key}`, '')
+        this.$set(this.form, `value_${type.key}`, 'R$ ')
         this.$set(this.form, `quantity_${type.key}`, '')
-        this.$set(this.form.originalData, `value_${type.key}`, '')
+        this.$set(this.form.originalData, `value_${type.key}`, 'R$ ')
         this.$set(this.form.originalData, `quantity_${type.key}`, '')
       }
     }
