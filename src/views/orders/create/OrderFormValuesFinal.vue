@@ -1,6 +1,6 @@
 <script>
 import accounting from 'accounting-js'
-import { maskValueBRL } from '@/utils/masks'
+import { maskCurrencyBRL } from '@/utils/masks'
 
 export default {
   props: {
@@ -15,7 +15,7 @@ export default {
   },
   data () {
     return {
-      maskValueBRL: maskValueBRL({ numeralPositiveOnly: true })
+      maskCurrencyBRL: maskCurrencyBRL({ numeralPositiveOnly: true })
     }
   },
   chimera: {
@@ -51,7 +51,7 @@ export default {
       <div class="col">
         <AppInput
           v-model="form.discount"
-          :mask="maskValueBRL"
+          :mask="maskCurrencyBRL"
           name="discount"
           optional
         >
@@ -65,7 +65,7 @@ export default {
         <AppInput
           v-model="form.down_payment"
           name="down_payment"
-          :mask="maskValueBRL"
+          :mask="maskCurrencyBRL"
           optional
         >
           Entrada

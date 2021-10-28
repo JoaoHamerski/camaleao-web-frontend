@@ -31,7 +31,7 @@ export const formatPhone = (str) => {
   return format(str, patterns[str.length])
 }
 
-export const formatMoney = (str, highlightNumerator = false) => {
+export const formatCurrencyBRL = (str, highlightNumerator = false) => {
   const formatted = new Intl.NumberFormat('pt-BR', {
     style: 'currency',
     currency: 'BRL'
@@ -57,5 +57,5 @@ export const formatDate = (str, format = 'dd/MM/y') => {
 
 export default {
   formatPhone,
-  formatMoney
+  formatCurrencyBRL
 }

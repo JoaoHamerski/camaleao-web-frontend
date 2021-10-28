@@ -9,7 +9,7 @@ export const maskPhone = {
   phoneRegionCode: 'br'
 }
 
-export const maskValueBRL = (options = {}) => ({
+export const maskCurrencyBRL = (options = {}) => ({
   prefix: 'R$ ',
   numeral: true,
   numeralDecimalMark: ',',

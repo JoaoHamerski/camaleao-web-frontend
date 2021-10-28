@@ -14,8 +14,8 @@ export default {
       return [
         { text: 'TIPO', value: 'name' },
         { text: 'QUANTIDADE', value: 'quantity' },
-        { text: 'VALOR UNIT.', value: 'value', format: 'money' },
-        { text: 'TOTAL', value: 'total', format: 'money' }
+        { text: 'VALOR UNIT.', value: 'value', format: 'currencyBRL' },
+        { text: 'TOTAL', value: 'total', format: 'currencyBRL' }
       ]
     }
   }

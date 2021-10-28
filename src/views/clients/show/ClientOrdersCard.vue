@@ -39,8 +39,8 @@ export default {
     headers () {
       return [
         { text: 'Código', value: 'code' },
-        { text: 'Valor total', value: 'price', format: 'money' },
-        { text: 'Total pago', value: 'total_paid', format: 'money' },
+        { text: 'Valor total', value: 'price', format: 'currencyBRL' },
+        { text: 'Total pago', value: 'total_paid', format: 'currencyBRL' },
         { text: 'Quantidade', value: 'quantity', align: 'center' },
         { text: 'Data de produção', value: 'production_date', align: 'center' },
         { text: 'Data de entrega', value: 'delivery_date', align: 'center' }

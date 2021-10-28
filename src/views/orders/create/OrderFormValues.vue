@@ -1,7 +1,7 @@
 <script>
 import accounting from 'accounting-js'
-import { formatMoney } from '@/utils/formatters'
-import { maskValueBRL, maskInteger } from '@/utils/masks'
+import { formatCurrencyBRL } from '@/utils/formatters'
+import { maskCurrencyBRL, maskInteger } from '@/utils/masks'
 
 import OrderFormValuesFinal from './OrderFormValuesFinal'
 
@@ -31,7 +31,7 @@ export default {
   },
   data () {
     return {
-      maskValueBRL: maskValueBRL({ numeralPositiveOnly: true }),
+      maskCurrencyBRL: maskCurrencyBRL({ numeralPositiveOnly: true }),
       maskInteger: maskInteger()
     }
   },
@@ -61,7 +61,7 @@ export default {
         return total
       }, 0)
 
-      return formatMoney(total)
+      return formatCurrencyBRL(total)
     },
     finalValue () {
       const sanitizedTotalValue = accounting.unformat(this.totalValue, ',')
@@ -72,7 +72,7 @@ export default {
         2
       )
 
-      return formatMoney(finalValue)
+      return formatCurrencyBRL(finalValue)
     }
   },
   methods: {
@@ -86,7 +86,7 @@ export default {
       const quantity = this.form[`quantity_${key}`]
       const result = accounting.toFixed(quantity * value, 2)
 
-      return formatMoney(result)
+      return formatCurrencyBRL(result)
     }
   }
 }
@@ -137,7 +137,7 @@ export default {
         <div class="col">
           <AppInput
             v-model="form[`value_${type.key}`]"
-            :mask="maskValueBRL"
+            :mask="maskCurrencyBRL"
             :name="'value_' + type.key"
           />
         </div>

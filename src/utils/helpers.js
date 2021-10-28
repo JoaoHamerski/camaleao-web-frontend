@@ -3,7 +3,7 @@
  * através de $helpers variavels
  */
 import { isNil } from 'lodash-es'
-import { formatMoney } from '@/utils/formatters'
+import { formatCurrencyBRL } from '@/utils/formatters'
 
 const fallback = (object, prop, fallbackString = 'N/A') => {
   if (isNil(prop)) {
@@ -14,7 +14,7 @@ const fallback = (object, prop, fallbackString = 'N/A') => {
 }
 
 const toBRL = (str, highlightNumerator = false) => {
-  return formatMoney(str, highlightNumerator)
+  return formatCurrencyBRL(str, highlightNumerator)
 }
 
 export default {

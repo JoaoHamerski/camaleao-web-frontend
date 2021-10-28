@@ -1,11 +1,11 @@
 <script>
-import { maskValueBRL } from '@/utils/masks'
+import { maskCurrencyBRL } from '@/utils/masks'
 
 export default {
   data () {
     return {
       value: '',
-      maskValueBRL: maskValueBRL()
+      maskCurrencyBRL: maskCurrencyBRL()
     }
   }
 }
@@ -17,7 +17,7 @@ export default {
 
     <AppInput
       v-model="value"
-      :mask="maskValueBRL"
+      :mask="maskCurrencyBRL"
       name="algo"
     />
     {{ value }}
