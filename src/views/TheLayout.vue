@@ -3,6 +3,9 @@ import TheHeaderbar from '@/components/Headerbar/TheHeaderbar'
 import TheSidebar from '@/components/Sidebar/TheSidebar'
 
 export default {
+  metaInfo: {
+    titleTemplate: '%s | Camaleão Web'
+  },
   components: {
     TheHeaderbar,
     TheSidebar
