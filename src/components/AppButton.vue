@@ -42,6 +42,8 @@ function renderBtn (h, context) {
       on={context.$listeners}
       disabled={context.isDisabled}
       class={context.btnClasses}
+      data-bs-toggle={context.isModalToggle && 'modal'}
+      data-bs-target={context.modalTarget || false}
     >
       { renderIconWrapper(h, context) }
       { context.$slots.default }
@@ -91,9 +93,16 @@ export default {
     btnClass: {
       type: String,
       default: ''
+    },
+    modalTarget: {
+      type: String,
+      default: null
     }
   },
   computed: {
+    isModalToggle () {
+      return !!this.modalTarget
+    },
     btnClasses () {
       return classNames([
         'btn',
