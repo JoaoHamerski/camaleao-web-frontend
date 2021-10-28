@@ -32,12 +32,12 @@ export default {
             }
 
             this.isLoading = false
+          },
+          success () {
+            this.form.reset()
+            this.isLoading = false
+            this.$emit('submitted')
           }
-        },
-        success () {
-          this.form.reset()
-          this.isLoading = false
-          this.$emit('submitted')
         }
       }
     }
