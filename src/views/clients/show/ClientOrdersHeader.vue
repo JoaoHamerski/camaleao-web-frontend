@@ -20,6 +20,9 @@ export default {
     clearSearch () {
       this.search = ''
       this.$emit('clear-search')
+    },
+    redirectToNewOrder () {
+      this.$router.push({ name: 'orders.create' })
     }
   }
 }
@@ -28,7 +31,10 @@ export default {
 <template>
   <div>
     <div class="d-flex justify-content-between">
-      <AppButton color="primary">
+      <AppButton
+        color="primary"
+        @click="redirectToNewOrder"
+      >
         <FontAwesomeIcon
           class="mr-1"
           :icon="icons.faPlus"

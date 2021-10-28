@@ -51,12 +51,12 @@ export default {
     rowClass (order) {
       return STATE_CLASSES[order.state] || false
     },
-    redirectToOrder (order) {
+    redirectToOrder ({ code }) {
       this.$router.push({
         name: 'orders.show',
         params: {
           client: this.$route.params.client,
-          order: order.code
+          order: code
         }
       })
     }

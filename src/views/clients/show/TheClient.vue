@@ -7,6 +7,11 @@ import ClientOrdersCard from './ClientOrdersCard'
 import ClientOrdersHeader from './ClientOrdersHeader'
 
 export default {
+  metaInfo () {
+    return {
+      title: this.client?.name || ''
+    }
+  },
   components: {
     ClientCard,
     ClientOrdersCard,
@@ -24,6 +29,7 @@ export default {
     return {
       page: 1,
       code: '',
+      client: null,
       icons: {
         faPlus,
         faArrowAltCircleLeft
@@ -77,6 +83,7 @@ export default {
       </div>
       <ClientCard
         :client-id="clientId"
+        @client="client = $event"
       />
     </div>
 
