@@ -104,10 +104,14 @@ export default {
           <template #prepend>
             <AppSimpleSelect
               v-model="form.option"
+              name="option"
+              hide-default-option
+              value-prop="value"
+              label-prop="name"
               :options="[
-                { text: 'Nome', value: 'name' },
-                { text: 'Cidade', value: 'city' },
-                { text: 'Telefone', value: 'phone' },
+                {name: 'Nome', value: 'name'},
+                {name: 'Cidade', value: 'city'},
+                {name: 'Telefone', value: 'phone'}
               ]"
             />
           </template>
