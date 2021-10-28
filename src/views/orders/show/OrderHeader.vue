@@ -8,8 +8,12 @@ import {
   faTimesCircle,
   faExchangeAlt
 } from '@fortawesome/free-solid-svg-icons'
+import NewPaymentModal from '../partials/NewPaymentModal'
 
 export default {
+  components: {
+    NewPaymentModal
+  },
   data () {
     return {
       icons: {
@@ -30,12 +34,14 @@ export default {
   <div class="mb-1 d-flex justify-content-between">
     <div>
       <AppButton
+        modal-target="#newPaymentModal"
         color="success"
         outlined
         :icon="icons.faDollarSign"
       >
         Adicionar pagamento
       </AppButton>
+      <NewPaymentModal />
     </div>
     <div>
       <AppButton
