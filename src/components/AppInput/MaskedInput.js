@@ -7,9 +7,9 @@ function MaskedInputElement (h, context) {
       type={context.inputType}
       disabled={context.isDisabled}
       aria-describedby={context.hintId}
-      on={{ ...context.$listeners, input: null }}
       vCleave={context.mask}
-      vOn:input={event => { context.$emit('input', event.target.value) }}
+      on={{ ...context.$listeners, input: null }}
+      vOn:input={e => { context.$emit('input', e.target.value) }}
       {...{ attrs: context.$attrs }}
     />
   )
