@@ -1,13 +1,36 @@
 <script>
+
 import ClientCard from '@/views/clients/partials/ClientCard'
 import { faArrowAltCircleLeft, faBoxOpen } from '@fortawesome/free-solid-svg-icons'
 
+import OrderHeader from './OrderHeader'
+import OrderCardBody from './OrderCardBody'
+
 export default {
+  metaInfo () {
+    return {
+      title: `${this.client?.name || ''} - Pedidos`
+    }
+  },
   components: {
-    ClientCard
+    ClientCard,
+    OrderHeader,
+    OrderCardBody
+  },
+  chimera: {
+    _order () {
+      return {
+        url: `api/clients/${this.clientId}/orders/${this.orderId}`,
+        params: {
+          payments: true,
+          clothing_types: true
+        }
+      }
+    }
   },
   data () {
     return {
+      client: null,
       icons: {
         faArrowAltCircleLeft,
         faBoxOpen
@@ -15,8 +38,14 @@ export default {
     }
   },
   computed: {
+    order () {
+      return this.$chimera._order?.data?.data
+    },
     clientId () {
       return this.$route.params.client
+    },
+    orderId () {
+      return this.$route.params.order
     }
   }
 }
@@ -33,13 +62,15 @@ export default {
         <FontAwesomeIcon :icon="icons.faArrowAltCircleLeft" />
         Cliente
       </AppButton>
-      <ClientCard :client-id="clientId" />
+
+      <ClientCard
+        :client-id="clientId"
+        @client="client = $event"
+      />
     </div>
 
     <div class="col-9">
-      <div class="mb-1">
-        <AppButton>Alguns botão aqui</AppButton>
-      </div>
+      <OrderHeader />
       <AppCard color="primary">
         <template #header>
           <h6 class="d-flex fw-bold align-items-center mb-0">
@@ -47,12 +78,22 @@ export default {
               :icon="icons.faBoxOpen"
               class="me-1"
             />
-            Pedido -
+            Pedido - {{ $helpers.fallback(order, 'name', '') }}
           </h6>
         </template>
 
         <template #body>
-          <!--  -->
+          <OrderCardBody
+            v-if="order"
+            :order="order"
+          />
+
+          <div
+            v-else
+            class="py-5"
+          >
+            <AppLoading />
+          </div>
         </template>
       </AppCard>
     </div>
