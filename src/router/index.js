@@ -3,6 +3,8 @@ import VueRouter from 'vue-router'
 import auth from '@/middleware/auth'
 import middlewarePipeline from '@/router/middlewarePipeline'
 
+import TheTest from '@/views/TheTest'
+
 import authRoutes from '@/views/auth/routes'
 import clientsRoutes from '@/views/clients/routes'
 import ordersRoutes from '@/views/orders/routes'
@@ -16,6 +18,13 @@ const routes = [
       middleware: [auth]
     },
     beforeEnter: (to, from, next) => next('/clientes')
+  },
+  {
+    path: '/testes',
+    component: TheTest,
+    meta: {
+      middleware: [auth]
+    }
   },
   ...authRoutes,
   ...clientsRoutes,
