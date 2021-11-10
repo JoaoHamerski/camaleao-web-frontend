@@ -109,7 +109,10 @@ export default {
       <h5 class="fw-bold text-secondary">
         Pagamentos
       </h5>
-      <OrderPayments :payments="order.payments" />
+      <OrderPayments
+        :payments="order.payments"
+        @open-modal="$emit('open-modal', $event)"
+      />
     </div>
   </div>
 </template>
