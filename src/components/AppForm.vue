@@ -11,6 +11,11 @@ export default {
       type: Function,
       required: true
     }
+  },
+  methods: {
+    clearError ({ target }) {
+      this.form.errors.clear(target.name)
+    }
   }
 }
 </script>
@@ -19,7 +24,7 @@ export default {
   <form
     @submit.prevent="onSubmit"
     @keypress.enter.prevent="onSubmit"
-    @focus.capture="form.errors.clear($event.target.name)"
+    @focus.capture="clearError"
   >
     <slot />
   </form>
