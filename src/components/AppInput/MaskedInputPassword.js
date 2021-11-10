@@ -1,8 +1,6 @@
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 import { faEyeSlash, faEye } from '@fortawesome/free-solid-svg-icons'
 
-import MaskedInputElement from './MaskedInput'
-
 export const renderPasswordToggleButton = function (h, context) {
   function renderEyeStateIcon (isTypePassword) {
     if (isTypePassword) {
@@ -23,10 +21,10 @@ export const renderPasswordToggleButton = function (h, context) {
   )
 }
 
-export const MaskedInputPassword = function (h, context) {
+export const MaskedInputPassword = function (h, context, element) {
   return (
     <div class="input-group">
-      { MaskedInputElement(h, context) }
+      { element }
       { renderPasswordToggleButton(h, context)}
     </div>
   )
