@@ -72,6 +72,7 @@ export default {
   },
   mounted () {
     this.modal = new Modal(this.$refs.modal)
+
     if (this.$refs.modal) {
       EVENTS_EMITTED.forEach(event => {
         this.$refs.modal.addEventListener(
