@@ -2,6 +2,7 @@
 import classNames from 'classnames'
 import { isEmpty } from 'lodash-es'
 import Cleave from 'cleave.js'
+import { DateTime } from 'luxon'
 
 import {
   renderInput,
@@ -39,9 +40,17 @@ export default {
       type: [String, Number],
       default: undefined
     },
+    todayButton: {
+      type: Boolean,
+      default: false
+    },
     mask: undefined,
     value: {
       type: [String, Number],
+      default: ''
+    },
+    autocomplete: {
+      type: String,
       default: ''
     },
     type: {
@@ -79,7 +88,6 @@ export default {
   },
   data () {
     return {
-      inputType: this.type,
       tippyConfig: {
         placement: 'bottom',
         duration: '150',
@@ -88,6 +96,20 @@ export default {
     }
   },
   computed: {
+    inputAutocomplete () {
+      const autocomplete = this.autocomplete || false
+
+      return this.type === 'date'
+        ? 'off'
+        : autocomplete
+    },
+    inputType () {
+      if (this.type === 'date') {
+        return 'text'
+      }
+
+      return this.type
+    },
     inputClasses () {
       return classNames([
         'form-control',
@@ -125,6 +147,11 @@ export default {
     }
   },
   methods: {
+    emitTodayDate () {
+      const todayDate = DateTime.now().toFormat('dd/LL/yyyy')
+
+      this.$emit('input', todayDate)
+    },
     focusInput () {
       const input = this.$refs.input.$el
       const length = input.value.length
