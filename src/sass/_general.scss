@@ -43,3 +43,7 @@ select[disabled="disabled"] {
 .minus:before {
   content: '- '
 }
+
+.animate__even-faster {
+  animation-duration: .25s;
+}
