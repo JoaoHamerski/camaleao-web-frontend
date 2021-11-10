@@ -1,9 +1,13 @@
 <script>
-import { isEmpty } from 'lodash-es'
+import { isEmpty, isNil } from 'lodash-es'
 
 export default {
   props: {
     id: undefined,
+    error: {
+      type: [Boolean, String],
+      default: false
+    },
     removeDefaultMargin: {
       type: Boolean,
       default: false
@@ -26,7 +30,7 @@ export default {
     },
     labelProp: {
       type: [String, Function],
-      default: 'text'
+      default: null
     },
     label: {
       type: [String, Number],
@@ -46,6 +50,10 @@ export default {
     renderLabel (option) {
       if (typeof this.labelProp === 'function') {
         return this.labelProp(option)
+      }
+
+      if (isNil(this.labelProp)) {
+        return option
       }
 
       return option[this.labelProp]
@@ -80,7 +88,9 @@ export default {
 
     <select
       :id="id"
+      :name="name"
       class="form-select"
+      :class="error && 'is-invalid'"
       v-bind="$attrs"
       v-on="$listeners"
       @change="$emit('input', $event.target.value)"
@@ -99,5 +109,11 @@ export default {
         {{ renderLabel(option) }}
       </option>
     </select>
+    <div
+      v-if="error"
+      class="small text-danger mb-1"
+    >
+      {{ error }}
+    </div>
   </div>
 </template>
