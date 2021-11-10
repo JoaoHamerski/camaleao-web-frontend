@@ -25,7 +25,7 @@ export default {
   chimera: {
     _client () {
       return {
-        url: `/api/clients/${this.$route.params.client}`
+        url: `/api/clients/${this.$route.params.clientKey}`
       }
     }
   },
@@ -42,7 +42,7 @@ export default {
     redirectToClient () {
       return this.$router.push({
         name: 'clients.show',
-        client: this.$route.params.client
+        client: this.$route.params.clientKey
       })
     }
   }

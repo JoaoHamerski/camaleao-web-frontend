@@ -55,8 +55,8 @@ export default {
       this.$router.push({
         name: 'orders.show',
         params: {
-          client: this.$route.params.client,
-          order: code
+          clientKey: this.$route.params.clientKey,
+          orderKey: code
         }
       })
     }

@@ -18,7 +18,7 @@ const children = [
   },
   {
     name: 'clients.show',
-    path: '/clientes/:client/pedidos',
+    path: '/clientes/:clientKey/pedidos',
     component: TheClient,
     meta: {
       middleware: [role],

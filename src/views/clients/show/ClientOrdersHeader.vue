@@ -22,7 +22,10 @@ export default {
       this.$emit('clear-search')
     },
     redirectToNewOrder () {
-      this.$router.push({ name: 'orders.create' })
+      this.$router.push({
+        name: 'orders.create',
+        clientKey: this.$route.params.clientKey
+      })
     }
   }
 }

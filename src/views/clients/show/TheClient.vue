@@ -20,7 +20,7 @@ export default {
   chimera: {
     _orders () {
       return {
-        url: `/api/clients/${this.$route.params.client}/orders/`,
+        url: `/api/clients/${this.$route.params.clientKey}/orders/`,
         params: { page: this.page }
       }
     }
@@ -40,8 +40,8 @@ export default {
     isLoading () {
       return this.$chimera._orders.loading
     },
-    clientId () {
-      return this.$route.params.client
+    clientKey () {
+      return this.$route.params.clientKey
     },
     orders () {
       return this.$chimera._orders?.data?.data || []
@@ -82,7 +82,7 @@ export default {
         </AppButton>
       </div>
       <ClientCard
-        :client-id="clientId"
+        :client-id="clientKey"
         @client="client = $event"
       />
     </div>

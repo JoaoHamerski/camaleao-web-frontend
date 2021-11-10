@@ -60,7 +60,7 @@ export default {
     redirectToClient (client) {
       this.$router.push({
         name: 'clients.show',
-        params: { client: client.id }
+        params: { clientKey: client.id }
       })
     },
     handleSearch () {

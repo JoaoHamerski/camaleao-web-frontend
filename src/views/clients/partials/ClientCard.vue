@@ -21,7 +21,7 @@ export default {
     }
   },
   props: {
-    clientId: {
+    clientKey: {
       type: [String, Number],
       default: null
     }
@@ -35,7 +35,7 @@ export default {
   },
   computed: {
     id () {
-      return this.clientId || this.$route.params.client
+      return this.clientKey || this.$route.params.clientKey
     },
     client () {
       return this.$chimera._client?.data?.data
