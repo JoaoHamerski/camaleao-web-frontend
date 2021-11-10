@@ -16,6 +16,10 @@ export default {
     iconColor: {
       type: String,
       default: ''
+    },
+    href: {
+      type: String,
+      default: '#'
     }
   },
   data () {
@@ -30,7 +34,7 @@ export default {
     <a
       class="dropdown-item"
       :class="itemClass"
-      href="#"
+      :href="href"
       @mousedown="active = true"
       @mouseup="active = false"
     >
