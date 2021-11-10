@@ -22,6 +22,7 @@ export default {
           name="name"
           placeholder="Nome que descreva o pedido..."
           label="Nome"
+          :error="form.errors.get('name')"
           optional
         />
       </div>
@@ -31,6 +32,7 @@ export default {
           v-model="form.code"
           name="code"
           placeholder="Código do pedido..."
+          :error="form.errors.get('code')"
           label="Código"
         />
       </div>

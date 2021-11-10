@@ -32,7 +32,8 @@ export default {
   data () {
     return {
       maskCurrencyBRL: maskCurrencyBRL({ numeralPositiveOnly: true }),
-      maskInteger: maskInteger()
+      maskInteger: maskInteger(),
+      console
     }
   },
   computed: {
@@ -93,7 +94,10 @@ export default {
 </script>
 
 <template>
-  <div class="mt-3">
+  <div
+    class="mt-3 clothing-types-group"
+    :class="form.errors.get('price') && 'is-invalid'"
+  >
     <h5 class="fw-bold text-secondary">
       Valores
     </h5>
@@ -104,10 +108,16 @@ export default {
     <div>
       <div class="row mb-3 text-secondary">
         <div class="col" />
-        <div class="col text-center fw-bold">
+        <div
+          class="col text-center fw-bold"
+          :class="form.errors.get('price') && 'text-danger'"
+        >
           QUANTIDADE
         </div>
-        <div class="col text-center fw-bold">
+        <div
+          class="col text-center fw-bold"
+          :class="form.errors.get('price') && 'text-danger'"
+        >
           VALOR UNIT.
         </div>
         <div class="col text-center fw-bold">
@@ -131,6 +141,7 @@ export default {
           <AppInput
             v-model="form[`quantity_${type.key}`]"
             :name="'quantity_' + type.key"
+            @focus="form.errors.clear('price')"
           />
         </div>
 
@@ -139,6 +150,7 @@ export default {
             v-model="form[`value_${type.key}`]"
             :mask="maskCurrencyBRL"
             :name="'value_' + type.key"
+            @focus="form.errors.clear('price')"
           />
         </div>
 
@@ -175,7 +187,9 @@ export default {
         </div>
       </div>
     </div>
-
+    <div class="small text-danger mb-1">
+      {{ form.errors.get('price') }}
+    </div>
     <small class="text-secondary">O valor só é estimado quando a <b>QUANTIDADE</b> e <b>VALOR UNIT.</b> de um linha é preenchido.</small>
 
     <OrderFormValuesFinal
@@ -184,3 +198,15 @@ export default {
     />
   </div>
 </template>
+
+<style lang="scss" scoped>
+@import '@/sass/variables/_colors.scss';
+
+.clothing-types-group.is-invalid {
+
+  .clothing-types-title,
+  .clothing-types-subtitle {
+    color: $danger !important;
+  }
+}
+</style>

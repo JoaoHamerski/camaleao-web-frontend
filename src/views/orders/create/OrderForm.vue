@@ -1,10 +1,19 @@
 <script>
 import Form from '@/utils/Form'
+import { handleError, handleSuccess } from '@/utils/forms'
 
 import OrderFormBasicInfo from './OrderFormBasicInfo'
 import OrderFormValues from './OrderFormValues'
 import OrderFormProduction from './OrderFormProduction'
 import OrderFormFiles from './OrderFormFiles'
+
+const ENDPOINTS = {
+  orders: {
+    post (clientKey) {
+      return `/api/clients/${clientKey}/new-order`
+    }
+  }
+}
 
 export default {
   components: {
@@ -14,6 +23,14 @@ export default {
     OrderFormFiles
   },
   props: {
+    isEdit: {
+      type: Boolean,
+      default: false
+    },
+    order: {
+      type: Object,
+      default: () => {}
+    },
     redirectToClient: {
       type: Function,
       default: () => {}
@@ -22,28 +39,17 @@ export default {
   chimera: {
     _newOrder () {
       return {
-        url: `/api/clients/${this.$route.params.client}/new-order`,
+        url: ENDPOINTS.orders.post(this.clientKey),
         method: 'POST',
         params: {
           ...this.form.data()
         },
         on: {
           error ({ error }) {
-            console.log(error)
-            this.$toast.error('Algo está incorreto, verifique os dados, por favor.', {
-              duration: 4000
-            })
-
-            if (error.errors) {
-              this.form.onFail(error.errors)
-            }
-
-            this.isLoading = false
+            handleError(this, error)
           },
           success () {
-            this.form.reset()
-            this.isLoading = false
-            this.$emit('submitted')
+            handleSuccess(this)
           }
         }
       }
@@ -66,10 +72,33 @@ export default {
       })
     }
   },
+  computed: {
+    clientKey () {
+      return this.$route.params.clientKey
+    },
+    orderKey () {
+      return this.$route.params.orderKey
+    }
+  },
   methods: {
-    onSubmit () {
+    async update () {
+
+    },
+    async store () {
+      try {
+        await this.$chimera._newOrder.fetch()
+      } catch (error) {}
+    },
+    async onSubmit () {
       this.isLoading = true
-      this.$chimera._newOrder.fetch()
+
+      if (this.isEdit) {
+        await this.update()
+      } else {
+        await this.store()
+      }
+
+      this.isLoading = false
     },
     onClothingTypesLoaded (clothingTypes) {
       for (const type of clothingTypes) {
@@ -78,6 +107,16 @@ export default {
         this.$set(this.form.originalData, `value_${type.key}`, 'R$ ')
         this.$set(this.form.originalData, `quantity_${type.key}`, '')
       }
+    },
+    onAttachFile ({ files, field }) {
+      this.form[field].push(...files)
+    },
+    onDeleteFile ({ fileKey, field }) {
+      const index = this.form[field].findIndex(
+        file => file.key === fileKey
+      )
+
+      this.form[field].splice(index, 1)
     }
   }
 }
@@ -94,16 +133,20 @@ export default {
       @clothing-types-loaded="onClothingTypesLoaded"
     />
     <OrderFormProduction :form="form" />
-    <OrderFormFiles :form="form" />
+    <OrderFormFiles
+      :form="form"
+      @attach-files="onAttachFile"
+      @delete-file="onDeleteFile"
+    />
 
-    <div class="mt-3">
+    <div class="mt-5">
       <AppButton
         type="submit"
         :loading="isLoading"
         color="success"
         class="fw-bold"
       >
-        Cadastrar
+        {{ isEdit ? 'Atualizar' : 'Cadastrar' }}
       </AppButton>
     </div>
   </AppForm>

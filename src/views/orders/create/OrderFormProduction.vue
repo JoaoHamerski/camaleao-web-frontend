@@ -27,10 +27,11 @@ export default {
         <AppInput
           id="production_date"
           v-model="form.production_date"
+          type="date"
           name="production_date"
-          :mask="maskDate"
-          optional
           placeholder="dd/mm/aaaa"
+          :mask="maskDate"
+          :error="form.errors.get('production_date')"
         >
           Data de produção
         </AppInput>
@@ -41,9 +42,9 @@ export default {
           id="delivery_date"
           v-model="form.delivery_date"
           name="delivery_date"
-          :mask="maskDate"
-          optional
+          type="date"
           placeholder="dd/mm/aaaa"
+          :error="form.errors.get('delivery_date')"
         >
           Data de entrega
         </AppInput>
