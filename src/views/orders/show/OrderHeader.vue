@@ -8,11 +8,13 @@ import {
   faTimesCircle,
   faExchangeAlt
 } from '@fortawesome/free-solid-svg-icons'
-import NewPaymentModal from '../partials/NewPaymentModal'
 
 export default {
-  components: {
-    NewPaymentModal
+  props: {
+    order: {
+      type: Object,
+      default: () => {}
+    }
   },
   data () {
     return {
@@ -26,6 +28,17 @@ export default {
         faExchangeAlt
       }
     }
+  },
+  methods: {
+    redirectToOrderEdit () {
+      this.$router.push({
+        name: 'orders.edit',
+        params: {
+          client: this.$route.params.clientKey,
+          order: this.$route.params.orderKey
+        }
+      })
+    }
   }
 }
 </script>
@@ -34,14 +47,15 @@ export default {
   <div class="mb-1 d-flex justify-content-between">
     <div>
       <AppButton
-        modal-target="#newPaymentModal"
         color="success"
         outlined
         :icon="icons.faDollarSign"
+        :disabled="order.state === 'PAID'"
+        :tooltip="order.state === 'PAID' && 'Pedido já pago'"
+        @click="$emit('open-modal', {isEdit: false})"
       >
         Adicionar pagamento
       </AppButton>
-      <NewPaymentModal />
     </div>
     <div>
       <AppButton
@@ -65,6 +79,7 @@ export default {
           :icon="icons.faEdit"
           text="Editar"
           icon-color="primary"
+          @click="redirectToOrderEdit"
         />
 
         <AppDropdownItem
