@@ -4,34 +4,36 @@ import classNames from 'classnames'
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 
 function renderIsLoadingIcon (h, context) {
-  if (context.loading) {
-    return (
-      <span>
-        <span
-          class="spinner-border spinner-border-sm"
-          role="status"
-          aria-hidden="true"
-        />
-        <span class="visually-hidden">Carregando...</span>
-      </span>
-    )
-  }
+  return (
+    <span>
+      <span
+        class="spinner-border spinner-border-sm"
+        role="status"
+        aria-hidden="true"
+      />
+      <span class="visually-hidden">Carregando...</span>
+    </span>
+  )
+}
+
+function renderFWIcon (h, context) {
+  return (
+    <FontAwesomeIcon
+      class={context.iconClass}
+      icon={context.icon}
+    />
+  )
 }
 
 function renderIcon (h, context) {
-  if (!context.loading && context.icon) {
-    return (
-      <FontAwesomeIcon icon={context.icon} />
-    )
-  }
-}
+  const shouldRenderIcon = !context.loading && context.icon
+  const shouldRenderLoading = context.loading
 
-function renderIconWrapper (h, context) {
-  if (context.isLoading || context.icon) {
+  if (context.loading || context.icon) {
     return (
       <div class="fa-fw d-inline-block">
-        { renderIcon(h, context) }
-        { renderIsLoadingIcon(h, context) }
+        { shouldRenderIcon && renderFWIcon(h, context) }
+        { shouldRenderLoading && renderIsLoadingIcon(h, context) }
       </div>
     )
   }
@@ -45,19 +47,19 @@ function renderBtn (h, context) {
       data-bs-toggle={context.isModalToggle && 'modal'}
       data-bs-target={context.modalTarget || false}
     >
-      { renderIconWrapper(h, context) }
+      { renderIcon(h, context) }
       { context.$slots.default }
     </button>
   )
 }
 
-function renderDisabledMessageBtn (h, context) {
+function renderMessageBtn (h, context) {
   return (
     <span
       tabindex="0"
-      class="d-inline-block"
+      class={context.block ? 'd-grid' : 'd-inline-block'}
       vTippy={context.tippyConfig}
-      content={context.disabledMessage}
+      content={context.tooltip}
     >
       { renderBtn(h, context) }
     </span>
@@ -66,6 +68,10 @@ function renderDisabledMessageBtn (h, context) {
 
 export default {
   props: {
+    block: {
+      type: Boolean,
+      default: false
+    },
     icon: {
       type: Object,
       default: null
@@ -86,9 +92,9 @@ export default {
       type: Boolean,
       default: false
     },
-    disabledMessage: {
-      type: String,
-      default: null
+    tooltip: {
+      type: [String, Boolean],
+      default: false
     },
     btnClass: {
       type: String,
@@ -97,6 +103,10 @@ export default {
     modalTarget: {
       type: String,
       default: null
+    },
+    iconClass: {
+      type: String,
+      default: ''
     }
   },
   computed: {
@@ -104,12 +114,20 @@ export default {
       return !!this.modalTarget
     },
     btnClasses () {
+      const appendClasses = {
+        'v-tippy-append': !!this.$parent.$slots.append,
+        'v-tippy-prepend': !!this.$parent.$slots.prepend
+      }
+
+      const isInputAttached = this.$parent.$options.name === 'AppInput'
+
       return classNames([
         'btn',
         {
           [`btn-${this.color}`]: !this.outlined,
           [`btn-outline-${this.color}`]: this.outlined
         },
+        isInputAttached && { ...appendClasses },
         this.btnClass
       ])
     },
@@ -125,9 +143,21 @@ export default {
     }
   },
   render: function (h) {
-    return !isEmpty(this.disabledMessage)
-      ? renderDisabledMessageBtn(h, this)
+    return !isEmpty(this.tooltip)
+      ? renderMessageBtn(h, this)
       : renderBtn(h, this)
   }
 }
 </script>
+
+<style lang="scss" scoped>
+.v-tippy-append {
+  border-top-left-radius: 0;
+  border-bottom-left-radius: 0;
+}
+
+.v-tippy-prepend {
+  border-top-right-radius: 0;
+  border-bottom-right-radius: 0;
+}
+</style>
