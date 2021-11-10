@@ -5,11 +5,12 @@ import roles from '@/constants/roles'
 
 import TheOrder from './show/TheOrder'
 import TheOrderNew from './create/TheOrderNew'
+import TheOrderEdit from './edit/TheOrderEdit'
 
 const children = [
   {
     name: 'orders.create',
-    path: '/clientes/:client/novo-pedido',
+    path: '/clientes/:clientKey/novo-pedido',
     component: TheOrderNew,
     meta: {
       middleware: [role],
@@ -18,8 +19,17 @@ const children = [
   },
   {
     name: 'orders.show',
-    path: '/clientes/:client/pedidos/:order',
+    path: '/clientes/:clientKey/pedidos/:orderKey',
     component: TheOrder,
+    meta: {
+      middleware: [role],
+      roles: [roles.ATENDIMENTO, roles.GERENCIA]
+    }
+  },
+  {
+    name: 'orders.edit',
+    path: '/clientes/:clientKey/pedidos/:orderKey/editar',
+    component: TheOrderEdit,
     meta: {
       middleware: [role],
       roles: [roles.ATENDIMENTO, roles.GERENCIA]
