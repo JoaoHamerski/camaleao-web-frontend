@@ -4,9 +4,16 @@ import {
   faArrowCircleLeft
 } from '@fortawesome/free-solid-svg-icons'
 
-import OrderForm from '../create/OrderForm'
+import { isEmpty } from 'lodash-es'
+
+import OrderForm from '../form/OrderForm'
 
 export default {
+  metaInfo () {
+    return {
+      title: 'Alterar pedido ' + this.order.code
+    }
+  },
   components: {
     OrderForm
   },
@@ -31,7 +38,8 @@ export default {
       icons: {
         faBoxOpen,
         faArrowCircleLeft
-      }
+      },
+      clothingTypesLoaded: false
     }
   },
   computed: {
@@ -46,17 +54,28 @@ export default {
     },
     orderKey () {
       return this.$route.params.orderKey
+    },
+    loaded () {
+      return this.clothingTypesLoaded && !isEmpty(this.order)
     }
   },
   methods: {
-    redirectToOrder () {
+    isEmpty,
+    redirectToOrder (event) {
       this.$router.push({
         name: 'orders.show',
         params: {
           clientKey: this.clientKey,
-          orderKey: this.orderKey
+          orderKey: event.orderKey || this.orderKey
         }
       })
+    },
+    onSuccess (event) {
+      this.$toast.success('Pedido atualizado com sucesso!')
+      this.redirectToOrder(event)
+    },
+    onClothingTypesLoaded () {
+      this.clothingTypesLoaded = true
     }
   }
 }
@@ -90,7 +109,10 @@ export default {
         <OrderForm
           :is-edit="true"
           :order="order"
+          @success="onSuccess"
+          @clothing-types-loaded="onClothingTypesLoaded"
         />
+        <AppLoading v-if="!loaded" />
       </template>
     </AppCard>
   </div>
