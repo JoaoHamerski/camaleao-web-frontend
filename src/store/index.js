@@ -10,5 +10,10 @@ export default new Vuex.Store({
   modules: {
     auth,
     sidebar
+  },
+  getters: {
+    apiURL () {
+      return process.env.VUE_APP_API_URL
+    }
   }
 })
