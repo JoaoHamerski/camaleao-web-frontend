@@ -3,7 +3,7 @@ import {
   faBoxOpen,
   faArrowCircleLeft
 } from '@fortawesome/free-solid-svg-icons'
-import OrderForm from './OrderForm'
+import OrderForm from '../form/OrderForm'
 
 export default {
   components: {
@@ -35,7 +35,7 @@ export default {
     }
   },
   methods: {
-    submitted () {
+    onSuccess () {
       this.$toast.success('Pedido criado com sucesso!')
       this.redirectToClient()
     },
@@ -71,7 +71,7 @@ export default {
       </template>
 
       <template #body>
-        <OrderForm @submitted="submitted" />
+        <OrderForm @success="onSuccess" />
       </template>
     </AppCard>
   </div>
