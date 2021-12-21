@@ -33,14 +33,13 @@ export default {
         },
         on: {
           error ({ error }) {
-            console.log(error)
-
-            handleError(error, this)
+            handleError(this, error)
           },
           success () {
             handleSuccess(this, {
               message: 'Pagamento registrado com sucesso!',
-              closeModal: true
+              closeModal: true,
+              resetForm: true
             })
           }
         }
@@ -49,7 +48,11 @@ export default {
     _updatePayment () {
       return {
         method: 'PATCH',
-        url: ENDPOINTS.payments.patch(this.clientKey, this.orderKey, this.paymentKey),
+        url: ENDPOINTS.payments.patch(
+          this.clientKey,
+          this.orderKey,
+          this.paymentKey
+        ),
         params: {
           ...this.form.data()
         },
@@ -59,8 +62,7 @@ export default {
           },
           success () {
             handleSuccess(this, {
-              message: 'Pagamento atualizado com sucesso!',
-              closeModal: true
+              message: 'Pagamento atualizado com sucesso!'
             })
           }
         }
@@ -191,7 +193,7 @@ export default {
     </template>
 
     <AppSimpleSelect
-      id="via_id"
+      id="payment_via_id"
       v-model="form.payment_via_id"
       name="payment_via_id"
       :options="vias"

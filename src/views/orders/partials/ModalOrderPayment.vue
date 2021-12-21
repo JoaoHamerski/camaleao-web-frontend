@@ -1,11 +1,11 @@
 <script>
 import { faDollarSign } from '@fortawesome/free-solid-svg-icons'
 import { formatCurrencyBRL, formatDate } from '@/utils/formatters'
-import PaymentForm from './PaymentForm'
+import OrderPaymentForm from './OrderPaymentForm'
 
 export default {
   components: {
-    PaymentForm
+    OrderPaymentForm
   },
   props: {
     value: {
@@ -15,10 +15,6 @@ export default {
     totalOwing: {
       type: [String, Number],
       default: ''
-    },
-    modalId: {
-      type: String,
-      required: true
     },
     isEdit: {
       type: Boolean,
@@ -39,9 +35,8 @@ export default {
     }
   },
   methods: {
-    submitted () {
-      this.$emit('refresh')
-      this.$emit('close-modal')
+    onSuccess () {
+      this.$emit('success')
     }
   }
 }
@@ -49,7 +44,7 @@ export default {
 
 <template>
   <AppModal
-    :id="modalId"
+    id="paymentModal"
     color="success"
     :value="value"
     v-on="$listeners"
@@ -71,11 +66,11 @@ export default {
         em
         <b>{{ formatDate(payment.date) }}</b>
       </div>
-      <PaymentForm
+      <OrderPaymentForm
         :is-edit="isEdit"
         :payment="payment"
         :total-owing="totalOwing"
-        @submitted="submitted"
+        @success="onSuccess"
       />
     </template>
   </AppModal>
