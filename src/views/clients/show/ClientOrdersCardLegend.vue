@@ -11,7 +11,7 @@
         PRÉ-REGISTRO
       </li>
       <li class="list-group-item list-group-item-secondary">
-        FECHADO
+        PAGO & FECHADO
       </li>
     </ul>
   </div>

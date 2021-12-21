@@ -6,12 +6,6 @@ import {
 import { TippyComponent } from 'vue-tippy'
 import ClientOrdersCardLegend from './ClientOrdersCardLegend'
 
-const STATE_CLASSES = {
-  PAID: 'table-success',
-  CLOSED: 'table-secondary',
-  'PRE-REGISTERED': 'table-warning'
-}
-
 export default {
   components: {
     ClientOrdersCardLegend,
@@ -42,14 +36,26 @@ export default {
         { text: 'Valor total', value: 'price', format: 'currencyBRL' },
         { text: 'Total pago', value: 'total_paid', format: 'currencyBRL' },
         { text: 'Quantidade', value: 'quantity', align: 'center' },
-        { text: 'Data de produção', value: 'production_date', align: 'center' },
-        { text: 'Data de entrega', value: 'delivery_date', align: 'center' }
+        { text: 'Data de produção', value: 'production_date', align: 'center', format: 'date' },
+        { text: 'Data de entrega', value: 'delivery_date', align: 'center', format: 'date' }
       ]
     }
   },
   methods: {
     rowClass (order) {
-      return STATE_CLASSES[order.state] || false
+      if (order.states.includes('PRE-REGISTERED')) {
+        return 'table-warning'
+      }
+
+      if (order.states.includes('CLOSED')) {
+        return 'table-secondary'
+      }
+
+      if (order.states.includes('PAID')) {
+        return 'table-success'
+      }
+
+      return ''
     },
     redirectToOrder ({ code }) {
       this.$router.push({
