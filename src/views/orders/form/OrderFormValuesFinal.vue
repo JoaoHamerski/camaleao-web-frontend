@@ -11,6 +11,10 @@ export default {
     form: {
       type: Object,
       required: true
+    },
+    isEdit: {
+      type: Boolean,
+      default: false
     }
   },
   data () {
@@ -49,7 +53,9 @@ export default {
           Preço final
         </AppInput>
       </div>
-      <div class="col">
+      <div
+        class="col"
+      >
         <AppInput
           id="discount"
           v-model="form.discount"
@@ -63,7 +69,10 @@ export default {
       </div>
     </div>
 
-    <div class="row">
+    <div
+      v-if="!isEdit"
+      class="row"
+    >
       <div class="col">
         <AppInput
           id="down_payment"

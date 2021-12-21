@@ -53,12 +53,13 @@ export default {
         <AppViewerItems
           :max-file-size="maxFileSize"
           col="6"
-          :files="items"
+          show-delete-button
+          :attachments="items"
           @delete-file="onDeleteFile"
         >
-          <template #file-info="{file}">
+          <template #attach-info="{ attach }">
             <div class="small text-secondary text-center">
-              ({{ truncate(file.name, { length: 15 }) }} - <b>{{ formatBytes(file.size) }}</b>)
+              ({{ truncate(attach.name, { length: 15 }) }} - <b>{{ formatBytes(attach.size) }}</b>)
             </div>
           </template>
         </AppViewerItems>

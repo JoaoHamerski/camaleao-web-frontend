@@ -44,6 +44,7 @@ export default {
           name="delivery_date"
           type="date"
           placeholder="dd/mm/aaaa"
+          :mask="maskDate"
           :error="form.errors.get('delivery_date')"
         >
           Data de entrega

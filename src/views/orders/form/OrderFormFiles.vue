@@ -19,6 +19,10 @@ export default {
     form: {
       type: Object,
       required: true
+    },
+    isEdit: {
+      type: Boolean,
+      default: false
     }
   },
   data () {
@@ -26,7 +30,8 @@ export default {
       VALID_TYPES,
       maxFileSize: 1048576,
       modal: false,
-      transferedItems: []
+      transferedItems: [],
+      pasteEnabled: false
     }
   },
   watch: {
@@ -36,8 +41,16 @@ export default {
       }
     }
   },
-  async mounted () {
-    document.addEventListener('paste', async (event) => {
+  mounted () {
+    document.addEventListener('paste', this.onPasteEvent)
+  },
+  beforeDestroy () {
+    document.removeEventListener('paste', this.onPasteEvent)
+  },
+  methods: {
+    formatBytes,
+    truncate,
+    async onPasteEvent (event) {
       try {
         const items = event.clipboardData.items
         const files = await this.getBase64Files(items)
@@ -47,12 +60,8 @@ export default {
       } catch (error) {
         this.$toast.error('Não foi possível detectar um arquivo na área de transferência.')
       }
-    })
-  },
-  methods: {
-    formatBytes,
-    truncate,
-    async onFilesSelected (fileList, field) {
+    },
+    async onFileSelected (fileList, field) {
       const base64Files = await this.getBase64Files(fileList)
       const files = this.getOnlyValidFiles(base64Files, VALID_TYPES[field])
 
@@ -81,9 +90,9 @@ export default {
     onCancel () {
       this.transferedItems = []
     },
-    onModalDeleteFile (fileKey) {
+    onModalDeleteFile (key) {
       const index = this.transferedItems.findIndex(
-        item => item.key === fileKey
+        item => item.key === key
       )
 
       this.transferedItems.splice(index, 1)
@@ -117,18 +126,22 @@ export default {
         multiple
         optional
         accept="image/*"
-        @input="onFilesSelected($event, 'art_paths')"
+        @input="onFileSelected($event, 'art_paths')"
       >
         Imagens da arte
       </AppInputFile>
       <AppViewerItems
-        :files="form.art_paths"
+        show-delete-button
+        :attachments="form.art_paths"
         :max-file-size="maxFileSize"
-        @delete-file="onFileDelete($event, 'art_paths')"
+        @delete-attach="onFileDelete($event, 'art_paths')"
       >
-        <template #file-info="{ file }">
+        <template
+          v-if="!isEdit"
+          #attach-info="{ attach }"
+        >
           <div class="small text-secondary text-center">
-            ({{ truncate(file.name, { length: 15 }) }} - <b>{{ formatBytes(file.size) }}</b>)
+            ({{ truncate(attach.name, { length: 15 }) }} - <b>{{ formatBytes(attach.size) }}</b>)
           </div>
         </template>
       </AppViewerItems>
@@ -141,18 +154,22 @@ export default {
         multiple
         optional
         accept="image/*"
-        @input="onFilesSelected($event, 'size_paths')"
+        @input="onFileSelected($event, 'size_paths')"
       >
         Imagens do tamanho
       </AppInputFile>
       <AppViewerItems
-        :files="form.size_paths"
+        show-delete-button
+        :attachments="form.size_paths"
         :max-file-size="maxFileSize"
-        @delete-file="onFileDelete($event, 'size_paths')"
+        @delete-attach="onFileDelete($event, 'size_paths')"
       >
-        <template #file-info="{ file }">
+        <template
+          v-if="!isEdit"
+          #attach-info="{ attach }"
+        >
           <div class="small text-secondary text-center">
-            ({{ truncate(file.name, { length: 15 }) }} - <b>{{ formatBytes(file.size) }}</b>)
+            ({{ truncate(attach.name, { length: 15 }) }} - <b>{{ formatBytes(attach.size) }}</b>)
           </div>
         </template>
       </AppViewerItems>
@@ -164,7 +181,7 @@ export default {
       multiple
       optional
       accept="image/*,application/pdf"
-      @input="onFilesSelected(
+      @input="onFileSelected(
         $event,
         'payment_voucher_paths',
         VALID_TYPES.payment_voucher_paths
@@ -174,18 +191,22 @@ export default {
     </AppInputFile>
 
     <AppViewerItems
+      show-delete-button
       list-type="card"
-      :files="form.payment_voucher_paths"
+      :attachments="form.payment_voucher_paths"
       :max-file-size="maxFileSize"
-      @delete-file="onFileDelete($event, 'payment_voucher_paths')"
+      @delete-attach="onFileDelete($event, 'payment_voucher_paths')"
     >
-      <template #file-info="{ file }">
+      <template
+        v-if="!isEdit"
+        #attach-info="{ attach }"
+      >
         <div class="small text-secondary text-center">
           (<span
             v-tippy="{placement: 'bottom'}"
-            :content="file.name"
-          >{{ truncate(file.name, { length: 15 }) }}
-          </span> - <b>{{ formatBytes(file.size) }}</b>)
+            :content="attach.name"
+          >{{ truncate(attach.name, { length: 15 }) }}
+          </span> - <b>{{ formatBytes(attach.size) }}</b>)
         </div>
       </template>
     </AppViewerItems>

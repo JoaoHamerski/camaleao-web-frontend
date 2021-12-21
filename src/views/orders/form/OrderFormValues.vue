@@ -27,12 +27,16 @@ export default {
     form: {
       type: Object,
       required: true
+    },
+    isEdit: {
+      type: Boolean,
+      default: false
     }
   },
   data () {
     return {
       maskCurrencyBRL: maskCurrencyBRL({ numeralPositiveOnly: true }),
-      maskInteger: maskInteger(),
+      maskInteger: maskInteger({ delimiter: '', numeralDecimalScale: 0 }),
       console
     }
   },
@@ -141,6 +145,7 @@ export default {
           <AppInput
             v-model="form[`quantity_${type.key}`]"
             :name="'quantity_' + type.key"
+            :mask="maskInteger"
             @focus="form.errors.clear('price')"
           />
         </div>
@@ -195,6 +200,7 @@ export default {
     <OrderFormValuesFinal
       :form="form"
       :final-value="finalValue"
+      :is-edit="isEdit"
     />
   </div>
 </template>
