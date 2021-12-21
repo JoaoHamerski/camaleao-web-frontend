@@ -9,7 +9,6 @@ const fallback = (object, prop, fallbackString = 'N/A') => {
   if (isNil(prop)) {
     return object || fallbackString
   }
-
   return isNil(object) ? fallbackString : object[prop]
 }
 
