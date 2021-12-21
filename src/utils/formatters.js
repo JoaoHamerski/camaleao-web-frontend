@@ -53,6 +53,10 @@ export const formatCurrencyBRL = (str, highlightNumerator = false) => {
 }
 
 export const formatDate = (str, format = 'dd/MM/y') => {
+  if (isNil(str)) {
+    return str
+  }
+
   return DateTime
     .fromISO(str)
     .setLocale('pt-br')
