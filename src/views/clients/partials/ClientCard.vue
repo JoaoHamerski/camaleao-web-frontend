@@ -1,5 +1,5 @@
 <script>
-import { faUser } from '@fortawesome/free-solid-svg-icons'
+import { faUser, faEdit, faTrashAlt } from '@fortawesome/free-solid-svg-icons'
 import ClientCardItem from './ClientCardItem'
 
 import { formatPhone } from '@/utils/formatters'
@@ -21,6 +21,10 @@ export default {
     }
   },
   props: {
+    showOptions: {
+      type: Boolean,
+      default: true
+    },
     clientKey: {
       type: [String, Number],
       default: null
@@ -29,7 +33,9 @@ export default {
   data () {
     return {
       icons: {
-        faUser
+        faUser,
+        faEdit,
+        faTrashAlt
       }
     }
   },
@@ -118,6 +124,36 @@ export default {
             <span v-html="$helpers.toBRL(client.total_owing, true)" />
           </template>
         </ClientCardItem>
+
+        <template v-if="showOptions">
+          <hr>
+          <div class="text-subtitle">
+            <div class="mb-1">
+              <a
+                href=""
+                class="text-decoration-none"
+              >
+                <FontAwesomeIcon
+                  :icon="icons.faEdit"
+                  fixed-width
+                />
+                Editar dados
+              </a>
+            </div>
+            <div>
+              <a
+                class="text-decoration-none link-danger"
+                href=""
+              >
+                <FontAwesomeIcon
+                  :icon="icons.faTrashAlt"
+                  fixed-width
+                />
+                Excluir cliente
+              </a>
+            </div>
+          </div>
+        </template>
       </template>
       <template
         v-else
