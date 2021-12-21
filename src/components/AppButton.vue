@@ -59,7 +59,7 @@ function renderMessageBtn (h, context) {
       tabindex="0"
       class={context.block ? 'd-grid' : 'd-inline-block'}
       vTippy={context.tippyConfig}
-      content={context.tooltip}
+      content={context.tooltipMessage}
     >
       { renderBtn(h, context) }
     </span>
@@ -93,6 +93,10 @@ export default {
       default: false
     },
     tooltip: {
+      type: [String, Boolean],
+      default: false
+    },
+    disabledMessage: {
       type: [String, Boolean],
       default: false
     },
@@ -131,8 +135,11 @@ export default {
         this.btnClass
       ])
     },
+    tooltipMessage () {
+      return this.tooltip || this.disabledMessage
+    },
     isDisabled () {
-      return this.loading || this.disabled
+      return this.loading || this.disabled || !!this.disabledMessage
     },
     tippyConfig () {
       return {
@@ -143,7 +150,7 @@ export default {
     }
   },
   render: function (h) {
-    return !isEmpty(this.tooltip)
+    return !isEmpty(this.tooltipMessage)
       ? renderMessageBtn(h, this)
       : renderBtn(h, this)
   }
