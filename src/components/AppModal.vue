@@ -23,6 +23,14 @@ export default {
       type: String,
       default: 'h6'
     },
+    modalDialogClass: {
+      type: String,
+      default: ''
+    },
+    footerClass: {
+      type: String,
+      default: ''
+    },
     color: {
       type: String,
       default: 'primary'
@@ -118,8 +126,8 @@ export default {
     aria-hidden="true"
   >
     <div
-      class="modal-dialog h"
-      :class="modalDialogClasses"
+      class="modal-dialog"
+      :class="[modalDialogClass, ...modalDialogClasses]"
     >
       <div class="modal-content">
         <div
@@ -150,6 +158,7 @@ export default {
         <div
           v-if="$slots.footer"
           class="modal-footer"
+          :class="footerClass"
         >
           <slot name="footer" />
         </div>
