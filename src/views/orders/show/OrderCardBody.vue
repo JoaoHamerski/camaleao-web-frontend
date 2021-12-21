@@ -1,24 +1,29 @@
 <script>
-import OrderClothingTypesTable from './OrderClothingTypesTable'
-import OrderPayments from './OrderPayments'
+import OrderClothingTypesTable from './partials/OrderClothingTypesTable'
+import OrderPayments from './partials/OrderPayments'
+import OrderAttachments from './partials/OrderAttachments'
+import { formatDate } from '@/utils/formatters'
 
 export default {
   components: {
-    OrderClothingTypesTable,
-    OrderPayments
+    OrderPayments,
+    OrderAttachments,
+    OrderClothingTypesTable
   },
   props: {
     order: {
       type: Object,
       required: true
     }
+  },
+  methods: {
+    formatDate
   }
 }
 </script>
 
 <template>
   <!-- eslint-disable vue/no-v-html -->
-
   <div>
     <div>
       <h5 class="fw-bold text-secondary">
@@ -30,7 +35,7 @@ export default {
             Nome
           </div>
           <b class="text-subtitle">
-            {{ $helpers.fallback(order, 'name') }}
+            {{ $helpers.fallback(order.name) }}
           </b>
         </div>
         <div>
@@ -43,6 +48,7 @@ export default {
         </div>
       </div>
     </div>
+
     <div class="d-flex justify-content-between mt-3">
       <div>
         <b class="small text-secondary">Status</b>
@@ -60,27 +66,30 @@ export default {
         </h5>
       </div>
     </div>
+
     <div class="mt-3 d-flex justify-content-between">
       <div>
         <b class="small text-secondary">Data de produção</b>
         <div>
-          {{ $helpers.fallback(order.production_date) }}
+          {{ $helpers.fallback(formatDate(order.production_date)) }}
         </div>
       </div>
       <div>
         <b class="small text-secondary">Data de entrega</b>
         <div>
-          {{ $helpers.fallback(order.delivery_date) }}
+          {{ $helpers.fallback(formatDate(order.delivery_date)) }}
         </div>
       </div>
     </div>
+
     <div class="mt-3">
       <div>
         <b class="small text-secondary">Tipos de roupa</b>
       </div>
       <OrderClothingTypesTable :order="order" />
     </div>
-    <div class="mt-3 d-flex justify-content-around">
+
+    <div class="my-3 d-flex justify-content-around">
       <div>
         <div>
           <b class="small text-secondary">Total pago</b>
@@ -105,14 +114,16 @@ export default {
         />
       </div>
     </div>
-    <div class="mt-5">
-      <h5 class="fw-bold text-secondary">
-        Pagamentos
-      </h5>
-      <OrderPayments
-        :payments="order.payments"
-        @open-modal="$emit('open-modal', $event)"
-      />
-    </div>
+
+    <OrderPayments
+      class="mb-3"
+      :payments="order.payments"
+      @open-modal="$emit('open-modal', $event)"
+    />
+
+    <OrderAttachments
+      class="mb-3"
+      :order="order"
+    />
   </div>
 </template>
