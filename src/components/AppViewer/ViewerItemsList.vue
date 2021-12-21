@@ -1,30 +1,12 @@
 <script>
+import { has } from 'lodash-es'
+
 import { faTrash } from '@fortawesome/free-solid-svg-icons'
 import { formatBytes } from '@/utils/formatters'
+import viewerMixin from './viewerMixin'
 
 export default {
-  props: {
-    files: {
-      type: Array,
-      default: () => ([])
-    },
-    isInvalid: {
-      type: Function,
-      default: () => {}
-    },
-    hideDeleteButton: {
-      type: Boolean,
-      default: false
-    },
-    onDeleteClick: {
-      type: Function,
-      default: () => {}
-    },
-    maxFileSize: {
-      type: Number,
-      default: null
-    }
-  },
+  mixins: [viewerMixin],
   data () {
     return {
       icons: {
@@ -33,7 +15,10 @@ export default {
     }
   },
   methods: {
-    formatBytes
+    formatBytes,
+    hasName (file) {
+      return has(file, 'name')
+    }
   }
 }
 </script>
@@ -47,26 +32,27 @@ export default {
       speed="even-faster"
     >
       <li
-        v-for="file in files"
-        :key="file.key"
+        v-for="(attach, index) in attachments"
+        :key="getKey(attach)"
         class="list-group-item"
       >
         <div class="d-flex justify-content-between">
           <div class="text-subtitle text-primary">
-            {{ file.name }}
+            <span v-if="hasName(attach)">{{ attach.name }}</span>
+            <span v-else>Anexo {{ index + 1 }}</span>
           </div>
           <div>
             <FontAwesomeIcon
               :icon="icons.faTrash"
               class="link-danger clickable"
-              @click="onDeleteClick(file.key)"
+              @click="onDeleteClick(attach)"
             />
           </div>
         </div>
         <div>
           <slot
-            name="file-info"
-            :file="file"
+            name="attach-info"
+            :attach="attach"
           />
         </div>
       </li>
