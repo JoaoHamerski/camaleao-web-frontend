@@ -2,7 +2,7 @@
 import { faList, faUserPlus } from '@fortawesome/free-solid-svg-icons'
 import { formatPhone } from '@/utils/formatters'
 
-import ClientModalNew from './index/ClientModalNew'
+import ClientModalNew from '../partials/ClientModalNew'
 
 export default {
   components: {

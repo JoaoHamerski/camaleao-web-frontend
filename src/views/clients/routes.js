@@ -3,7 +3,7 @@ import Layout from './Layout'
 import role from '@/middleware/role'
 import roles from '@/constants/roles'
 
-import TheClients from './TheClients'
+import TheClients from './index/TheClients'
 import TheClient from './show/TheClient'
 
 const children = [

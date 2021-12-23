@@ -4,10 +4,20 @@ import role from '@/middleware/role'
 import roles from '@/constants/roles'
 
 import TheOrder from './show/TheOrder'
+import TheOrders from './index/TheOrders'
 import TheOrderNew from './create/TheOrderNew'
 import TheOrderEdit from './edit/TheOrderEdit'
 
 const children = [
+  {
+    name: 'orders.index',
+    path: '/pedidos',
+    component: TheOrders,
+    meta: {
+      middleware: [role],
+      roles: [roles.ATENDIMENTO, roles.GERENCIA]
+    }
+  },
   {
     name: 'orders.create',
     path: '/clientes/:clientKey/novo-pedido',

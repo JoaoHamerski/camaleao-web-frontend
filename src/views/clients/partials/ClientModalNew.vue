@@ -1,6 +1,6 @@
 <script>
 import { faUserPlus } from '@fortawesome/free-solid-svg-icons'
-import ClientForm from './ClientForm'
+import ClientForm from '../partials/ClientForm'
 
 export default {
   components: {

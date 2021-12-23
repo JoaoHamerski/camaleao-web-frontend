@@ -2,7 +2,8 @@
 import { mapGetters, mapActions } from 'vuex'
 import {
   faList,
-  faSignOutAlt
+  faSignOutAlt,
+  faBoxes
 } from '@fortawesome/free-solid-svg-icons'
 
 import SidebarItem from './SidebarItem'
@@ -17,7 +18,8 @@ export default {
     return {
       icons: {
         faList,
-        faSignOutAlt
+        faSignOutAlt,
+        faBoxes
       }
     }
   },
@@ -44,6 +46,13 @@ export default {
         :to="{name: 'clients.index'}"
       >
         Clientes
+      </SidebarItem>
+
+      <SidebarItem
+        :icon="icons.faBoxes"
+        :to="{name: 'orders.index'}"
+      >
+        Pedidos
       </SidebarItem>
 
       <SidebarItem
