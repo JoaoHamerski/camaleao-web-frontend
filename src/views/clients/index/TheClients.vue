@@ -57,12 +57,6 @@ export default {
     refresh () {
       this.$chimera._clients.reload()
     },
-    redirectToClient (client) {
-      this.$router.push({
-        name: 'clients.show',
-        params: { clientKey: client.id }
-      })
-    },
     handleSearch () {
       const { option, search } = this.form
 
@@ -72,6 +66,22 @@ export default {
     },
     clearSearch () {
       this.$chimera._clients.reload()
+    },
+    redirectToClient (client) {
+      this.$router.push({
+        name: 'clients.show',
+        params: { clientKey: client.id }
+      })
+    },
+    clientUrl (client) {
+      const resolvedRoute = this.$router.resolve({
+        name: 'clients.show',
+        params: {
+          clientKey: client.id
+        }
+      })
+
+      return resolvedRoute.href
     }
   }
 }
@@ -86,7 +96,7 @@ export default {
         data-bs-target="#clientModalNew"
       >
         <FontAwesomeIcon
-          class="fa-fw mr-2"
+          fixed-width
           :icon="icons.faUserPlus"
         />
         Novo cliente
@@ -150,6 +160,7 @@ export default {
         <AppTable
           :headers="headers"
           :items="clients"
+          :row-url="clientUrl"
           @click:item="redirectToClient"
         >
           <template #[`items.city`]="{ item }">

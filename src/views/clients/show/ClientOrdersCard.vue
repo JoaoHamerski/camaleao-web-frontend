@@ -4,12 +4,12 @@ import {
   faQuestionCircle
 } from '@fortawesome/free-solid-svg-icons'
 import { TippyComponent } from 'vue-tippy'
-import ClientOrdersCardLegend from './ClientOrdersCardLegend'
+import OrdersListLegend from '../../orders/partials/OrdersListLegend'
 
 export default {
   components: {
-    ClientOrdersCardLegend,
-    tippy: TippyComponent
+    OrdersListLegend,
+    Tippy: TippyComponent
   },
   props: {
     isLoading: {
@@ -42,6 +42,17 @@ export default {
     }
   },
   methods: {
+    orderUrl (order) {
+      const resolvedRoute = this.$router.resolve({
+        name: 'orders.show',
+        params: {
+          clientKey: this.$route.params.clientKey,
+          orderKey: order.code
+        }
+      })
+
+      return resolvedRoute.href
+    },
     rowClass (order) {
       if (order.states.includes('PRE-REGISTERED')) {
         return 'table-warning'
@@ -85,15 +96,15 @@ export default {
           Pedidos
         </div>
         <div>
-          <tippy
+          <Tippy
             to="icon-question"
             placement="bottom"
             arrow
             theme="light-border"
             :duration="150"
           >
-            <ClientOrdersCardLegend />
-          </tippy>
+            <OrdersListLegend />
+          </Tippy>
           <FontAwesomeIcon
             name="icon-question"
             :icon="icons.faQuestionCircle"
@@ -106,6 +117,7 @@ export default {
         :headers="headers"
         :items="orders"
         :row-class="rowClass"
+        :row-url="orderUrl"
         @click:item="redirectToOrder"
       />
     </template>
