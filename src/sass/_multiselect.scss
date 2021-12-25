@@ -7,7 +7,7 @@
   
   &.multiselect--active {
     .multiselect__input {
-      min-height: 23px;
+      min-height: 20px;
     }
   }
 
@@ -18,9 +18,10 @@
   
   .multiselect__tags {
     padding-left: 12px;
-    height: $input-height;
+    min-height: $input-height;
     border: 1px solid $input-border-color;
     border-radius: $input-border-radius;
+    padding: 5px 40px 0 8px;
     
     .multiselect__single {
       font-size: $input-font-size;
@@ -32,6 +33,7 @@
   .multiselect__placeholder {
     font-size: $input-font-size;
     padding-top: 0;
+    margin-bottom: 0;
     color: $input-placeholder-color;
   }
 }
