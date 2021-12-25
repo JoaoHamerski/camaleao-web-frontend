@@ -41,6 +41,7 @@ const renderTableCell = (h, context, item) => {
       <TableCell
         isUsingSlot={context.hasSlot(`items.${header.value}`)}
         hasRowLinks={context.hasRowLinks}
+        url={context.rowUrl(item)}
         align={header.align}
         format={header.format}
         key={index}
@@ -93,6 +94,10 @@ export default {
     TableCell
   },
   props: {
+    rowUrl: {
+      type: Function,
+      default: () => ''
+    },
     rowClass: {
       type: Function,
       default: () => {}

@@ -34,7 +34,7 @@ function renderValue (h, context) {
 function renderLinkCell (h, context) {
   return (
     <a
-      href="#"
+      href={context.url}
       class={classNames([
         'd-block text-decoration-none',
         !context.hasDecoration && 'text-dark'
@@ -62,6 +62,10 @@ export default {
     isUsingSlot: {
       type: Boolean,
       default: false
+    },
+    url: {
+      type: String,
+      default: ''
     },
     value: undefined,
     format: {
