@@ -62,7 +62,6 @@ export default {
     },
     collapsibleCardIconClass () {
       return classNames([
-        'fas fa-caret-down text-white',
         'card-collapsible-icon',
         {
           'card-icon-expanded': !this.isCollapsed
@@ -103,3 +102,16 @@ export default {
   }
 }
 </script>
+
+<style lang="scss" scoped>
+
+::v-deep {
+  .card-collapsible-icon {
+    transition: .25s;
+
+    &.card-icon-expanded {
+      transform: rotate(- 90deg)
+    }
+  }
+}
+</style>
