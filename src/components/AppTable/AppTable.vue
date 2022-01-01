@@ -72,7 +72,7 @@ const renderTableBody = (h, context) => {
             <tr
               key={index}
               class={context.rowClass(item)}
-              vOn:click={() => { context.rowClicked(item) }}
+              vOn:mousedown={(e) => { context.rowClicked(e, item) }}
             >
               { renderTableCell(h, context, item) }
             </tr>
@@ -138,8 +138,10 @@ export default {
     }
   },
   methods: {
-    rowClicked (item) {
-      this.$emit('click:item', item)
+    rowClicked (event, item) {
+      if (event.which === 1) {
+        this.$emit('click:item', item)
+      }
     },
     hasSlot (name) {
       return !!(this.$slots[name] || this.$scopedSlots[name])
