@@ -5,7 +5,10 @@ export default {
       type: String,
       required: true
     },
-    value: undefined
+    value: {
+      type: Boolean,
+      default: false
+    }
   }
 }
 </script>
@@ -17,7 +20,7 @@ export default {
       class="form-check-input"
       type="checkbox"
       :value="value"
-      @input="$emit('input', $event.target.value)"
+      @input="$emit('input', $event.target.checked)"
     >
     <label
       v-if="$slots.default"
