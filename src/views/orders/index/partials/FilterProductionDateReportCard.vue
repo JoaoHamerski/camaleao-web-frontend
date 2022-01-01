@@ -1,11 +1,21 @@
 <script>
 import { faClipboardList } from '@fortawesome/free-solid-svg-icons'
 import { maskDate } from '@/utils/masks'
+import { isNil, pickBy } from 'lodash-es'
+
+import ModalReport from './ModalReport'
+
+const PRODUCTION_DATE_REPORT_PATH_URL = '/api/orders/reports/production-date'
 
 export default {
+  components: {
+    ModalReport
+  },
   data () {
     return {
       maskDate,
+      src: '',
+      modal: false,
       filter: {
         production_date: '',
         order: 'is_open'
@@ -16,11 +26,34 @@ export default {
     }
   },
   computed: {
+    apiUrl () {
+      return this.$store.getters.apiURL
+    },
     orderOptions () {
       return [
         { id: 'is_open_2', label: 'Em aberto', value: 'is_open' },
         { id: 'all_2', label: 'Todos', value: 'all' }
       ]
+    }
+  },
+  methods: {
+    generateURL () {
+      const url = new URL(this.apiUrl + PRODUCTION_DATE_REPORT_PATH_URL)
+      const filters = { ...this.filter }
+      const validFilters = pickBy(filters, item => !isNil(item) && item !== '')
+
+      url.search = new URLSearchParams(validFilters)
+
+      return url.toString()
+    },
+    onGenerateReportClick () {
+      const url = this.generateURL()
+
+      this.src = url
+      this.modal = true
+    },
+    onModalHidden () {
+      this.src = ''
     }
   }
 }
@@ -42,6 +75,13 @@ export default {
       </h6>
     </template>
     <template #body>
+      <ModalReport
+        id="productionDateReportModal"
+        v-model="modal"
+        :src="src"
+        @hidden="onModalHidden"
+      />
+
       <h6 class="fw-bold">
         Filtros
       </h6>
@@ -67,7 +107,10 @@ export default {
         />
       </div>
 
-      <AppButton outlined>
+      <AppButton
+        outlined
+        @click.prevent="onGenerateReportClick"
+      >
         Gerar relatório
       </AppButton>
     </template>
