@@ -52,7 +52,7 @@ export const formatCurrencyBRL = (str, highlightNumerator = false) => {
   return formatted
 }
 
-export const formatDate = (str, format = 'dd/MM/y') => {
+export const formatDatetime = (str, format = 'dd/MM/y') => {
   if (isNil(str)) {
     return str
   }
@@ -84,7 +84,7 @@ export const formatBytes = (bytes, decimals = 2) => {
 
 export default {
   formatCurrencyBRL,
-  formatDate,
+  formatDatetime,
   formatBytes,
   formatPhone
 }

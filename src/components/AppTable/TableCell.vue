@@ -10,7 +10,7 @@ import format from '@/utils/formatters'
 const VALID_FORMATTERS = [
   'currencyBRL',
   'phone',
-  'date'
+  'datetime'
 ]
 
 function renderValue (h, context) {
@@ -25,7 +25,7 @@ function renderValue (h, context) {
   }
 
   if (!isNil(context.format)) {
-    return format[functionName](context.value)
+    return format[functionName](context.value, context.formatting)
   }
 
   return context.value
@@ -73,6 +73,7 @@ export default {
       default: null,
       validator: (value) => VALID_FORMATTERS.indexOf(value) !== -1
     },
+    formatting: undefined,
     hasDecoration: {
       type: Boolean,
       default: false
