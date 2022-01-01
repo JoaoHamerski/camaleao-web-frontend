@@ -35,9 +35,9 @@ export default {
 
 <template>
   <ViewerFileModal
-    modal-dialog-class="modal-fullscreen"
-    :src="src"
     :value="value"
+    :src="src"
+    modal-dialog-class="modal-fullscreen"
     v-on="$listeners"
   >
     <template #title>
