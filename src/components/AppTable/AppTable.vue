@@ -4,6 +4,15 @@ import classNames from 'classnames'
 import TableCell from './TableCell'
 import TableEmpty from './TableEmpty'
 
+const tableHeadContent = (h, context, header) => {
+  if (!context.hasSlot(`headers.${header.value}`)) {
+    return header.text
+  }
+
+  return context.$scopedSlots[`headers.${header.value}`]({ header })
+  || context.$slots[`headers.${header.value}`]
+}
+
 const renderTableHead = (h, context) => {
   return (
     <thead>
@@ -14,7 +23,7 @@ const renderTableHead = (h, context) => {
               <th
                 key={index}
                 class={`text-${header.align}`}>
-                { header.text }
+                { tableHeadContent(h, context, header) }
               </th>
             )
           })
@@ -44,6 +53,7 @@ const renderTableCell = (h, context, item) => {
         url={context.rowUrl(item)}
         align={header.align}
         format={header.format}
+        formatting={header.formatting}
         key={index}
         value={item[header.value]}
       >
@@ -62,7 +72,7 @@ const renderTableBody = (h, context) => {
             <tr
               key={index}
               class={context.rowClass(item)}
-              vOn:click_prevent={() => { context.rowClicked(item) }}
+              vOn:click={() => { context.rowClicked(item) }}
             >
               { renderTableCell(h, context, item) }
             </tr>
