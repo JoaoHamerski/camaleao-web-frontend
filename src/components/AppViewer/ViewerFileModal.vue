@@ -1,6 +1,10 @@
 <script>
 export default {
   props: {
+    id: {
+      type: String,
+      default: 'viewerFileModal'
+    },
     src: {
       type: String,
       required: true
@@ -10,20 +14,35 @@ export default {
       default: ''
     }
   },
+  data () {
+    return {
+      isLoading: true
+    }
+  },
   computed: {
     modalDialogClasses () {
       return 'modal-lg ' + this.modalDialogClass
+    }
+  },
+  methods: {
+    onLoad () {
+      this.isLoading = false
+    },
+    enableLoading () {
+      this.isLoading = true
     }
   }
 }
 </script>
 <template>
   <AppModal
-    id="viewerFileModal"
+    :id="id"
     :modal-dialog-class="modalDialogClasses"
     footer-class="bg-secondary"
     v-bind="$attrs"
     v-on="$listeners"
+    @show="enableLoading"
+    @hidden="enableLoading"
   >
     <template
       v-if="!$slots.title"
@@ -31,23 +50,31 @@ export default {
     >
       Visualização de arquivo
     </template>
+
     <template
       v-else
       #title
     >
       <slot name="title" />
     </template>
+
     <template #body>
       <div
+        v-show="!isLoading"
         class="text-center mb-3 responsive-iframe-container"
       >
         <iframe
           class="responsive-iframe"
           :src="src"
           allowfullscreen
+          @load="onLoad"
         />
       </div>
+      <div v-show="isLoading">
+        <AppLoading />
+      </div>
     </template>
+
     <template #footer>
       <AppButton
         color="light"
