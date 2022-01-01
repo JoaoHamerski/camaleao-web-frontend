@@ -3,23 +3,31 @@ import { mapGetters, mapActions } from 'vuex'
 import {
   faList,
   faSignOutAlt,
-  faBoxes
+  faBoxes,
+  faCashRegister,
+  faDollarSign,
+  faFunnelDollar
 } from '@fortawesome/free-solid-svg-icons'
 
 import SidebarItem from './SidebarItem'
 import SidebarHeader from './SidebarHeader'
+import SidebarItemCollapsible from './SidebarItemCollapsible'
 
 export default {
   components: {
     SidebarHeader,
-    SidebarItem
+    SidebarItem,
+    SidebarItemCollapsible
   },
   data () {
     return {
       icons: {
         faList,
         faSignOutAlt,
-        faBoxes
+        faBoxes,
+        faCashRegister,
+        faDollarSign,
+        faFunnelDollar
       }
     }
   },
@@ -54,6 +62,36 @@ export default {
       >
         Pedidos
       </SidebarItem>
+
+      <SidebarItem
+        :icon="icons.faCashRegister"
+        :to="{name: 'daily-cash.index'}"
+      >
+        Caixa diário
+      </SidebarItem>
+
+      <SidebarItemCollapsible
+        id="financial"
+        :icon="icons.faDollarSign"
+      >
+        <template #collapsible-title>
+          Financeiro
+        </template>
+        <template #collapsible-items>
+          <SidebarItem
+            :icon="icons.faFunnelDollar"
+            :to="{name: 'expenses.index'}"
+          >
+            Despesas
+          </SidebarItem>
+          <SidebarItem
+            :icon="icons.faCashRegister"
+            :to="{name: 'cash-flow.index'}"
+          >
+            Fluxo de caixa
+          </SidebarItem>
+        </template>
+      </SidebarItemCollapsible>
 
       <SidebarItem
         to="/sair"
