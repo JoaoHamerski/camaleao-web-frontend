@@ -8,6 +8,9 @@ import TheTest from '@/views/TheTest'
 import authRoutes from '@/views/auth/routes'
 import clientsRoutes from '@/views/clients/routes'
 import ordersRoutes from '@/views/orders/routes'
+import dailyCashRoutes from '@/views/daily-cash/routes'
+import cashFlowRoutes from '@/views/cash-flow/routes'
+import expensesRoutes from '@/views/expenses/routes'
 
 Vue.use(VueRouter)
 
@@ -28,7 +31,10 @@ const routes = [
   },
   ...authRoutes,
   ...clientsRoutes,
-  ...ordersRoutes
+  ...ordersRoutes,
+  ...dailyCashRoutes,
+  ...cashFlowRoutes,
+  ...expensesRoutes
 ]
 
 const router = new VueRouter({
