@@ -14,6 +14,11 @@ export default {
       default: false
     }
   },
+  computed: {
+    isCollapsibleItem () {
+      return this.$parent.$options.name === 'SidebarItemCollapsible'
+    }
+  },
   methods: {
     redirect (event, navigate) {
       if (this.disabledRedirect) {
@@ -34,9 +39,13 @@ export default {
   >
     <li
       class="list-group-item list-sidebar-item px-4 clickable"
-      :class="{'active': isActive}"
+      :class="{'active': isActive }"
       @click="e => redirect(e, navigate)"
     >
+      <span
+        v-show="isCollapsibleItem"
+        class="px-2"
+      />
       <FontAwesomeIcon
         v-if="icon"
         :icon="icon"
