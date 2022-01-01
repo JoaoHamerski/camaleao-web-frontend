@@ -1,6 +1,6 @@
 <script>
 import { faDollarSign } from '@fortawesome/free-solid-svg-icons'
-import { formatCurrencyBRL, formatDate } from '@/utils/formatters'
+import { formatCurrencyBRL, formatDatetime } from '@/utils/formatters'
 import OrderPaymentForm from './OrderPaymentForm'
 
 export default {
@@ -28,7 +28,7 @@ export default {
   data () {
     return {
       formatCurrencyBRL,
-      formatDate,
+      formatDatetime,
       icons: {
         faDollarSign
       }
@@ -64,7 +64,7 @@ export default {
         Pagamento de
         <b>{{ formatCurrencyBRL(payment.value) }}</b>
         em
-        <b>{{ formatDate(payment.date) }}</b>
+        <b>{{ formatDatetime(payment.date) }}</b>
       </div>
       <OrderPaymentForm
         :is-edit="isEdit"

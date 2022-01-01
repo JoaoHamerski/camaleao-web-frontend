@@ -1,7 +1,7 @@
 <script>
 
 import Form from '@/utils/Form'
-import { formatDate } from '@/utils/formatters'
+import { formatDatetime } from '@/utils/formatters'
 import { handleError, handleSuccess } from '@/utils/forms'
 import { map, pick } from 'lodash-es'
 
@@ -160,8 +160,8 @@ export default {
 
       fields.discount = this.$helpers.toBRL(fields.discount)
       fields.price = this.$helpers.toBRL(fields.price)
-      fields.production_date = formatDate(fields.production_date)
-      fields.delivery_date = formatDate(fields.delivery_date)
+      fields.production_date = formatDatetime(fields.production_date)
+      fields.delivery_date = formatDatetime(fields.delivery_date)
 
       for (const field in fields) {
         this.form[field] = fields[field]

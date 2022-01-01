@@ -2,7 +2,7 @@
 import OrderClothingTypesTable from './partials/OrderClothingTypesTable'
 import OrderPayments from './partials/OrderPayments'
 import OrderAttachments from './partials/OrderAttachments'
-import { formatDate } from '@/utils/formatters'
+import { formatDatetime } from '@/utils/formatters'
 
 export default {
   components: {
@@ -17,7 +17,7 @@ export default {
     }
   },
   methods: {
-    formatDate
+    formatDatetime
   }
 }
 </script>
@@ -71,13 +71,13 @@ export default {
       <div>
         <b class="small text-secondary">Data de produção</b>
         <div>
-          {{ $helpers.fallback(formatDate(order.production_date)) }}
+          {{ $helpers.fallback(formatDatetime(order.production_date)) }}
         </div>
       </div>
       <div>
         <b class="small text-secondary">Data de entrega</b>
         <div>
-          {{ $helpers.fallback(formatDate(order.delivery_date)) }}
+          {{ $helpers.fallback(formatDatetime(order.delivery_date)) }}
         </div>
       </div>
     </div>

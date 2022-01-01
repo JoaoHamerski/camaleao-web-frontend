@@ -1,6 +1,6 @@
 <script>
 import { faEdit } from '@fortawesome/free-solid-svg-icons'
-import { formatDate } from '@/utils/formatters'
+import { formatDatetime } from '@/utils/formatters'
 import ModalOrderPayment from '../../partials/ModalOrderPayment'
 
 const PAYMENT_STATE = {
@@ -28,7 +28,7 @@ export default {
     }
   },
   methods: {
-    formatDate,
+    formatDatetime,
     getPaymentState (payment) {
       return PAYMENT_STATE[payment.is_confirmed]
     },
@@ -66,7 +66,7 @@ export default {
               <div>
                 <b>{{ $helpers.toBRL(payment.value) }}</b>
                 em
-                <b>{{ formatDate(payment.date) }}</b>
+                <b>{{ formatDatetime(payment.date) }}</b>
                 via
                 <b>{{ payment.payment_via.name }}</b>
                 <span

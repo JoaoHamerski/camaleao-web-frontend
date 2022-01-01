@@ -32,11 +32,6 @@ export default {
           page: this.page,
           sort: this.sort,
           code: this.code
-        },
-        on: {
-          error ({ error }) {
-            console.log(error)
-          }
         }
       }
     }
@@ -60,8 +55,8 @@ export default {
         { text: 'Quantidade', value: 'quantity' },
         { text: 'Valor total', value: 'price', format: 'currencyBRL' },
         { text: 'Total pago', value: 'total_paid', format: 'currencyBRL' },
-        { text: 'Produção', value: 'producton_date', format: 'date' },
-        { text: 'Entrega', value: 'delivery_date', format: 'date' }
+        { text: 'Produção', value: 'producton_date', format: 'datetime' },
+        { text: 'Entrega', value: 'delivery_date', format: 'datetime' }
       ]
     },
     orders () {

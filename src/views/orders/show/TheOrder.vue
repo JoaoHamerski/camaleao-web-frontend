@@ -2,7 +2,7 @@
 
 import ClientCard from '@/views/clients/partials/ClientCard'
 import { faArrowAltCircleLeft, faBoxOpen } from '@fortawesome/free-solid-svg-icons'
-import { formatDate } from '@/utils/formatters'
+import { formatDatetime } from '@/utils/formatters'
 
 import OrderHeader from './OrderHeader'
 import OrderCardBody from './OrderCardBody'
@@ -72,7 +72,7 @@ export default {
     }
   },
   methods: {
-    formatDate,
+    formatDatetime,
     openModalPaymentOrder ({ payment, isEdit }) {
       this.modalOrderPayment.isEdit = isEdit
       this.modalOrderPayment.payment = payment || null
@@ -203,7 +203,7 @@ export default {
             >
               PEDIDO FECHADO
               <div class="small">
-                Em {{ formatDate(order.closed_at) }}
+                Em {{ formatDatetime(order.closed_at) }}
               </div>
             </div>
           </h6>
