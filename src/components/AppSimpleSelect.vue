@@ -4,6 +4,7 @@ import { isEmpty, isNil } from 'lodash-es'
 export default {
   props: {
     id: undefined,
+
     error: {
       type: [Boolean, String],
       default: false
@@ -23,6 +24,10 @@ export default {
     name: {
       type: String,
       required: true
+    },
+    placeholder: {
+      type: String,
+      default: 'Selecione uma opção'
     },
     valueProp: {
       type: String,
@@ -99,7 +104,7 @@ export default {
         v-if="!hideDefaultOption"
         value=""
       >
-        Seleciona uma opção
+        {{ placeholder }}
       </option>
       <option
         v-for="(option, index) in options"
