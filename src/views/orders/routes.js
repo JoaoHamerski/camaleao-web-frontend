@@ -3,10 +3,25 @@ import Layout from './Layout'
 import role from '@/middleware/role'
 import roles from '@/constants/roles'
 
-import TheOrder from './show/TheOrder'
-import TheOrders from './index/TheOrders'
-import TheOrderNew from './create/TheOrderNew'
-import TheOrderEdit from './edit/TheOrderEdit'
+const TheOrder = () => import(
+  /* webpackChunkName: "orders" */
+  './show/TheOrder'
+)
+
+const TheOrders = () => import(
+  /* webpackChunkName: "orders" */
+  './index/TheOrders'
+)
+
+const TheOrderNew = () => import(
+  /* webpackChunkName: "orders" */
+  './create/TheOrderNew'
+)
+
+const TheOrderEdit = () => import(
+  /* webpackChunkName: "orders" */
+  './edit/TheOrderEdit'
+)
 
 const children = [
   {

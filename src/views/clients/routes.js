@@ -3,8 +3,15 @@ import Layout from './Layout'
 import role from '@/middleware/role'
 import roles from '@/constants/roles'
 
-import TheClients from './index/TheClients'
-import TheClient from './show/TheClient'
+const TheClients = () => import(
+  /* webpackChunkName: "clients" */
+  './index/TheClients'
+)
+
+const TheClient = () => import(
+  /* webpackChunkName: "clients" */
+  './show/TheClient'
+)
 
 const children = [
   {
