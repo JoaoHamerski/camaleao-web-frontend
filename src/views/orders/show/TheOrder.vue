@@ -9,7 +9,11 @@ import OrderCardBody from './OrderCardBody'
 import ModalOrderPayment from '../partials/ModalOrderPayment'
 import ModalOrderStatus from '../partials/ModalOrderStatus'
 import ModalOrderDelete from '../partials/ModalOrderDelete'
-import ModalOrderReport from '../partials/ModalOrderReport'
+import ModalReport from '../partials/ModalReport'
+
+const getOrderPathUrl = (clientKey, orderKey) => {
+  return `/api/clients/${clientKey}/orders/${orderKey}/generate-report`
+}
 
 export default {
   metaInfo () {
@@ -24,7 +28,7 @@ export default {
     ModalOrderPayment,
     ModalOrderStatus,
     ModalOrderDelete,
-    ModalOrderReport
+    ModalReport
   },
   chimera: {
     _order () {
@@ -52,7 +56,8 @@ export default {
         value: false
       },
       modalOrderReport: {
-        value: false
+        value: false,
+        src: ''
       },
       icons: {
         faArrowAltCircleLeft,
@@ -69,43 +74,48 @@ export default {
     },
     orderKey () {
       return this.$route.params.orderKey
+    },
+    apiUrl () {
+      return this.$store.getters.apiURL
     }
   },
   methods: {
     formatDatetime,
+    generateURL () {
+      const url = new URL(this.apiUrl + getOrderPathUrl(this.clientKey, this.orderKey))
+
+      return url.toString()
+    },
+    onGenerateReportClick () {
+      const url = this.generateURL()
+
+      this.modalOrderReport.src = url
+      this.modalOrderReport.value = true
+    },
     openModalPaymentOrder ({ payment, isEdit }) {
       this.modalOrderPayment.isEdit = isEdit
       this.modalOrderPayment.payment = payment || null
       this.modalOrderPayment.value = true
     },
-    openModalOrderStatus () {
-      this.modalOrderStatus.value = true
+    openModal (modal) {
+      this[modal].value = true
     },
-    openModalOrderDelete () {
-      this.modalOrderDelete.value = true
+    closeModal (modal) {
+      this[modal].value = false
     },
-    openModalOrderReport () {
-      this.modalOrderReport.value = true
-    },
-    closeModalOrderPayment () {
-      this.modalOrderPayment.value = false
-    },
-    closeModalOrderStatus () {
-      this.modalOrderStatus.value = false
-    },
-    closeModalOrderDelete () {
-      this.modalOrderDelete.value = false
+    onModalOrderReportHidden () {
+      this.modalOrderReport.src = ''
     },
     onPayment () {
-      this.closeModalOrderPayment()
+      this.closeModal('modalOrderPayment')
       this.refresh()
     },
     onStatusUpdated () {
-      this.closeModalOrderStatus()
+      this.closeModal('modalOrderStatus')
       this.refresh()
     },
     onOrderDeleted () {
-      this.closeModalOrderDelete()
+      this.closeModal('modalOrderDelete')
       this.$nextTick(() => {
         this.redirectToClient()
       })
@@ -167,18 +177,21 @@ export default {
         @success="onOrderDeleted"
       />
 
-      <ModalOrderReport
+      <ModalReport
         v-if="order"
+        id="orderShow"
         v-model="modalOrderReport.value"
+        :src="modalOrderReport.src"
         :order="order"
+        @hidden="onModalOrderReportHidden"
       />
 
       <OrderHeader
         :order="order"
-        @open-payment-modal="openModalPaymentOrder"
-        @open-status-modal="openModalOrderStatus"
-        @open-delete-order-modal="openModalOrderDelete"
-        @open-report-modal="openModalOrderReport"
+        @open-payment-modal="openModal('modalOrderPayment')"
+        @open-status-modal="openModal('modalOrderStatus')"
+        @open-delete-order-modal="openModal('modalOrderDelete')"
+        @open-report-modal="onGenerateReportClick"
         @refresh="refresh"
       />
 

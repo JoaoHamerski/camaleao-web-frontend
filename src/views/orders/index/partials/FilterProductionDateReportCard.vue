@@ -3,7 +3,7 @@ import { faClipboardList } from '@fortawesome/free-solid-svg-icons'
 import { maskDate } from '@/utils/masks'
 import { isNil, pickBy } from 'lodash-es'
 
-import ModalReport from './ModalReport'
+import ModalReport from '../../partials/ModalReport'
 
 const PRODUCTION_DATE_REPORT_PATH_URL = '/api/orders/reports/production-date'
 
