@@ -9,8 +9,8 @@ export default {
         priority: 'Prioritários',
         older: 'Mais antigos',
         newer: 'Mais recentes',
-        'production-date': 'Data de entrega',
-        'pre-register': 'Pré-registro'
+        production_date: 'Data de entrega',
+        pre_register: 'Pré-registro'
       },
       icons: {
         faExclamationCircle
@@ -23,11 +23,11 @@ export default {
         priority: '<strong>Ordem de cadastro mais antigo primeiro</strong>, apenas pedidos em aberto',
         older: '<strong>Ordem de cadastro mais antigos primeiros</strong>, incluindo pedidos fechados',
         newer: '<strong>Ordem de cadastro mais recente primeiros</strong>, incluindo pedidos fechados',
-        'production-date': `
+        production_date: `
           <strong>Ordem de data de entrega mais antiga primeiro</strong>, apenas pedidos em aberto
           <br/>(pedidos sem data de entrega informada ficam por último).
         `,
-        'pre-register': '<strong>Pedidos que precisam ter seus dados completados.</strong>'
+        pre_register: '<strong>Pedidos que precisam ter seus dados completados.</strong>'
       }
     }
   },
@@ -49,12 +49,12 @@ export default {
     >
       <template v-for="name, key in radios">
         <input
-          :id="key"
-          :key="key + 'Input'"
+          :id="`${key}__sort`"
+          :key="key + '__input'"
           v-model="selected"
           type="radio"
           class="btn-check"
-          :name="key"
+          :name="`${key}__sort`"
           :value="key"
           autocomplete="off"
           @change="onOptionChange"
@@ -63,14 +63,14 @@ export default {
           :key="key + 'Label'"
           class="btn btn-outline-primary"
           :class="selected === key && 'fw-bold'"
-          :for="key"
+          :for="`${key}__sort`"
         >{{ name }}</label>
       </template>
     </div>
 
     <div
       class="text-secondary small"
-      :class="selected === 'pre-register' && 'text-danger'"
+      :class="selected === 'pre_register' && 'text-danger'"
     >
       <FontAwesomeIcon
         class="me-1"
