@@ -1,6 +1,15 @@
 /// Multiselect library styling to match system style.
 
 .multiselect {
+  min-height: 36px !important;
+  .multiselect__select {
+    height: 35px;;
+  }
+  
+  .multiselect__spinner {
+    height: 34px;
+  }
+  
   &.is-invalid .multiselect__tags {
     border: 1px solid $danger;
   }
