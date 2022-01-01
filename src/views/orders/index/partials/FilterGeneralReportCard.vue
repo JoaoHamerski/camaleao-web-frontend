@@ -1,8 +1,16 @@
 <script>
 import { faClipboardList } from '@fortawesome/free-solid-svg-icons'
 import { maskDate } from '@/utils/masks'
+import { isEmpty, isNil, pickBy } from 'lodash-es'
+
+import ModalReport from './ModalReport'
+
+const GENERAL_REPORT_PATH_URL = '/api/orders/reports/general'
 
 export default {
+  components: {
+    ModalReport
+  },
   chimera: {
     _status () {
       return {
@@ -20,13 +28,16 @@ export default {
   data () {
     return {
       maskDate,
+      modal: false,
+      src: '',
       filter: {
         city: '',
         status: '',
         closing_date: '',
         delivery_date: '',
         order: 'is_open',
-        sort: 'older'
+        sort: 'older',
+        client: true
       },
       icons: {
         faClipboardList
@@ -34,6 +45,9 @@ export default {
     }
   },
   computed: {
+    apiUrl () {
+      return this.$store.getters.apiURL
+    },
     status () {
       return this.$chimera._status?.data?.data || []
     },
@@ -55,6 +69,27 @@ export default {
     }
   },
   methods: {
+    isEmpty,
+    generateURL () {
+      const url = new URL(this.apiUrl + GENERAL_REPORT_PATH_URL)
+      const filters = { ...this.filter }
+      const validFilters = pickBy(filters, item => !isNil(item) && item !== '')
+
+      filters.city = filters.city.id
+
+      url.search = new URLSearchParams(validFilters)
+
+      return url.toString()
+    },
+    onGenerateReportClick () {
+      const url = this.generateURL()
+
+      this.src = url
+      this.modal = true
+    },
+    onModalHidden () {
+      this.src = ''
+    },
     customLabelCity (city) {
       if (city.state) {
         return `${city.name} - ${city.state.abbreviation}`
@@ -85,6 +120,17 @@ export default {
       </h6>
     </template>
     <template #body>
+      <ModalReport
+        id="generalReportModal"
+        v-model="modal"
+        :src="src"
+        @hidden="onModalHidden"
+      >
+        <template #title>
+          Relatório geral de pedidos
+        </template>
+      </ModalReport>
+
       <h6 class="fw-bold">
         Filtros
       </h6>
@@ -167,6 +213,7 @@ export default {
       <AppButton
         outlined
         class="mt-4"
+        @click.prevent="onGenerateReportClick"
       >
         Gerar relatório
       </AppButton>
