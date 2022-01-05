@@ -1,12 +1,16 @@
 import { has } from 'lodash-es'
 
-export const handleError = (context, error) => {
+export const handleError = (context, error, options) => {
   context.$toast.error('Algo está incorreto, verifique os dados, por favor.', {
     duration: 4000
   })
 
   if (has(error, 'errors')) {
-    context.form.onFail(error.errors)
+    if (has(options, 'formProp')) {
+      context[options.formProp].onFail(error.errors)
+    } else {
+      context.form.onFail(error.errors)
+    }
   }
 }
 
