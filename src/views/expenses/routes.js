@@ -8,7 +8,7 @@ import TheExpenses from './index/TheExpenses'
 const children = [
   {
     name: 'expenses.index',
-    path: 'depesas',
+    path: 'despesas',
     component: TheExpenses,
     meta: {
       middleware: [role],
