@@ -50,6 +50,11 @@ export default {
       dragState: DRAG_STATES.DRAG_LEAVE
     }
   },
+  computed: {
+    hasLabel () {
+      return this.$slots.default || this.label
+    }
+  },
   mounted () {
     const preventEvents = ['dragover', 'drop']
 
@@ -72,6 +77,7 @@ export default {
 <template>
   <div class="mb-3">
     <label
+      v-if="hasLabel"
       :for="id"
       class="form-label"
     >

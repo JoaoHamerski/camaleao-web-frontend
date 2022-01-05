@@ -13,7 +13,7 @@ export default {
 </script>
 
 <template>
-  <!-- Não inserir "pointer-events-none" no mesmo elemento com eventos de ação   do mouse -->
+  <!-- Não inserir "pointer-events-none" no mesmo elemento com eventos de ação do mouse -->
   <div v-on="$listeners">
     <div class="text-center border pointer-events-none p-2">
       <FontAwesomeIcon
