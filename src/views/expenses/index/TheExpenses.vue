@@ -1,5 +1,26 @@
+<script>
+import FilterCard from './FiltersCard'
+import TheExpensesBody from './TheExpensesBody'
+import TheExpensesHeader from './TheExpensesHeader'
+
+export default {
+  metaInfo () {
+    return {
+      title: 'Despesas'
+    }
+  },
+  components: {
+    FilterCard,
+    TheExpensesBody,
+    TheExpensesHeader
+  }
+}
+</script>
+
 <template>
-  <h1>
-    Despesas
-  </h1>
+  <div class="mt-5">
+    <FilterCard class="mb-2" />
+    <TheExpensesHeader />
+    <TheExpensesBody />
+  </div>
 </template>
