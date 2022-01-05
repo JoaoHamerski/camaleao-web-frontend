@@ -32,7 +32,6 @@ export default {
      * com o arquivo em base64.
      *
      * @param {array} items
-     * @param {string|array} validTypes
      */
     async getBase64Files (items) {
       const base64Files = []
