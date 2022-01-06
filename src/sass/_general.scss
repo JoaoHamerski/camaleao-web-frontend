@@ -29,7 +29,6 @@
 }
 
 @each $color, $value in $toast-colors {
-
   .v-toast__item--#{$color} {
     background-color: $value !important;
   }

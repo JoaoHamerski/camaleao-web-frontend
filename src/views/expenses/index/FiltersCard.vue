@@ -54,7 +54,7 @@ export default {
         >
           <AppInput
             v-model="dates.second"
-            name="date-first"
+            name="date-second"
             placeholder="dd/mm/aaaa"
             type="date"
             :mask="maskDate"

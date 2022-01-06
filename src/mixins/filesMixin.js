@@ -17,7 +17,10 @@ export default {
       return item
     },
     getOnlyValidFiles (files, validTypes) {
-      const validFiles = filter(files, file => this.$helpers.strContainsAny(file.type, validTypes))
+      const validFiles = filter(
+        files,
+        file => this.$helpers.strContainsAny(file.type, validTypes)
+      )
 
       if (files.length !== validFiles.length) {
         this.$toast.error('Alguns arquivos estão no formato inválido, por isso não foram enviados.', {

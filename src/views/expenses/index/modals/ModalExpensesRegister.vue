@@ -1,9 +1,12 @@
 <script>
 import { faPlus } from '@fortawesome/free-solid-svg-icons'
 import { maskDate, maskCurrencyBRL } from '@/utils/masks'
+import { isEmpty } from 'lodash-es'
+import fileMixin from '@/mixins/filesMixin'
 import Form from '@/utils/Form'
 
 export default {
+  mixins: [fileMixin],
   chimera: {
     _vias () {
       return {
@@ -38,7 +41,7 @@ export default {
         expense_type_id: '',
         value: 'R$ ',
         expense_via_id: '',
-        recepit_path: '',
+        receipt_path: '',
         date: ''
       }),
       maskDate,
@@ -46,6 +49,17 @@ export default {
     }
   },
   methods: {
+    async onReceiptUploaded (fileList) {
+      const files = await this.getBase64Files(fileList)
+      const validFiles = this.getOnlyValidFiles(files, ['pdf', 'image'])
+
+      if (!isEmpty(validFiles)) {
+        this.form.receipt_path = validFiles[0]
+      }
+    },
+    onDeleteAttach () {
+      this.form.receipt_path = ''
+    },
     onSubmit () {
       //
     }
@@ -57,6 +71,7 @@ export default {
   <AppModal
     id="expensesRegisterModal"
     :value="value"
+    data-bs-keyboard="false"
     v-on="$listeners"
   >
     <template #title>
@@ -116,12 +131,22 @@ export default {
           </div>
         </div>
 
-        <AppInput
-          v-model="form.receipt_path"
-          name="receipt_path"
+        <AppInputFile
+          id="receipt_path"
+          accept="image/*,application/pdf"
+          centered
+          @input="onReceiptUploaded"
         >
           Comprovante
-        </AppInput>
+        </AppInputFile>
+
+        <AppViewerItems
+          show-delete-button
+          col="5"
+          :attachments="[form.receipt_path]"
+          @delete-attach="onDeleteAttach"
+        />
+
         <AppInput
           id="date"
           v-model="form.date"

@@ -1,0 +1,27 @@
+$calendar-active-background-color: $primary;
+$default-color: $secondary;
+
+@import '~vue2-datepicker/scss/index.scss';
+
+.mx-datepicker {
+  display: block;
+  width: 100%;
+}
+
+.mx-input-wrapper {
+  display: block;
+  width: 100%;
+}
+
+.mx-datepicker-popup {
+  border-radius: $input-border-radius;
+
+  .today {
+    font-weight: bold;
+  }
+
+  .cell {
+    border-radius: $input-border-radius;
+    font-size: .9rem;
+  }
+}

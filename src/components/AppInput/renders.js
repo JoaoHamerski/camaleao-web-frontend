@@ -1,10 +1,14 @@
 import { isBoolean } from 'lodash-es'
+import { faCalendarAlt, faTimesCircle } from '@fortawesome/free-solid-svg-icons'
+import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
+import DatePicker from 'vue2-datepicker'
+import 'vue2-datepicker/locale/pt-br'
+
 import MaskedInputElement from './MaskedInput'
 import {
   MaskedInputPassword,
   renderPasswordToggleButton
 } from './MaskedInputPassword'
-import DatePicker from 'v-calendar/lib/components/date-picker.umd'
 
 function renderOptionalLabel (h, context) {
   if (context.optional) {
@@ -88,26 +92,27 @@ export const MaskedInputGroup = function (h, context, element) {
 export const MaskedInputDate = function (h, context) {
   return (
     <DatePicker
-      class="col"
+      format="DD/MM/YYYY"
+      value-type="format"
+      popup-style={{ top: '100%', left: 0 }}
+      append-to-body={false}
       value={context.value}
-      model-config={{
-        type: 'string',
-        mask: 'DD/MM/YYYY'
-      }}
-      attributes={[{
-        key: 'today',
-        bar: true,
-        dates: new Date()
-      }]}
-      popover={{
-        visibility: 'focus'
-      }}
       vOn:input={e => { context.$emit('input', e) }}
-    >
+      lang={{
+        formatLocale: {
+          weekdaysMin: ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb']
+        }
+      }}
       {
-        ({ inputEvents }) => MaskedInputElement(h, context, inputEvents)
+        ...{
+          scopedSlots: {
+            input: ({ events }) => MaskedInputElement(h, context, events),
+            'icon-calendar': () => <FontAwesomeIcon icon={faCalendarAlt} />,
+            'icon-clear': () => <FontAwesomeIcon icon={faTimesCircle} />
+          }
+        }
       }
-    </DatePicker>
+    />
   )
 }
 

@@ -124,6 +124,8 @@ export default {
     tabindex="-1"
     :aria-labelledby="`${id}Label`"
     aria-hidden="true"
+    @focusin.stop.prevent
+    @focus.stop.prevent
   >
     <div
       class="modal-dialog"
