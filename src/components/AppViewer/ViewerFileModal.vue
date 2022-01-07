@@ -42,7 +42,6 @@ export default {
     v-bind="$attrs"
     v-on="$listeners"
     @show="enableLoading"
-    @hidden="enableLoading"
   >
     <template
       v-if="!$slots.title"

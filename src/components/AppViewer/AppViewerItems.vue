@@ -2,14 +2,11 @@
 import ViewerItemsCard from './ViewerItemsCard'
 import ViewerItemsList from './ViewerItemsList'
 
-import viewerMixin from './viewerMixin'
-
 export default {
   components: {
     ViewerItemsCard,
     ViewerItemsList
   },
-  mixins: [viewerMixin],
   props: {
     listType: {
       type: String,
@@ -25,7 +22,7 @@ export default {
     <ViewerItemsList
       v-if="listType === 'list'"
       key="typeList"
-      v-bind="$props"
+      v-bind="$attrs"
       v-on="$listeners"
     >
       <template #attach-info="{ attach }">
@@ -39,7 +36,7 @@ export default {
     <ViewerItemsCard
       v-if="listType === 'card'"
       key="typeCard"
-      v-bind="$props"
+      v-bind="$attrs"
       v-on="$listeners"
     >
       <template #attach-info="{ attach }">
