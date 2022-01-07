@@ -1,13 +1,35 @@
 <script>
+import { truncate, isEmpty } from 'lodash-es'
+import { formatBytes } from '@/utils/formatters'
 import { faPlus } from '@fortawesome/free-solid-svg-icons'
 import { maskDate, maskCurrencyBRL } from '@/utils/masks'
-import { isEmpty } from 'lodash-es'
 import fileMixin from '@/mixins/filesMixin'
+import pasteFilesMixin from '@/mixins/pasteFilesMixin'
+import { handleError } from '@/utils/forms'
 import Form from '@/utils/Form'
 
+import ViewerItemsCardAttach from '@/components/AppViewer/ViewerItemsCardAttach'
+
 export default {
-  mixins: [fileMixin],
+  components: {
+    ViewerItemsCardAttach
+  },
+  mixins: [fileMixin, pasteFilesMixin],
   chimera: {
+    _newExpense () {
+      return {
+        method: 'POST',
+        url: 'api/expenses',
+        on: {
+          success ({ data }) {
+            console.log(data)
+          },
+          error ({ error }) {
+            handleError(this, error)
+          }
+        }
+      }
+    },
     _vias () {
       return {
         method: 'GET',
@@ -44,11 +66,24 @@ export default {
         receipt_path: '',
         date: ''
       }),
+      isLoading: false,
       maskDate,
       maskCurrencyBRL
     }
   },
   methods: {
+    truncate,
+    formatBytes,
+    attachEventListener () {
+      document.addEventListener('paste', this.onPasteEvent)
+    },
+    destroyEventListener () {
+      document.removeEventListener('paste', this.onPasteEvent)
+    },
+    afterPaste (files) {
+      const validFiles = this.getOnlyValidFiles(files, ['pdf', 'image'])
+      this.form.receipt_path = validFiles[0]
+    },
     async onReceiptUploaded (fileList) {
       const files = await this.getBase64Files(fileList)
       const validFiles = this.getOnlyValidFiles(files, ['pdf', 'image'])
@@ -60,8 +95,20 @@ export default {
     onDeleteAttach () {
       this.form.receipt_path = ''
     },
-    onSubmit () {
-      //
+    async onSubmit () {
+      const data = this.form.data()
+
+      data.receipt_path = data.receipt_path.base64
+
+      this.isLoading = true
+
+      try {
+        await this.$chimera._newExpense.fetch(true, {
+          params: { ...data }
+        })
+      } catch (error) {}
+
+      this.isLoading = false
     }
   }
 }
@@ -73,6 +120,8 @@ export default {
     :value="value"
     data-bs-keyboard="false"
     v-on="$listeners"
+    @show="attachEventListener"
+    @hide="destroyEventListener"
   >
     <template #title>
       <FontAwesomeIcon
@@ -92,6 +141,7 @@ export default {
           v-model="form.description"
           name="description"
           placeholder="Descrição da despesa..."
+          :error="form.errors.get('description')"
         >
           Descrição
         </AppInput>
@@ -103,6 +153,7 @@ export default {
           :options="expenseTypes"
           label-prop="name"
           placeholder="Selecione um tipo"
+          :error="form.errors.get('expense_type_id')"
         >
           Tipo de despesa
         </AppSimpleSelect>
@@ -114,6 +165,7 @@ export default {
               v-model="form.value"
               name="value"
               :mask="maskCurrencyBRL()"
+              :error="form.errors.get('value')"
             >
               Valor
             </AppInput>
@@ -125,6 +177,7 @@ export default {
               name="expense_via_id"
               :options="vias"
               label-prop="name"
+              :error="form.errors.get('expense_via_id')"
             >
               Via
             </AppSimpleSelect>
@@ -135,24 +188,35 @@ export default {
           id="receipt_path"
           accept="image/*,application/pdf"
           centered
+          optional
           @input="onReceiptUploaded"
         >
           Comprovante
         </AppInputFile>
 
-        <AppViewerItems
-          show-delete-button
-          col="5"
-          :attachments="[form.receipt_path]"
-          @delete-attach="onDeleteAttach"
-        />
+        <div
+          v-if="form.receipt_path"
+          class="col-5"
+        >
+          <ViewerItemsCardAttach
+            :attach="form.receipt_path"
+            alt="Comprovante de pagamento"
+            show-delete-button
+            @delete-attach="onDeleteAttach"
+          />
+          <div class="small text-secondary text-center">
+            ({{ truncate(form.receipt_path.name, { length: 15 }) }} - <b>{{ formatBytes(form.receipt_path.size) }}</b>)
+          </div>
+        </div>
 
         <AppInput
           id="date"
           v-model="form.date"
           name="date"
+          type="date"
           :mask="maskDate"
           placeholder="dd/mm/aaaa"
+          :error="form.errors.get('date')"
         >
           Data
         </AppInput>
@@ -161,6 +225,7 @@ export default {
           <AppButton
             color="success"
             btn-class="fw-bold"
+            :loading="isLoading"
           >
             Registrar
           </AppButton>

@@ -2,6 +2,7 @@
 import { formatBytes } from '@/utils/formatters'
 import { truncate } from 'lodash-es'
 import filesMixin from '@/mixins/filesMixin'
+import pasteFilesMixin from '@/mixins/pasteFilesMixin'
 import OrderFormFilesModal from './OrderFormFilesModal'
 
 const VALID_TYPES = {
@@ -14,7 +15,7 @@ export default {
   components: {
     OrderFormFilesModal
   },
-  mixins: [filesMixin],
+  mixins: [filesMixin, pasteFilesMixin],
   props: {
     form: {
       type: Object,
@@ -50,16 +51,9 @@ export default {
   methods: {
     formatBytes,
     truncate,
-    async onPasteEvent (event) {
-      try {
-        const items = event.clipboardData.items
-        const files = await this.getBase64Files(items)
-
-        this.transferedItems = files
-        this.modal = true
-      } catch (error) {
-        this.$toast.error('Não foi possível detectar um arquivo na área de transferência.')
-      }
+    afterPaste (pastedFiles) {
+      this.transferedItems = pastedFiles
+      this.modal = true
     },
     async onFileSelected (fileList, field) {
       const base64Files = await this.getBase64Files(fileList)
