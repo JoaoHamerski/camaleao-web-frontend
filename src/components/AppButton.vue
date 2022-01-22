@@ -38,6 +38,7 @@ function renderIcon (h, context) {
     )
   }
 }
+
 function renderBtn (h, context) {
   return (
     <button
@@ -123,15 +124,16 @@ export default {
         'v-tippy-prepend': !!this.$parent.$slots.prepend
       }
 
-      const isInputAttached = this.$parent.$options.name === 'AppInput'
+      const isButtonAppended = this.$parent.$options.name === 'AppInput'
 
       return classNames([
         'btn',
         {
           [`btn-${this.color}`]: !this.outlined,
-          [`btn-outline-${this.color}`]: this.outlined
+          [`btn-outline-${this.color}`]: this.outlined,
+          'd-block w-100': this.block
         },
-        isInputAttached && { ...appendClasses },
+        isButtonAppended && { ...appendClasses },
         this.btnClass
       ])
     },
