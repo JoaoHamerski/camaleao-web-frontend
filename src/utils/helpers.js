@@ -25,6 +25,10 @@ const inputFileToBase64 = file => new Promise((resolve, reject) => {
 })
 
 const strContainsAny = (str, search) => {
+  if (!str) {
+    return str
+  }
+
   if (typeof search === 'object') {
     for (const s of search) {
       if (str.indexOf(s) > -1) {
