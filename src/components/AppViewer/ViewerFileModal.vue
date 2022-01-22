@@ -76,6 +76,7 @@ export default {
 
     <template #footer>
       <AppButton
+        type="button"
         color="light"
         data-bs-dismiss="modal"
       >

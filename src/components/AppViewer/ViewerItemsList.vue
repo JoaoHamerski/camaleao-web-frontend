@@ -32,27 +32,27 @@ export default {
       speed="even-faster"
     >
       <li
-        v-for="(attach, index) in attachments"
-        :key="getKey(attach)"
+        v-for="(file, index) in files"
+        :key="getKey(file)"
         class="list-group-item"
       >
         <div class="d-flex justify-content-between">
           <div class="text-subtitle text-primary">
-            <span v-if="hasName(attach)">{{ attach.name }}</span>
+            <span v-if="hasName(file)">{{ file.name }}</span>
             <span v-else>Anexo {{ index + 1 }}</span>
           </div>
           <div>
             <FontAwesomeIcon
               :icon="icons.faTrash"
               class="link-danger clickable"
-              @click="onDeleteClick(attach)"
+              @click="onDeleteClick(file)"
             />
           </div>
         </div>
         <div>
           <slot
-            name="attach-info"
-            :attach="attach"
+            name="file-info"
+            :file="file"
           />
         </div>
       </li>

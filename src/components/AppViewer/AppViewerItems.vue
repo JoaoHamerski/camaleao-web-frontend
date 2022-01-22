@@ -25,10 +25,10 @@ export default {
       v-bind="$attrs"
       v-on="$listeners"
     >
-      <template #attach-info="{ attach }">
+      <template #file-info="{ file }">
         <slot
-          name="attach-info"
-          :attach="attach"
+          name="file-info"
+          :file="file"
         />
       </template>
     </ViewerItemsList>
@@ -39,10 +39,10 @@ export default {
       v-bind="$attrs"
       v-on="$listeners"
     >
-      <template #attach-info="{ attach }">
+      <template #file-info="{ file }">
         <slot
-          name="attach-info"
-          :attach="attach"
+          name="file-info"
+          :file="file"
         />
       </template>
     </ViewerItemsCard>

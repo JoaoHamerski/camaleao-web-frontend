@@ -5,12 +5,12 @@ import { faTrash } from '@fortawesome/free-solid-svg-icons'
 import { formatBytes } from '@/utils/formatters'
 import viewerMixin from './viewerMixin'
 import ViewerFileModal from './ViewerFileModal'
-import ViewerItemsCardAttach from './ViewerItemsCardAttach'
+import ViewerItemsCardFile from './ViewerItemsCardFile'
 
 export default {
   components: {
     ViewerFileModal,
-    ViewerItemsCardAttach
+    ViewerItemsCardFile
   },
   mixins: [viewerMixin],
   props: {
@@ -24,7 +24,7 @@ export default {
       icons: {
         faTrash
       },
-      attachToDisplay: '',
+      fileToShow: '',
       modal: false
     }
   },
@@ -33,21 +33,25 @@ export default {
     getAlt ({ name }) {
       return name || this.alt
     },
-    displayAttach (attach) {
-      const attachToDisplay = has(attach, 'base64')
-        ? attach.base64
-        : attach
+    showFile ({ file, type }) {
+      if (type !== 'file') {
+        return
+      }
 
-      this.attachToDisplay = attachToDisplay
+      const fileToShow = has(file, 'base64')
+        ? file.base64
+        : file
+
+      this.fileToShow = fileToShow
       this.modal = true
     },
     onViewerFileModalHidden () {
-      this.attachToDisplay = ''
+      this.fileToShow = ''
     },
-    deleteAttach (attach) {
-      const key = has(attach, 'key') ? attach.key : attach
+    deleteFile (file) {
+      const key = has(file, 'key') ? file.key : file
 
-      this.$emit('delete-attach', key)
+      this.$emit('delete-file', key)
     }
   }
 }
@@ -64,32 +68,33 @@ export default {
     <ViewerFileModal
       key="viewerFileModal"
       v-model="modal"
-      :src="attachToDisplay"
+      :src="fileToShow"
+      modal-dialog-class="modal-fullscreen"
       @hidden="onViewerFileModalHidden"
     />
 
     <div
-      v-for="attach in attachments"
-      :key="getKey(attach)"
+      v-for="file in files"
+      :key="getKey(file)"
       :class="`col-${col} mb-2`"
     >
-      <div v-if="attach">
-        <ViewerItemsCardAttach
+      <div v-if="file">
+        <ViewerItemsCardFile
           :show-delete-button="showDeleteButton"
-          :attach="attach"
-          :is-invalid="isInvalid(attach)"
-          :alt="getAlt(attach)"
+          :file="file"
+          :is-invalid="isInvalid(file)"
+          :alt="getAlt(file)"
           clickable
-          @display-attach="displayAttach"
-          @delete-attach="deleteAttach"
+          @show-file="showFile"
+          @delete-file="deleteFile"
         />
 
         <slot
-          name="attach-info"
-          :attach="attach"
+          name="file-info"
+          :file="file"
         />
         <div
-          v-if="isInvalid(attach)"
+          v-if="isInvalid(file)"
           class="small text-center text-danger fw-bold"
         >
           Este arquivo passou do limite de tamanho ({{ formatBytes(maxFileSize) }}), por favor, escolha outro.

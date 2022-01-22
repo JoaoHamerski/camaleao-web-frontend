@@ -4,7 +4,7 @@ import { faFileAlt, faFilePdf, faTrash } from '@fortawesome/free-solid-svg-icons
 
 export default {
   props: {
-    attach: {
+    file: {
       type: [Object, String],
       required: true
     },
@@ -36,11 +36,11 @@ export default {
   },
   computed: {
     src () {
-      if (has(this.attach, 'base64')) {
-        return this.attach.base64
+      if (has(this.file, 'base64')) {
+        return this.file.base64
       }
 
-      return this.attach
+      return this.file
     }
   },
   methods: {
@@ -51,11 +51,11 @@ export default {
 
       return this.$helpers.strContainsAny(file.type, type)
     },
-    onAttachClick () {
-      this.$emit('display-attach', this.attach)
+    onFileClick (type) {
+      this.$emit('show-file', { file: this.file, type })
     },
     onDeleteClick () {
-      this.$emit('delete-attach', this.attach)
+      this.$emit('delete-file', this.file)
     }
   }
 }
@@ -63,7 +63,10 @@ export default {
 
 <template>
   <div>
-    <div v-if="isType(attach, ['image', 'jpg', 'jpeg', 'png'])">
+    <div
+      v-if="isType(file, ['image', 'jpg', 'jpeg', 'png'])"
+      @click="onFileClick('image')"
+    >
       <div class="text-center">
         <img
           :src="src"
@@ -78,14 +81,14 @@ export default {
       v-else
       class="position-relative"
       :class="clickable && 'clickable'"
-      @click="onAttachClick"
+      @click="onFileClick('file')"
     >
       <div
         class="img-thumbnail text-center d-flex flex-column justify-content-center align-items-center"
         style="height: 120px"
       >
         <FontAwesomeIcon
-          v-if="isType(attach, 'pdf')"
+          v-if="isType(file, 'pdf')"
           class="text-primary"
           :icon="icons.faFilePdf"
           size="3x"

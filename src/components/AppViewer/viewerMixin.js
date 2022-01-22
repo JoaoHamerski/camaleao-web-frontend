@@ -2,7 +2,7 @@ import { has } from 'lodash-es'
 
 export default {
   props: {
-    attachments: {
+    files: {
       type: Array,
       default: () => ([])
     },

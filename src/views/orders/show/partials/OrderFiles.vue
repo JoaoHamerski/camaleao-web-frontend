@@ -1,7 +1,7 @@
 <script>
 import { keys, isEmpty } from 'lodash-es'
 
-const ATTACHMENTS_MAP = {
+const FILES_MAP = {
   art_paths: 'Imagens da arte',
   size_paths: 'Imagens do tamanho',
   payment_voucher_paths: 'Comprovantes de pagamento'
@@ -16,12 +16,12 @@ export default {
   },
   data () {
     return {
-      ATTACHMENTS_MAP
+      FILES_MAP
     }
   },
   computed: {
-    attachmentsCount () {
-      const fields = keys(ATTACHMENTS_MAP)
+    filesCount () {
+      const fields = keys(FILES_MAP)
 
       return fields.reduce((total, field) => {
         const length = !isEmpty(this.order[field])
@@ -37,19 +37,19 @@ export default {
 
 <template>
   <AppCollapsible
-    v-if="attachmentsCount"
-    id="attachments"
+    v-if="filesCount"
+    id="files"
     header-class="text-secondary"
   >
     <template #header>
       <h5 class="fw-bold">
-        Anexos <span v-if="attachmentsCount">({{ attachmentsCount }})</span>
+        Anexos <span v-if="filesCount">({{ filesCount }})</span>
       </h5>
     </template>
 
     <template #body>
       <div
-        v-for="(label, key) in ATTACHMENTS_MAP"
+        v-for="(label, key) in FILES_MAP"
         :key="key"
       >
         <div
@@ -62,7 +62,7 @@ export default {
           <div v-if="order[key].length">
             <AppViewerItems
               :alt="label"
-              :attachments="order[key]"
+              :files="order[key]"
             />
           </div>
           <div
