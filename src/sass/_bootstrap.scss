@@ -27,13 +27,15 @@
   &.table-click tbody tr:hover {
     cursor: pointer;
   }
+
+  tbody tr:last-child td  {
+    border-bottom: none;
+  }
 }
 
 .table > :not(:last-child) > :last-child > * {
   border-bottom: 2px solid $gray-300;
 }
-
-
 
 .input-group {
   .form-select-wrapper {
