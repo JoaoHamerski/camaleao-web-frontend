@@ -1,13 +1,13 @@
 <script>
 import OrderClothingTypesTable from './partials/OrderClothingTypesTable'
 import OrderPayments from './partials/OrderPayments'
-import OrderAttachments from './partials/OrderAttachments'
+import OrderFiles from './partials/OrderFiles'
 import { formatDatetime } from '@/utils/formatters'
 
 export default {
   components: {
     OrderPayments,
-    OrderAttachments,
+    OrderFiles,
     OrderClothingTypesTable
   },
   props: {
@@ -44,6 +44,14 @@ export default {
           </div>
           <b class="text-subtitle">
             {{ order.code }}
+          </b>
+        </div>
+        <div>
+          <div class="fw-bold small text-secondary">
+            Registrado em
+          </div>
+          <b class="text-subtitle">
+            {{ formatDatetime(order.created_at) }}
           </b>
         </div>
       </div>
@@ -121,7 +129,7 @@ export default {
       @open-modal="$emit('open-modal', $event)"
     />
 
-    <OrderAttachments
+    <OrderFiles
       class="mb-3"
       :order="order"
     />

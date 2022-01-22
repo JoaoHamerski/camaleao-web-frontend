@@ -59,7 +59,7 @@ export default {
       const base64Files = await this.getBase64Files(fileList)
       const files = this.getOnlyValidFiles(base64Files, VALID_TYPES[field])
 
-      this.$emit('attach-files', {
+      this.$emit('selected-files', {
         files, field
       })
     },
@@ -69,7 +69,7 @@ export default {
         VALID_TYPES[field]
       )
 
-      this.$emit('attach-files', {
+      this.$emit('selected-files', {
         files, field
       })
 
@@ -126,16 +126,16 @@ export default {
       </AppInputFile>
       <AppViewerItems
         show-delete-button
-        :attachments="form.art_paths"
+        :files="form.art_paths"
         :max-file-size="maxFileSize"
-        @delete-attach="onFileDelete($event, 'art_paths')"
+        @delete-file="onFileDelete($event, 'art_paths')"
       >
         <template
           v-if="!isEdit"
-          #attach-info="{ attach }"
+          #file-info="{ file }"
         >
           <div class="small text-secondary text-center">
-            ({{ truncate(attach.name, { length: 15 }) }} - <b>{{ formatBytes(attach.size) }}</b>)
+            ({{ truncate(file.name, { length: 15 }) }} - <b>{{ formatBytes(file.size) }}</b>)
           </div>
         </template>
       </AppViewerItems>
@@ -154,16 +154,16 @@ export default {
       </AppInputFile>
       <AppViewerItems
         show-delete-button
-        :attachments="form.size_paths"
+        :files="form.size_paths"
         :max-file-size="maxFileSize"
-        @delete-attach="onFileDelete($event, 'size_paths')"
+        @delete-file="onFileDelete($event, 'size_paths')"
       >
         <template
           v-if="!isEdit"
-          #attach-info="{ attach }"
+          #file-info="{ file }"
         >
           <div class="small text-secondary text-center">
-            ({{ truncate(attach.name, { length: 15 }) }} - <b>{{ formatBytes(attach.size) }}</b>)
+            ({{ truncate(file.name, { length: 15 }) }} - <b>{{ formatBytes(file.size) }}</b>)
           </div>
         </template>
       </AppViewerItems>
@@ -187,20 +187,20 @@ export default {
     <AppViewerItems
       show-delete-button
       list-type="card"
-      :attachments="form.payment_voucher_paths"
+      :files="form.payment_voucher_paths"
       :max-file-size="maxFileSize"
-      @delete-attach="onFileDelete($event, 'payment_voucher_paths')"
+      @delete-file="onFileDelete($event, 'payment_voucher_paths')"
     >
       <template
         v-if="!isEdit"
-        #attach-info="{ attach }"
+        #file-info="{ file }"
       >
         <div class="small text-secondary text-center">
           (<span
             v-tippy="{placement: 'bottom'}"
-            :content="attach.name"
-          >{{ truncate(attach.name, { length: 15 }) }}
-          </span> - <b>{{ formatBytes(attach.size) }}</b>)
+            :content="file.name"
+          >{{ truncate(file.name, { length: 15 }) }}
+          </span> - <b>{{ formatBytes(file.size) }}</b>)
         </div>
       </template>
     </AppViewerItems>

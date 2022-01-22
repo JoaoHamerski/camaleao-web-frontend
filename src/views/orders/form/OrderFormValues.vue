@@ -36,8 +36,7 @@ export default {
   data () {
     return {
       maskCurrencyBRL: maskCurrencyBRL({ numeralPositiveOnly: true }),
-      maskInteger: maskInteger({ delimiter: '', numeralDecimalScale: 0 }),
-      console
+      maskInteger: maskInteger({ delimiter: '', numeralDecimalScale: 0 })
     }
   },
   computed: {

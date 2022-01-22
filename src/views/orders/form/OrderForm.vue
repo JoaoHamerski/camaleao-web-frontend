@@ -192,7 +192,7 @@ export default {
         this.populateClothingTypes(this.order.clothing_types)
       }
     },
-    onAttachFiles ({ files, field }) {
+    onSelectFiles ({ files, field }) {
       this.form[field].push(...files)
     },
     onDeleteFile ({ fileKey, field }) {
@@ -221,7 +221,7 @@ export default {
     <OrderFormFiles
       :is-edit="isEdit"
       :form="form"
-      @attach-files="onAttachFiles"
+      @selected-files="onSelectFiles"
       @delete-file="onDeleteFile"
     />
 
