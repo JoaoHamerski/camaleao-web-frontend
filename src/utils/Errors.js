@@ -12,7 +12,7 @@ class Errors {
   }
 
   has (field) {
-    return this.errors.hasOwnProperty.call(field)
+    return this.errors.hasOwnProperty.call(this, field)
   }
 
   any () {
