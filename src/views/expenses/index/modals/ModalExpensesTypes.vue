@@ -13,9 +13,9 @@ export default {
         auto: false,
         on: {
           success () {
-            this.$toast.success('Tipo criado com sucesso!')
             this.form.reset()
-            this.$emit('refresh')
+            this.$toast.success('Tipo criado com sucesso!')
+            this.$emit('success', { action: 'register' })
           },
           error ({ error }) {
             handleError(this, error)
@@ -31,7 +31,7 @@ export default {
         on: {
           success () {
             this.$toast.success('Tipo editado com sucesso!')
-            this.$emit('refresh')
+            this.$emit('success', { action: 'update' })
           },
           error ({ error }) {
             handleError(this, error, { formProp: 'editForm' })
