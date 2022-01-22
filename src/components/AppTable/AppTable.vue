@@ -65,7 +65,7 @@ const renderTableCell = (h, context, item) => {
 
 const renderTableBody = (h, context) => {
   return (
-    <tbody>
+    <tbody class="position-relative">
       {
         context.items.map((item, index) => {
           return (
