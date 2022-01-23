@@ -1,0 +1,10 @@
+query authUser {
+  authUser {
+    name
+    email
+    role {
+      id
+      name
+    }
+  }
+}

@@ -24,10 +24,7 @@ const routes = [
   },
   {
     path: '/testes',
-    component: TheTest,
-    meta: {
-      middleware: [auth]
-    }
+    component: TheTest
   },
   ...authRoutes,
   ...clientsRoutes,

@@ -1,11 +1,11 @@
 <script>
-import { isEmpty } from 'lodash-es'
-import AuthService from '@/services/AuthService'
 import Form from '@/utils/Form'
+import { handleError } from '@/utils/forms'
 
 export default {
   data () {
     return {
+      isLoading: false,
       form: new Form({
         email: '',
         password: '',
@@ -15,23 +15,17 @@ export default {
   },
   methods: {
     async onSubmit () {
-      this.form.isLoading = true
+      this.isLoading = true
+
+      const { email, password } = this.form.data()
 
       try {
-        await AuthService.login(this.form)
-        const authUser = await this.$store.dispatch('auth/getAuthUser')
-
-        if (authUser) {
-          this.$store.dispatch('auth/setGuest', { value: 'isNotGuest' })
-          this.$router.push({ name: 'clients.index' })
-        }
+        await this.$store.dispatch('auth/login', {
+          credentials: { email, password }
+        })
       } catch (error) {
-        if (!isEmpty(error.response.data.errors)) {
-          this.form.errors.record(error.response.data.errors)
-          this.form.password = ''
-        }
-
-        this.form.isLoading = false
+        handleError(this, error)
+        this.isLoading = false
       }
     }
   }
@@ -73,7 +67,7 @@ export default {
 
     <div class="d-grid">
       <AppButton
-        :loading="form.isLoading"
+        :loading="isLoading"
         color="primary"
         btn-class="fw-bold"
       >

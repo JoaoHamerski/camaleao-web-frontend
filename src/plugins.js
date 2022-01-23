@@ -1,9 +1,7 @@
 import Vue from 'vue'
 import VueMeta from 'vue-meta'
-import VueChimera from 'vue-chimera'
 import VueToast from 'vue-toast-notification'
 import VueTippy from 'vue-tippy'
-import client from '@/request'
 import helpers from '@/utils/helpers'
 import 'cleave.js/dist/addons/cleave-phone.br'
 
@@ -25,6 +23,3 @@ Vue.use(VueToast, {
 Vue.use(VueMeta)
 
 Vue.use(custom)
-Vue.use(VueChimera, {
-  axios: client
-})

@@ -1,14 +1,16 @@
 import store from '@/store'
 
-export default async function auth ({ next }) {
-  const loginRoute = { path: '/entrar' }
+const LOGIN_ROUTE = {
+  path: '/entrar'
+}
 
+export default async function auth ({ next }) {
   if (!store.getters['auth/authUser']) {
     await store.dispatch('auth/getAuthUser')
   }
 
   if (!store.getters['auth/authUser']) {
-    next(loginRoute)
+    next(LOGIN_ROUTE)
     return
   }
 

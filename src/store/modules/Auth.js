@@ -1,7 +1,26 @@
-import AuthService from '@/services/AuthService'
+import {
+  apolloClientInstance,
+  onLogin,
+  onLogout
+  // onLogout
+} from '@/vue-apollo'
+
+import { authUser } from '@/graphql/auth/AuthUser.gql'
+import { login } from '@/graphql/auth/Login.gql'
+
 import router from '@/router'
 
 export const namespaced = true
+
+const { apolloClient } = apolloClientInstance()
+
+const ON_LOGIN_ROUTE = {
+  path: '/'
+}
+
+const ON_LOGOUT_ROUTE = {
+  path: '/entrar'
+}
 
 export const state = {
   user: null,
@@ -14,33 +33,49 @@ export const mutations = {
     state.user = user
   }
 }
+
 export const actions = {
+  async login ({ commit, dispatch }, payload) {
+    const { credentials } = payload
+
+    const data = await apolloClient.mutate({
+      mutation: login,
+      variables: credentials
+    })
+
+    const token = data.data.login.token
+
+    await onLogin(apolloClient, token)
+
+    router.push(ON_LOGIN_ROUTE)
+  },
   async logout ({ commit, dispatch }) {
     try {
-      await AuthService.logout()
+      await onLogout(apolloClient)
+
       commit('SET_USER', null)
-      dispatch('setGuest', { value: 'isGuest' })
 
       if (router.currentRoute.name !== 'login') {
-        router.push({ path: 'entrar' })
+        router.push(ON_LOGOUT_ROUTE)
       }
     } catch (error) {
+      // eslint-disable-next-line no-console
       console.error(error.response)
     }
   },
   async getAuthUser ({ commit }) {
     try {
-      const { data } = await AuthService.getAuthUser()
+      const data = await apolloClient.query({
+        query: authUser
+      })
 
-      commit('SET_USER', data.data)
+      commit('SET_USER', data.data.authUser)
 
-      return data.data
+      return data.data.authUser
     } catch (error) {
+      // eslint-disable-next-line no-console
       console.error(error)
     }
-  },
-  setGuest (context, { value }) {
-    window.localStorage.setItem('guest', value)
   }
 }
 
@@ -53,19 +88,5 @@ export const getters = {
   },
   loggedIn: (state) => {
     return !!state.user
-  },
-  guest: () => {
-    const storageItem = window.localStorage.getItem('guest')
-    if (!storageItem) {
-      return false
-    }
-
-    if (storageItem === 'isGuest') {
-      return true
-    }
-
-    if (storageItem === 'isNotGuest') {
-      return false
-    }
   }
 }

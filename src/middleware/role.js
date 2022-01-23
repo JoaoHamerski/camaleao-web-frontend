@@ -1,25 +1,30 @@
 import store from '@/store'
 
+const LOGIN_ROUTE = {
+  path: '/entrar'
+}
+
 const authHasRole = (allowedRoles) => {
+  const authUser = store.getters['auth/authUser']
+
   return allowedRoles.includes(
-    store.getters['auth/authUser'].role.id
+    +authUser.role.id
   )
 }
 
 export default async function role (context) {
-  const loginRoute = { path: '/entrar' }
-
   if (!store.getters['auth/authUser']) {
     await store.dispatch('auth/getAuthUser')
   }
 
   if (!store.getters['auth/authUser']) {
-    context.next(loginRoute)
+    context.next(LOGIN_ROUTE)
     return
   }
 
   if (!authHasRole(context.roles)) {
-    console.error('SEM PERMISSÃO PARA ACESSO')
+    // eslint-disable-next-line no-console
+    console.error('SEM PERMISSÃO DE ACESSO')
     return
   }
 
