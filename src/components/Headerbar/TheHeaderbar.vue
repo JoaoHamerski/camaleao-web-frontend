@@ -8,6 +8,12 @@ export default {
     HeaderbarBurgerButton,
     HeaderbarBackButton
   },
+  props: {
+    authUser: {
+      type: Object,
+      default: null
+    }
+  },
   data () {
     return {
       SVGInject
@@ -27,27 +33,32 @@ export default {
 </script>
 
 <template>
-  <nav
-    id="headerbar"
-    class="d-flex justify-content-between align-items-center py-2"
+  <AppTransition
+    enter="fadeInUp"
+    leave="fadeOutUp"
   >
-    <div class="d-flex">
-      <HeaderbarBurgerButton
-        class="mx-2"
-        :is-active="isSidebarActive"
-        @click="toggleSidebarState"
-      />
-      <div class="col-4 ms-3">
-        <img
-          class="img-fluid logo"
-          src="@/assets/images/logo.svg"
-          @load="SVGInject($event.target)"
-        >
+    <nav
+      v-if="authUser"
+      id="headerbar"
+      class="d-flex justify-content-between align-items-center py-2"
+    >
+      <div class="d-flex">
+        <HeaderbarBurgerButton
+          class="mx-2"
+          :is-active="isSidebarActive"
+          @click="toggleSidebarState"
+        />
+        <div class="col-4 ms-3">
+          <img
+            class="img-fluid logo"
+            src="@/assets/images/logo.svg"
+            @load="SVGInject($event.target)"
+          >
+        </div>
       </div>
-    </div>
-
-    <div class="text-right">
-      <HeaderbarBackButton />
-    </div>
-  </nav>
+      <div class="text-right">
+        <HeaderbarBackButton />
+      </div>
+    </nav>
+  </AppTransition>
 </template>
