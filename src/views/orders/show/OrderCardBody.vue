@@ -3,6 +3,7 @@ import OrderClothingTypesTable from './partials/OrderClothingTypesTable'
 import OrderPayments from './partials/OrderPayments'
 import OrderFiles from './partials/OrderFiles'
 import { formatDatetime } from '@/utils/formatters'
+import { faExclamationTriangle } from '@fortawesome/free-solid-svg-icons'
 
 export default {
   components: {
@@ -16,6 +17,26 @@ export default {
       required: true
     }
   },
+  data () {
+    return {
+      icons: {
+        faExclamationTriangle
+      }
+    }
+  },
+  computed: {
+    showReminder () {
+      return this.order.states.includes('PRE-REGISTERED') && this.order.reminder
+    },
+    /**
+     * Compatibilidade com versão antiga do sistema,
+     * só exibe a tabela de tipos de roupas
+     * se a quantidade não existir (pre-registro) ou houver tipos de roupas
+     */
+    shouldShowClothingTypes () {
+      return !this.order.quantity || this.order.clothing_types.length
+    }
+  },
   methods: {
     formatDatetime
   }
@@ -25,6 +46,23 @@ export default {
 <template>
   <!-- eslint-disable vue/no-v-html -->
   <div>
+    <div
+      v-if="showReminder"
+      class="d-flex flex-column align-middle text-center"
+    >
+      <div>
+        <FontAwesomeIcon
+          :icon="icons.faExclamationTriangle"
+          class="text-warning me-2"
+          size="2x"
+        />
+      </div>
+      <div>
+        {{ order.reminder }}
+      </div>
+
+      <hr>
+    </div>
     <div>
       <h5 class="fw-bold text-secondary">
         Detalhes do Pedido
@@ -70,7 +108,7 @@ export default {
       <div>
         <b class="small text-secondary">Quantidade</b>
         <h5 class="fw-bold text-center">
-          {{ order.quantity }}
+          {{ $helpers.fallback(order.quantity) }}
         </h5>
       </div>
     </div>
@@ -90,7 +128,10 @@ export default {
       </div>
     </div>
 
-    <div class="mt-3">
+    <div
+      v-if="shouldShowClothingTypes"
+      class="mt-3"
+    >
       <div>
         <b class="small text-secondary">Tipos de roupa</b>
       </div>
@@ -98,6 +139,27 @@ export default {
     </div>
 
     <div class="my-3 d-flex justify-content-around">
+      <div>
+        <div>
+          <b class="small text-secondary">Valor total</b>
+        </div>
+        <h5
+          class="text-primary mb-0"
+          v-html="$helpers.toBRL(order.original_price, true)"
+        />
+        <template v-if="order.discount">
+          <div
+            class="small text-secondary"
+          >
+            DESCONTO:
+            <b>{{ $helpers.toBRL(-order.discount) }}</b>
+          </div>
+          <div class="small text-primary">
+            VALOR FINAL:
+            <b>{{ $helpers.toBRL(order.original_price - order.discount) }}</b>
+          </div>
+        </template>
+      </div>
       <div>
         <div>
           <b class="small text-secondary">Total pago</b>
@@ -126,7 +188,7 @@ export default {
     <OrderPayments
       class="mb-3"
       :payments="order.payments"
-      @open-modal="$emit('open-modal', $event)"
+      @open-payment-modal="$emit('open-payment-modal', $event)"
     />
 
     <OrderFiles
