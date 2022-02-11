@@ -1,4 +1,7 @@
 <script>
+import { isEmpty } from 'lodash-es'
+import { orderToggle } from '@/graphql/Orders.gql'
+
 import {
   faCog,
   faFileInvoice,
@@ -11,25 +14,6 @@ import {
 } from '@fortawesome/free-solid-svg-icons'
 
 export default {
-  chimera: {
-    _toggleOrder () {
-      return {
-        url: `/api/clients/${this.clientKey}/orders/${this.orderKey}/toggle-order`,
-        method: 'POST',
-        on: {
-          success () {
-            if (!this.order.closed_at) {
-              this.$toast.success('Pedido fechado!')
-            } else {
-              this.$toast.success('Pedido reaberto!')
-            }
-
-            this.$emit('refresh')
-          }
-        }
-      }
-    }
-  },
   props: {
     order: {
       type: Object,
@@ -58,7 +42,7 @@ export default {
       return this.$route.params.orderKey
     },
     paymentBtnDisabledMessage () {
-      if (!this.order) {
+      if (isEmpty(this.order)) {
         return true
       }
 
@@ -74,6 +58,7 @@ export default {
     }
   },
   methods: {
+    isEmpty,
     redirectToOrderEdit () {
       this.$router.push({
         name: 'orders.edit',
@@ -83,8 +68,22 @@ export default {
         }
       })
     },
-    toggleOrder () {
-      this.$chimera._toggleOrder.fetch()
+    async toggleOrder () {
+      const isOrderOpen = this.order.closed_at === null
+
+      try {
+        await this.$apollo.mutate({
+          mutation: orderToggle,
+          variables: {
+            id: this.order.id
+          }
+        })
+
+        this.$toast.success(isOrderOpen ? 'Pedido fechado' : 'Pedido reaberto')
+        this.$emit('refresh')
+      } catch (error) {
+        this.$toast.error('Ops! Algo deu errado.')
+      }
     },
     onDeleteOrderClick () {
       this.$emit('open-delete-order-modal')
@@ -131,7 +130,7 @@ export default {
         <AppDropdownItem
           :disabled-message="order.states.includes('CLOSED') && 'Não é possível editar pedidos fechados.'"
           :icon="icons.faEdit"
-          text="Editar"
+          :text="order.states.includes('PRE-REGISTERED') ? 'Concluir registro' : 'Editar'"
           icon-color="primary"
           @click.prevent="redirectToOrderEdit"
         />

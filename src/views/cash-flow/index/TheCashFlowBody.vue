@@ -1,23 +1,29 @@
 <script>
 import { faCashRegister, faExclamationCircle } from '@fortawesome/free-solid-svg-icons'
+import { isEmpty } from 'lodash-es'
 
-import { formatCurrencyBRL } from '@/utils/formatters'
 import 'tippy.js/themes/light-border.css'
 
 import CashFlowBodyTable from './partials/CashFlowBodyTable'
+import CashFlowBodyStatistics from './partials/CashFlowBodyStatstics'
 
 export default {
   components: {
-    CashFlowBodyTable
+    CashFlowBodyTable,
+    CashFlowBodyStatistics
   },
   props: {
     isLoading: {
       type: Boolean,
       default: false
     },
-    data: {
+    filterDates: {
       type: Object,
       default: () => ({})
+    },
+    data: {
+      type: Array,
+      default: () => []
     },
     pagination: {
       type: Object,
@@ -26,6 +32,10 @@ export default {
     page: {
       type: Number,
       required: true
+    },
+    statistics: {
+      type: Object,
+      default: () => ({})
     }
   },
   data () {
@@ -36,11 +46,19 @@ export default {
       }
     }
   },
-  methods: {
-    formatCurrencyBRL,
-    onPaginationUpdate (page) {
-      this.$emit('update:page', page)
+  computed: {
+    displayFilteredDate () {
+      const { start_date, final_date } = this.filterDates
+
+      if (start_date && final_date) {
+        return `${start_date} ~ ${final_date}`
+      }
+
+      return `${start_date}`
     }
+  },
+  methods: {
+    isEmpty
   }
 }
 </script>
@@ -73,15 +91,29 @@ export default {
 
       <template #body>
         <AppLoading v-show="isLoading" />
+
+        <div
+          v-if="!isEmpty(filterDates.start_date)"
+          class="text-center"
+        >
+          <div><small class="text-secondary">Filtragem por data</small></div>
+          <h5 class="fw-bold">
+            {{ displayFilteredDate }}
+          </h5>
+        </div>
+        <CashFlowBodyStatistics
+          v-if="!isEmpty(statistics)"
+          :data="statistics"
+        />
         <CashFlowBodyTable :data="data" />
       </template>
     </AppCard>
 
     <AppPaginator
+      :value="page"
       class="mt-2"
       :pagination="pagination"
-      :page="page"
-      @update:page="onPaginationUpdate"
+      @input="$emit('update:page', $event)"
     />
   </div>
 </template>

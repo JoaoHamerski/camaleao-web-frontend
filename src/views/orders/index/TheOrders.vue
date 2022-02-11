@@ -1,6 +1,8 @@
 <script>
 import { faBoxes, faQuestionCircle } from '@fortawesome/free-solid-svg-icons'
 import { TippyComponent } from 'vue-tippy'
+import { ordersIndex } from '@/graphql/Orders.gql'
+import { QUERIES } from './constants'
 
 import FilterGeneralReportCard from './partials/FilterGeneralReportCard'
 import FilterProductionDateReportCard from './partials/FilterProductionDateReportCard'
@@ -22,25 +24,26 @@ export default {
       title: 'Pedidos'
     }
   },
-  chimera: {
-    _orders () {
-      return {
-        method: 'GET',
-        url: 'api/orders',
-        params: {
-          client: true,
-          page: this.page,
-          sort: this.sort,
-          code: this.code
-        }
+  apollo: {
+    orders: {
+      query: ordersIndex,
+      variables () {
+        return { ...this.params }
       }
     }
   },
   data () {
     return {
-      page: 1,
-      sort: 'priority',
       code: '',
+      buttonSelected: 'priority',
+      params: {
+        page: 1,
+        ...QUERIES.OLDER
+      },
+      orders: {
+        data: [],
+        paginatorInfo: {}
+      },
       icons: {
         faBoxes,
         faQuestionCircle
@@ -48,6 +51,9 @@ export default {
     }
   },
   computed: {
+    isLoading () {
+      return !!this.$apollo.queries.orders.loading
+    },
     headers () {
       return [
         { text: 'Cliente', value: 'client' },
@@ -58,23 +64,35 @@ export default {
         { text: 'Produção', value: 'producton_date', format: 'datetime' },
         { text: 'Entrega', value: 'delivery_date', format: 'datetime' }
       ]
-    },
-    orders () {
-      return this.$chimera._orders?.data?.data || []
-    },
-    pagination () {
-      return this.$chimera._orders?.data?.meta || ({})
-    },
-    isLoading () {
-      return this.$chimera._orders.loading
     }
   },
   methods: {
     onFilterButtonsChanged (value) {
-      this.sort = value
+      const query = QUERIES[value.toUpperCase()]
+
+      this.code = ''
+
+      this.params = { ...this.params, ...query }
     },
     onCodeSearch (code) {
-      this.code = code
+      this.buttonSelected = ''
+
+      this.params = {
+        ...this.params,
+        where: {
+          column: 'CODE', operator: 'LIKE', value: `%${code}%`
+        }
+      }
+    },
+    onSearchClear () {
+      if (this.buttonSelected === '') {
+        this.buttonSelected = 'priority'
+        this.code = ''
+        this.onFilterButtonsChanged(this.buttonSelected)
+        return
+      }
+
+      this.onFilterButtonsChanged(this.buttonSelected)
     },
     orderClass (order) {
       if (order.states.includes('PRE-REGISTERED')) {
@@ -121,13 +139,16 @@ export default {
     <FilterProductionDateReportCard class="mb-2" />
 
     <FilterSortButtons
+      v-model="buttonSelected"
       class="mb-3"
       @filter-changed="onFilterButtonsChanged"
     />
 
     <FilterSearchInput
+      v-model="code"
       class="mb-3"
-      @code="onCodeSearch"
+      @search="onCodeSearch"
+      @clear-search="onSearchClear"
     />
 
     <AppCard :has-body-padding="false">
@@ -160,7 +181,7 @@ export default {
 
         <AppTable
           :headers="headers"
-          :items="orders"
+          :items="orders.data"
           :row-url="orderUrl"
           :row-class="orderClass"
           @click:item="redirectToOrder"
@@ -173,9 +194,10 @@ export default {
     </AppCard>
 
     <AppPaginator
+      v-model="params.page"
       class="mt-2"
-      :pagination="pagination"
-      :page.sync="page"
+      :is-loading="isLoading"
+      :pagination="orders.paginatorInfo"
     />
   </div>
 </template>

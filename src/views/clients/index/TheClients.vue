@@ -4,6 +4,14 @@ import { formatPhone } from '@/utils/formatters'
 
 import ClientModalNew from '../partials/ClientModalNew'
 
+import { clientsIndex } from '@/graphql/Clients.gql'
+
+const COLUMNS = {
+  NAME: 'NAME',
+  CITY: 'CITY',
+  PHONE: 'PHONE'
+}
+
 export default {
   components: {
     ClientModalNew
@@ -11,61 +19,96 @@ export default {
   metaInfo: {
     title: 'Clientes'
   },
-  chimera: {
-    _clients () {
-      return {
-        url: '/api/clients',
-        params: {
-          page: this.page
-        }
+  apollo: {
+    clients: {
+      query: clientsIndex,
+      variables () {
+        return { ...this.query }
       }
     }
   },
   data () {
     return {
+      query: {
+        page: 1,
+        hasCity: null,
+        where: null
+      },
+      clients: {
+        data: []
+      },
       icons: {
         faList,
         faUserPlus
       },
-      page: 1,
       form: {
-        option: 'name',
+        option: 'NAME',
         search: ''
       }
     }
   },
   computed: {
-    clients () {
-      return this.$chimera._clients?.data?.data || []
-    },
-    pagination () {
-      return this.$chimera._clients?.data?.meta || ({})
-    },
     isLoading () {
-      return this.$chimera._clients.loading
+      return !!this.$apollo.queries.clients.loading
     },
+
     headers () {
       return [
         { text: 'Nome', value: 'name' },
         { text: 'Telefone', value: 'phone' },
         { text: 'Cidade', value: 'city' }
       ]
+    },
+    selectOptions () {
+      return [
+        { name: 'Nome', value: COLUMNS.NAME },
+        { name: 'Cidade', value: COLUMNS.CITY },
+        { name: 'Telefone', value: COLUMNS.PHONE }
+      ]
     }
   },
   methods: {
     formatPhone,
     refresh () {
-      this.$chimera._clients.reload()
+      this.$apollo.queries.clients.refetch()
+    },
+    getSearchByDDD () {
+      const search = this.$helpers.stripNonDigits(this.form.search)
+
+      return `${search}%`
+    },
+    getValueToSearch () {
+      if (this.form.option === COLUMNS.PHONE) {
+        if (this.form.search.startsWith('(')) {
+          return this.getSearchByDDD()
+        }
+      }
+
+      return `%${this.form.search}%`
     },
     handleSearch () {
-      const { option, search } = this.form
+      const value = this.getValueToSearch()
+      const column = this.form.option === COLUMNS.CITY
+        ? 'NAME'
+        : this.form.option
 
-      this.$chimera._clients.fetch(true, {
-        params: { option, search, page: 1 }
-      })
+      const options = {
+        value,
+        operator: 'LIKE',
+        column
+      }
+
+      this.query.hasCity = this.form.option === COLUMNS.CITY ? options : null
+      this.query.where = this.form.option !== COLUMNS.CITY ? options : null
+
+      this.$apollo.queries.clients.refetch()
     },
     clearSearch () {
-      this.$chimera._clients.reload()
+      this.form.search = ''
+      this.query.hasCity = null
+      this.query.where = null
+
+      this.handleSearch()
     },
     redirectToClient (client) {
       this.$router.push({
@@ -101,6 +144,7 @@ export default {
         />
         Novo cliente
       </AppButton>
+
       <ClientModalNew @refresh="refresh" />
 
       <div class="col-5">
@@ -119,11 +163,7 @@ export default {
               hide-default-option
               value-prop="value"
               label-prop="name"
-              :options="[
-                {name: 'Nome', value: 'name'},
-                {name: 'Cidade', value: 'city'},
-                {name: 'Telefone', value: 'phone'}
-              ]"
+              :options="selectOptions"
             />
           </template>
 
@@ -137,6 +177,18 @@ export default {
           </template>
         </AppInput>
       </div>
+    </div>
+
+    <div
+      v-show="form.search"
+      class="text-end"
+    >
+      <span
+        class="clickable link-primary small"
+        @click="clearSearch"
+      >
+        Limpar busca
+      </span>
     </div>
 
     <AppCard
@@ -159,7 +211,7 @@ export default {
       <template #body>
         <AppTable
           :headers="headers"
-          :items="clients"
+          :items="clients.data"
           :row-url="clientUrl"
           @click:item="redirectToClient"
         >
@@ -175,9 +227,10 @@ export default {
     </AppCard>
 
     <AppPaginator
+      v-model="query.page"
       class="mt-2"
-      :pagination="pagination"
-      :page.sync="page"
+      :is-loading="isLoading"
+      :pagination="clients.paginatorInfo"
     />
   </div>
 </template>

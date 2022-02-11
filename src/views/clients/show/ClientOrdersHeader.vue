@@ -2,12 +2,6 @@
 import { faPlus } from '@fortawesome/free-solid-svg-icons'
 
 export default {
-  props: {
-    code: {
-      type: String,
-      default: ''
-    }
-  },
   data () {
     return {
       search: '',
@@ -69,7 +63,7 @@ export default {
       class="small text-decoration-none d-flex justify-content-end mb-1"
       @click.prevent="clearSearch"
     >
-      {{ code !== '' ? 'Limpar busca' : '' }}
+      {{ search !== '' ? 'Limpar busca' : '' }}
     </a>
   </div>
 </template>

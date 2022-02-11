@@ -4,31 +4,13 @@ import {
 } from '@fortawesome/free-solid-svg-icons'
 import { formatDatetime } from '@/utils/formatters'
 import { DateTime } from 'luxon'
+import { payments, paymentsPendencies } from '@/graphql/Payment.gql'
 
 import DailyPaymentModal from './partials/DailyPaymentModal'
 import TheDailyCashHeader from './partials/TheDailyCashHeader'
 import TheDailyCashBody from './partials/TheDailyCashBody'
 
 export default {
-  chimera: {
-    _payments () {
-      return {
-        method: 'GET',
-        url: 'api/daily-cash/payments-of-day',
-        params: {
-          date: DateTime.now().toFormat('dd/MM/y'),
-          client: true,
-          order: true
-        }
-      }
-    },
-    _pendencies () {
-      return {
-        method: 'GET',
-        url: 'api/daily-cash/pendencies'
-      }
-    }
-  },
   metaInfo () {
     return {
       title: 'Caixa Diário'
@@ -39,38 +21,43 @@ export default {
     TheDailyCashBody,
     DailyPaymentModal
   },
+  apollo: {
+    payments: {
+      query: payments,
+      variables () {
+        return {
+          created_at: this.date,
+          pendencies: this.pendencies
+        }
+      },
+      deep: true
+    },
+    paymentsPendencies: {
+      query: paymentsPendencies
+    }
+  },
   data () {
     return {
-      date: DateTime.now().toFormat('dd/MM/y'),
+      pendencies: false,
+      date: DateTime.now().toISODate(),
+      payments: [],
       paymentModal: false,
+      paymentsPendencies: [],
       icons: {
         faCashRegister
       }
     }
   },
   computed: {
-    payments () {
-      return this.$chimera._payments?.data?.data || []
-    },
-    pendencies () {
-      return this.$chimera._pendencies?.data?.data || []
-    },
     isLoading () {
-      return this.$chimera._payments.loading
+      return !!this.$apollo.queries.payments.loading
     }
   },
   methods: {
+    formatDatetime,
     async onLoadPendenciesFromDate (date) {
-      const formattedDate = formatDatetime(date)
-
-      await this.$chimera._payments.fetch(true, {
-        params: {
-          date: formattedDate,
-          only_pendency: true
-        }
-      })
-
-      this.date = formattedDate
+      this.pendencies = true
+      this.date = date
     },
     onNewEntryClick () {
       this.paymentModal = true
@@ -84,63 +71,55 @@ export default {
       this.refreshPendencies()
     },
     refreshPendencies () {
-      this.$chimera._pendencies.reload()
+      this.$apollo.queries.paymentsPendencies.refetch()
     },
     refreshPayments () {
-      this.$chimera._payments.reload()
+      this.$apollo.queries.payments.refetch()
     },
-    async resetPayments () {
-      const formattedDate = DateTime.now().toFormat('dd/MM/y')
-
-      await this.$chimera._payments.fetch(true, {
-        params: {
-          date: formattedDate,
-          only_pendency: false
-        }
-      })
-
-      this.date = formattedDate
+    resetPayments () {
+      this.date = DateTime.now().toISODate()
+      this.pendencies = false
+      this.refreshPayments()
     }
   }
 }
 </script>
 
 <template>
-  <AppCard
-    color="success"
-    class="mt-5"
-  >
-    <template #header>
-      <h6 class="fw-bold mb-0">
-        <FontAwesomeIcon
-          :icon="icons.faCashRegister"
-          fixed-width
+  <div>
+    <TheDailyCashHeader
+      class="mt-5 mb-2"
+      :pendencies="paymentsPendencies"
+      :active-date="formatDatetime(date)"
+      @on-new-entry-click="onNewEntryClick"
+      @load-pendencies-from-date="onLoadPendenciesFromDate"
+      @reset-payments="resetPayments"
+    />
+
+    <AppCard
+      color="success"
+    >
+      <template #header>
+        <h6 class="fw-bold mb-0">
+          <FontAwesomeIcon
+            :icon="icons.faCashRegister"
+            fixed-width
+          />
+          Caixa Diário
+        </h6>
+      </template>
+      <template #body>
+        <AppLoading v-if="isLoading" />
+        <DailyPaymentModal
+          v-model="paymentModal"
+          @success="onPaymentSuccess"
         />
-        Caixa Diário
-      </h6>
-    </template>
-
-    <template #body>
-      <AppLoading v-if="isLoading" />
-
-      <DailyPaymentModal
-        v-model="paymentModal"
-        @success="onPaymentSuccess"
-      />
-
-      <TheDailyCashHeader
-        :pendencies="pendencies"
-        :active-date="date"
-        @on-new-entry-click="onNewEntryClick"
-        @load-pendencies-from-date="onLoadPendenciesFromDate"
-        @reset-payments="resetPayments"
-      />
-
-      <TheDailyCashBody
-        :payments="payments"
-        :date="date"
-        @daily-payment-success="onDailyPaymentSuccess"
-      />
-    </template>
-  </AppCard>
+        <TheDailyCashBody
+          :payments="payments"
+          :date="formatDatetime(date, 'dd/MM/y')"
+          @daily-payment-success="onDailyPaymentSuccess"
+        />
+      </template>
+    </AppCard>
+  </div>
 </template>

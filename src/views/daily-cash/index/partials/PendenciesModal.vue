@@ -43,18 +43,18 @@ export default {
       <div class="list-group mb-3">
         <a
           v-for="pendency in pendencies"
-          :key="pendency.payment_date"
+          :key="pendency.created_at_payment"
           href="#"
           class="list-group-item list-group-item-action d-flex justify-content-between link-primary"
-          :class="{'active text-white': isActiveListItem(pendency.payment_date, activeDate)}"
-          @click.prevent="onPendencyClick(pendency.payment_date)"
+          :class="{'active text-white': isActiveListItem(pendency.created_at_payment, activeDate)}"
+          @click.prevent="onPendencyClick(pendency.created_at_payment)"
         >
           <div class="fw-bold">
-            {{ formatDatetime(pendency.payment_date) }}
+            {{ formatDatetime(pendency.created_at_payment) }}
           </div>
           <span
             class="badge bg-primary align-self-center py-2"
-            :class="{'bg-light text-primary': isActiveListItem(pendency.payment_date, activeDate)}"
+            :class="{'bg-light text-primary': isActiveListItem(pendency.created_at_payment, activeDate)}"
           >{{ pendency.total }}</span>
         </a>
       </div>

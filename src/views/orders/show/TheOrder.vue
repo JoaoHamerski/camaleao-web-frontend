@@ -1,8 +1,9 @@
 <script>
-
+import { order } from '@/graphql/Orders.gql'
 import ClientCard from '@/views/clients/partials/ClientCard'
 import { faArrowAltCircleLeft, faBoxOpen } from '@fortawesome/free-solid-svg-icons'
 import { formatDatetime } from '@/utils/formatters'
+import { isEmpty } from 'lodash-es'
 
 import OrderHeader from './OrderHeader'
 import OrderCardBody from './OrderCardBody'
@@ -18,7 +19,7 @@ const getOrderPathUrl = (clientKey, orderKey) => {
 export default {
   metaInfo () {
     return {
-      title: `${this.client?.name || ''} - Pedidos`
+      title: `${this.order?.client?.name || ''} - Pedidos`
     }
   },
   components: {
@@ -30,20 +31,21 @@ export default {
     ModalOrderDelete,
     ModalReport
   },
-  chimera: {
-    _order () {
-      return {
-        url: `api/clients/${this.clientKey}/orders/${this.orderKey}`,
-        params: {
-          payments: true,
-          clothing_types: true
+  apollo: {
+    order: {
+      query: order,
+      variables () {
+        return {
+          code: this.orderKey,
+          clientId: this.clientKey
         }
       }
+      // fetchPolicy: 'network-only'
     }
   },
   data () {
     return {
-      client: null,
+      order: null,
       modalOrderPayment: {
         payment: null,
         value: false,
@@ -66,8 +68,8 @@ export default {
     }
   },
   computed: {
-    order () {
-      return this.$chimera._order?.data?.data
+    client () {
+      return this.order?.client || {}
     },
     clientKey () {
       return this.$route.params.clientKey
@@ -77,10 +79,22 @@ export default {
     },
     apiUrl () {
       return this.$store.getters.apiURL
+    },
+    cardColor () {
+      if (this.order.states.includes('CLOSED')) {
+        return 'secondary'
+      }
+
+      if (this.order.states.includes('PRE-REGISTERED')) {
+        return 'warning'
+      }
+
+      return 'primary'
     }
   },
   methods: {
     formatDatetime,
+    isEmpty,
     generateURL () {
       const url = new URL(this.apiUrl + getOrderPathUrl(this.clientKey, this.orderKey))
 
@@ -116,12 +130,13 @@ export default {
     },
     onOrderDeleted () {
       this.closeModal('modalOrderDelete')
+
       this.$nextTick(() => {
         this.redirectToClient()
       })
     },
     refresh () {
-      this.$chimera._order.fetch()
+      this.$apollo.queries.order.refetch()
     },
     redirectToClient () {
       this.$router.push({
@@ -148,8 +163,7 @@ export default {
       </AppButton>
 
       <ClientCard
-        :client-id="clientKey"
-        @client="client = $event"
+        :client="client"
       />
     </div>
 
@@ -157,8 +171,8 @@ export default {
       <ModalOrderPayment
         v-if="order"
         v-model="modalOrderPayment.value"
-        :total-owing="order.total_owing"
         :is-edit="modalOrderPayment.isEdit"
+        :order="order"
         :payment="modalOrderPayment.payment"
         @success="onPayment"
       />
@@ -166,7 +180,7 @@ export default {
       <ModalOrderStatus
         v-if="order"
         v-model="modalOrderStatus.value"
-        :order-status="order.status"
+        :order="order"
         @success="onStatusUpdated"
       />
 
@@ -188,7 +202,7 @@ export default {
 
       <OrderHeader
         :order="order"
-        @open-payment-modal="openModal('modalOrderPayment')"
+        @open-payment-modal="openModalPaymentOrder"
         @open-status-modal="openModal('modalOrderStatus')"
         @open-delete-order-modal="openModal('modalOrderDelete')"
         @open-report-modal="onGenerateReportClick"
@@ -197,7 +211,7 @@ export default {
 
       <AppCard
         v-if="order"
-        :color="order.states.includes('CLOSED') ? 'secondary' : 'primary'"
+        :color="cardColor"
       >
         <template #header>
           <h6
@@ -226,7 +240,7 @@ export default {
           <OrderCardBody
             v-if="order"
             :order="order"
-            @open-modal="openModalPaymentOrder"
+            @open-payment-modal="openModalPaymentOrder"
           />
 
           <div

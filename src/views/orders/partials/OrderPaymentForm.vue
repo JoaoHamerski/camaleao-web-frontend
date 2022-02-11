@@ -1,82 +1,24 @@
 <script>
+import { vias } from '@/graphql/Via.gql'
 import Form from '@/utils/Form'
 import { maskCurrencyBRL, maskDate } from '@/utils/masks'
 import { handleError, handleSuccess } from '@/utils/forms'
-
-const ENDPOINTS = {
-  vias: {
-    get: '/api/vias'
-  },
-  payments: {
-    post (clientKey, orderKey) {
-      return `/api/clients/${clientKey}/orders/${orderKey}/payments`
-    },
-    patch (clientKey, orderKey, paymentKey) {
-      return `/api/clients/${clientKey}/orders/${orderKey}/payments/${paymentKey}/`
-    }
-  }
-}
+import { paymentCreate, paymentUpdate } from '@/graphql/Payment.gql'
 
 export default {
-  chimera: {
-    _vias () {
-      return {
-        url: ENDPOINTS.vias.get
-      }
-    },
-    _newPayment () {
-      return {
-        method: 'POST',
-        url: ENDPOINTS.payments.post(this.clientKey, this.orderKey),
-        params: {
-          ...this.form.data()
-        },
-        on: {
-          error ({ error }) {
-            handleError(this, error)
-          },
-          success () {
-            handleSuccess(this, {
-              message: 'Pagamento registrado com sucesso!',
-              closeModal: true,
-              resetForm: true
-            })
-          }
-        }
-      }
-    },
-    _updatePayment () {
-      return {
-        method: 'PATCH',
-        url: ENDPOINTS.payments.patch(
-          this.clientKey,
-          this.orderKey,
-          this.paymentKey
-        ),
-        params: {
-          ...this.form.data()
-        },
-        on: {
-          error ({ error }) {
-            handleError(this, error)
-          },
-          success () {
-            handleSuccess(this, {
-              message: 'Pagamento atualizado com sucesso!'
-            })
-          }
-        }
-      }
+  apollo: {
+    vias: {
+      query: vias
     }
   },
   props: {
-    payment: {
+    order: {
       type: Object,
       default: () => {}
     },
-    totalOwing: {
-      type: [Number, String],
-      default: ''
+    payment: {
+      type: Object,
+      default: () => {}
     },
     isEdit: {
       type: Boolean,
@@ -97,9 +39,6 @@ export default {
     }
   },
   computed: {
-    vias () {
-      return this.$chimera._vias?.data?.data || []
-    },
     clientKey () {
       return this.$route.params.clientKey
     },
@@ -119,23 +58,49 @@ export default {
         return
       }
 
-      this.form.payment_via_id = payment.payment_via?.id
+      this.form.payment_via_id = payment.via.id
       this.form.note = payment.note
     }
   },
   methods: {
     payRest () {
-      this.form.value = this.$helpers.toBRL(this.totalOwing)
+      this.form.value = this.$helpers.toBRL(this.order.total_owing)
     },
     async store () {
       try {
-        await this.$chimera._newPayment.fetch()
-      } catch (error) {}
+        await this.$apollo.mutate({
+          mutation: paymentCreate,
+          variables: {
+            input: {
+              order_id: this.order.id,
+              ...this.form.data()
+            }
+          }
+        })
+
+        handleSuccess(this, { message: 'Pagamento registrado!', resetForm: true })
+      } catch (error) {
+        handleError(this, error)
+      }
     },
     async update () {
       try {
-        await this.$chimera._updatePayment.fetch()
-      } catch (error) {}
+        await this.$apollo.mutate({
+          mutation: paymentUpdate,
+          variables: {
+            id: this.payment.id,
+            input: {
+              order_id: this.order.id,
+              ...this.form.data()
+            }
+          }
+        })
+
+        handleSuccess(this, { message: 'Pagamento atualizado!' })
+      } catch (error) {
+        console.log({ ...error })
+        handleError(this, error)
+      }
     },
     async onSubmit () {
       this.isLoading = true
@@ -170,7 +135,7 @@ export default {
         <template #append>
           <AppButton
             outlined
-            :tooltip="$helpers.toBRL(totalOwing)"
+            :tooltip="$helpers.toBRL(order.total_owing)"
             @click.prevent="payRest"
           >
             Restante

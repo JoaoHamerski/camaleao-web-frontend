@@ -1,6 +1,7 @@
 <script>
 import { faUser, faEdit, faTrashAlt } from '@fortawesome/free-solid-svg-icons'
 import ClientCardItem from './ClientCardItem'
+import { isEmpty } from 'lodash-es'
 
 import { formatPhone } from '@/utils/formatters'
 
@@ -8,19 +9,11 @@ export default {
   components: {
     ClientCardItem
   },
-  chimera: {
-    _client () {
-      return {
-        url: `/api/clients/${this.id}`,
-        on: {
-          success ({ data }) {
-            this.$emit('client', data.data)
-          }
-        }
-      }
-    }
-  },
   props: {
+    client: {
+      type: Object,
+      default: () => ({})
+    },
     showOptions: {
       type: Boolean,
       default: true
@@ -40,11 +33,8 @@ export default {
     }
   },
   computed: {
-    id () {
+    key () {
       return this.clientKey || this.$route.params.clientKey
-    },
-    client () {
-      return this.$chimera._client?.data?.data
     },
     clientCityInfo () {
       const city = this.client.city?.name
@@ -68,7 +58,8 @@ export default {
     }
   },
   methods: {
-    formatPhone
+    formatPhone,
+    isEmpty
   }
 }
 </script>
@@ -87,7 +78,7 @@ export default {
         </h6>
       </template>
       <template
-        v-if="client"
+        v-if="!isEmpty(client)"
         #body
       >
         <ClientCardItem

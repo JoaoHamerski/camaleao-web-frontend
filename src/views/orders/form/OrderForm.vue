@@ -2,24 +2,14 @@
 
 import Form from '@/utils/Form'
 import { formatDatetime } from '@/utils/formatters'
-import { handleError, handleSuccess } from '@/utils/forms'
 import { map, pick } from 'lodash-es'
+import { orderCreate, orderUpdate, order } from '@/graphql/Orders.gql'
+import { handleError } from '@/utils/forms'
 
 import OrderFormBasicInfo from './OrderFormBasicInfo'
 import OrderFormValues from './OrderFormValues'
 import OrderFormProduction from './OrderFormProduction'
 import OrderFormFiles from './OrderFormFiles'
-
-const ENDPOINTS = {
-  orders: {
-    post (clientKey) {
-      return `/api/clients/${clientKey}/new-order`
-    },
-    patch (clientKey, orderKey) {
-      return `/api/clients/${clientKey}/orders/${orderKey}`
-    }
-  }
-}
 
 export default {
   components: {
@@ -42,36 +32,6 @@ export default {
       default: () => {}
     }
   },
-  chimera: {
-    _newOrder () {
-      return {
-        url: ENDPOINTS.orders.post(this.clientKey),
-        method: 'POST',
-        on: {
-          success ({ data }) {
-            handleSuccess(this)
-          },
-          error ({ error }) {
-            handleError(this, error)
-          }
-        }
-      }
-    },
-    _updateOrder () {
-      return {
-        url: ENDPOINTS.orders.patch(this.clientKey, this.orderKey),
-        method: 'PATCH',
-        on: {
-          success (response) {
-            this.$emit('success', { orderKey: this.form.code })
-          },
-          error ({ error }) {
-            handleError(this, error)
-          }
-        }
-      }
-    }
-  },
   data () {
     return {
       isLoading: false,
@@ -83,6 +43,7 @@ export default {
         payment_via_id: '',
         production_date: '',
         delivery_date: '',
+        clothing_types: [],
         art_paths: [],
         size_paths: [],
         payment_voucher_paths: []
@@ -97,56 +58,75 @@ export default {
       return this.$route.params.orderKey
     }
   },
-  watch: {
-    order (val) {
-      if (val) {
-        this.populateForm()
-      }
-    }
+  mounted () {
+    this.$on('order-loaded', ({ order }) => {
+      this.populateForm(order)
+    })
   },
   methods: {
+    getFile (item) {
+      return item.base64 || item
+    },
     getFomattedForm () {
       const form = { ...this.form.data() }
-      const getFile = (item) => {
-        return item.base64 || item
-      }
 
-      form.art_paths = map(form.art_paths, getFile)
-      form.size_paths = map(form.size_paths, getFile)
-      form.payment_voucher_paths = map(form.payment_voucher_paths, getFile)
+      form.art_paths = map(form.art_paths, this.getFile)
+      form.size_paths = map(form.size_paths, this.getFile)
+      form.payment_voucher_paths = map(form.payment_voucher_paths, this.getFile)
 
       return form
     },
     async update () {
-      const form = this.getFomattedForm()
+      const data = this.getFomattedForm()
 
       try {
-        await this.$chimera._updateOrder.fetch(true, {
-          params: {
-            ...form
-          }
-        })
-      } catch (error) {}
-    },
-    async store () {
-      const form = this.getFomattedForm()
+        const { data: { orderUpdate: { code } } } = await this.$apollo.mutate({
+          mutation: orderUpdate,
+          variables: {
+            id: this.order.id,
+            input: { ...data }
+          },
+          update: async (store) => {
+            const data = await store.readQuery({
+              query: order,
+              variables: {
+                code: this.order.code,
+                clientId: this.order.client.id
+              }
+            })
 
-      try {
-        await this.$chimera._newOrder.fetch(true, {
-          params: {
-            ...form
+            store.writeQuery({
+              query: order,
+              data
+            })
           }
         })
-      } catch (error) {}
-    },
-    populateClothingTypes (clothingTypes) {
-      for (const type of clothingTypes) {
-        this.form[`value_${type.key}`] = this.$helpers.toBRL(type.value)
-        this.form[`quantity_${type.key}`] = type.quantity
+
+        this.$emit('success', { orderCode: code, clientId: this.clientKey })
+      } catch (error) {
+        handleError(this, error)
       }
     },
-    populateForm () {
-      const fields = pick(this.order, [
+    async store () {
+      const data = this.getFomattedForm()
+
+      try {
+        const { data: { orderCreate: { code } } } = await this.$apollo.mutate({
+          mutation: orderCreate,
+          variables: {
+            client_id: this.clientKey,
+            input: { ...data }
+          }
+        })
+
+        this.$emit('success', { orderCode: code, clientId: this.clientKey })
+      } catch (error) {
+        console.log({ ...error })
+        handleError(this, error)
+      }
+    },
+    populateForm (order) {
+      const fields = pick(order, [
         'name',
         'price',
         'code',
@@ -158,7 +138,9 @@ export default {
         'payment_voucher_paths'
       ])
 
-      fields.discount = this.$helpers.toBRL(fields.discount)
+      fields.discount = +fields.discount === 0
+        ? 'R$ '
+        : this.$helpers.toBRL(fields.discount)
       fields.price = this.$helpers.toBRL(fields.price)
       fields.production_date = formatDatetime(fields.production_date)
       fields.delivery_date = formatDatetime(fields.delivery_date)
@@ -166,6 +148,10 @@ export default {
       for (const field in fields) {
         this.form[field] = fields[field]
       }
+
+      this.$on('clothing-types-loaded', () => {
+        this.populateClothingTypes(order.clothing_types)
+      })
     },
     async onSubmit () {
       this.isLoading = true
@@ -179,18 +165,32 @@ export default {
       this.isLoading = false
     },
     onClothingTypesLoaded (clothingTypes) {
-      this.$emit('clothing-types-loaded')
+      if (this.form.clothing_types.length) {
+        this.$emit('clothing-types-loaded')
+        return
+      }
 
       for (const type of clothingTypes) {
-        this.$set(this.form, `value_${type.key}`, 'R$ ')
-        this.$set(this.form, `quantity_${type.key}`, '')
-        this.$set(this.form.originalData, `value_${type.key}`, 'R$ ')
-        this.$set(this.form.originalData, `quantity_${type.key}`, '')
+        this.form.clothing_types.push({
+          key: type.key,
+          value: 'R$ ',
+          quantity: ''
+        })
       }
 
-      if (this.isEdit) {
-        this.populateClothingTypes(this.order.clothing_types)
-      }
+      this.$emit('clothing-types-loaded')
+    },
+    populateClothingTypes (clothingTypes) {
+      this.form.clothing_types.forEach((type, index) => {
+        const searchType = clothingTypes.find(
+          (searchType) => searchType.key === type.key
+        )
+
+        if (searchType) {
+          this.form.clothing_types[index].value = this.$helpers.toBRL(searchType.value)
+          this.form.clothing_types[index].quantity = searchType.quantity
+        }
+      })
     },
     onSelectFiles ({ files, field }) {
       this.form[field].push(...files)
@@ -213,6 +213,7 @@ export default {
   >
     <OrderFormBasicInfo :form="form" />
     <OrderFormValues
+      :order="order"
       :form="form"
       :is-edit="isEdit"
       @clothing-types-loaded="onClothingTypesLoaded"

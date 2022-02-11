@@ -1,6 +1,8 @@
 <script>
 import ClientCard from '../partials/ClientCard'
 import { faPlus, faArrowAltCircleLeft } from '@fortawesome/free-solid-svg-icons'
+import { clientShow } from '@/graphql/Clients.gql'
+
 import 'tippy.js/themes/light-border.css'
 
 import ClientOrdersCard from './ClientOrdersCard'
@@ -17,12 +19,17 @@ export default {
     ClientOrdersCard,
     ClientOrdersHeader
   },
-  chimera: {
-    _orders () {
-      return {
-        url: `/api/clients/${this.$route.params.clientKey}/orders/`,
-        params: { page: this.page }
-      }
+  apollo: {
+    client: {
+      query: clientShow,
+      variables () {
+        return {
+          id: this.clientKey,
+          orderPage: this.page,
+          orderWhere: this.orderWhere
+        }
+      },
+      fetchPolicy: 'network-only'
     }
   },
   data () {
@@ -30,6 +37,7 @@ export default {
       page: 1,
       code: '',
       client: null,
+      orderWhere: {},
       icons: {
         faPlus,
         faArrowAltCircleLeft
@@ -38,32 +46,27 @@ export default {
   },
   computed: {
     isLoading () {
-      return this.$chimera._orders.loading
+      return !!this.$apollo.queries.client.loading
     },
     clientKey () {
       return this.$route.params.clientKey
     },
     orders () {
-      return this.$chimera._orders?.data?.data || []
-    },
-    pagination () {
-      return this.$chimera._orders?.data?.meta || ({})
+      return this.client?.orders || {}
     }
   },
   methods: {
     handleSearch (code) {
-      this.code = code
+      const where = {
+        column: 'CODE',
+        operator: 'LIKE',
+        value: `%${code}%`
+      }
 
-      this.$chimera._orders.fetch(true, {
-        params: { code, page: 1 }
-      })
+      this.orderWhere = where
     },
     onSearchClear () {
-      this.code = ''
-
-      this.$chimera._orders.fetch(true, {
-        params: { code: '', page: 1 }
-      })
+      this.orderWhere = {}
     }
   }
 }
@@ -82,8 +85,7 @@ export default {
         </AppButton>
       </div>
       <ClientCard
-        :client-id="clientKey"
-        @client="client = $event"
+        :client="client"
       />
     </div>
 
@@ -96,13 +98,13 @@ export default {
 
       <ClientOrdersCard
         :is-loading="isLoading"
-        :orders="orders"
+        :orders="orders.data"
       />
 
       <AppPaginator
+        v-model="page"
         class="mt-2"
-        :page.sync="page"
-        :pagination="pagination"
+        :pagination="orders.paginatorInfo"
       />
     </div>
   </div>

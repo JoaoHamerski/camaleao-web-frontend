@@ -1,12 +1,14 @@
 <script>
 import { truncate, isEmpty, omit } from 'lodash-es'
 import { maskDate, maskCurrencyBRL } from '@/utils/masks'
-import Form from '@/utils/Form'
-import ViewerItemsCardFile from '@/components/AppViewer/ViewerItemsCardFile'
+import { handleError, handleSuccess } from '@/utils/forms'
+import { formatBytes } from '@/utils/formatters'
 import fileMixin from '@/mixins/filesMixin'
 import pasteFilesMixin from '@/mixins/pasteFilesMixin'
-import { handleError } from '@/utils/forms'
-import { formatBytes } from '@/utils/formatters'
+import Form from '@/utils/Form'
+import { expenseCreate, expenseUpdate } from '@/graphql/Expense.gql'
+
+import ViewerItemsCardFile from '@/components/AppViewer/ViewerItemsCardFile'
 
 export default {
   components: {
@@ -124,35 +126,56 @@ export default {
     async onSubmit () {
       this.isLoading = true
 
-      try {
-        if (this.isEdit) {
-          await this.onUpdate()
-          return
-        }
-
-        await this.onCreate()
-      } catch (error) {}
+      if (this.isEdit) {
+        await this.update()
+      } else {
+        await this.store()
+      }
 
       this.isLoading = false
     },
-    getFormattedData (data) {
+    getFormattedData () {
+      const data = this.form.data()
+
       data.receipt_path = data.receipt_path?.base64 || data.receipt_path
 
       return data
     },
-    async onUpdate () {
+    async update () {
       const data = this.getFormattedData(this.form.data())
 
-      await this.$chimera._updateExpense.fetch(true, {
-        params: { ...data }
-      })
+      try {
+        await this.$apollo.mutate({
+          mutation: expenseUpdate,
+          variables: {
+            id: this.expense.id,
+            input: data
+          }
+        })
+
+        handleSuccess(this, { message: 'Despesa atualizada!' })
+      } catch (error) {
+        console.log({ ...error })
+        handleError(this, error)
+      }
     },
-    async onCreate () {
+    async store () {
       const data = this.getFormattedData(this.form.data())
 
-      await this.$chimera._newExpense.fetch(true, {
-        params: { ...data }
-      })
+      try {
+        await this.$apollo.mutate({
+          mutation: expenseCreate,
+          variables: {
+            input: {
+              ...data
+            }
+          }
+        })
+
+        handleSuccess(this, { message: 'Despesa cadastrada!', resetForm: true })
+      } catch (error) {
+        handleError(this, error)
+      }
     }
   }
 }

@@ -1,17 +1,17 @@
 <script>
 export default {
-  data () {
-    return {
-      code: ''
+  props: {
+    value: {
+      type: String,
+      default: ''
     }
   },
   methods: {
     onSearchClick () {
-      this.$emit('code', this.code)
+      this.$emit('search')
     },
     onClearSearchClick () {
-      this.code = ''
-      this.$emit('code', '')
+      this.$emit('clear-search')
     }
   }
 }
@@ -21,10 +21,11 @@ export default {
   <div class="col-6">
     <AppInput
       id="code"
-      v-model="code"
+      :value="value"
       name="code"
       placeholder="Por código..."
       :default-margin="false"
+      @input="$emit('input', $event)"
     >
       <template #append>
         <AppButton
@@ -36,7 +37,7 @@ export default {
       </template>
     </AppInput>
     <a
-      v-if="code !== ''"
+      v-if="value !== ''"
       class="text-decoration-none small"
       href="#"
       @click.prevent="onClearSearchClick"

@@ -20,11 +20,8 @@ export default {
     }
   },
   computed: {
-    isPayment () {
-      return 'order' in this.entry
-    },
     modalColor () {
-      return this.isPayment ? 'success' : 'danger'
+      return this.is_expense ? 'danger' : 'success'
     }
   },
   methods: {
@@ -45,13 +42,13 @@ export default {
 
     <template #body>
       <div v-if="!isEmpty(entry)">
-        <EntryDetailsPayment
-          v-if="isPayment"
-          :payment="entry"
-        />
         <EntryDetailsExpense
-          v-else
+          v-if="entry.is_expense"
           :expense="entry"
+        />
+        <EntryDetailsPayment
+          v-else
+          :payment="entry"
         />
       </div>
     </template>

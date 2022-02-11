@@ -1,27 +1,15 @@
 <script>
 import accounting from 'accounting-js'
+import { isEmpty } from 'lodash-es'
 import { formatCurrencyBRL } from '@/utils/formatters'
 import { maskCurrencyBRL, maskInteger } from '@/utils/masks'
+import { clothingTypes } from '@/graphql/ClothingTypes.gql'
 
 import OrderFormValuesFinal from './OrderFormValuesFinal'
 
 export default {
   components: {
     OrderFormValuesFinal
-  },
-  chimera: {
-    _clothingTypes () {
-      return {
-        url: '/api/clothing-types?hidden=false',
-        on: {
-          success ({ data }) {
-            const clothingTypes = data.data
-
-            this.$emit('clothing-types-loaded', clothingTypes)
-          }
-        }
-      }
-    }
   },
   props: {
     form: {
@@ -31,35 +19,45 @@ export default {
     isEdit: {
       type: Boolean,
       default: false
+    },
+    order: {
+      type: Object,
+      default: () => ({})
+    }
+  },
+  apollo: {
+    clothingTypes: {
+      query: clothingTypes,
+      result ({ data }) {
+        this.$emit('clothing-types-loaded', data.clothingTypes)
+      }
     }
   },
   data () {
     return {
+      clothingTypes: [],
       maskCurrencyBRL: maskCurrencyBRL({ numeralPositiveOnly: true }),
       maskInteger: maskInteger({ delimiter: '', numeralDecimalScale: 0 })
     }
   },
   computed: {
-    clothingTypes () {
-      return this.$chimera._clothingTypes?.data?.data || []
-    },
     totalQuantity () {
-      return this.clothingTypes.reduce((total, type) => {
-        const value = accounting.unformat(this.form[`value_${type.key}`], ',')
+      return this.clothingTypes.reduce((total, type, index) => {
+        const value = accounting.unformat(this.form.clothing_types[index].value, ',')
 
         if (value > 0) {
-          total += +this.form[`quantity_${type.key}`]
+          total += +this.form.clothing_types[index].quantity
         }
 
         return total
       }, 0)
     },
     totalValue () {
-      const total = this.clothingTypes.reduce((total, type) => {
-        const quantity = this.form[`quantity_${type.key}`]
+      const total = this.clothingTypes.reduce((total, type, index) => {
+        const quantity = this.form.clothing_types[index].quantity
 
         if (quantity > 0) {
-          total += accounting.unformat(this.evaluateTotalType(type.key), ',')
+          total += accounting.unformat(this.evaluateTotalType(index), ',')
         }
 
         return total
@@ -67,12 +65,31 @@ export default {
 
       return formatCurrencyBRL(total)
     },
+    isSomeFieldFilled () {
+      return this.form.clothing_types.some((item, index) => {
+        return this.isValidType(index)
+      })
+    },
     finalValue () {
-      const sanitizedTotalValue = accounting.unformat(this.totalValue, ',')
-      const sanitizedDiscount = accounting.unformat(this.form.discount, ',')
+      const unformattedTotalValue = accounting.unformat(this.totalValue, ',')
+      const unformattedDiscount = accounting.unformat(this.form.discount, ',')
+
+      if (isEmpty(this.order)) {
+        return 'R$ '
+      }
+
+      if (this.order.states.includes('PRE-REGISTERED') && !this.isSomeFieldFilled) {
+        const unformattedPrice = accounting.unformat(this.order.original_price, ',')
+        const finalPrice = accounting.toFixed(
+          unformattedPrice - unformattedDiscount,
+          2
+        )
+
+        return formatCurrencyBRL(finalPrice)
+      }
 
       const finalValue = accounting.toFixed(
-        sanitizedTotalValue - sanitizedDiscount,
+        unformattedTotalValue - unformattedDiscount,
         2
       )
 
@@ -80,14 +97,18 @@ export default {
     }
   },
   methods: {
-    isValidType (key) {
-      const sanitizedValue = accounting.unformat(this.form[`value_${key}`], ',')
+    isEmpty,
+    isValidType (index) {
+      const sanitizedValue = accounting.unformat(
+        this.form.clothing_types[index].value,
+        ','
+      )
 
-      return this.form[`quantity_${key}`] > 0 && sanitizedValue > 0
+      return this.form.clothing_types[index].quantity > 0 && sanitizedValue > 0
     },
-    evaluateTotalType (key) {
-      const value = accounting.unformat(this.form[`value_${key}`], ',')
-      const quantity = this.form[`quantity_${key}`]
+    evaluateTotalType (index) {
+      const value = accounting.unformat(this.form.clothing_types[index].value, ',')
+      const quantity = this.form.clothing_types[index].quantity
       const result = accounting.toFixed(quantity * value, 2)
 
       return formatCurrencyBRL(result)
@@ -107,6 +128,12 @@ export default {
     <h6 class="text-secondary">
       Tipos de roupas
     </h6>
+
+    <template v-if="!isEmpty(order) && order.states.includes('PRE-REGISTERED')">
+      <div class="small text-warning fw-bold">
+        Pedido pré-registrado com o valor de {{ $helpers.toBRL(order.original_price) }}
+      </div>
+    </template>
 
     <div>
       <div class="row mb-3 text-secondary">
@@ -129,20 +156,20 @@ export default {
       </div>
 
       <div
-        v-for="type in clothingTypes"
+        v-for="(type, index) in clothingTypes"
         :key="type.key"
         class="row"
       >
         <div
           class="col text-subtitle fw-bold"
-          :class="isValidType(type.key) && 'text-success'"
+          :class="isValidType(index) && 'text-success'"
         >
           {{ type.name }}
         </div>
 
         <div class="col">
           <AppInput
-            v-model="form[`quantity_${type.key}`]"
+            v-model="form.clothing_types[index].quantity"
             :name="'quantity_' + type.key"
             :mask="maskInteger"
             @focus="form.errors.clear('price')"
@@ -151,7 +178,7 @@ export default {
 
         <div class="col">
           <AppInput
-            v-model="form[`value_${type.key}`]"
+            v-model="form.clothing_types[index].value"
             :mask="maskCurrencyBRL"
             :name="'value_' + type.key"
             @focus="form.errors.clear('price')"
@@ -160,7 +187,7 @@ export default {
 
         <div class="col">
           <AppInput
-            :value="evaluateTotalType(type.key)"
+            :value="evaluateTotalType(index)"
             :name="'total_' + type.key"
             disabled
           />

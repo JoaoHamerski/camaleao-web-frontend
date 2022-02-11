@@ -94,7 +94,7 @@ export default {
         </li>
 
         <li class="list-group-item">
-          <b>Via: </b> {{ payment.payment_via.name }}
+          <b>Via: </b> {{ payment.via.name }}
         </li>
 
         <li class="list-group-item d-flex justify-content-between">
@@ -111,7 +111,7 @@ export default {
 
         <li class="list-group-item d-flex justify-content-between">
           <div>
-            <b>Registrado em: </b> {{ formatDatetime(payment.created_at, "dd/mm/yyyy HH'h 'mm'm'") }}
+            <b>Registrado em: </b> {{ formatDatetime(payment.created_at, "dd/MM/yyyy HH'h 'mm'm'") }}
           </div>
 
           <div>

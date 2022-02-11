@@ -1,4 +1,8 @@
 <script>
+import { expenses } from '@/graphql/Expense.gql'
+import { expenseTypes } from '@/graphql/ExpenseTypes.gql'
+import { vias } from '@/graphql/Via.gql'
+
 import TheExpensesReportCard from './TheExpensesReportCard'
 import TheExpensesBody from './TheExpensesBody'
 import TheExpensesHeader from './TheExpensesHeader'
@@ -14,42 +18,19 @@ export default {
     TheExpensesBody,
     TheExpensesHeader
   },
-  chimera: {
-    _vias () {
-      return {
-        method: 'GET',
-        url: 'api/vias',
-        on: {
-          success ({ data }) {
-            this.vias = data.data
-          }
-        }
-      }
+  apollo: {
+    vias: {
+      query: vias
     },
-    _expenses () {
-      return {
-        method: 'GET',
-        url: 'api/expenses',
-        params: {
-          page: this.page,
-          search: this.search
-        },
-        on: {
-          success ({ data }) {
-            this.expenses = data.data
-            this.pagination = data.meta
-          }
-        }
-      }
+    expenseTypes: {
+      query: expenseTypes
     },
-    _expenseTypes () {
-      return {
-        method: 'GET',
-        url: 'api/expense-types/',
-        on: {
-          success ({ data }) {
-            this.expenseTypes = data.data
-          }
+    expenses: {
+      query: expenses,
+      variables () {
+        return {
+          descriptionLike: `%${this.search}%`,
+          page: this.page
         }
       }
     }
@@ -59,14 +40,16 @@ export default {
       page: 1,
       search: '',
       vias: [],
-      expenses: [],
-      expenseTypes: [],
-      pagination: {}
+      expenses: {
+        data: [],
+        paginatorInfo: {}
+      },
+      expenseTypes: []
     }
   },
   computed: {
     isLoading () {
-      return this.$chimera._expenses.loading
+      return !!this.$apollo.queries.expenses.loading
     }
   },
   methods: {
@@ -74,10 +57,10 @@ export default {
       this.search = search
     },
     refreshExpenses () {
-      this.$chimera._expenses.reload()
+      this.$apollo.queries.expenses.refetch()
     },
     refreshExpenseTypes () {
-      this.$chimera._expenseTypes.reload()
+      this.$apollo.queries.expenseTypes.refetch()
     },
     refreshAll () {
       this.refreshExpenseTypes()
@@ -103,8 +86,8 @@ export default {
     <TheExpensesBody
       :vias="vias"
       :expense-types="expenseTypes"
-      :expenses="expenses"
-      :pagination="pagination"
+      :expenses="expenses.data"
+      :pagination="expenses.paginatorInfo"
       :page.sync="page"
       :is-loading="isLoading"
       @refresh-expenses="refreshExpenses"

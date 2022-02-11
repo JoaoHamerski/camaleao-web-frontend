@@ -1,4 +1,6 @@
 <script>
+import { client } from '@/graphql/Clients.gql'
+
 import {
   faBoxOpen,
   faArrowCircleLeft
@@ -14,6 +16,16 @@ export default {
       title: 'Novo pedido - ' + this.client?.name || ''
     }
   },
+  apollo: {
+    client: {
+      query: client,
+      variables () {
+        return {
+          id: this.$route.params.clientKey
+        }
+      }
+    }
+  },
   data () {
     return {
       icons: {
@@ -22,27 +34,25 @@ export default {
       }
     }
   },
-  chimera: {
-    _client () {
-      return {
-        url: `/api/clients/${this.$route.params.clientKey}`
-      }
-    }
-  },
-  computed: {
-    client () {
-      return this.$chimera._client?.data?.data || {}
-    }
-  },
   methods: {
-    onSuccess () {
-      this.$toast.success('Pedido criado com sucesso!')
-      this.redirectToClient()
+    onSuccess ({ clientId, orderCode }) {
+      this.$toast.success('Pedido criado!')
+      this.redirectToOrder(clientId, orderCode)
+    },
+    redirectToOrder (clientKey, orderKey) {
+      return this.$router.push({
+        name: 'orders.show',
+        params: {
+          clientKey, orderKey
+        }
+      })
     },
     redirectToClient () {
       return this.$router.push({
         name: 'clients.show',
-        client: this.$route.params.clientKey
+        params: {
+          clientKey: this.$route.params.clientKey
+        }
       })
     }
   }

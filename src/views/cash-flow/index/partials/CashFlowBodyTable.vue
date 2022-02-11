@@ -20,7 +20,7 @@ export default {
   },
   props: {
     data: {
-      type: Object,
+      type: Array,
       default: () => ({})
     }
   },
@@ -48,36 +48,16 @@ export default {
         { text: 'Data', value: 'date', align: 'center', format: 'datetime' },
         { text: 'Detalhes', value: 'details', align: 'center' }
       ]
-    },
-    items () {
-      return this.data?.entries?.data || []
     }
   },
   methods: {
     formatCurrencyBRL,
-    isPayment (entry) {
-      return 'order' in entry
-    },
     rowClass (item) {
-      if (this.isPayment(item)) {
-        return 'table-success'
+      if (item.is_expense) {
+        return 'table-danger'
       }
 
-      return 'table-danger'
-    },
-    getDescription (entry) {
-      if (this.isPayment(entry)) {
-        return entry.order.name || `[CÓD.] ${entry.order.code}`
-      }
-
-      return entry.description
-    },
-    getVia (entry) {
-      if (this.isPayment(entry)) {
-        return entry.payment_via.name
-      }
-
-      return entry.via.name
+      return 'table-success'
     },
     getOrderUrl (entry) {
       const resolvedRoute = this.$router.resolve({
@@ -91,8 +71,8 @@ export default {
       return resolvedRoute.href
     },
     onDetailsShowClick (entry) {
-      this.modalEntryDetails.modal = true
       this.modalEntryDetails.entry = entry
+      this.modalEntryDetails.modal = true
     },
     onModalHidden () {
       this.modalEntryDetails.entry = {}
@@ -110,7 +90,7 @@ export default {
     />
     <AppTable
       :headers="headers"
-      :items="items"
+      :items="data"
       :row-class="rowClass"
     >
       <template #[`headers.type`]>
@@ -142,34 +122,34 @@ export default {
       </template>
       <template #[`items.type`]="{ item }">
         <FontAwesomeIcon
-          v-if="isPayment(item)"
-          :icon="icons.faHandHoldingUsd"
-          class="text-success"
-        />
-        <FontAwesomeIcon
-          v-else
+          v-if="item.is_expense"
           :icon="icons.faFunnelDollar"
           class="text-danger"
         />
+        <FontAwesomeIcon
+          v-else
+          :icon="icons.faHandHoldingUsd"
+          class="text-success"
+        />
       </template>
       <template #[`items.description`]="{ item }">
+        <span v-if="item.is_expense">
+          {{ item.description }}
+        </span>
         <a
-          v-if="isPayment(item)"
+          v-else
           target="_blank"
           class="text-decoration-none"
           :href="getOrderUrl(item)"
         >
-          {{ getDescription(item) }}
+          {{ item.description }}
         </a>
-        <span v-else>
-          {{ getDescription(item) }}
-        </span>
       </template>
       <template #[`items.via`]="{ item }">
-        {{ getVia(item) }}
+        {{ item.via.name }}
       </template>
       <template #[`items.value`]="{ item }">
-        {{ formatCurrencyBRL(isPayment(item) ? item.value : -item.value) }}
+        {{ formatCurrencyBRL(item.is_expense ? -item.value : item.value) }}
       </template>
     </AppTable>
   </div>

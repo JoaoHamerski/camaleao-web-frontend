@@ -3,6 +3,7 @@ import {
   faBoxOpen,
   faArrowCircleLeft
 } from '@fortawesome/free-solid-svg-icons'
+import { order } from '@/graphql/Orders.gql'
 
 import { isEmpty } from 'lodash-es'
 
@@ -17,38 +18,36 @@ export default {
   components: {
     OrderForm
   },
-  chimera: {
-    _client () {
-      return {
-        url: `/api/clients/${this.$route.params.clientKey}`
-      }
-    },
-    _order () {
-      return {
-        url: `api/clients/${this.clientKey}/orders/${this.orderKey}`,
-        params: {
-          payments: true,
-          clothing_types: true
+  apollo: {
+    order: {
+      query: order,
+      variables () {
+        return {
+          code: this.orderKey,
+          clientId: this.clientKey
         }
+      },
+      result ({ data }) {
+        this.$nextTick(() => {
+          this.$refs.orderForm.$emit(
+            'order-loaded',
+            { order: data.order }
+          )
+        })
       }
     }
   },
   data () {
     return {
+      order: {},
+      clothingTypesLoaded: false,
       icons: {
         faBoxOpen,
         faArrowCircleLeft
-      },
-      clothingTypesLoaded: false
+      }
     }
   },
   computed: {
-    client () {
-      return this.$chimera._client?.data?.data || {}
-    },
-    order () {
-      return this.$chimera._order?.data?.data || {}
-    },
     clientKey () {
       return this.$route.params.clientKey
     },
@@ -61,18 +60,17 @@ export default {
   },
   methods: {
     isEmpty,
-    redirectToOrder (event) {
+    redirectToOrder (clientKey, orderKey) {
       this.$router.push({
         name: 'orders.show',
         params: {
-          clientKey: this.clientKey,
-          orderKey: event.orderKey || this.orderKey
+          clientKey, orderKey
         }
       })
     },
-    onSuccess (event) {
-      this.$toast.success('Pedido atualizado com sucesso!')
-      this.redirectToOrder(event)
+    onSuccess ({ clientId, orderCode }) {
+      this.$toast.success('Pedido atualizado!')
+      this.redirectToOrder(clientId, orderCode)
     },
     onClothingTypesLoaded () {
       this.clothingTypesLoaded = true
@@ -87,7 +85,7 @@ export default {
       class="mb-2"
       outlined
       :icon="icons.faArrowCircleLeft"
-      @click="redirectToOrder"
+      @click="redirectToOrder(clientKey, orderKey)"
     >
       Pedido
     </AppButton>
@@ -101,12 +99,13 @@ export default {
           Alterar pedido -
           {{ $helpers.fallback(order, 'name', '[SEM NOME]') }}
           DE
-          {{ client.name }}
+          {{ $helpers.fallback(order.client, 'name') }}
         </h6>
       </template>
 
       <template #body>
         <OrderForm
+          ref="orderForm"
           :is-edit="true"
           :order="order"
           @success="onSuccess"

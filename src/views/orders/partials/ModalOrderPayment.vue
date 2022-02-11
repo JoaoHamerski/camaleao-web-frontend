@@ -12,15 +12,15 @@ export default {
       type: Boolean,
       default: false
     },
-    totalOwing: {
-      type: [String, Number],
-      default: ''
-    },
     isEdit: {
       type: Boolean,
       default: false
     },
     payment: {
+      type: Object,
+      default: () => {}
+    },
+    order: {
       type: Object,
       default: () => {}
     }
@@ -66,10 +66,11 @@ export default {
         em
         <b>{{ formatDatetime(payment.date) }}</b>
       </div>
+
       <OrderPaymentForm
+        :order="order"
         :is-edit="isEdit"
         :payment="payment"
-        :total-owing="totalOwing"
         @success="onSuccess"
       />
     </template>

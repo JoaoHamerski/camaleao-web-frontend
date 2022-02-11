@@ -2,6 +2,8 @@
 import { faClipboardList } from '@fortawesome/free-solid-svg-icons'
 import { maskDate } from '@/utils/masks'
 import { isEmpty, isNil, pickBy } from 'lodash-es'
+import { cities } from '@/graphql/Cities.gql'
+import { status } from '@/graphql/Status.gql'
 
 import ModalReport from '../../partials/ModalReport'
 
@@ -11,18 +13,12 @@ export default {
   components: {
     ModalReport
   },
-  chimera: {
-    _status () {
-      return {
-        method: 'GET',
-        url: 'api/status'
-      }
+  apollo: {
+    cities: {
+      query: cities
     },
-    _cities () {
-      return {
-        method: 'GET',
-        url: 'api/cities'
-      }
+    status: {
+      query: status
     }
   },
   data () {
@@ -30,6 +26,8 @@ export default {
       maskDate,
       modal: false,
       src: '',
+      cities: [],
+      status: [],
       filter: {
         city: '',
         status: '',
@@ -47,12 +45,6 @@ export default {
   computed: {
     apiUrl () {
       return this.$store.getters.apiURL
-    },
-    status () {
-      return this.$chimera._status?.data?.data || []
-    },
-    cities () {
-      return this.$chimera._cities?.data?.data || []
     },
     orderOptions () {
       return [

@@ -1,37 +1,19 @@
 <script>
-import { isEmpty } from 'lodash-es'
+import { isEmpty, isObject, omit, cloneDeep } from 'lodash-es'
 import { formatCurrencyBRL } from '@/utils/formatters'
 import { maskCurrencyBRL } from '@/utils/masks'
 import Form from '@/utils/Form'
-import { handleError } from '@/utils/forms.js'
+import { handleSuccess, handleError } from '@/utils/forms'
+import { vias } from '@/graphql/Via.gql'
+import { dailyCashEntry } from '@/graphql/Payment.gql'
 
 import DailyPaymentFormClient from './DailyPaymentFormClient'
 import DailyPaymentFormOrder from './DailyPaymentFormOrder'
 
 export default {
-  chimera: {
-    _vias () {
-      return {
-        method: 'GET',
-        url: 'api/vias'
-      }
-    },
-    _newDailyCashPayment () {
-      return {
-        method: 'POST',
-        url: 'api/daily-cash/create',
-        auto: false,
-        on: {
-          success () {
-            this.$emit('success')
-            this.$toast.success('Registro feito com sucesso!')
-            this.form.reset()
-          },
-          error ({ error }) {
-            handleError(this, error)
-          }
-        }
-      }
+  apollo: {
+    vias: {
+      query: vias
     }
   },
   components: {
@@ -43,26 +25,29 @@ export default {
       maskCurrencyBRL: maskCurrencyBRL(),
       isLoading: false,
       form: new Form({
-        isNewClient: false,
-        isNewOrder: false,
-        client: '',
-        order: '',
+        client: {
+          id: '',
+          name: '',
+          isNew: false
+        },
+        order: {
+          id: '',
+          code: '',
+          price: '',
+          reminder: '',
+          isNew: false
+        },
         value: '',
-        via_id: '',
-        price: '',
-        reminder: ''
+        via_id: ''
       })
     }
   },
   computed: {
     hasOrder () {
-      return !isEmpty(this.form.order) && !this.form.isNewOrder
+      return !isEmpty(this.form.order.id) && !this.form.order.isNew
     },
     apiUrl () {
       return this.$store.getters.apiURL
-    },
-    vias () {
-      return this.$chimera._vias?.data?.data || []
     }
   },
   methods: {
@@ -74,14 +59,36 @@ export default {
     onRestValueClick () {
       this.form.value = formatCurrencyBRL(this.form.order.total_owing)
     },
+    getFormattedData () {
+      const data = cloneDeep(this.form.data())
+
+      if (isObject(data.client.id)) {
+        data.client.id = data.client.id.id
+      }
+
+      if (isObject(data.order.id)) {
+        data.order.id = data.order.id.id
+      }
+
+      data.client = omit(data.client, 'isNew')
+      data.order = omit(data.order, 'isNew')
+
+      return data
+    },
     async onSubmit () {
       this.isLoading = true
+      const data = this.getFormattedData()
 
       try {
-        await this.$chimera._newDailyCashPayment.fetch(true, {
-          params: { ...this.form }
+        await this.$apollo.mutate({
+          mutation: dailyCashEntry,
+          variables: { ...data }
         })
-      } catch (error) {}
+
+        handleSuccess(this, { message: 'Entrada registrada!', resetForm: true })
+      } catch (error) {
+        handleError(this, error)
+      }
 
       this.isLoading = false
     }
@@ -122,7 +129,7 @@ export default {
           >
             <AppButton
               v-if="hasOrder"
-              :tooltip="formatCurrencyBRL(form.order.total_owing)"
+              :tooltip="formatCurrencyBRL(form.order.id.total_owing)"
               outlined
               @click.prevent="onRestValueClick"
             >

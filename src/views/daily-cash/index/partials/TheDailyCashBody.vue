@@ -6,6 +6,12 @@ import { DateTime } from 'luxon'
 import DailyPaymentConfirmation from './DailyPaymentConfirmation'
 import DailyPaymentConfirmationErrorModal from './DailyPaymentConfirmationErrorModal'
 
+const PAYMENT_STATUS_CLASS = {
+  true: 'table-success',
+  false: 'table-danger',
+  null: 'table-warning'
+}
+
 export default {
   components: {
     DailyPaymentConfirmation,
@@ -14,7 +20,7 @@ export default {
   props: {
     payments: {
       type: Array,
-      default: () => []
+      default: () => ([])
     },
     date: {
       type: String,
@@ -34,6 +40,9 @@ export default {
     }
   },
   computed: {
+    abbrDate () {
+      return DateTime.fromFormat(this.date, 'dd/MM/y').toFormat('dd/MM')
+    },
     isSelectedDateToday () {
       const now = DateTime.now()
       const selectedDate = DateTime.fromFormat(this.date, 'dd/MM/y')
@@ -52,7 +61,7 @@ export default {
         { text: 'CLIENTE', value: 'client' },
         { text: 'VALOR', value: 'value', format: 'currencyBRL' },
         { text: 'VIA', value: 'via' },
-        { text: 'HORÁRIO', value: 'created_at', format: 'datetime', formatting: 'HH:mm', align: 'center' },
+        { text: 'REGISTRO ÀS', value: 'created_at', format: 'datetime', formatting: 'HH:mm', align: 'center' },
         { text: 'CHECKED', value: 'checked', align: 'center' }
       ]
     }
@@ -81,13 +90,7 @@ export default {
       return resolvedRoute.href
     },
     paymentRowClass (payment) {
-      const PAYMENT_STATUS = {
-        1: 'table-success',
-        0: 'table-danger',
-        null: 'table-warning'
-      }
-
-      return PAYMENT_STATUS[payment.is_confirmed]
+      return PAYMENT_STATUS_CLASS[payment.is_confirmed]
     },
     onDailyPaymentSuccess () {
       this.$emit('daily-payment-success')
@@ -106,7 +109,7 @@ export default {
       <span
         v-tippy
         :content="selectedDateExtended"
-      >{{ DateTime.fromFormat(date, 'dd/MM/y').toFormat('dd/MM') }}</span>
+      >{{ abbrDate }}</span>
     </h5>
 
     <div
@@ -149,7 +152,7 @@ export default {
       </template>
 
       <template #[`items.via`]="{ item }">
-        {{ item.payment_via.name }}
+        {{ item.via.name }}
       </template>
 
       <template #[`headers.checked`]>

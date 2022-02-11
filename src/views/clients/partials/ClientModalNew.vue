@@ -15,8 +15,7 @@ export default {
     }
   },
   methods: {
-    submitted () {
-      this.$toast.success('Cadastrado com sucesso!')
+    onSuccess () {
       this.modal = false
       this.$emit('refresh')
     }
@@ -40,7 +39,7 @@ export default {
       </template>
       <template #body>
         <ClientForm
-          @submitted="submitted"
+          @success="onSuccess"
         />
       </template>
     </AppModal>
