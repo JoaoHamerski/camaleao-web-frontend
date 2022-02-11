@@ -11,6 +11,8 @@ import ordersRoutes from '@/views/orders/routes'
 import dailyCashRoutes from '@/views/daily-cash/routes'
 import cashFlowRoutes from '@/views/cash-flow/routes'
 import expensesRoutes from '@/views/expenses/routes'
+import usersRoutes from '@/views/users/routes'
+import citiesRoutes from '@/views/cities/routes'
 
 Vue.use(VueRouter)
 
@@ -31,7 +33,9 @@ const routes = [
   ...ordersRoutes,
   ...dailyCashRoutes,
   ...cashFlowRoutes,
-  ...expensesRoutes
+  ...expensesRoutes,
+  ...usersRoutes,
+  ...citiesRoutes
 ]
 
 const router = new VueRouter({
