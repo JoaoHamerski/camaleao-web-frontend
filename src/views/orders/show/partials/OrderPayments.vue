@@ -5,8 +5,8 @@ import ModalOrderPayment from '../../partials/ModalOrderPayment'
 
 const PAYMENT_STATE = {
   null: 'PENDENTE',
-  0: 'RECUSADO',
-  1: 'APROVADO'
+  false: 'RECUSADO',
+  true: 'APROVADO'
 }
 
 export default {
@@ -32,8 +32,8 @@ export default {
     getPaymentState (payment) {
       return PAYMENT_STATE[payment.is_confirmed]
     },
-    selectPayment (payment) {
-      this.$emit('open-modal', { payment, isEdit: true })
+    onEditPaymentClick (payment) {
+      this.$emit('open-payment-modal', { payment, isEdit: true })
     }
   }
 }
@@ -57,7 +57,7 @@ export default {
           :key="payment.id"
           class="list-group-item text-subtitle"
           :class="{
-            'list-group-item-danger': payment.is_confirmed === 0,
+            'list-group-item-danger': payment.is_confirmed === false,
             'list-group-item-warning': payment.is_confirmed === null,
           }"
         >
@@ -68,7 +68,7 @@ export default {
                 em
                 <b>{{ formatDatetime(payment.date) }}</b>
                 via
-                <b>{{ payment.payment_via.name }}</b>
+                <b>{{ payment.via.name }}</b>
                 <span
                   v-if="!payment.is_confirmed"
                   class="fw-bold"
@@ -89,7 +89,7 @@ export default {
                 btn-class="btn-sm"
                 tooltip="Editar pagamento"
                 :icon="icons.faEdit"
-                @click="selectPayment(payment)"
+                @click="onEditPaymentClick(payment)"
               />
             </div>
           </div>
