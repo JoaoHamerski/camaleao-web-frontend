@@ -4,8 +4,12 @@ $default-color: $secondary;
 @import '~vue2-datepicker/scss/index.scss';
 
 .mx-datepicker {
-  display: block;
+  &.today-btn {
+    flex: 1 0 0%;
+  }
+  
   width: 100%;
+  display: block;
 }
 
 .mx-input-wrapper {
