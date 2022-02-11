@@ -2,17 +2,15 @@ import {
   apolloClientInstance,
   onLogin,
   onLogout
-  // onLogout
 } from '@/vue-apollo'
 
-import { authUser } from '@/graphql/auth/AuthUser.gql'
-import { login } from '@/graphql/auth/Login.gql'
+import { authUser, login } from '@/graphql/Auth.gql'
 
 import router from '@/router'
 
 export const namespaced = true
 
-const { apolloClient } = apolloClientInstance()
+const { apolloClient } = apolloClientInstance
 
 const ON_LOGIN_ROUTE = {
   path: '/'
@@ -26,6 +24,18 @@ export const state = {
   user: null,
   loading: false,
   error: null
+}
+
+export const getters = {
+  authUser: (state) => {
+    return state.user
+  },
+  loading: (state) => {
+    return state.loading
+  },
+  loggedIn: (state) => {
+    return !!state.user
+  }
 }
 
 export const mutations = {
@@ -53,9 +63,8 @@ export const actions = {
     try {
       await onLogout(apolloClient)
 
-      commit('SET_USER', null)
-
       if (router.currentRoute.name !== 'login') {
+        commit('SET_USER', null)
         router.push(ON_LOGOUT_ROUTE)
       }
     } catch (error) {
@@ -76,17 +85,5 @@ export const actions = {
       // eslint-disable-next-line no-console
       console.error(error)
     }
-  }
-}
-
-export const getters = {
-  authUser: (state) => {
-    return state.user
-  },
-  loading: (state) => {
-    return state.loading
-  },
-  loggedIn: (state) => {
-    return !!state.user
   }
 }
