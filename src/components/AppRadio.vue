@@ -1,6 +1,14 @@
 <script>
 export default {
   props: {
+    labelProp: {
+      type: String,
+      default: 'label'
+    },
+    valueProp: {
+      type: String,
+      default: 'value'
+    },
     value: {
       type: [String, Number],
       default: ''
@@ -43,8 +51,8 @@ export default {
         class="form-check-input"
         type="radio"
         :name="`radio_${option.id}`"
-        :value="option.value"
-        :checked="option.value === value"
+        :value="option[valueProp]"
+        :checked="option[valueProp] === value"
         :disabled="option.disabled"
         @change="$emit('input', $event.target.value)"
       >
@@ -52,7 +60,7 @@ export default {
         class="form-check-label"
         :for="`radio_${option.id}`"
       >
-        {{ option.label }}
+        {{ option[labelProp] }}
       </label>
     </div>
   </div>
