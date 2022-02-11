@@ -1,4 +1,4 @@
-import { has, isEmpty } from 'lodash-es'
+import { isEmpty } from 'lodash-es'
 
 const getGraphqlErrors = (error) => {
   return error.graphQLErrors[0].extensions.validation
@@ -34,14 +34,18 @@ export const handleError = (context, error, extraOptions = {}) => {
   })
 }
 
-export const handleSuccess = (context, options) => {
-  if (has(options, 'resetForm')) {
+export const handleSuccess = (context, options = {}) => {
+  if ('resetForm' in options) {
     context.form.reset()
   }
 
-  if (has(options, 'message')) {
+  if ('message' in options) {
     context.$toast.success(options.message)
   }
 
-  context.$emit('success')
+  if ('payload' in options) {
+    context.$emit('success', options.payload)
+  } else {
+    context.$emit('success')
+  }
 }
