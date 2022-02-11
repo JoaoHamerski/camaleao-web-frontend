@@ -1,0 +1,41 @@
+query cities {
+  cities {
+    id
+    name
+    
+    state {
+      name
+      abbreviation
+    }
+
+    branch {
+      city {
+        id
+      }
+      shipping_company {
+        id
+      }
+    }
+  }
+}
+
+query citiesIndex ($where: WhereConditions) {
+  cities (
+    where: $where
+    orderBy: [{column: "name" order: ASC}]
+  ) {
+    id
+    name
+    state {
+      id
+      name
+      abbreviation
+    }
+  }
+}
+
+mutation cityMassUpdateState ($state_id: ID! $cities_id: [ID!]!) {
+  cityMassUpdateState(state_id: $state_id cities_id: $cities_id) {
+    id
+  }
+}

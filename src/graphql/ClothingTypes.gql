@@ -1,0 +1,9 @@
+query clothingTypes {
+  clothingTypes {
+    id
+    key
+    name
+    is_hidden
+    commission
+  }
+}

@@ -1,0 +1,75 @@
+query payments (
+  $created_at: Date
+  $where: WhereConditions
+  $pendencies: Boolean
+) {
+  payments (
+    created_at: $created_at
+    where: $where 
+    orderBy: [{column: "created_at" order: DESC}]
+    pendencies: $pendencies
+  ) {
+    id
+    value
+    date
+    note
+    order {
+      id
+      code
+      name
+      client {
+        id
+        name
+      }
+      total_owing
+    }
+    via {
+      id 
+      name
+    }
+    confirmed_at
+    is_confirmed
+    created_at
+  }
+}
+
+query paymentsPendencies {
+  paymentsPendencies {
+    created_at_payment
+    total
+  }
+}
+
+mutation paymentCreate ($input: PaymentInput!) {
+  paymentCreate (input: $input) {
+    id
+  }
+}
+
+mutation paymentUpdate ($id: ID! $input: PaymentInput!) {
+  paymentUpdate (id: $id input: $input) {
+    id
+  }
+}
+
+mutation paymentConfirm ($id: ID! $confirmation: Boolean!) {
+  paymentConfirm (id: $id confirmation: $confirmation) {
+    is_confirmed
+  }
+}
+
+mutation dailyCashEntry (
+  $client: DailyCashClientInput!
+  $order: DailyCashOrderInput!
+  $value: String!
+  $via_id: ID!
+) {
+  dailyCashEntry (
+    client: $client
+    order: $order
+    value: $value
+    via_id: $via_id
+  ) {
+    id
+  }
+}

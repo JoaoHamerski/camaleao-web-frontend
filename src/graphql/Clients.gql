@@ -1,0 +1,109 @@
+query clientsIndex (
+  $page: Int!
+  $where: QueryClientsWhereWhereConditions
+  $hasCity: QueryClientsHasCityWhereHasConditions
+) {
+  clients (
+    first: 10, 
+    page: $page
+    orderBy: [{column: CREATED_AT order: DESC}]
+    where: $where
+    hasCity: $hasCity
+  ) {
+    paginatorInfo {
+      currentPage
+      perPage
+      total
+    }
+
+    data {
+      id
+      name
+      phone
+      city {
+        name
+        state {
+          name
+          abbreviation
+        }
+      }
+    }
+  }
+}
+
+query clientShow (
+  $id: ID! 
+  $orderPage: Int!
+  $orderWhere: ClientOrdersWhereWhereConditions
+) {
+  client (id: $id) {
+    id
+    name
+    phone
+    total_owing
+    shipping_company {
+      name
+    }
+    branch {
+      city {
+        name
+      }
+    }
+    city {
+      name
+    }
+    orders (
+      first: 10 
+      page: $orderPage
+      orderBy: [{column: CREATED_AT order: DESC}]
+      where: $orderWhere
+    ) {
+      paginatorInfo {
+        currentPage
+        perPage
+        total
+      }	
+      
+      data {
+        client {
+          id
+        }
+        code
+        price
+        total_paid
+        quantity
+        production_date
+        delivery_date
+        states
+      }
+    }
+  }
+}
+
+query client ($id: ID!) {
+  client (id: $id) {
+    id
+    name
+    phone
+    total_owing
+    shipping_company {
+      name
+    }
+    branch {
+      city {
+        name
+      }
+    }
+    city {
+      name
+    }
+  }
+}
+
+mutation clientCreate (
+  $input: ClientInput!
+) {
+  clientCreate (
+    input: $input
+  ) { id }
+}

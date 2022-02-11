@@ -1,0 +1,7 @@
+query states {
+  states (orderBy: [{column: "name" order: ASC}]) {
+    id
+    name
+    abbreviation
+  }
+}

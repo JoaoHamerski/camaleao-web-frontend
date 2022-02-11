@@ -1,0 +1,13 @@
+query branches {
+  branches {
+    id
+    city {
+      id
+      name
+      state {
+        name
+        abbreviation
+      }
+    }
+  }
+}

@@ -1,0 +1,69 @@
+
+query cashFlowEntries (
+  $first: Int = 10 
+  $page: Int 
+  $where: WhereConditions
+) {
+  cashFlowEntries (
+    first: $first 
+    page: $page 
+    where: $where
+    orderBy: [{column: "created_at" order: DESC}]
+  ) {
+    paginatorInfo {
+      currentPage
+      perPage
+      total
+    }
+
+    data {    
+      id
+      description
+      date
+      value
+      is_expense
+      receipt_path
+      note
+      confirmed_at
+      created_at
+      employee_name
+
+      via {
+        name
+      }
+      
+      type {
+        name
+      }
+      
+      order {
+        id
+        code
+        name
+        quantity
+        art_paths
+        client {
+          id
+          name
+        }
+      }
+      
+      user {
+        id
+        name
+      }
+    }
+  }
+}
+
+query cashFlowStatistics ($input: CashFlowFilterDatesInput!) {
+  cashFlowStatistics(input: $input) {
+    created_orders
+    created_shirts
+    closed_orders
+    closed_shirts
+    no_payments_orders
+    no_payments_shirts
+    balance
+  }
+}

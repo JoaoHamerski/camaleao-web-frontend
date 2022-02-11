@@ -1,0 +1,137 @@
+fragment OrderParts on Order {
+  client {
+      id
+      name
+      phone
+      total_owing
+      shipping_company {
+        name
+      }
+      branch {
+        city {
+          name
+        }
+      }
+      city {
+        name
+      }
+    }
+    status {
+      id
+      text
+    }
+    clothing_types {
+      id
+      key
+      name
+      is_hidden
+      commission
+      quantity
+      value
+      total_value
+    }
+    payments (orderBy: [
+      {column: "date" order: DESC}
+      {column: "created_at" order: DESC}
+    ]) {
+      id
+      value
+      date
+      note
+      via {
+        id
+        name
+      }
+      confirmed_at
+      is_confirmed
+      created_at
+    }
+    id
+    code
+    name
+    price
+    original_price
+    states
+    discount
+    quantity
+    total_paid
+    total_owing
+    total_clothings_value
+    production_date
+    delivery_date
+    created_at
+    closed_at
+    art_paths
+    size_paths
+    payment_voucher_paths
+    reminder
+}
+
+query ordersIndex (
+  $page: Int
+  $orderBy: [QueryOrdersOrderByOrderByClause!]
+  $where: QueryOrdersWhereWhereConditions
+  $hasCity: QueryOrdersHasCityWhereConditions
+  $hasStatus: QueryOrdersHasStatusWhereConditions
+) {
+  orders (
+    first: 10 
+    page: $page
+    orderBy: $orderBy
+    where: $where
+    hasCity: $hasCity
+    hasStatus: $hasStatus
+  ) {
+    paginatorInfo {
+      total
+      perPage
+      currentPage
+    }
+
+    data {
+      id
+      code
+      quantity
+      price
+      total_paid
+      production_date
+      delivery_date
+      states
+      total_owing
+      client {
+        id
+        name
+      }
+    }
+  }
+}
+
+query order ($code: ID! $clientId: ID!) {
+  order (code: $code clientId: $clientId) {
+    ...OrderParts
+  }
+}
+
+mutation orderUpdate ($id: ID! $input: OrderInput!) {
+  orderUpdate (id: $id input: $input) {
+    ...OrderParts
+  }
+}
+
+mutation orderToggle ($id: ID!) {
+  orderToggle (id: $id) {
+    id
+  }
+}
+
+mutation orderDelete ($id: ID!) {
+  orderDelete (id: $id) {
+    id
+  }
+}
+
+mutation orderCreate ($client_id: ID! $input: OrderInput!) {
+  orderCreate (client_id: $client_id input: $input) {
+    ...OrderParts
+  }
+}

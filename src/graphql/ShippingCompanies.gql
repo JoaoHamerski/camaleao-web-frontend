@@ -1,0 +1,6 @@
+query shippingCompanies {
+  shippingCompanies {
+    id
+    name
+  }
+}
