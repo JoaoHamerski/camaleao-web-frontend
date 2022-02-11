@@ -8,18 +8,31 @@ export default {
     value: {
       type: Boolean,
       default: false
+    },
+    defaultMargin: {
+      type: Boolean,
+      default: true
+    },
+    lg: {
+      type: Boolean,
+      default: false
     }
   }
 }
 </script>
 
 <template>
-  <div class="form-check mb-3">
+  <div
+    class="form-check"
+    :class="defaultMargin && 'mb-3'"
+  >
     <input
       :id="id"
       class="form-check-input"
+      :class="lg && 'form-check-input-lg'"
       type="checkbox"
       :value="value"
+      :checked="value"
       @input="$emit('input', $event.target.checked)"
     >
     <label
