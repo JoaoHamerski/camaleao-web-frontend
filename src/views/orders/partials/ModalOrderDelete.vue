@@ -1,25 +1,8 @@
 <script>
 import { faTrashAlt } from '@fortawesome/free-solid-svg-icons'
+import { orderDelete } from '@/graphql/Orders.gql'
 
 export default {
-  chimera: {
-    _deleteOrder () {
-      return {
-        method: 'DELETE',
-        url: `api/clients/${this.clientKey}/orders/${this.orderKey}`,
-        on: {
-          success () {
-            this.$toast.success('Pedido deletado com sucesso!')
-            this.$emit('success')
-          },
-          error () {
-            this.isLoading = false
-            this.$toast.error('Ops! Algo deu errado.')
-          }
-        }
-      }
-    }
-  },
   props: {
     value: {
       type: Boolean,
@@ -52,6 +35,16 @@ export default {
     }
   },
   methods: {
+    async delete () {
+      await this.$apollo.mutate({
+        mutation: orderDelete,
+        variables: {
+          id: this.order.id
+        }
+      })
+
+      this.$emit('success')
+    },
     deleteOrder () {
       this.isLoading = true
 
@@ -62,7 +55,7 @@ export default {
         return
       }
 
-      this.$chimera._deleteOrder.fetch()
+      this.delete()
     }
   }
 }
@@ -100,7 +93,7 @@ export default {
             v-model="orderCode"
             name="code"
           >
-            Confirme o código do pedido:
+            Confirme o código do pedido ({{ order.code }}):
           </AppInput>
         </div>
 
