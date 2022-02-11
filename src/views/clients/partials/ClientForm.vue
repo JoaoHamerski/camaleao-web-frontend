@@ -1,51 +1,32 @@
 <script>
+import { clientCreate } from '@/graphql/Clients.gql'
+import { cities } from '@/graphql/Cities.gql'
+import { branches } from '@/graphql/Branches.gql'
+import { shippingCompanies } from '@/graphql/ShippingCompanies.gql'
+
 import Form from '@/utils/Form'
-import 'vue-multiselect/dist/vue-multiselect.min.css'
+import { handleSuccess, handleError } from '@/utils/forms'
 import { maskPhone } from '@/utils/masks'
 
 export default {
-  chimera: {
-    _cities: {
-      url: '/api/cities'
+  apollo: {
+    cities: {
+      query: cities
     },
-    _branches: {
-      url: '/api/branches'
+    branches: {
+      query: branches
     },
-    _shippingCompanies: {
-      url: '/api/shipping-companies'
-    },
-    _newClient () {
-      return {
-        url: '/api/clients',
-        method: 'POST',
-        params: {
-          ...this.form.data()
-        },
-        on: {
-          error ({ error }) {
-            this.$toast.error('Algo está incorreto, verifique os dados, por favor.', {
-              duration: 4000
-            })
-
-            if (error.errors) {
-              this.form.onFail(error.errors)
-            }
-
-            this.isLoading = false
-          },
-          success () {
-            this.form.reset()
-            this.isLoading = false
-            this.$emit('submitted')
-          }
-        }
-      }
+    shippingCompanies: {
+      query: shippingCompanies
     }
   },
   data () {
     return {
       maskPhone,
       isLoading: false,
+      cities: [],
+      branches: [],
+      shippingCompanies: [],
       form: new Form({
         name: '',
         phone: '',
@@ -55,21 +36,35 @@ export default {
       })
     }
   },
-  computed: {
-    cities () {
-      return this.$chimera?._cities?.data?.data || []
-    },
-    branches () {
-      return this.$chimera?._branches?.data?.data || []
-    },
-    shippingCompanies () {
-      return this.$chimera?._shippingCompanies?.data?.data || []
-    }
-  },
   methods: {
-    onSubmit () {
+    getFormattedData () {
+      const form = this.form.data()
+
+      form.city_id = form.city_id.id || ''
+      form.branch_id = form.branch_id.id || ''
+      form.shipping_company_id = form.shipping_company_id.id || ''
+
+      return form
+    },
+    async onSubmit () {
+      const data = this.getFormattedData()
+
       this.isLoading = true
-      this.$chimera._newClient.fetch()
+
+      try {
+        await this.$apollo.mutate({
+          mutation: clientCreate,
+          variables: {
+            input: { ...data }
+          }
+        })
+
+        handleSuccess(this, { message: 'Cliente cadastrado!', resetForm: true })
+      } catch (error) {
+        handleError(this, error)
+      }
+
+      this.isLoading = false
     },
     customLabelCity ({ name, state }) {
       if (state === null) {
