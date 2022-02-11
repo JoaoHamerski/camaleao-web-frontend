@@ -1,4 +1,6 @@
 <script>
+import roles from '@/constants/roles'
+
 import { mapGetters, mapActions } from 'vuex'
 import {
   faList,
@@ -6,7 +8,10 @@ import {
   faBoxes,
   faCashRegister,
   faDollarSign,
-  faFunnelDollar
+  faFunnelDollar,
+  faCog,
+  faUsers,
+  faCity
 } from '@fortawesome/free-solid-svg-icons'
 
 import SidebarItem from './SidebarItem'
@@ -19,15 +24,25 @@ export default {
     SidebarItem,
     SidebarItemCollapsible
   },
+  props: {
+    authUser: {
+      type: Object,
+      default: null
+    }
+  },
   data () {
     return {
+      roles,
       icons: {
         faList,
         faSignOutAlt,
         faBoxes,
         faCashRegister,
         faDollarSign,
-        faFunnelDollar
+        faFunnelDollar,
+        faCog,
+        faUsers,
+        faCity
       }
     }
   },
@@ -42,10 +57,12 @@ export default {
 
 <template>
   <nav
+    v-if="authUser"
     id="sidebar"
     :class="isSidebarActive && 'active'"
   >
-    <SidebarHeader />
+    <SidebarHeader :auth-user="authUser" />
+
     <hr class="bg-light">
 
     <ul class="list-group list-group-flush">
@@ -85,6 +102,7 @@ export default {
             Despesas
           </SidebarItem>
           <SidebarItem
+            v-if="+authUser.role.id === roles.GERENCIA"
             :icon="icons.faCashRegister"
             :to="{name: 'cash-flow.index'}"
           >
@@ -93,6 +111,29 @@ export default {
         </template>
       </SidebarItemCollapsible>
 
+      <SidebarItemCollapsible
+        id="settings"
+        :icon="icons.faCog"
+      >
+        <template #collapsible-title>
+          Gerenciamento
+        </template>
+
+        <template #collapsible-items>
+          <SidebarItem
+            :to="{name: 'users.index'}"
+            :icon="icons.faUsers"
+          >
+            Usuários
+          </SidebarItem>
+          <SidebarItem
+            :to="{name: 'cities.index'}"
+            :icon="icons.faCity"
+          >
+            Cidades
+          </SidebarItem>
+        </template>
+      </SidebarItemCollapsible>
       <SidebarItem
         to="/sair"
         :icon="icons.faSignOutAlt"
