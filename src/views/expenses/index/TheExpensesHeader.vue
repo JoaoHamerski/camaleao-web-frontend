@@ -56,7 +56,6 @@ export default {
     },
     onExpenseRegisterSuccess () {
       this.modalExpensesRegister = false
-      this.$toast.success('Despesa registrada com sucesso!')
       this.$emit('refresh-expenses')
     },
     onExpenseTypeRegisterSuccess ({ action }) {
@@ -81,7 +80,7 @@ export default {
     />
 
     <ModalExpensesTypes
-      v-if="authUser.role.id === roles.GERENCIA"
+      v-if="+authUser.role.id === roles.GERENCIA"
       v-model="modalExpensesTypes"
       :expense-types="expenseTypes"
       @success="onExpenseTypeRegisterSuccess"
@@ -97,7 +96,7 @@ export default {
       </AppButton>
 
       <AppButton
-        v-if="authUser.role.id === roles.GERENCIA"
+        v-if="+authUser.role.id === roles.GERENCIA"
         outlined
         :icon="icons.faList"
         @click="onExpensesTypesClick"
