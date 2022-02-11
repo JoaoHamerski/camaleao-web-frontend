@@ -9,6 +9,7 @@ function MaskedInputElement (h, context, events) {
       aria-describedby={context.hintId}
       autocomplete={context.inputAutocomplete}
       vCleave={context.mask}
+      ref="input"
       on={{ ...context.$listeners, ...events, input: null }}
       vOn:input={e => { context.$emit('input', e.target.value) }}
       {...{ attrs: context.$attrs }}

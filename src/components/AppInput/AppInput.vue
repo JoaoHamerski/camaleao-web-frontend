@@ -84,6 +84,7 @@ export default {
   },
   data () {
     return {
+      inputType: this.type,
       tippyConfig: {
         placement: 'bottom',
         duration: '150',
@@ -99,12 +100,12 @@ export default {
         ? 'off'
         : autocomplete
     },
-    inputType () {
-      if (this.type === 'date') {
+    typeComputed () {
+      if (this.inputType === 'date') {
         return 'text'
       }
 
-      return this.type
+      return this.inputType
     },
     inputClasses () {
       return classNames([
@@ -119,7 +120,7 @@ export default {
       return this.disabled || !isEmpty(this.disabledMessage)
     },
     isTypePassword () {
-      return this.inputType === 'password'
+      return this.typeComputed === 'password'
     },
     inputLabel () {
       return this.$slots.default || this.label
@@ -149,7 +150,7 @@ export default {
       this.$emit('input', todayDate)
     },
     focusInput () {
-      const input = this.$refs.input.$el
+      const input = this.$refs.input
       const length = input.value.length
 
       input.focus()
@@ -158,9 +159,9 @@ export default {
       setTimeout(() => { input.setSelectionRange(length, length) }, 0)
     },
     togglePassord () {
-      this.isTypePassword
-        ? this.inputType = 'text'
-        : this.inputType = 'password'
+      this.inputType = this.isTypePassword
+        ? 'text'
+        : 'password'
 
       this.focusInput()
     }
