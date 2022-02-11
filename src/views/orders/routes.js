@@ -3,14 +3,14 @@ import Layout from './Layout'
 import role from '@/middleware/role'
 import roles from '@/constants/roles'
 
-const TheOrder = () => import(
-  /* webpackChunkName: "orders" */
-  './show/TheOrder'
-)
-
 const TheOrders = () => import(
   /* webpackChunkName: "orders" */
   './index/TheOrders'
+)
+
+const TheOrder = () => import(
+  /* webpackChunkName: "orders" */
+  './show/TheOrder'
 )
 
 const TheOrderNew = () => import(
