@@ -15,7 +15,7 @@ const children = [
     component: TheCashFlow,
     meta: {
       middleware: [role],
-      roles: [roles.ATENDIMENTO, roles.GERENCIA]
+      roles: [roles.GERENCIA]
     }
   }
 ]
