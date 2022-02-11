@@ -9,14 +9,19 @@ export default {
   components: {
     TheHeaderbar,
     TheSidebar
+  },
+  computed: {
+    authUser () {
+      return this.$store.getters['auth/authUser']
+    }
   }
 }
 </script>
 
 <template>
   <div>
-    <TheHeaderbar />
-    <TheSidebar />
+    <TheHeaderbar :auth-user="authUser" />
+    <TheSidebar :auth-user="authUser" />
 
     <div id="content">
       <div class="container">
