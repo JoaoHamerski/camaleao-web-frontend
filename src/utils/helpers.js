@@ -44,9 +44,19 @@ const strContainsAny = (str, search) => {
   return false
 }
 
+export const stripNonDigits = (str) => {
+  return str.replace(/\D/g, '')
+}
+
+export const isNumeric = (value) => {
+  return /^\d+$/.test(value)
+}
+
 export default {
   fallback,
   toBRL,
   inputFileToBase64,
-  strContainsAny
+  strContainsAny,
+  stripNonDigits,
+  isNumeric
 }
