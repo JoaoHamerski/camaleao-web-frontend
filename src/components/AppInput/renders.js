@@ -92,6 +92,7 @@ export const MaskedInputGroup = function (h, context, element) {
 export const MaskedInputDate = function (h, context) {
   return (
     <DatePicker
+      class={context.todayButton && 'today-btn' }
       format="DD/MM/YYYY"
       value-type="format"
       popup-style={{ top: '100%', left: 0 }}
