@@ -4,6 +4,7 @@ import { citiesIndex } from '@/graphql/Cities.gql'
 import { states } from '@/graphql/State.gql'
 
 import TheCitiesCard from './TheCitiesCard'
+import NewCityModal from '../partials/NewCityModal'
 
 export default {
   metaInfo: {
@@ -12,7 +13,8 @@ export default {
     }
   },
   components: {
-    TheCitiesCard
+    TheCitiesCard,
+    NewCityModal
   },
   apollo: {
     cities: {
@@ -30,6 +32,7 @@ export default {
   data () {
     return {
       cities: [],
+      newCityModal: false,
       icons: {
         faPlus
       }
@@ -41,6 +44,13 @@ export default {
     }
   },
   methods: {
+    onNewCitySuccess () {
+      this.newCityModal = false
+      this.refresh()
+    },
+    onNewCityClick () {
+      this.newCityModal = true
+    },
     refresh () {
       this.$apollo.queries.cities.refetch()
     }
@@ -52,12 +62,21 @@ export default {
   <div>
     <div class="mt-5 mb-2">
       <AppButton
+        color="success"
         btn-class="fw-bold"
         :icon="icons.faPlus"
+        @click.prevent="onNewCityClick"
       >
         Nova cidade
       </AppButton>
     </div>
+
+    <NewCityModal
+      v-model="newCityModal"
+      :states="states"
+      @success="onNewCitySuccess"
+    />
+
     <TheCitiesCard
       :cities="cities"
       :states="states"
