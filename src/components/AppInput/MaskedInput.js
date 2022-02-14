@@ -4,7 +4,7 @@ function MaskedInputElement (h, context, events) {
       class={context.inputClasses}
       value={context.value}
       name={context.name}
-      type={context.inputType}
+      type={context.typeComputed}
       disabled={context.isDisabled}
       aria-describedby={context.hintId}
       autocomplete={context.inputAutocomplete}
