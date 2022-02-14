@@ -121,6 +121,7 @@ export default {
 
         <template #collapsible-items>
           <SidebarItem
+            v-if="+authUser.role.id === roles.GERENCIA"
             :to="{name: 'users.index'}"
             :icon="icons.faUsers"
           >
