@@ -130,6 +130,7 @@ export default {
 
       <div class="col">
         <AppButton
+          type="button"
           data-bs-dismiss="modal"
           block
           color="light"

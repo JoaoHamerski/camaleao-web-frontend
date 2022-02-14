@@ -35,6 +35,7 @@ export default {
 <template>
   <AppModal
     id="newUserModal"
+    color="success"
     :value="value"
     centered
     v-on="$listeners"
