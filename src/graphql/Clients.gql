@@ -1,5 +1,5 @@
 query clientsIndex (
-  $page: Int!
+  $page: Int
   $where: QueryClientsWhereWhereConditions
   $hasCity: QueryClientsHasCityWhereHasConditions
 ) {
@@ -51,6 +51,10 @@ query clientShow (
     }
     city {
       name
+      state {
+        name
+        abbreviation
+      }
     }
     orders (
       first: 10 
