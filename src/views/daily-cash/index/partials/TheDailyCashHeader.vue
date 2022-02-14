@@ -68,6 +68,7 @@ export default {
     <div class="d-flex justify-content-between align-items-center">
       <div>
         <AppButton
+          color="success"
           btn-class="btn-lg"
           class="fw-bold"
           :icon="icons.faPlus"

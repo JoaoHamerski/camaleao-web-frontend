@@ -134,6 +134,7 @@ export default {
   <div class="col-10 mx-auto mt-5">
     <div class="d-flex justify-content-between">
       <AppButton
+        color="success"
         class="fw-bold"
         data-bs-toggle="modal"
         data-bs-target="#clientModalNew"

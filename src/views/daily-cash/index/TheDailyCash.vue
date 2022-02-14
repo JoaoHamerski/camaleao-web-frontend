@@ -96,9 +96,7 @@ export default {
       @reset-payments="resetPayments"
     />
 
-    <AppCard
-      color="success"
-    >
+    <AppCard>
       <template #header>
         <h6 class="fw-bold mb-0">
           <FontAwesomeIcon

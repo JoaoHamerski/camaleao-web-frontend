@@ -58,6 +58,7 @@ export default {
     <div class="mt-5 mb-2">
       <AppButton
         :icon="icons.faUserPlus"
+        color="success"
         btn-class="fw-bold"
         @click.prevent="onNewUserClick"
       >

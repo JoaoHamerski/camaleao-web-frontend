@@ -28,6 +28,7 @@ export default {
     <AppModal
       id="clientModalNew"
       v-model="modal"
+      color="success"
       centered
     >
       <template #title>
