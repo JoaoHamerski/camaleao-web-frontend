@@ -11,7 +11,10 @@ import { maskPhone } from '@/utils/masks'
 export default {
   apollo: {
     cities: {
-      query: cities
+      query: cities,
+      variables: {
+        orderBy: [{ column: 'name', order: 'ASC' }]
+      }
     },
     branches: {
       query: branches

@@ -31,6 +31,9 @@ export default {
     onCheckboxChange (isSelected, city) {
       this.$emit('checkbox-change', { isSelected, city })
     },
+    onActionClicked (city, action) {
+      this.$emit('action-clicked', { city, action })
+    },
     getStateNameAndAbbr (city) {
       return city.state
         ? `${city.state.name} (${city.state.abbreviation})`
@@ -58,12 +61,13 @@ export default {
     <template #[`items.state`]="{ item }">
       {{ getStateNameAndAbbr(item) }}
     </template>
-    <template #[`items.actions`]>
+    <template #[`items.actions`]="{ item }">
       <div class="d-flex justify-content-center">
         <AppButton
           :icon="icons.faUsers"
           btn-class="btn-sm px-3"
           tooltip="Ver clientes"
+          @click.prevent="onActionClicked(item, 'show')"
         />
         <AppButton
           class="mx-2"
@@ -71,6 +75,7 @@ export default {
           btn-class="btn-sm px-3"
           outlined
           tooltip="Editar"
+          @click.prevent="onActionClicked(item, 'edit')"
         />
         <AppButton
           :icon="icons.faTrashAlt"
@@ -78,6 +83,7 @@ export default {
           color="danger"
           outlined
           tooltip="Deletar"
+          @click.prevent="onActionClicked(item, 'delete')"
         />
       </div>
     </template>

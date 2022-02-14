@@ -37,8 +37,8 @@ export default {
         await this.$apollo.mutate({
           mutation: cityMassUpdateState,
           variables: {
-            state_id: data.state?.id || '',
-            cities_id: map(this.selectedCities, 'id')
+            ids: map(this.selectedCities, 'id'),
+            state_id: data.state?.id || ''
           }
         })
 

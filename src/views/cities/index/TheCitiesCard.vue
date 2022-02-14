@@ -1,12 +1,19 @@
 <script>
 import { faCity } from '@fortawesome/free-solid-svg-icons'
+
 import TheCitiesCardTable from './TheCitiesCardTable'
 import EditCitiesModal from '../partials/EditCitiesModal'
+import EditCityModal from '../partials/EditCityModal'
+import DeleteCityModal from '../partials/DeleteCityModal'
+import ShowCityClientsModal from '../partials/ShowCityClientsModal'
 
 export default {
   components: {
     TheCitiesCardTable,
-    EditCitiesModal
+    EditCitiesModal,
+    EditCityModal,
+    DeleteCityModal,
+    ShowCityClientsModal
   },
   props: {
     isLoading: {
@@ -26,6 +33,18 @@ export default {
     return {
       selectedCities: [],
       editCitiesModal: false,
+      editCityModal: {
+        value: false,
+        city: {}
+      },
+      deleteCityModal: {
+        value: false,
+        city: {}
+      },
+      showCityClientsModal: {
+        value: false,
+        city: {}
+      },
       icons: {
         faCity
       }
@@ -40,6 +59,11 @@ export default {
 
       this.selectedCities.splice(index, 1)
     },
+    onDeleteCitySuccess () {
+      this.deleteCityModal.value = false
+      this.deleteCityModal.city = {}
+      this.$emit('refresh')
+    },
     onEditCitiesClick () {
       this.editCitiesModal = true
     },
@@ -47,6 +71,14 @@ export default {
       this.editCitiesModal = false
       this.selectedCities.splice(0, this.selectedCities.length)
       this.$emit('refresh')
+    },
+    onEditCitySuccess () {
+      this.editCityModal.value = false
+      this.editCityModal.city = {}
+      this.$emit('refresh')
+    },
+    onEditCityModalHidden () {
+      this.editCityModal.city = {}
     },
     getStateNameAndAbbr (city) {
       return city.state
@@ -60,6 +92,22 @@ export default {
       }
 
       this.removeCity(city)
+    },
+    onCityActionClicked ({ city, action }) {
+      if (action === 'show') {
+        this.showCityClientsModal.city = city
+        this.showCityClientsModal.value = true
+      }
+
+      if (action === 'edit') {
+        this.editCityModal.city = city
+        this.editCityModal.value = true
+      }
+
+      if (action === 'delete') {
+        this.deleteCityModal.city = city
+        this.deleteCityModal.value = true
+      }
     }
   }
 }
@@ -85,6 +133,25 @@ export default {
           @success="onEditCitiesSuccess"
         />
 
+        <EditCityModal
+          v-model="editCityModal.value"
+          :city="editCityModal.city"
+          :states="states"
+          @hidden="onEditCityModalHidden"
+          @success="onEditCitySuccess"
+        />
+
+        <DeleteCityModal
+          v-model="deleteCityModal.value"
+          :city="deleteCityModal.city"
+          @success="onDeleteCitySuccess"
+        />
+
+        <ShowCityClientsModal
+          v-model="showCityClientsModal.value"
+          :city="showCityClientsModal.city"
+        />
+
         <div><b>Multiplas ações</b></div>
         <div class="text-secondary">
           <small>Selecione multiplas cidades abaixo para editar várias de uma vez.</small>
@@ -107,6 +174,7 @@ export default {
       <TheCitiesCardTable
         :items="cities"
         @checkbox-change="onCityCheckboxChange"
+        @action-clicked="onCityActionClicked"
       />
     </template>
   </AppCard>
