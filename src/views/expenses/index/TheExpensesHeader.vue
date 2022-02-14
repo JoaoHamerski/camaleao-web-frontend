@@ -2,11 +2,11 @@
 import roles from '@/constants/roles'
 import { faPlus, faList } from '@fortawesome/free-solid-svg-icons'
 
-import ModalExpensesRegister from './modals/ModalExpensesRegister'
+import ModalExpensesNew from './modals/ModalExpensesNew'
 
 export default {
   components: {
-    ModalExpensesRegister,
+    ModalExpensesNew,
     ModalExpensesTypes: () => import('./modals/ModalExpensesTypes')
   },
   props: {
@@ -72,7 +72,7 @@ export default {
 
 <template>
   <div>
-    <ModalExpensesRegister
+    <ModalExpensesNew
       v-model="modalExpensesRegister"
       :expense-types="expenseTypes"
       :vias="vias"
@@ -89,6 +89,7 @@ export default {
     <div class="d-flex justify-content-between mb-2">
       <AppButton
         :icon="icons.faPlus"
+        color="success"
         btn-class="fw-bold"
         @click="onRegisterExpenseClick"
       >

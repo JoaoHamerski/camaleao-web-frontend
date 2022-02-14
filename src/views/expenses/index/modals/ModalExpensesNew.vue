@@ -29,7 +29,7 @@ export default {
     }
   },
   methods: {
-    onRegisterSuccess () {
+    onSuccess () {
       this.$emit('success')
     }
   }
@@ -39,6 +39,7 @@ export default {
 <template>
   <AppModal
     id="expensesRegisterModal"
+    color="success"
     :value="value"
     v-on="$listeners"
   >
@@ -56,7 +57,7 @@ export default {
         key="registerForm"
         :vias="vias"
         :expense-types="expenseTypes"
-        @success="onRegisterSuccess"
+        @success="onSuccess"
       />
     </template>
   </AppModal>
