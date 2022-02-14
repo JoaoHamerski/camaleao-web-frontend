@@ -1,5 +1,8 @@
-query cities {
-  cities {
+query cities (
+  $orderBy: [OrderByClause!]
+  $where: WhereConditions
+) {
+  cities (orderBy: $orderBy where: $where) {
     id
     name
     
@@ -34,8 +37,26 @@ query citiesIndex ($where: WhereConditions) {
   }
 }
 
-mutation cityMassUpdateState ($state_id: ID! $cities_id: [ID!]!) {
-  cityMassUpdateState(state_id: $state_id cities_id: $cities_id) {
+mutation cityCreate ($input: CityInput!) {
+  cityCreate (input: $input) {
+    id
+  }
+}
+
+mutation cityUpdate ($id: ID! $input: CityInput!) {
+  cityUpdate (id: $id input: $input) {
+    id
+  }
+}
+
+mutation cityMassUpdateState ($ids: [ID!]! $state_id: ID!) {
+  cityMassUpdateState(ids: $ids state_id: $state_id) {
+    id
+  }
+}
+
+mutation cityDelete ($id: ID! $city_id: ID $replace: CityReplaceOptionsInput) {
+  cityDelete(id: $id city_id: $city_id replace: $replace) {
     id
   }
 }
