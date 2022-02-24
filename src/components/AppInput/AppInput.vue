@@ -89,19 +89,20 @@ export default {
         placement: 'bottom',
         duration: '150',
         arrow: true
-      }
+      },
+      dateRelated: ['date', 'week', 'month', 'year']
     }
   },
   computed: {
     inputAutocomplete () {
       const autocomplete = this.autocomplete || false
 
-      return this.type === 'date'
+      return this.dateRelated.includes(this.inputType)
         ? 'off'
         : autocomplete
     },
     typeComputed () {
-      if (this.inputType === 'date') {
+      if (this.dateRelated.includes(this.inputType)) {
         return 'text'
       }
 

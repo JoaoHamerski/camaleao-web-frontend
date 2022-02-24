@@ -1,0 +1,24 @@
+query shippingCompanies {
+  shippingCompanies {
+    id
+    name
+  }
+}
+
+mutation shippingCompanyCreate ($name: String!) {
+  shippingCompanyCreate (name: $name) {
+    id
+  }
+}
+
+mutation shippingCompanyEdit ($id: ID! $name: String) {
+  shippingCompanyEdit (id: $id name: $name) {
+    id
+  }
+}
+
+mutation shippingCompanyDelete ($id: ID!) {
+  shippingCompanyDelete (id: $id) {
+    id
+  }
+}

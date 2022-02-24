@@ -103,6 +103,7 @@ export default {
         </div>
         <AppRadio
           v-model="filter.order"
+          name="order"
           :options="orderOptions"
         />
       </div>

@@ -4,6 +4,18 @@ export const maskDate = {
   datePattern: ['d', 'm', 'Y']
 }
 
+export const maskMonth = {
+  date: true,
+  delimiter: '/',
+  datePattern: ['m', 'Y']
+}
+
+export const maskYear = {
+  date: true,
+  delimiter: '/',
+  datePattern: ['Y']
+}
+
 export const maskPhone = {
   phone: true,
   phoneRegionCode: 'br'

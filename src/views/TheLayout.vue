@@ -19,14 +19,22 @@ export default {
 </script>
 
 <template>
-  <div>
+  <div
+    v-if="authUser"
+    key="layout"
+  >
     <TheHeaderbar :auth-user="authUser" />
     <TheSidebar :auth-user="authUser" />
-
     <div id="content">
       <div class="container">
         <slot />
       </div>
     </div>
+  </div>
+  <div
+    v-else
+    class="d-flex justify-content-center align-items-center"
+  >
+    <AppSpinner />
   </div>
 </template>

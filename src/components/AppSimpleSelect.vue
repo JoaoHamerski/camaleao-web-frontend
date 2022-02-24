@@ -4,7 +4,6 @@ import { isEmpty, isNil } from 'lodash-es'
 export default {
   props: {
     id: undefined,
-
     error: {
       type: [Boolean, String],
       default: false

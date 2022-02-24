@@ -4,7 +4,7 @@ import { formatPhone } from '@/utils/formatters'
 
 import ClientModalNew from '../partials/ClientModalNew'
 
-import { clientsIndex } from '@/graphql/Clients.gql'
+import { clientsIndex } from '@/graphql/Client.gql'
 
 const COLUMNS = {
   NAME: 'NAME',
@@ -29,6 +29,7 @@ export default {
   },
   data () {
     return {
+      newClientModal: false,
       query: {
         page: 1,
         hasCity: null,
@@ -51,7 +52,6 @@ export default {
     isLoading () {
       return !!this.$apollo.queries.clients.loading
     },
-
     headers () {
       return [
         { text: 'Nome', value: 'name' },
@@ -69,6 +69,13 @@ export default {
   },
   methods: {
     formatPhone,
+    onNewClientClick () {
+      this.newClientModal = true
+    },
+    onNewClientSuccess () {
+      this.newClientModal = false
+      this.refresh()
+    },
     refresh () {
       this.$apollo.queries.clients.refetch()
     },
@@ -136,8 +143,7 @@ export default {
       <AppButton
         color="success"
         class="fw-bold"
-        data-bs-toggle="modal"
-        data-bs-target="#clientModalNew"
+        @click.prevent="onNewClientClick"
       >
         <FontAwesomeIcon
           fixed-width
@@ -146,7 +152,10 @@ export default {
         Novo cliente
       </AppButton>
 
-      <ClientModalNew @refresh="refresh" />
+      <ClientModalNew
+        v-model="newClientModal"
+        @success="onNewClientSuccess"
+      />
 
       <div class="col-5">
         <AppInput

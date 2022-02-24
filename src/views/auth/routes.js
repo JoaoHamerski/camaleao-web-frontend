@@ -4,6 +4,7 @@ import TheLogin from './TheLogin'
 
 export default [
   {
+    name: 'login',
     path: '/entrar',
     component: TheLogin,
     meta: { middleware: [guest] }

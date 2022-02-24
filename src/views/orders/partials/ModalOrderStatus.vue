@@ -1,6 +1,6 @@
 <script>
 import { status } from '@/graphql/Status.gql'
-import { orderUpdate } from '@/graphql/Orders.gql'
+import { orderUpdate } from '@/graphql/Order.gql'
 import { handleError, handleSuccess } from '@/utils/forms'
 
 export default {

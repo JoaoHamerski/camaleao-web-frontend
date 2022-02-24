@@ -6,9 +6,14 @@ export default {
   components: {
     ClientForm
   },
+  props: {
+    value: {
+      type: Boolean,
+      default: false
+    }
+  },
   data () {
     return {
-      modal: false,
       icons: {
         faUserPlus
       }
@@ -16,8 +21,7 @@ export default {
   },
   methods: {
     onSuccess () {
-      this.modal = false
-      this.$emit('refresh')
+      this.$emit('success')
     }
   }
 }
@@ -27,9 +31,10 @@ export default {
   <div>
     <AppModal
       id="clientModalNew"
-      v-model="modal"
+      :value="value"
       color="success"
       centered
+      v-on="$listeners"
     >
       <template #title>
         <FontAwesomeIcon
@@ -40,6 +45,7 @@ export default {
       </template>
       <template #body>
         <ClientForm
+          v-if="value"
           @success="onSuccess"
         />
       </template>

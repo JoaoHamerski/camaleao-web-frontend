@@ -1,12 +1,10 @@
 query payments (
   $created_at: Date
-  $where: WhereConditions
   $pendencies: Boolean
 ) {
   payments (
     created_at: $created_at
-    where: $where 
-    orderBy: [{column: "created_at" order: DESC}]
+    orderBy: [{column: CREATED_AT order: DESC}]
     pendencies: $pendencies
   ) {
     id

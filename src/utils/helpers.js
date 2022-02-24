@@ -2,7 +2,11 @@
  * @file Arquivo para o plugin de helpers do vue disponível
  * através de $helpers variavel
  */
-import { isNil } from 'lodash-es'
+import { apolloClientInstance } from '@/vue-apollo'
+import { configGet } from '@/graphql/Config.gql'
+import store from '@/store'
+
+import { isNil, flattenDeep } from 'lodash-es'
 import { formatCurrencyBRL } from '@/utils/formatters'
 
 const fallback = (object, prop, fallbackString = 'N/A') => {
@@ -52,11 +56,41 @@ export const isNumeric = (value) => {
   return /^\d+$/.test(value)
 }
 
+export const getConfig = async (name, key = null) => {
+  const { apolloClient } = apolloClientInstance
+
+  const { data } = await apolloClient.query({
+    query: configGet,
+    variables: {
+      name, key
+    },
+    fetchPolicy: 'no-cache'
+  })
+
+  return JSON.parse(data.configGet)
+}
+
+export const canView = (...roleIds) => {
+  const authUser = store.getters['auth/authUser']
+
+  if (Array.isArray(roleIds[0])) {
+    roleIds = flattenDeep(roleIds)
+  }
+
+  if (!authUser) {
+    return false
+  }
+
+  return roleIds.includes(+authUser.role.id)
+}
+
 export default {
   fallback,
   toBRL,
   inputFileToBase64,
   strContainsAny,
   stripNonDigits,
-  isNumeric
+  isNumeric,
+  getConfig,
+  canView
 }

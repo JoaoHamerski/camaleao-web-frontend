@@ -131,6 +131,14 @@ export default {
           Exibir estatísticas
         </AppCheckbox>
 
+        <AppCheckbox
+          id="show_balance"
+          v-model="form.showBalance"
+          name="show_balance"
+        >
+          Exibir balanço final
+        </AppCheckbox>
+
         <div class="d-flex mb-4">
           <AppButton
             type="button"

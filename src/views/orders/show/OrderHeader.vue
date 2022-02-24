@@ -1,6 +1,6 @@
 <script>
 import { isEmpty } from 'lodash-es'
-import { orderToggle } from '@/graphql/Orders.gql'
+import { orderToggle } from '@/graphql/Order.gql'
 
 import {
   faCog,

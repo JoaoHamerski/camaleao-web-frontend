@@ -1,23 +1,8 @@
 <script>
-import gql from 'graphql-tag'
-
 export default {
-  apollo: {
-    users: gql`{
-      users {
-        data {
-          email
-          role {
-            name
-          }
-        }
-      }
-    }
-    `
-  },
   data () {
     return {
-      users: []
+      date: ''
     }
   }
 }
@@ -25,6 +10,12 @@ export default {
 
 <template>
   <div>
-    <h1>Página de testes</h1>
+    <AppInput
+      v-model="date"
+      type="week"
+      name="algo"
+    />
+
+    {{ date }}
   </div>
 </template>

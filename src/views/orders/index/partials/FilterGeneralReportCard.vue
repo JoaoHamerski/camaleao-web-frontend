@@ -2,7 +2,7 @@
 import { faClipboardList } from '@fortawesome/free-solid-svg-icons'
 import { maskDate } from '@/utils/masks'
 import { isEmpty, isNil, pickBy } from 'lodash-es'
-import { cities } from '@/graphql/Cities.gql'
+import { cities } from '@/graphql/City.gql'
 import { status } from '@/graphql/Status.gql'
 
 import ModalReport from '../../partials/ModalReport'
@@ -187,6 +187,7 @@ export default {
         </div>
         <AppRadio
           v-model="filter.order"
+          name="order"
           :options="orderOptions"
         />
       </div>
@@ -198,6 +199,7 @@ export default {
 
         <AppRadio
           v-model="filter.sort"
+          name="sort"
           :options="sortOptions"
         />
       </div>

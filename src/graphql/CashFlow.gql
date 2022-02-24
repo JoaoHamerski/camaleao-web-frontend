@@ -2,13 +2,16 @@
 query cashFlowEntries (
   $first: Int = 10 
   $page: Int 
-  $where: WhereConditions
+  $where: QueryCashFlowEntriesWhereWhereConditions
 ) {
   cashFlowEntries (
     first: $first 
     page: $page 
     where: $where
-    orderBy: [{column: "created_at" order: DESC}]
+    orderBy: [
+      {column: CREATED_AT order: DESC}
+      {column: DATE order: DESC}
+    ]
   ) {
     paginatorInfo {
       currentPage

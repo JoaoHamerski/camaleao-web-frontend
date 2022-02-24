@@ -3,7 +3,7 @@ import { isEmpty } from 'lodash-es'
 import { faList, faEdit } from '@fortawesome/free-solid-svg-icons'
 import Form from '@/utils/Form'
 import { handleSuccess, handleError } from '@/utils/forms'
-import { expenseTypesCreate, expenseTypesUpdate } from '@/graphql/ExpenseTypes.gql'
+import { expenseTypesCreate, expenseTypesUpdate } from '@/graphql/ExpenseType.gql'
 
 export default {
   props: {

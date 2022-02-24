@@ -1,6 +1,14 @@
 <script>
 export default {
   props: {
+    name: {
+      type: String,
+      required: true
+    },
+    error: {
+      type: String,
+      default: ''
+    },
     labelProp: {
       type: String,
       default: 'label'
@@ -20,6 +28,10 @@ export default {
     align: {
       type: String,
       default: 'horizontal'
+    },
+    defaultMargin: {
+      type: Boolean,
+      default: true
     }
   },
   computed: {
@@ -28,29 +40,38 @@ export default {
         return 'form-check-inline'
       }
 
-      if (this.align === 'vertical') {
-        return ''
-      }
-
       return ''
+    },
+    hasError () {
+      return this.error !== ''
     }
   }
 }
 </script>
 
 <template>
-  <div>
+  <div :class="defaultMargin && 'mb-3'">
+    <div>
+      <label
+        v-if="$slots.default"
+        class="form-label fw-bold"
+      >
+        <slot />
+      </label>
+    </div>
+
     <div
-      v-for="option in options"
-      :key="option.id"
+      v-for="(option, index) in options"
+      :key="option.id || index"
       class="form-check"
       :class="alignmentClass"
     >
       <input
-        :id="`radio_${option.id}`"
+        :id="`radio_${option.id || index}`"
         class="form-check-input"
+        :class="hasError && 'is-invalid'"
         type="radio"
-        :name="`radio_${option.id}`"
+        :name="name"
         :value="option[valueProp]"
         :checked="option[valueProp] === value"
         :disabled="option.disabled"
@@ -58,10 +79,16 @@ export default {
       >
       <label
         class="form-check-label"
-        :for="`radio_${option.id}`"
+        :for="`radio_${option.id || index}`"
       >
         {{ option[labelProp] }}
       </label>
+    </div>
+    <div
+      v-if="hasError"
+      class="small text-danger"
+    >
+      {{ error }}
     </div>
   </div>
 </template>

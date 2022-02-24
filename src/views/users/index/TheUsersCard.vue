@@ -85,7 +85,7 @@ export default {
           :icon="icons.faUsers"
           fixed-width
         />
-        Lista de usuários do sistema
+        Gerenciamento de usuários do sistema
       </h6>
     </template>
     <template #body>

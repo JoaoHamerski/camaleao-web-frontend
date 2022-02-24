@@ -1,0 +1,122 @@
+fragment ShippingCompany on Client {
+  shipping_company {
+    id
+    name
+  }
+}
+
+fragment Branch on Client {
+  branch {
+    id
+    city {
+      id
+      name
+    }
+  }
+}
+
+fragment City on Client {
+  city {
+    id
+    name
+    state {
+      id
+      name
+      abbreviation
+    }
+  }
+}
+
+fragment ClientCitiesParts on Client {
+  ...ShippingCompany
+  ...Branch
+  ...City
+}
+
+fragment ClientBaseInfo on Client {
+  id
+  name
+  phone
+  total_owing
+}
+
+query clientsIndex (
+  $page: Int
+  $where: QueryClientsWhereWhereConditions
+  $hasCity: QueryClientsHasCityWhereHasConditions
+) {
+  clients (
+    first: 10, 
+    page: $page
+    orderBy: [{column: CREATED_AT order: DESC}]
+    where: $where
+    hasCity: $hasCity
+  ) {
+    paginatorInfo {
+      currentPage
+      perPage
+      total
+    }
+
+    data {
+      ...ClientBaseInfo
+      ...City
+    } 
+  }
+}
+
+query clientsShow (
+  $id: ID! 
+  $orderPage: Int
+  $orderWhere: ClientOrdersWhereWhereConditions
+) {
+  client (id: $id) {
+    ...ClientBaseInfo
+    ...ClientCitiesParts
+
+    orders (
+      first: 10 
+      page: $orderPage
+      orderBy: [{column: CREATED_AT order: DESC}]
+      where: $orderWhere
+    ) {
+      paginatorInfo {
+        currentPage
+        perPage
+        total
+      }	
+      
+      data {
+        client {
+          id
+        }
+        code
+        price
+        total_paid
+        quantity
+        production_date
+        delivery_date
+        states
+      }
+    }
+  }
+}
+
+query client ($id: ID!) {
+  client (id: $id) {
+    ...ClientBaseInfo
+    ...ClientCitiesParts
+  }
+}
+
+mutation clientCreate ($input: ClientInput!) {
+  clientCreate (input: $input) { 
+    id 
+  }
+}
+
+mutation clientUpdate ($id: ID! $input: ClientInput!) {
+  clientUpdate (id: $id input: $input) {
+    id
+  }
+}

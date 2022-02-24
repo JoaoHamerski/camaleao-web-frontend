@@ -1,5 +1,5 @@
 <script>
-import { order } from '@/graphql/Orders.gql'
+import { order } from '@/graphql/Order.gql'
 import ClientCard from '@/views/clients/partials/ClientCard'
 import { faArrowAltCircleLeft, faBoxOpen } from '@fortawesome/free-solid-svg-icons'
 import { formatDatetime } from '@/utils/formatters'

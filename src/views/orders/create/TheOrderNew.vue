@@ -1,5 +1,5 @@
 <script>
-import { client } from '@/graphql/Clients.gql'
+import { client } from '@/graphql/Client.gql'
 
 import {
   faBoxOpen,

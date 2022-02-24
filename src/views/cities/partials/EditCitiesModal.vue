@@ -1,5 +1,5 @@
 <script>
-import { cityMassUpdateState } from '@/graphql/Cities.gql'
+import { cityMassUpdateState } from '@/graphql/City.gql'
 import Form from '@/utils/Form'
 import { map } from 'lodash-es'
 import { handleError, handleSuccess } from '@/utils/forms'

@@ -1,6 +1,6 @@
 <script>
 import { faTrashAlt } from '@fortawesome/free-solid-svg-icons'
-import { orderDelete } from '@/graphql/Orders.gql'
+import { orderDelete } from '@/graphql/Order.gql'
 
 export default {
   props: {

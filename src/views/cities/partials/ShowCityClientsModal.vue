@@ -1,5 +1,5 @@
 <script>
-import { clientsIndex } from '@/graphql/Clients.gql'
+import { clientsIndex } from '@/graphql/Client.gql'
 
 export default {
   apollo: {

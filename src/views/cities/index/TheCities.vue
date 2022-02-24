@@ -1,6 +1,6 @@
 <script>
 import { faPlus } from '@fortawesome/free-solid-svg-icons'
-import { citiesIndex } from '@/graphql/Cities.gql'
+import { citiesIndex } from '@/graphql/City.gql'
 import { states } from '@/graphql/State.gql'
 
 import TheCitiesCard from './TheCitiesCard'

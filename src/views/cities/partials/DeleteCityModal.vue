@@ -7,7 +7,7 @@ import {
 
 import Form from '@/utils/Form'
 import { handleError, handleSuccess } from '@/utils/forms'
-import { citiesIndex, cityDelete } from '@/graphql/Cities.gql'
+import { citiesIndex, cityDelete } from '@/graphql/City.gql'
 
 export default {
   apollo: {

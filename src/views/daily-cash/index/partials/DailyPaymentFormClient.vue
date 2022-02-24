@@ -1,6 +1,6 @@
 <script>
 import { formatPhone } from '@/utils/formatters'
-import { clientsIndex } from '@/graphql/Clients.gql'
+import { clientsIndex } from '@/graphql/Client.gql'
 import { stripNonDigits, isNumeric } from '@/utils/helpers'
 
 const whereClientsClause = (query) => {

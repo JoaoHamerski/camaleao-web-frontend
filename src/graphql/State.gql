@@ -1,5 +1,5 @@
 query states {
-  states (orderBy: [{column: "name" order: ASC}]) {
+  states {
     id
     name
     abbreviation

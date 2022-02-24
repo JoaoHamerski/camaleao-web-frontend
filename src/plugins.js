@@ -13,7 +13,8 @@ const custom = {
 
 Vue.use(VueTippy, {
   duration: 150,
-  arrow: true
+  arrow: true,
+  appendTo: () => document.querySelector('#app')
 })
 
 Vue.use(VueToast, {

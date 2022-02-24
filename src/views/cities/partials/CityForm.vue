@@ -1,5 +1,5 @@
 <script>
-import { cityUpdate, cityCreate } from '@/graphql/Cities.gql'
+import { cityUpdate, cityCreate } from '@/graphql/City.gql'
 import { handleError, handleSuccess } from '@/utils/forms'
 
 import Form from '@/utils/Form'

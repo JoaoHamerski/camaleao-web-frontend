@@ -23,8 +23,7 @@ export default {
         return {
           page: this.page,
           first: 10,
-          where: this.where,
-          orderBy: this.orderBy
+          where: this.where
         }
       },
       result () {
@@ -47,14 +46,14 @@ export default {
       filterForm: new Form({
         start_date: '',
         final_date: '',
-        showStatistics: false
+        showStatistics: false,
+        showBalance: false
       }),
       filterDates: {},
       statistics: {},
       page: 1,
       search: '',
-      where: {},
-      orderBy: {}
+      where: {}
     }
   },
   computed: {
@@ -67,7 +66,7 @@ export default {
       const search = this.search
 
       this.where = {
-        column: 'description',
+        column: 'DESCRIPTION',
         operator: 'LIKE',
         value: `%${search}%`
       }
@@ -79,7 +78,6 @@ export default {
     onFilterClear () {
       this.filterForm.reset()
       this.filterDates = {}
-      this.orderBy = {}
       this.where = {}
     },
     async submitStatistics (formData) {
@@ -99,20 +97,16 @@ export default {
     },
     async onSubmit () {
       const data = this.filterForm.data()
+      const { showStatistics, showBalance } = data
       const { start_date, final_date } = data
 
-      if (data.showStatistics) {
+      if (showStatistics || showBalance) {
         this.submitStatistics(data)
-      }
-
-      this.orderBy = {
-        column: 'date',
-        order: 'DESC'
       }
 
       if (start_date && final_date) {
         this.where = {
-          column: 'date',
+          column: 'DATE',
           operator: 'BETWEEN',
           value: [start_date, final_date]
         }
@@ -121,7 +115,7 @@ export default {
       }
 
       this.where = {
-        column: 'date',
+        column: 'DATE',
         operator: 'EQ',
         value: start_date
       }
@@ -169,6 +163,8 @@ export default {
 
     <TheCashFlowBody
       :is-loading="isLoading"
+      :show-statistics="filterForm.showStatistics"
+      :show-balance="filterForm.showBalance"
       :page.sync="page"
       :statistics="statistics"
       :filter-dates="filterDates"

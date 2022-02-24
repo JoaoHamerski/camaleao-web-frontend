@@ -1,6 +1,6 @@
 <script>
 import { expenses } from '@/graphql/Expense.gql'
-import { expenseTypes } from '@/graphql/ExpenseTypes.gql'
+import { expenseTypes } from '@/graphql/ExpenseType.gql'
 import { vias } from '@/graphql/Via.gql'
 
 import TheExpensesReportCard from './TheExpensesReportCard'

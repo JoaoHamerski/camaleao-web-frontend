@@ -4,14 +4,14 @@ import role from '@/middleware/role'
 import roles from '@/constants/roles'
 
 const TheCities = () => import(
-  /* webpackChunkName: "users" */
+  /* webpackChunkName: "cities" */
   './index/TheCities'
 )
 
 const children = [
   {
     name: 'cities.index',
-    path: '/cidades',
+    path: '/gerenciamento/cidades',
     component: TheCities,
     meta: {
       middleware: [role],

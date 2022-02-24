@@ -2,6 +2,7 @@ import { isBoolean } from 'lodash-es'
 import { faCalendarAlt, faTimesCircle } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 import DatePicker from 'vue2-datepicker'
+import { DateTime } from 'luxon'
 import 'vue2-datepicker/locale/pt-br'
 
 import MaskedInputElement from './MaskedInput'
@@ -89,19 +90,43 @@ export const MaskedInputGroup = function (h, context, element) {
   )
 }
 
+const emitDate = (context, event) => {
+  if (context.type === 'week') {
+    const [day, month, year] = event.split('/')
+    const date = DateTime.local(+year, +month, +day)
+    const startOfWeek = date.startOf('week').toFormat('dd/MM/y')
+    const endOfWeek = date.endOf('week').toFormat('dd/MM/y')
+
+    context.$emit('input', [startOfWeek, endOfWeek].join(' - '))
+    return
+  }
+
+  context.$emit('input', event)
+}
+
 export const MaskedInputDate = function (h, context) {
+  const formats = {
+    date: 'DD/MM/YYYY',
+    month: 'MM/YYYY',
+    week: 'DD/MM/YYYY',
+    year: 'YYYY'
+  }
+
   return (
     <DatePicker
-      class={context.todayButton && 'today-btn' }
-      format="DD/MM/YYYY"
+      class={[context.todayButton && 'today-btn', 'custom-date-picker'] }
+      format={formats[context.type]}
       value-type="format"
+      type={context.type}
       popup-style={{ top: '100%', left: 0 }}
       append-to-body={false}
       value={context.value}
-      vOn:input={e => { context.$emit('input', e) }}
+      vOn:input={e => { emitDate(context, e) }}
+      show-week-number={false}
       lang={{
         formatLocale: {
-          weekdaysMin: ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb']
+          weekdaysMin: ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb'],
+          firstDayOfWeek: 1
         }
       }}
       {
@@ -124,7 +149,7 @@ export const renderInput = function (h, context) {
     element = MaskedInputPassword(h, context, element)
   }
 
-  if (context.type === 'date') {
+  if (context.dateRelated.includes(context.type)) {
     element = MaskedInputDate(h, context)
   }
 

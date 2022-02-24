@@ -7,7 +7,7 @@ query expenses (
     first: $first 
     page: $page
     descriptionLike: $descriptionLike
-    orderBy: [{column: "created_at" order: DESC}]
+    orderBy: [{column: CREATED_AT order: DESC}]
   ) {
     paginatorInfo {
       total

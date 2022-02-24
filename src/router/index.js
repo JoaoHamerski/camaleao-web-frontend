@@ -2,6 +2,8 @@ import Vue from 'vue'
 import VueRouter from 'vue-router'
 import auth from '@/middleware/auth'
 import middlewarePipeline from '@/router/middlewarePipeline'
+import store from '@/store'
+import roles from '@/constants/roles'
 
 import TheTest from '@/views/TheTest'
 
@@ -13,6 +15,11 @@ import cashFlowRoutes from '@/views/cash-flow/routes'
 import expensesRoutes from '@/views/expenses/routes'
 import usersRoutes from '@/views/users/routes'
 import citiesRoutes from '@/views/cities/routes'
+import branchesRoutes from '@/views/branches/routes'
+import clothingTypesRoutes from '@/views/clothing-types/routes'
+import productionRoutes from '@/views/production/routes'
+import productionUsersRoutes from '@/views/production-users/routes'
+import myAccountRoutes from '@/views/my-account/routes'
 
 Vue.use(VueRouter)
 
@@ -22,7 +29,16 @@ const routes = [
     meta: {
       middleware: [auth]
     },
-    beforeEnter: (to, from, next) => next('/clientes')
+    beforeEnter: async (to, from, next) => {
+      const authUser = store.getters['auth/authUser']
+
+      if ([roles.ESTAMPA, roles.COSTURA].includes(+authUser.role.id)) {
+        next('/producao')
+        return
+      }
+
+      next('/clientes')
+    }
   },
   {
     path: '/testes',
@@ -35,7 +51,12 @@ const routes = [
   ...cashFlowRoutes,
   ...expensesRoutes,
   ...usersRoutes,
-  ...citiesRoutes
+  ...citiesRoutes,
+  ...branchesRoutes,
+  ...clothingTypesRoutes,
+  ...productionRoutes,
+  ...productionUsersRoutes,
+  ...myAccountRoutes
 ]
 
 const router = new VueRouter({

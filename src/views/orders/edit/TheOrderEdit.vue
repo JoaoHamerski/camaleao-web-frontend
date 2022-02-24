@@ -3,7 +3,7 @@ import {
   faBoxOpen,
   faArrowCircleLeft
 } from '@fortawesome/free-solid-svg-icons'
-import { order } from '@/graphql/Orders.gql'
+import { order } from '@/graphql/Order.gql'
 
 import { isEmpty } from 'lodash-es'
 

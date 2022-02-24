@@ -85,14 +85,11 @@ export default {
       }
     }
   },
+  beforeDestroy () {
+    this.destroyEventListener()
+  },
   mounted () {
-    this.$parent.$on('shown', () => {
-      this.attachEventListener()
-    })
-
-    this.$parent.$on('hidden', () => {
-      this.destroyEventListener()
-    })
+    this.attachEventListener()
 
     if (this.isEdit) {
       this.form = new Form({ ...omit(this.expense, 'id') })

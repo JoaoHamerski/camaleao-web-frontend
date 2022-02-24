@@ -1,7 +1,7 @@
 <script>
 import { faBoxes, faQuestionCircle } from '@fortawesome/free-solid-svg-icons'
 import { TippyComponent } from 'vue-tippy'
-import { ordersIndex } from '@/graphql/Orders.gql'
+import { ordersIndex } from '@/graphql/Order.gql'
 import { QUERIES } from './constants'
 
 import FilterGeneralReportCard from './partials/FilterGeneralReportCard'
@@ -74,13 +74,14 @@ export default {
 
       this.params = { ...this.params, ...query }
     },
-    onCodeSearch (code) {
+    onCodeSearch () {
       this.buttonSelected = ''
 
       this.params = {
-        ...this.params,
+        page: 1,
+        order: [{ column: 'created_at', order: 'DESC' }],
         where: {
-          column: 'CODE', operator: 'LIKE', value: `%${code}%`
+          column: 'CODE', operator: 'LIKE', value: `%${this.code}%`
         }
       }
     },

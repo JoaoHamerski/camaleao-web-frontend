@@ -36,6 +36,14 @@ export default {
     statistics: {
       type: Object,
       default: () => ({})
+    },
+    showStatistics: {
+      type: Boolean,
+      default: false
+    },
+    showBalance: {
+      type: Boolean,
+      default: false
     }
   },
   data () {
@@ -103,6 +111,8 @@ export default {
         </div>
         <CashFlowBodyStatistics
           v-if="!isEmpty(statistics)"
+          :show-statistics="showStatistics"
+          :show-balance="showBalance"
           :data="statistics"
         />
         <CashFlowBodyTable :data="data" />

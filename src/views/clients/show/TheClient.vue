@@ -1,7 +1,7 @@
 <script>
 import ClientCard from '../partials/ClientCard'
 import { faPlus, faArrowAltCircleLeft } from '@fortawesome/free-solid-svg-icons'
-import { clientShow } from '@/graphql/Clients.gql'
+import { clientsShow } from '@/graphql/Client.gql'
 
 import 'tippy.js/themes/light-border.css'
 
@@ -21,7 +21,7 @@ export default {
   },
   apollo: {
     client: {
-      query: clientShow,
+      query: clientsShow,
       variables () {
         return {
           id: this.clientKey,

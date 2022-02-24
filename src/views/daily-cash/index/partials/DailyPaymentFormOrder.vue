@@ -2,7 +2,7 @@
 import { isEmpty } from 'lodash-es'
 import { formatCurrencyBRL } from '@/utils/formatters'
 import { maskCurrencyBRL } from '@/utils/masks'
-import { ordersIndex } from '@/graphql/Orders.gql'
+import { ordersIndex } from '@/graphql/Order.gql'
 
 import { faQuestionCircle } from '@fortawesome/free-solid-svg-icons'
 

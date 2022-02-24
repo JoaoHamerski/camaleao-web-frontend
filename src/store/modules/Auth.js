@@ -22,16 +22,12 @@ const ON_LOGOUT_ROUTE = {
 
 export const state = {
   user: null,
-  loading: false,
   error: null
 }
 
 export const getters = {
   authUser: (state) => {
     return state.user
-  },
-  loading: (state) => {
-    return state.loading
   },
   loggedIn: (state) => {
     return !!state.user
@@ -61,10 +57,11 @@ export const actions = {
   },
   async logout ({ commit, dispatch }) {
     try {
+      await commit('SET_USER', null)
+
       await onLogout(apolloClient)
 
       if (router.currentRoute.name !== 'login') {
-        commit('SET_USER', null)
         router.push(ON_LOGOUT_ROUTE)
       }
     } catch (error) {

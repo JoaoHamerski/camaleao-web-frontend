@@ -22,7 +22,7 @@ const renderTableHead = (h, context) => {
             return (
               <th
                 key={index}
-                class={`text-${header.align}`}>
+                class={header.align && `text-${header.align}`}>
                 { tableHeadContent(h, context, header) }
               </th>
             )

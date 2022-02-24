@@ -11,7 +11,7 @@ const TheUsers = () => import(
 const children = [
   {
     name: 'users.index',
-    path: '/usuarios',
+    path: '/gerenciamento/usuarios',
     component: TheUsers,
     meta: {
       middleware: [role],

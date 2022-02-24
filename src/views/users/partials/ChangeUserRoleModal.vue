@@ -83,6 +83,7 @@ export default {
           <AppRadio
             v-model="selectedRole"
             :options="roles"
+            name="selectedRole"
             label-prop="name"
             value-prop="id"
             align="vertical"

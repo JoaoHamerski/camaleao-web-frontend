@@ -1,8 +1,15 @@
 <script>
-import { clientCreate } from '@/graphql/Clients.gql'
-import { cities } from '@/graphql/Cities.gql'
-import { branches } from '@/graphql/Branches.gql'
-import { shippingCompanies } from '@/graphql/ShippingCompanies.gql'
+import { every } from 'lodash-es'
+import {
+  client,
+  clientsIndex,
+  clientsShow,
+  clientCreate,
+  clientUpdate
+} from '@/graphql/Client.gql'
+import { cities } from '@/graphql/City.gql'
+import { branches } from '@/graphql/Branch.gql'
+import { shippingCompanies } from '@/graphql/ShippingCompany.gql'
 
 import Form from '@/utils/Form'
 import { handleSuccess, handleError } from '@/utils/forms'
@@ -13,14 +20,39 @@ export default {
     cities: {
       query: cities,
       variables: {
-        orderBy: [{ column: 'name', order: 'ASC' }]
+        orderBy: [{ column: 'NAME', order: 'ASC' }]
+      },
+      result ({ loading }) {
+        if (!loading) {
+          this.loaded.cities = true
+        }
       }
     },
     branches: {
-      query: branches
+      query: branches,
+      result ({ loading }) {
+        if (!loading) {
+          this.loaded.branches = true
+        }
+      }
     },
     shippingCompanies: {
-      query: shippingCompanies
+      query: shippingCompanies,
+      result ({ loading }) {
+        if (!loading) {
+          this.loaded.shippingCompanies = true
+        }
+      }
+    }
+  },
+  props: {
+    client: {
+      type: Object,
+      default: null
+    },
+    isEdit: {
+      type: Boolean,
+      default: false
     }
   },
   data () {
@@ -30,6 +62,11 @@ export default {
       cities: [],
       branches: [],
       shippingCompanies: [],
+      loaded: {
+        cities: false,
+        branches: false,
+        shippingCompanies: false
+      },
       form: new Form({
         name: '',
         phone: '',
@@ -39,32 +76,92 @@ export default {
       })
     }
   },
+  computed: {
+    isQueryLoading () {
+      return !!this.$apollo.loading
+    }
+  },
+  watch: {
+    loaded: {
+      immediate: true,
+      deep: true,
+      handler (value) {
+        const isAllQueriesLoaded = every({ ...value }, item => item === true)
+
+        if (this.isEdit && isAllQueriesLoaded) {
+          this.populateForm()
+        }
+      }
+    }
+  },
   methods: {
+    populateForm () {
+      const { name, phone, city, branch, shipping_company } = this.client
+
+      this.form.name = name
+      this.form.phone = phone
+
+      if (city) {
+        this.form.city_id = this.cities.find(({ id }) => city.id === id)
+        this.cities.find(({ id }) => city.id === id)
+      }
+
+      if (branch) {
+        this.form.branch_id = this.branches.find(({ id }) => branch.id === id)
+      }
+
+      if (shipping_company) {
+        this.form.shipping_company_id = this.shippingCompanies.find(
+          ({ id }) => shipping_company.id === id
+        )
+      }
+    },
     getFormattedData () {
       const form = this.form.data()
 
-      form.city_id = form.city_id.id || ''
-      form.branch_id = form.branch_id.id || ''
-      form.shipping_company_id = form.shipping_company_id.id || ''
+      form.city_id = form.city_id?.id || ''
+      form.branch_id = form.branch_id?.id || ''
+      form.shipping_company_id = form.shipping_company_id?.id || ''
 
       return form
     },
-    async onSubmit () {
-      const data = this.getFormattedData()
-
-      this.isLoading = true
-
+    async create (input) {
       try {
         await this.$apollo.mutate({
           mutation: clientCreate,
-          variables: {
-            input: { ...data }
-          }
+          variables: { input }
         })
 
         handleSuccess(this, { message: 'Cliente cadastrado!', resetForm: true })
       } catch (error) {
         handleError(this, error)
+      }
+    },
+    async update (input) {
+      try {
+        await this.$apollo.mutate({
+          mutation: clientUpdate,
+          variables: { id: this.client.id, input },
+          refetchQueries: [
+            { query: client, variables: { id: this.client.id } },
+            { query: clientsIndex },
+            { query: clientsShow, variables: { id: this.client.id } }
+          ]
+        })
+
+        handleSuccess(this, { message: 'Cliente atualizado!' })
+      } catch (error) {
+        handleError(this, error)
+      }
+    },
+    async onSubmit () {
+      const data = this.getFormattedData()
+      this.isLoading = true
+
+      if (this.isEdit) {
+        await this.update(data)
+      } else {
+        await this.create(data)
       }
 
       this.isLoading = false
@@ -84,6 +181,15 @@ export default {
       }
 
       return `${city.name} - ${state.abbreviation}`
+    },
+    onCitySelected (city) {
+      this.form.branch_id = this.branches.find(
+        branch => branch.id === city?.branch?.id
+      )
+
+      this.form.shipping_company_id = this.shippingCompanies.find(
+        company => company.id === city.branch?.shipping_company?.id
+      )
     }
   }
 }
@@ -94,6 +200,7 @@ export default {
     :on-submit="onSubmit"
     :form="form"
   >
+    <AppLoading v-show="isQueryLoading" />
     <AppInput
       id="name"
       v-model="form.name"
@@ -123,8 +230,12 @@ export default {
       :options="cities"
       :custom-label="customLabelCity"
       optional
+      @input="onCitySelected"
     >
       Cidade
+      <template #hint>
+        Ao selecionar a <b>Cidade</b>, a <b>Filial</b> e <b>Transportadora</b> serão preenchidos automaticamente caso haja algum dado relacionado.
+      </template>
     </AppSelect>
 
     <AppSelect
@@ -146,25 +257,32 @@ export default {
       :custom-label="({name}) => name"
       optional
     >
-      Frete
+      Frete - Transportadora
     </AppSelect>
 
-    <div class="d-flex justify-content-between">
-      <AppButton
-        :loading="isLoading"
-        type="submit"
-        color="success"
-        class="fw-bold"
-      >
-        Cadastrar
-      </AppButton>
-      <AppButton
-        type="button"
-        color="light"
-        data-bs-dismiss="modal"
-      >
-        Cancelar
-      </AppButton>
+    <div class="row">
+      <div class="col">
+        <AppButton
+          :loading="isLoading"
+          type="submit"
+          color="success"
+          class="fw-bold"
+          block
+        >
+          {{ isEdit ? 'Atualizar' : 'Cadastrar' }}
+        </AppButton>
+      </div>
+      <div class="col">
+        <AppButton
+          type="button"
+          color="light"
+          data-bs-dismiss="modal"
+          block
+          :disabled="isLoading"
+        >
+          Cancelar
+        </AppButton>
+      </div>
     </div>
   </AppForm>
 </template>

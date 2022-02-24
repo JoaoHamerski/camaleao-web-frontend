@@ -3,7 +3,7 @@ import accounting from 'accounting-js'
 import { isEmpty } from 'lodash-es'
 import { formatCurrencyBRL } from '@/utils/formatters'
 import { maskCurrencyBRL, maskInteger } from '@/utils/masks'
-import { clothingTypes } from '@/graphql/ClothingTypes.gql'
+import { clothingTypes } from '@/graphql/ClothingType.gql'
 
 import OrderFormValuesFinal from './OrderFormValuesFinal'
 
@@ -28,6 +28,9 @@ export default {
   apollo: {
     clothingTypes: {
       query: clothingTypes,
+      variables: {
+        is_hidden: false
+      },
       result ({ data }) {
         this.$emit('clothing-types-loaded', data.clothingTypes)
       }

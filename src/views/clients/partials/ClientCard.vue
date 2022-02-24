@@ -1,13 +1,15 @@
 <script>
 import { faUser, faEdit, faTrashAlt } from '@fortawesome/free-solid-svg-icons'
-import ClientCardItem from './ClientCardItem'
 import { isEmpty } from 'lodash-es'
-
 import { formatPhone } from '@/utils/formatters'
+
+import ClientCardItem from './ClientCardItem'
+import ClientModalEdit from './ClientModalEdit'
 
 export default {
   components: {
-    ClientCardItem
+    ClientCardItem,
+    ClientModalEdit
   },
   props: {
     client: {
@@ -25,6 +27,10 @@ export default {
   },
   data () {
     return {
+      clientModalEdit: {
+        value: false,
+        client: null
+      },
       icons: {
         faUser,
         faEdit,
@@ -59,7 +65,15 @@ export default {
   },
   methods: {
     formatPhone,
-    isEmpty
+    isEmpty,
+    onEditClientClick () {
+      this.clientModalEdit.client = this.client
+      this.clientModalEdit.value = true
+    },
+    onEditSuccess () {
+      this.clientModalEdit.client = null
+      this.clientModalEdit.value = false
+    }
   }
 }
 </script>
@@ -81,6 +95,12 @@ export default {
         v-if="!isEmpty(client)"
         #body
       >
+        <ClientModalEdit
+          v-model="clientModalEdit.value"
+          :client="clientModalEdit.client"
+          @success="onEditSuccess"
+        />
+
         <ClientCardItem
           label="Nome"
           :text="client.name"
@@ -116,35 +136,31 @@ export default {
           </template>
         </ClientCardItem>
 
-        <template v-if="showOptions">
-          <hr>
-          <div class="text-subtitle">
-            <div class="mb-1">
-              <a
-                href=""
-                class="text-decoration-none"
-              >
-                <FontAwesomeIcon
-                  :icon="icons.faEdit"
-                  fixed-width
-                />
-                Editar dados
-              </a>
-            </div>
-            <div>
-              <a
-                class="text-decoration-none link-danger"
-                href=""
-              >
-                <FontAwesomeIcon
-                  :icon="icons.faTrashAlt"
-                  fixed-width
-                />
-                Excluir cliente
-              </a>
-            </div>
+        <hr>
+
+        <div class="text-subtitle">
+          <div class="mb-1">
+            <span
+              class="link-primary clickable text-decoration-none"
+              @click.prevent="onEditClientClick"
+            >
+              <FontAwesomeIcon
+                :icon="icons.faEdit"
+                fixed-width
+              />
+              Editar dados
+            </span>
           </div>
-        </template>
+          <div>
+            <span class="link-danger clickable">
+              <FontAwesomeIcon
+                :icon="icons.faTrashAlt"
+                fixed-width
+              />
+              Excluir cliente
+            </span>
+          </div>
+        </div>
       </template>
       <template
         v-else

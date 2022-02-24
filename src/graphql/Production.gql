@@ -1,0 +1,103 @@
+query commissionsUser ($page: Int) {
+  commissionsUser (page: $page first: 10) {
+    paginatorInfo {
+      total
+      perPage
+      currentPage
+    }
+
+    data {
+      id
+      print_commission
+      seam_commission
+      seam_total_commission
+      print_total_commission
+      
+      pivot {
+        id
+        commission_value
+        confirmed_at
+        was_quantity_changed
+        role {
+          id
+          name
+        }
+      }
+
+      order {
+        code
+        quantity
+        art_paths
+        size_paths
+        created_at
+        updated_at
+      }
+    }
+  }
+}
+
+query commissionsUsers ($page: Int $where: QueryCommissionsUsersWhereWhereConditions) {
+  commissionsUsers (first: 10 page: $page where: $where) {
+    paginatorInfo {
+      total
+      perPage
+      currentPage
+    }
+
+    data {
+      id
+      user {
+        id
+        name
+      }
+      
+      commission {
+        seam_commission
+        print_commission
+        seam_total_commission
+        print_total_commission
+        order {
+          id
+          code
+          quantity
+          created_at
+
+          client {
+            id
+          }
+        }
+      }
+
+      role {
+        id
+        name
+      }
+      
+      commission_value
+      was_quantity_changed
+			confirmed_at
+    }
+  }
+}
+
+query commissionRoleByMonth ($role_id: ID $month: String!) {
+  commissionRoleByMonth (role_id: $role_id month: $month) {
+    month
+    year
+    value
+    role {
+      id
+      name
+    }
+  } 
+}
+
+mutation commissionValueUpsert($value: String!) {
+  commissionValueUpsert(value: $value)
+}
+
+mutation commissionConfirmProduction ($id: ID!) {
+  commissionConfirmProduction (id: $id) {
+    id
+  }
+}

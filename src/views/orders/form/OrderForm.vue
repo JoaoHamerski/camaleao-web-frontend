@@ -3,7 +3,7 @@
 import Form from '@/utils/Form'
 import { formatDatetime } from '@/utils/formatters'
 import { map, pick } from 'lodash-es'
-import { orderCreate, orderUpdate, order } from '@/graphql/Orders.gql'
+import { orderCreate, orderUpdate, order } from '@/graphql/Order.gql'
 import { handleError } from '@/utils/forms'
 
 import OrderFormBasicInfo from './OrderFormBasicInfo'
@@ -121,7 +121,6 @@ export default {
 
         this.$emit('success', { orderCode: code, clientId: this.clientKey })
       } catch (error) {
-        console.log({ ...error })
         handleError(this, error)
       }
     },
