@@ -1,6 +1,10 @@
 <script>
-import { faEdit } from '@fortawesome/free-solid-svg-icons'
+import { faEdit, faCheck, faTimes, faHandHoldingUsd } from '@fortawesome/free-solid-svg-icons'
 import { formatDatetime } from '@/utils/formatters'
+import { paymentConfirm } from '@/graphql/Payment.gql'
+import { order } from '@/graphql/Order.gql'
+import roles from '@/constants/roles'
+
 import ModalOrderPayment from '../../partials/ModalOrderPayment'
 
 const PAYMENT_STATE = {
@@ -21,10 +25,15 @@ export default {
   },
   data () {
     return {
+      roles,
       icons: {
-        faEdit
+        faEdit,
+        faCheck,
+        faTimes,
+        faHandHoldingUsd
       },
-      selectedPayment: {}
+      selectedPayment: {},
+      loadingId: ''
     }
   },
   methods: {
@@ -34,6 +43,35 @@ export default {
     },
     onEditPaymentClick (payment) {
       this.$emit('open-payment-modal', { payment, isEdit: true })
+    },
+    async onConfirmPayment ({ id }, confirmation) {
+      this.loadingId = id
+
+      try {
+        await this.$apollo.mutate({
+          mutation: paymentConfirm,
+          variables: { id, confirmation },
+          refetchQueries: [
+            {
+              query: order,
+              variables: {
+                code: this.$route.params.orderKey,
+                client_id: this.$route.params.clientKey
+              }
+            }
+          ]
+        })
+
+        this.$toast.success(
+          confirmation
+            ? 'Pagamento confirmado!'
+            : 'Pagamento recusado!'
+        )
+      } catch (error) {
+        this.$toast.error('Ops! Algo deu errado, tente novamente!')
+      }
+
+      this.loadingId = ''
     }
   }
 }
@@ -42,6 +80,7 @@ export default {
 <template>
   <div>
     <h5 class="fw-bold text-secondary">
+      <FontAwesomeIcon :icon="icons.faHandHoldingUsd" />
       Pagamentos
     </h5>
     <div v-if="payments.length">
@@ -51,6 +90,7 @@ export default {
         :payment="selectedPayment"
         @refresh="$emit('refresh')"
       />
+
       <ul class="list-group list-group-flush">
         <li
           v-for="payment in payments"
@@ -84,12 +124,35 @@ export default {
               </div>
             </div>
             <div v-if="payment.is_confirmed === null">
+              <template v-if="$helpers.canView(roles.GERENCIA)">
+                <AppButton
+                  outlined
+                  btn-class="btn-sm"
+                  color="success"
+                  :icon="icons.faCheck"
+                  tooltip="Confirmar"
+                  :loading="payment.id === loadingId"
+                  @click.prevent="onConfirmPayment(payment, true)"
+                />
+
+                <AppButton
+                  outlined
+                  btn-class="btn-sm"
+                  color="danger"
+                  :icon="icons.faTimes"
+                  class="mx-2"
+                  tooltip="Recusar"
+                  :disabled="payment.id === loadingId"
+                  @click.prevent="onConfirmPayment(payment, false)"
+                />
+              </template>
+
               <AppButton
                 outlined
                 btn-class="btn-sm"
-                tooltip="Editar pagamento"
+                tooltip="Editar"
                 :icon="icons.faEdit"
-                @click="onEditPaymentClick(payment)"
+                @click.prevent="onEditPaymentClick(payment)"
               />
             </div>
           </div>
