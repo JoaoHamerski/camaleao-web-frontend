@@ -23,7 +23,10 @@ export default {
     clients: {
       query: clientsIndex,
       variables () {
-        return { ...this.query }
+        return {
+          ...this.query,
+          orderBy: [{ column: 'CREATED_AT', order: 'DESC' }]
+        }
       }
     }
   },
