@@ -70,7 +70,9 @@ export default {
           class="btn btn-outline-primary"
           :class="value === key && 'fw-bold'"
           :for="`${key}__sort`"
-        >{{ name }}</label>
+        >
+          {{ name }}
+        </label>
       </template>
     </div>
 
