@@ -44,11 +44,12 @@ query clientsIndex (
   $page: Int
   $where: QueryClientsWhereWhereConditions
   $hasCity: QueryClientsHasCityWhereHasConditions
+  $orderBy: [QueryClientsOrderByOrderByClause!]
 ) {
   clients (
     first: 10, 
     page: $page
-    orderBy: [{column: CREATED_AT order: DESC}]
+    orderBy: $orderBy
     where: $where
     hasCity: $hasCity
   ) {
