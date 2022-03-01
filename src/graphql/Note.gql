@@ -1,0 +1,19 @@
+query notesOrder ($order_id: ID!) {
+  notesOrder(order_id: $order_id) {
+    id
+    text
+    created_at
+  }
+}
+
+mutation noteCreate ($order_id: ID! $text: String!) {
+  noteCreate (order_id: $order_id text: $text) {
+    id
+  }
+}
+
+mutation noteUpdate ($id: ID! $text: String!) {
+  noteUpdate (id: $id text: $text) {
+    id
+  }
+}
