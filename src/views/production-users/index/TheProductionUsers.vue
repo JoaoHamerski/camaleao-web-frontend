@@ -20,7 +20,8 @@ export default {
       variables () {
         return {
           page: this.page,
-          where: this.where
+          where: this.where,
+          orderBy: this.orderBy
         }
       }
     }
@@ -29,6 +30,7 @@ export default {
     return {
       page: 1,
       where: {},
+      orderBy: [],
       commissionsUsers: {
         data: [],
         paginatorInfo: {}
@@ -42,11 +44,20 @@ export default {
   },
   methods: {
     onTabChanged (value) {
+      this.page = 1
+      this.where = {}
+      this.orderBy = []
+
       if (value === 'confirmed') {
         this.where = {
           column: 'CONFIRMED_AT',
           operator: 'IS_NOT_NULL'
         }
+
+        this.orderBy = [{
+          column: 'CONFIRMED_AT',
+          order: 'DESC'
+        }]
 
         return
       }
@@ -56,11 +67,7 @@ export default {
           column: 'CONFIRMED_AT',
           operator: 'IS_NULL'
         }
-
-        return
       }
-
-      this.where = {}
     }
   }
 }
