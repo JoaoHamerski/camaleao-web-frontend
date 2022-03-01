@@ -61,7 +61,7 @@ export default {
         { text: 'Quantidade', value: 'quantity' },
         { text: 'Valor total', value: 'price', format: 'currencyBRL' },
         { text: 'Total pago', value: 'total_paid', format: 'currencyBRL' },
-        { text: 'Produção', value: 'producton_date', format: 'datetime' },
+        { text: 'Produção', value: 'production_date', format: 'datetime' },
         { text: 'Entrega', value: 'delivery_date', format: 'datetime' }
       ]
     }
