@@ -49,6 +49,10 @@ export default {
   methods: {
     formatDatetime,
     hasImages ({ order: { art_paths, size_paths } }) {
+      if (!art_paths || !size_paths) {
+        return false
+      }
+
       const images = [...art_paths, ...size_paths]
 
       return !!images.length
@@ -150,11 +154,10 @@ export default {
 
       <template #[`items.image`]="{ item }">
         <AppButton
-          v-tippy
           btn-class="btn-sm"
           outlined
           :icon="icons.faFileImage"
-          content="Imagem do pedido"
+          :tooltip="hasImages(item) ? 'Imagem do pedido' : 'Pedido sem imagens'"
           :color="hasImages(item) ? 'primary' : 'secondary'"
           :disabled="!hasImages(item)"
           @click.prevent="showImages(item)"
