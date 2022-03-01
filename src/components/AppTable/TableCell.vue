@@ -51,7 +51,7 @@ function renderNormalCell (h, context) {
 
 function renderCell (h, context, element) {
   return (
-    <td class={`text-${context.align}`}>
+    <td nowrap={context.nowrap} class={`text-${context.align}`}>
       { element }
     </td>
   )
@@ -85,6 +85,10 @@ export default {
     align: {
       type: String,
       default: 'left'
+    },
+    nowrap: {
+      type: Boolean,
+      default: false
     }
   },
   render (h) {

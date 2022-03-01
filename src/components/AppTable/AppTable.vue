@@ -53,6 +53,7 @@ const renderTableCell = (h, context, item) => {
         url={context.rowUrl(item)}
         align={header.align}
         format={header.format}
+        nowrap={header.nowrap}
         formatting={header.formatting}
         key={index}
         value={item[header.value]}

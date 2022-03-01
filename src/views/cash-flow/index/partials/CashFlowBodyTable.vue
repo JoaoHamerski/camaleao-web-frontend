@@ -44,7 +44,7 @@ export default {
         { text: 'Tipo', value: 'type', align: 'center' },
         { text: 'Descrição/Pedido', value: 'description' },
         { text: 'Via', value: 'via' },
-        { text: 'Valor', value: 'value', format: 'currencyBRL' },
+        { text: 'Valor', value: 'value', format: 'currencyBRL', nowrap: true },
         { text: 'Data', value: 'date', align: 'center', format: 'datetime' },
         { text: 'Detalhes', value: 'details', align: 'center' }
       ]
