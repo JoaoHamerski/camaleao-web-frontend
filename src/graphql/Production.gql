@@ -36,8 +36,12 @@ query commissionsUser ($page: Int) {
   }
 }
 
-query commissionsUsers ($page: Int $where: QueryCommissionsUsersWhereWhereConditions) {
-  commissionsUsers (first: 10 page: $page where: $where) {
+query commissionsUsers (
+  $page: Int 
+  $where: QueryCommissionsUsersWhereWhereConditions
+  $orderBy: [QueryCommissionsUsersOrderByOrderByClause!]
+) {
+  commissionsUsers (first: 10 page: $page where: $where orderBy: $orderBy) {
     paginatorInfo {
       total
       perPage
