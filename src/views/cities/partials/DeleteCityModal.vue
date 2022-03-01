@@ -129,12 +129,30 @@ export default {
       </div>
 
       <div class="text-secondary">
-        <FontAwesomeIcon
-          :icon="icons.faExclamationCircle"
-          fixed-width
-          class="text-primary"
-        />
-        Qualquer cliente ou filial relacionado com esta cidade serão desvinculados.
+        <div>
+          <FontAwesomeIcon
+            :icon="icons.faExclamationCircle"
+            fixed-width
+            class="text-primary"
+          />
+          Qualquer cidade de cliente relacionado com está cidade será desvinculado.
+        </div>
+        <div>
+          <FontAwesomeIcon
+            :icon="icons.faExclamationCircle"
+            fixed-width
+            class="text-primary"
+          />
+          Qualquer filial registrada no nome dessa cidade será removida.
+        </div>
+        <div>
+          <FontAwesomeIcon
+            :icon="icons.faExclamationCircle"
+            fixed-width
+            class="text-primary"
+          />
+          Qualquer cidade de filiais vinculadas serão desvinculadas.
+        </div>
       </div>
 
       <div class="mt-3">
