@@ -1,4 +1,5 @@
 <script>
+import { faFileImage } from '@fortawesome/free-solid-svg-icons'
 import { keys, isEmpty } from 'lodash-es'
 
 const FILES_MAP = {
@@ -16,7 +17,10 @@ export default {
   },
   data () {
     return {
-      FILES_MAP
+      FILES_MAP,
+      icons: {
+        faFileImage
+      }
     }
   },
   computed: {
@@ -88,6 +92,7 @@ export default {
     v-else
   >
     <h5 class="fw-bold text-secondary">
+      <FontAwesomeIcon :icon="icons.faFileImage" />
       Anexos
     </h5>
     <div class="text-secondary text-center py-3">
