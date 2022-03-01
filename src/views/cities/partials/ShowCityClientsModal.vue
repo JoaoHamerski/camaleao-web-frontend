@@ -8,6 +8,10 @@ export default {
       variables () {
         return {
           page: this.page,
+          orderBy: [{
+            column: 'NAME',
+            order: 'ASC'
+          }],
           where: {
             column: 'CITY_ID',
             operator: 'EQ',
