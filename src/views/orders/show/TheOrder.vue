@@ -37,10 +37,9 @@ export default {
       variables () {
         return {
           code: this.orderKey,
-          clientId: this.clientKey
+          client_id: this.clientKey
         }
       }
-      // fetchPolicy: 'network-only'
     }
   },
   data () {
