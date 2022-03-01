@@ -1,67 +1,86 @@
+
 fragment OrderParts on Order {
   client {
+    id
+    name
+    phone
+    total_owing
+    shipping_company {
       id
       name
-      phone
-      total_owing
-      shipping_company {
-        name
-      }
-      branch {
-        city {
-          name
-        }
-      }
+    }
+
+    branch {
+      id
       city {
-        name
-      }
-    }
-    status {
-      id
-      text
-    }
-    clothing_types {
-      id
-      key
-      name
-      is_hidden
-      commission
-      quantity
-      value
-      total_value
-    }
-    payments {
-      id
-      value
-      date
-      note
-      via {
         id
         name
       }
-      confirmed_at
-      is_confirmed
-      created_at
     }
+
+    city {
+      id
+      name
+    }
+  }
+
+  status {
     id
-    code
+    text
+    is_avaliable
+  }
+
+  clothing_types {
+    id
+    key
     name
-    price
-    original_price
-    states
-    discount
+    is_hidden
+    commission
     quantity
-    total_paid
-    total_owing
-    total_clothings_value
-    production_date
-    delivery_date
+    value
+    total_value
+  }
+
+  payments {
+    id
+    value
+    date
+    note
+    via {
+      id
+      name
+    }
+
+    confirmed_at
+    is_confirmed
     created_at
-    closed_at
-    art_paths
-    size_paths
-    payment_voucher_paths
-    reminder
+  }
+
+  notes {
+    id
+    text
+    created_at
+  }
+
+  id
+  code
+  name
+  price
+  original_price
+  states
+  discount
+  quantity
+  total_paid
+  total_owing
+  total_clothings_value
+  production_date
+  delivery_date
+  created_at
+  closed_at
+  art_paths
+  size_paths
+  payment_voucher_paths
+  reminder
 }
 
 query ordersIndex (
@@ -99,8 +118,8 @@ query ordersIndex (
   }
 }
 
-query order ($code: ID! $clientId: ID!) {
-  order (code: $code clientId: $clientId) {
+query order ($code: ID! $client_id: ID!) {
+  order (code: $code client_id: $client_id) {
     ...OrderParts
   }
 }
