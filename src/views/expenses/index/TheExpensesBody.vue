@@ -82,7 +82,7 @@ export default {
         { text: 'Descrição', value: 'description' },
         { text: 'Tipo', value: 'type' },
         { text: 'Via', value: 'via' },
-        { text: 'Valor', value: 'value', format: 'currencyBRL' },
+        { text: 'Valor', value: 'value', format: 'currencyBRL', nowrap: true },
         { text: 'Data', value: 'date', format: 'datetime' },
         { text: 'Comprovante', value: 'receipt', align: 'center' },
         { text: 'Ações', value: 'actions', align: 'center' }
