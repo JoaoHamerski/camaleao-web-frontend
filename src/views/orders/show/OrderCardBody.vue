@@ -1,15 +1,18 @@
 <script>
-import OrderClothingTypesTable from './partials/OrderClothingTypesTable'
-import OrderPayments from './partials/OrderPayments'
-import OrderFiles from './partials/OrderFiles'
 import { formatDatetime } from '@/utils/formatters'
 import { faExclamationTriangle } from '@fortawesome/free-solid-svg-icons'
 
+import OrderClothingTypesTable from './partials/OrderClothingTypesTable'
+import OrderNotes from './partials/OrderNotes'
+import OrderPayments from './partials/OrderPayments'
+import OrderFiles from './partials/OrderFiles'
+
 export default {
   components: {
+    OrderClothingTypesTable,
+    OrderNotes,
     OrderPayments,
-    OrderFiles,
-    OrderClothingTypesTable
+    OrderFiles
   },
   props: {
     order: {
@@ -100,7 +103,7 @@ export default {
         <b class="small text-secondary">Status</b>
         <h5
           class="fw-bold"
-          :class="order.status.avaliable ? 'text-success' : 'text-warning'"
+          :class="order.status.is_avaliable ? 'text-success' : 'text-warning'"
         >
           {{ order.status.text }}
         </h5>
@@ -184,6 +187,12 @@ export default {
         />
       </div>
     </div>
+
+    <OrderNotes
+      class="mb-3"
+      :order-id="order.id"
+      :notes="order.notes"
+    />
 
     <OrderPayments
       class="mb-3"
