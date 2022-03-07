@@ -42,7 +42,10 @@ export default {
       return PAYMENT_STATE[payment.is_confirmed]
     },
     onEditPaymentClick (payment) {
-      this.$emit('open-payment-modal', { payment, isEdit: true })
+      this.$emit('open-modal', {
+        modal: 'payment',
+        payload: { payment, isEdit: true }
+      })
     },
     async onConfirmPayment ({ id }, confirmation) {
       this.loadingId = id
