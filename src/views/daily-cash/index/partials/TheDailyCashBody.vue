@@ -133,7 +133,7 @@ export default {
     >
       <template #[`items.order`]="{ item }">
         <a
-          :href="orderUrl(item.order.client.id, item.order.code)"
+          :href="orderUrl(item.order.client.id, item.order.id)"
           target="_blank"
           class="text-decoration-none fw-bold"
         >{{ item.order.code }}</a>

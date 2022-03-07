@@ -42,12 +42,12 @@ export default {
     }
   },
   methods: {
-    orderUrl (order) {
+    orderUrl ({ id }) {
       const resolvedRoute = this.$router.resolve({
         name: 'orders.show',
         params: {
           clientKey: this.$route.params.clientKey,
-          orderKey: order.code
+          orderKey: id
         }
       })
 
@@ -68,12 +68,12 @@ export default {
 
       return ''
     },
-    redirectToOrder ({ code }) {
+    redirectToOrder ({ id }) {
       this.$router.push({
         name: 'orders.show',
         params: {
           clientKey: this.$route.params.clientKey,
-          orderKey: code
+          orderKey: id
         }
       })
     }
