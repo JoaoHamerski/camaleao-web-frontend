@@ -4,15 +4,28 @@ import Form from '@/utils/Form'
 import { formatDatetime } from '@/utils/formatters'
 import { map, pick } from 'lodash-es'
 import { orderCreate, orderUpdate, order } from '@/graphql/Order.gql'
+import { clientsShow } from '@/graphql/Client.gql'
 import { handleError } from '@/utils/forms'
 
+import OrderFormClient from './OrderFormClient'
 import OrderFormBasicInfo from './OrderFormBasicInfo'
 import OrderFormValues from './OrderFormValues'
 import OrderFormProduction from './OrderFormProduction'
 import OrderFormFiles from './OrderFormFiles'
 
+const refetchQueriesOnUpdate = (context) => {
+  return [{
+    query: order,
+    variables: {
+      id: context.$route.params.orderKey,
+      client_id: context.$route.params.clientKey
+    }
+  }]
+}
+
 export default {
   components: {
+    OrderFormClient,
     OrderFormBasicInfo,
     OrderFormValues,
     OrderFormProduction,
@@ -38,6 +51,7 @@ export default {
       form: new Form({
         name: '',
         code: '',
+        client_id: '',
         discount: '',
         down_payment: '',
         payment_via_id: '',
@@ -70,6 +84,7 @@ export default {
     getFomattedForm () {
       const form = { ...this.form.data() }
 
+      form.client_id = form.client_id?.id || ''
       form.art_paths = map(form.art_paths, this.getFile)
       form.size_paths = map(form.size_paths, this.getFile)
       form.payment_voucher_paths = map(form.payment_voucher_paths, this.getFile)
@@ -80,29 +95,16 @@ export default {
       const data = this.getFomattedForm()
 
       try {
-        const { data: { orderUpdate: { code } } } = await this.$apollo.mutate({
+        const { data: { orderUpdate: { id, client } } } = await this.$apollo.mutate({
           mutation: orderUpdate,
           variables: {
             id: this.order.id,
             input: { ...data }
           },
-          update: async (store) => {
-            const data = await store.readQuery({
-              query: order,
-              variables: {
-                code: this.order.code,
-                clientId: this.order.client.id
-              }
-            })
-
-            store.writeQuery({
-              query: order,
-              data
-            })
-          }
+          refetchQueries: refetchQueriesOnUpdate(this)
         })
 
-        this.$emit('success', { orderCode: code, clientId: this.clientKey })
+        this.$emit('success', { orderId: id, clientId: client.id })
       } catch (error) {
         handleError(this, error)
       }
@@ -111,15 +113,23 @@ export default {
       const data = this.getFomattedForm()
 
       try {
-        const { data: { orderCreate: { code } } } = await this.$apollo.mutate({
+        const { data: { orderCreate: { id } } } = await this.$apollo.mutate({
           mutation: orderCreate,
           variables: {
             client_id: this.clientKey,
             input: { ...data }
-          }
+          },
+          refetchQueries: [{
+            query: clientsShow,
+            variables: {
+              id: this.clientKey,
+              orderPage: 1,
+              orderWhere: {}
+            }
+          }]
         })
 
-        this.$emit('success', { orderCode: code, clientId: this.clientKey })
+        this.$emit('success', { orderId: id, clientId: this.clientKey })
       } catch (error) {
         handleError(this, error)
       }
@@ -210,14 +220,22 @@ export default {
     :on-submit="onSubmit"
     :form="form"
   >
+    <OrderFormClient
+      v-if="order && !order.client"
+      :form="form"
+    />
+
     <OrderFormBasicInfo :form="form" />
+
     <OrderFormValues
       :order="order"
       :form="form"
       :is-edit="isEdit"
       @clothing-types-loaded="onClothingTypesLoaded"
     />
+
     <OrderFormProduction :form="form" />
+
     <OrderFormFiles
       :is-edit="isEdit"
       :form="form"
