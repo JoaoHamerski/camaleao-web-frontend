@@ -1,6 +1,6 @@
 <script>
 import { isEmpty } from 'lodash-es'
-import { orderToggle } from '@/graphql/Order.gql'
+import { orderToggle, order } from '@/graphql/Order.gql'
 
 import {
   faCog,
@@ -18,6 +18,10 @@ export default {
     order: {
       type: Object,
       default: () => {}
+    },
+    isLoading: {
+      type: Boolean,
+      default: false
     }
   },
   data () {
@@ -54,39 +58,84 @@ export default {
         return 'Não é possível registrar pagamento em pedidos fechados.'
       }
 
+      if (this.order.price === null) {
+        return 'Pedido em pré-registro sem preço, impossível efetuar pagamentos.'
+      }
+
       return false
     }
   },
   methods: {
     isEmpty,
     redirectToOrderEdit () {
+      if (!this.order.client) {
+        this.$router.push({
+          name: 'orders.edit.pre-registered',
+          params: {
+            orderKey: this.$route.params.orderKey
+          }
+        })
+
+        return
+      }
+
       this.$router.push({
         name: 'orders.edit',
         params: {
-          client: this.$route.params.clientKey,
-          order: this.$route.params.orderKey
+          clientKey: this.$route.params.clientKey,
+          orderKey: this.$route.params.orderKey
         }
       })
     },
     async toggleOrder () {
       const isOrderOpen = this.order.closed_at === null
+      const getQueryVariables = () => {
+        if (this.order.client) {
+          return {
+            id: this.order.id,
+            client_id: this.order.client.id
+          }
+        }
+
+        return {
+          id: this.order.id
+        }
+      }
 
       try {
         await this.$apollo.mutate({
           mutation: orderToggle,
           variables: {
             id: this.order.id
-          }
+          },
+          refetchQueries: [{
+            query: order,
+            variables: getQueryVariables()
+          }]
         })
 
         this.$toast.success(isOrderOpen ? 'Pedido fechado' : 'Pedido reaberto')
-        this.$emit('refresh')
       } catch (error) {
         this.$toast.error('Ops! Algo deu errado.')
       }
     },
+    onAddPaymentClick () {
+      this.$emit('open-modal', {
+        modal: 'payment',
+        payload: {
+          isEdit: false
+        }
+      })
+    },
     onDeleteOrderClick () {
-      this.$emit('open-delete-order-modal')
+      this.$emit('open-modal', {
+        modal: 'delete-order'
+      })
+    },
+    onChangeStatusClick () {
+      this.$emit('open-modal', {
+        modal: 'change-status'
+      })
     }
   }
 }
@@ -100,7 +149,7 @@ export default {
         outlined
         :icon="icons.faDollarSign"
         :disabled-message="paymentBtnDisabledMessage"
-        @click="$emit('open-payment-modal', {isEdit: false})"
+        @click="onAddPaymentClick"
       >
         Adicionar pagamento
       </AppButton>
@@ -110,7 +159,6 @@ export default {
         class="me-1"
         :icon="icons.faFileInvoice"
         :disabled="!order"
-        @click="$emit('open-report-modal')"
       >
         Gerar relatório
       </AppButton>
@@ -123,7 +171,7 @@ export default {
       />
 
       <ul
-        v-if="order"
+        v-if="!isLoading"
         class="dropdown-menu"
         aria-labelledby="dropdownOptions"
       >
@@ -149,7 +197,7 @@ export default {
           :icon="icons.faExchangeAlt"
           text="Alterar status"
           icon-color="primary"
-          @click="$emit('open-status-modal')"
+          @click="onChangeStatusClick"
         />
 
         <AppDropdownItem

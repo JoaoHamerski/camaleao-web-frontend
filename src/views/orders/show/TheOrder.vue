@@ -1,50 +1,59 @@
 <script>
+import { faArrowAltCircleLeft } from '@fortawesome/free-solid-svg-icons'
 import { order } from '@/graphql/Order.gql'
-import ClientCard from '@/views/clients/partials/ClientCard'
-import { faArrowAltCircleLeft, faBoxOpen } from '@fortawesome/free-solid-svg-icons'
-import { formatDatetime } from '@/utils/formatters'
-import { isEmpty } from 'lodash-es'
+import { redirectToClient, redirectToClients } from '@/utils/redirects'
+import orderStatesMixin from '../orderStatesMixin'
 
-import OrderHeader from './OrderHeader'
-import OrderCardBody from './OrderCardBody'
+import ClientCard from '@/views/clients/partials/ClientCard'
+import TheOrderHeader from './TheOrderHeader'
+import TheOrderCardBody from './TheOrderCardBody'
+import TheOrderCardHeader from './TheOrderCardHeader'
+import TheOrderCardPlaceholder from './TheOrderCardPlaceholder'
 import ModalOrderPayment from '../partials/ModalOrderPayment'
 import ModalOrderStatus from '../partials/ModalOrderStatus'
 import ModalOrderDelete from '../partials/ModalOrderDelete'
-import ModalReport from '../partials/ModalReport'
 
-const getOrderPathUrl = (clientKey, orderKey) => {
-  return `/api/clients/${clientKey}/orders/${orderKey}/generate-report`
+export const orderQueryVariables = (context) => {
+  if (context.clientKey === undefined) {
+    return {
+      id: context.orderKey
+    }
+  }
+
+  return {
+    id: context.orderKey,
+    client_id: context.clientKey
+  }
 }
 
 export default {
   metaInfo () {
     return {
-      title: `${this.order?.client?.name || ''} - Pedidos`
+      title: `${this.order?.client?.name || 'PRE-REGISTRO'} - Pedidos`
     }
   },
   components: {
     ClientCard,
-    OrderHeader,
-    OrderCardBody,
+    TheOrderHeader,
+    TheOrderCardBody,
+    TheOrderCardHeader,
+    TheOrderCardPlaceholder,
     ModalOrderPayment,
     ModalOrderStatus,
-    ModalOrderDelete,
-    ModalReport
+    ModalOrderDelete
   },
+  mixins: [orderStatesMixin],
   apollo: {
     order: {
       query: order,
       variables () {
-        return {
-          code: this.orderKey,
-          client_id: this.clientKey
-        }
+        return orderQueryVariables(this)
       }
     }
   },
   data () {
     return {
-      order: null,
+      order: {},
       modalOrderPayment: {
         payment: null,
         value: false,
@@ -56,28 +65,20 @@ export default {
       modalOrderDelete: {
         value: false
       },
-      modalOrderReport: {
-        value: false,
-        src: ''
-      },
       icons: {
-        faArrowAltCircleLeft,
-        faBoxOpen
+        faArrowAltCircleLeft
       }
     }
   },
   computed: {
-    client () {
-      return this.order?.client || {}
-    },
     clientKey () {
       return this.$route.params.clientKey
     },
     orderKey () {
       return this.$route.params.orderKey
     },
-    apiUrl () {
-      return this.$store.getters.apiURL
+    isLoading () {
+      return !!this.$apollo.queries.order.loading
     },
     cardColor () {
       if (this.order.states.includes('CLOSED')) {
@@ -92,56 +93,48 @@ export default {
     }
   },
   methods: {
-    formatDatetime,
-    isEmpty,
-    generateURL () {
-      const url = new URL(this.apiUrl + getOrderPathUrl(this.clientKey, this.orderKey))
-
-      return url.toString()
-    },
-    onGenerateReportClick () {
-      const url = this.generateURL()
-
-      this.modalOrderReport.src = url
-      this.modalOrderReport.value = true
-    },
-    openModalPaymentOrder ({ payment, isEdit }) {
-      this.modalOrderPayment.isEdit = isEdit
-      this.modalOrderPayment.payment = payment || null
-      this.modalOrderPayment.value = true
-    },
+    redirectToClient,
     openModal (modal) {
       this[modal].value = true
     },
     closeModal (modal) {
       this[modal].value = false
     },
-    onModalOrderReportHidden () {
-      this.modalOrderReport.src = ''
+    openModalOrderPayment ({ payment, isEdit }) {
+      this.modalOrderPayment.isEdit = isEdit
+      this.modalOrderPayment.payment = payment || null
+      this.modalOrderPayment.value = true
     },
-    onPayment () {
+    onPaymentCreated () {
       this.closeModal('modalOrderPayment')
-      this.refresh()
     },
     onStatusUpdated () {
       this.closeModal('modalOrderStatus')
-      this.refresh()
     },
     onOrderDeleted () {
       this.closeModal('modalOrderDelete')
 
       this.$nextTick(() => {
-        this.redirectToClient()
+        if (!this.order.client) {
+          redirectToClients()
+          return
+        }
+
+        redirectToClient(this.order.client)
       })
     },
-    refresh () {
-      this.$apollo.queries.order.refetch()
-    },
-    redirectToClient () {
-      this.$router.push({
-        name: 'clients.show',
-        params: { clientKey: this.clientKey }
-      })
+    onOpenModalRequest ({ modal, payload }) {
+      if (modal === 'payment') {
+        this.openModalOrderPayment(payload)
+      }
+
+      if (modal === 'delete-order') {
+        this.openModal('modalOrderDelete')
+      }
+
+      if (modal === 'change-status') {
+        this.openModal('modalOrderStatus')
+      }
     }
   }
 }
@@ -155,116 +148,68 @@ export default {
       <AppButton
         class="mb-1"
         outlined
-        @click="redirectToClient"
+        :disabled-message="!order.client && 'O pedido não possui cliente'"
+        @click="redirectToClient(order.client)"
       >
         <FontAwesomeIcon :icon="icons.faArrowAltCircleLeft" />
         Cliente
       </AppButton>
 
       <ClientCard
-        :client="client"
+        :is-loading="isLoading"
+        :client="order.client"
       />
     </div>
 
     <div class="col-9">
       <ModalOrderPayment
-        v-if="order"
+        v-if="!isLoading"
         v-model="modalOrderPayment.value"
-        :is-edit="modalOrderPayment.isEdit"
-        :order="order"
-        :payment="modalOrderPayment.payment"
-        @success="onPayment"
+        v-bind="{...modalOrderPayment, order}"
+        @success="onPaymentCreated"
       />
 
       <ModalOrderStatus
-        v-if="order"
+        v-if="!isLoading"
         v-model="modalOrderStatus.value"
         :order="order"
         @success="onStatusUpdated"
       />
 
       <ModalOrderDelete
-        v-if="order"
+        v-if="!isLoading"
         v-model="modalOrderDelete.value"
         :order="order"
         @success="onOrderDeleted"
       />
 
-      <ModalReport
-        v-if="order"
-        id="orderShow"
-        v-model="modalOrderReport.value"
-        :src="modalOrderReport.src"
+      <TheOrderHeader
         :order="order"
-        @hidden="onModalOrderReportHidden"
-      />
-
-      <OrderHeader
-        :order="order"
-        @open-payment-modal="openModalPaymentOrder"
-        @open-status-modal="openModal('modalOrderStatus')"
-        @open-delete-order-modal="openModal('modalOrderDelete')"
-        @open-report-modal="onGenerateReportClick"
-        @refresh="refresh"
+        :is-loading="isLoading"
+        @open-modal="onOpenModalRequest"
       />
 
       <AppCard
-        v-if="order"
+        v-if="!isLoading"
         :color="cardColor"
       >
         <template #header>
-          <h6
-            v-if="order"
-            class="d-flex justify-content-between fw-bold align-items-center mb-0"
-          >
-            <div>
-              <FontAwesomeIcon
-                :icon="icons.faBoxOpen"
-                class="me-1"
-              />
-              Pedido - {{ $helpers.fallback(order.name, null, '[SEM NOME]') }}
-            </div>
-            <div
-              v-if="order.states.includes('CLOSED')"
-            >
-              PEDIDO FECHADO
-              <div class="small">
-                Em {{ formatDatetime(order.closed_at) }}
-              </div>
-            </div>
-          </h6>
-        </template>
-
-        <template #body>
-          <OrderCardBody
-            v-if="order"
+          <TheOrderCardHeader
             :order="order"
-            @open-payment-modal="openModalPaymentOrder"
+            :is-order-closed="isOrderClosed"
           />
+        </template>
 
-          <div
-            v-else
-            class="py-5"
-          >
-            <AppLoading />
-          </div>
-        </template>
-      </AppCard>
-      <AppCard v-else>
-        <template #header>
-          <h6 class="fw-bold">
-            <FontAwesomeIcon
-              :icon="icons.faBoxOpen"
-              class="me-1"
-            />Pedido -
-          </h6>
-        </template>
         <template #body>
-          <div class="py-5">
-            <AppLoading />
-          </div>
+          <TheOrderCardBody
+            :order="order"
+            :is-order-pre-registered="isOrderPreRegistered"
+            @open-modal="onOpenModalRequest"
+          />
         </template>
       </AppCard>
+
+      <TheOrderCardPlaceholder v-else />
     </div>
   </div>
 </template>

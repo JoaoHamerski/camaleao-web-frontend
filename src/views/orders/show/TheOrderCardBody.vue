@@ -1,7 +1,7 @@
 <script>
 import { formatDatetime } from '@/utils/formatters'
-import { faExclamationTriangle } from '@fortawesome/free-solid-svg-icons'
 
+import OrderReminder from './partials/OrderReminder'
 import OrderClothingTypesTable from './partials/OrderClothingTypesTable'
 import OrderNotes from './partials/OrderNotes'
 import OrderPayments from './partials/OrderPayments'
@@ -12,24 +12,22 @@ export default {
     OrderClothingTypesTable,
     OrderNotes,
     OrderPayments,
-    OrderFiles
+    OrderFiles,
+    OrderReminder
   },
   props: {
     order: {
       type: Object,
       required: true
-    }
-  },
-  data () {
-    return {
-      icons: {
-        faExclamationTriangle
-      }
+    },
+    isOrderPreRegistered: {
+      type: Boolean,
+      default: false
     }
   },
   computed: {
     showReminder () {
-      return this.order.states.includes('PRE-REGISTERED') && this.order.reminder
+      return this.isOrderPreRegistered && this.order.reminder
     },
     /**
      * Compatibilidade com versão antiga do sistema,
@@ -49,23 +47,10 @@ export default {
 <template>
   <!-- eslint-disable vue/no-v-html -->
   <div>
-    <div
-      v-if="showReminder"
-      class="d-flex flex-column align-middle text-center"
-    >
-      <div>
-        <FontAwesomeIcon
-          :icon="icons.faExclamationTriangle"
-          class="text-warning me-2"
-          size="2x"
-        />
-      </div>
-      <div>
-        {{ order.reminder }}
-      </div>
+    <OrderReminder v-if="showReminder">
+      {{ order.reminder }}
+    </OrderReminder>
 
-      <hr>
-    </div>
     <div>
       <h5 class="fw-bold text-secondary">
         Detalhes do Pedido
@@ -84,7 +69,7 @@ export default {
             Código
           </div>
           <b class="text-subtitle">
-            {{ order.code }}
+            {{ $helpers.fallback(order.code) }}
           </b>
         </div>
         <div>
@@ -141,7 +126,10 @@ export default {
       <OrderClothingTypesTable :order="order" />
     </div>
 
-    <div class="my-3 d-flex justify-content-around">
+    <div
+      v-if="order.price !== null"
+      class="my-3 d-flex justify-content-around"
+    >
       <div>
         <div>
           <b class="small text-secondary">Valor total</b>
@@ -197,7 +185,7 @@ export default {
     <OrderPayments
       class="mb-3"
       :payments="order.payments"
-      @open-payment-modal="$emit('open-payment-modal', $event)"
+      @open-modal="$emit('open-modal', $event)"
     />
 
     <OrderFiles
