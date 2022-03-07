@@ -43,6 +43,10 @@ export default {
     options: {
       type: Array,
       default: () => []
+    },
+    selectClass: {
+      type: String,
+      default: ''
     }
   },
   computed: {
@@ -94,7 +98,7 @@ export default {
       :id="id"
       :name="name"
       class="form-select"
-      :class="error && 'is-invalid'"
+      :class="[error && 'is-invalid', selectClass]"
       v-bind="$attrs"
       v-on="$listeners"
       @change="$emit('input', $event.target.value)"
