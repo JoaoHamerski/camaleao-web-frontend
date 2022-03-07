@@ -1,4 +1,6 @@
 <script>
+import { faEdit } from '@fortawesome/free-solid-svg-icons'
+
 import ClientForm from './ClientForm'
 
 export default {
@@ -13,6 +15,13 @@ export default {
     client: {
       type: Object,
       default: null
+    }
+  },
+  data () {
+    return {
+      icons: {
+        faEdit
+      }
     }
   },
   methods: {
@@ -30,7 +39,8 @@ export default {
     v-on="$listeners"
   >
     <template #title>
-      Editar dados de
+      <FontAwesomeIcon :icon="icons.faEdit" />
+      Editar dados de {{ client ? client.name : '' }}
     </template>
     <template #body>
       <ClientForm
