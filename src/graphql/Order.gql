@@ -118,8 +118,8 @@ query ordersIndex (
   }
 }
 
-query order ($code: ID! $client_id: ID!) {
-  order (code: $code client_id: $client_id) {
+query order ($id: ID! $client_id: ID) {
+  order (id: $id client_id: $client_id) {
     ...OrderParts
   }
 }
