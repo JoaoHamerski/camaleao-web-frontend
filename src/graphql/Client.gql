@@ -91,6 +91,7 @@ query clientsShow (
         client {
           id
         }
+        id
         code
         price
         total_paid
