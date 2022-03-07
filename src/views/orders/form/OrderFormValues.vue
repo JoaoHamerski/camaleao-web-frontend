@@ -76,27 +76,21 @@ export default {
     finalValue () {
       const unformattedTotalValue = accounting.unformat(this.totalValue, ',')
       const unformattedDiscount = accounting.unformat(this.form.discount, ',')
-
-      if (isEmpty(this.order)) {
-        return 'R$ '
-      }
-
-      if (this.order.states.includes('PRE-REGISTERED') && !this.isSomeFieldFilled) {
-        const unformattedPrice = accounting.unformat(this.order.original_price, ',')
-        const finalPrice = accounting.toFixed(
-          unformattedPrice - unformattedDiscount,
-          2
-        )
-
-        return formatCurrencyBRL(finalPrice)
-      }
-
       const finalValue = accounting.toFixed(
         unformattedTotalValue - unformattedDiscount,
         2
       )
 
+      if (!this.isSomeFieldFilled) {
+        return 'R$ '
+      }
+
       return formatCurrencyBRL(finalValue)
+    },
+    showPreRegisterInfo () {
+      return !isEmpty(this.order)
+        && this.isPreRegisteredOrder
+        && this.order.price !== null
     }
   },
   methods: {
@@ -132,8 +126,10 @@ export default {
       Tipos de roupas
     </h6>
 
-    <template v-if="!isEmpty(order) && order.states.includes('PRE-REGISTERED')">
-      <div class="small text-warning fw-bold">
+    <template v-if="showPreRegisterInfo">
+      <div
+        class="small text-warning fw-bold"
+      >
         Pedido pré-registrado com o valor de {{ $helpers.toBRL(order.original_price) }}
       </div>
     </template>
@@ -224,7 +220,9 @@ export default {
     <div class="small text-danger mb-1">
       {{ form.errors.get('price') }}
     </div>
-    <small class="text-secondary">O valor só é estimado quando a <b>QUANTIDADE</b> e <b>VALOR UNIT.</b> de um linha é preenchido.</small>
+    <small class="text-secondary">
+      O valor só é estimado quando a <b>QUANTIDADE</b> e <b>VALOR UNIT.</b> de um linha é preenchido.
+    </small>
 
     <OrderFormValuesFinal
       :form="form"
