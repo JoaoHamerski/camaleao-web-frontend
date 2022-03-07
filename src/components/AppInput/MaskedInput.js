@@ -1,4 +1,6 @@
 function MaskedInputElement (h, context, events) {
+  const onInput = e => { context.$emit('input', e.target.value) }
+
   return (
     <input
       class={context.inputClasses}
@@ -11,7 +13,7 @@ function MaskedInputElement (h, context, events) {
       vCleave={context.mask}
       ref="input"
       on={{ ...context.$listeners, ...events, input: null }}
-      vOn:input={e => { context.$emit('input', e.target.value) }}
+      vOn:input={onInput}
       {...{ attrs: context.$attrs }}
     />
   )
