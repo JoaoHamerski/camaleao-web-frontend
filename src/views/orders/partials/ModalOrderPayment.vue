@@ -1,6 +1,7 @@
 <script>
 import { faDollarSign } from '@fortawesome/free-solid-svg-icons'
 import { formatCurrencyBRL, formatDatetime } from '@/utils/formatters'
+
 import OrderPaymentForm from './OrderPaymentForm'
 
 export default {
@@ -52,8 +53,9 @@ export default {
     <template #title>
       <FontAwesomeIcon
         :icon="icons.faDollarSign"
-        class="me-2"
-      />{{ isEdit ? 'Alterar pagamento' : 'Novo pagamento' }}
+        fixed-width
+      />
+      {{ isEdit ? 'Alterar pagamento' : 'Novo pagamento' }}
     </template>
 
     <template #body>

@@ -1,6 +1,9 @@
 <script>
+import { faExchangeAlt } from '@fortawesome/free-solid-svg-icons'
+
 import { status } from '@/graphql/Status.gql'
 import { orderUpdate } from '@/graphql/Order.gql'
+
 import { handleError, handleSuccess } from '@/utils/forms'
 
 export default {
@@ -21,6 +24,9 @@ export default {
   },
   data () {
     return {
+      icons: {
+        faExchangeAlt
+      },
       isLoading: false,
       status: [],
       selected: this.order.status.id
@@ -53,7 +59,6 @@ export default {
           message: 'Status alterado!'
         })
       } catch (error) {
-        console.log({ ...error })
         handleError(this, error)
       }
 
@@ -72,6 +77,10 @@ export default {
     v-on="$listeners"
   >
     <template #title>
+      <FontAwesomeIcon
+        :icon="icons.faExchangeAlt"
+        fixed-width
+      />
       Alterar status do pedido
     </template>
 
@@ -115,21 +124,28 @@ export default {
         </div>
       </div>
 
-      <div class="d-flex justify-content-between">
-        <AppButton
-          :loading="isLoading"
-          color="success"
-          class="fw-bold"
-          @click="updateStatus"
-        >
-          Salvar
-        </AppButton>
-        <AppButton
-          color="light"
-          data-bs-dismiss="modal"
-        >
-          Fechar
-        </AppButton>
+      <div class="row">
+        <div class="col">
+          <AppButton
+            :loading="isLoading"
+            color="success"
+            class="fw-bold"
+            block
+            @click.prevent="updateStatus"
+          >
+            Salvar
+          </AppButton>
+        </div>
+        <div class="col">
+          <AppButton
+            type="button"
+            block
+            color="light"
+            data-bs-dismiss="modal"
+          >
+            Fechar
+          </AppButton>
+        </div>
       </div>
     </template>
   </AppModal>

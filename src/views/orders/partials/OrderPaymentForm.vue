@@ -1,9 +1,14 @@
 <script>
 import { vias } from '@/graphql/Via.gql'
+import { order } from '@/graphql/Order.gql'
+import { cashFlowEntries } from '@/graphql/CashFlow.gql'
+import { paymentCreate, paymentUpdate } from '@/graphql/Payment.gql'
+
+import { orderQueryVariables } from '../show/TheOrder'
+
 import Form from '@/utils/Form'
 import { maskCurrencyBRL, maskDate } from '@/utils/masks'
 import { handleError, handleSuccess } from '@/utils/forms'
-import { paymentCreate, paymentUpdate } from '@/graphql/Payment.gql'
 
 export default {
   apollo: {
@@ -75,7 +80,11 @@ export default {
               order_id: this.order.id,
               ...this.form.data()
             }
-          }
+          },
+          refetchQueries: [
+            { query: order, variables: orderQueryVariables(this) },
+            { query: cashFlowEntries, variables: { page: 1, first: 10, where: {} } }
+          ]
         })
 
         handleSuccess(this, { message: 'Pagamento registrado!', resetForm: true })
@@ -93,12 +102,14 @@ export default {
               order_id: this.order.id,
               ...this.form.data()
             }
-          }
+          },
+          refetchQueries: [
+            { query: order, variables: orderQueryVariables(this) }
+          ]
         })
 
         handleSuccess(this, { message: 'Pagamento atualizado!' })
       } catch (error) {
-        console.log({ ...error })
         handleError(this, error)
       }
     },
@@ -178,23 +189,29 @@ export default {
       Observação
     </AppInput>
 
-    <div class="d-flex justify-content-between mt-4">
-      <AppButton
-        type="submit"
-        color="success"
-        class="fw-bold"
-        :loading="isLoading"
-      >
-        {{ isEdit ? 'ATUALIZAR' : 'REGISTRAR' }}
-      </AppButton>
+    <div class="row mt-4">
+      <div class="col">
+        <AppButton
+          type="submit"
+          color="success"
+          class="fw-bold"
+          block
+          :loading="isLoading"
+        >
+          {{ isEdit ? 'ATUALIZAR' : 'REGISTRAR' }}
+        </AppButton>
+      </div>
 
-      <AppButton
-        type="button"
-        color="light"
-        data-bs-dismiss="modal"
-      >
-        Cancelar
-      </AppButton>
+      <div class="col">
+        <AppButton
+          type="button"
+          color="light"
+          block
+          data-bs-dismiss="modal"
+        >
+          Cancelar
+        </AppButton>
+      </div>
     </div>
   </AppForm>
 </template>

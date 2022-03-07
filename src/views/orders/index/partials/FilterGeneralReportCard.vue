@@ -5,14 +5,9 @@ import { isEmpty, isNil, pickBy } from 'lodash-es'
 import { cities } from '@/graphql/City.gql'
 import { status } from '@/graphql/Status.gql'
 
-import ModalReport from '../../partials/ModalReport'
-
 const GENERAL_REPORT_PATH_URL = '/api/orders/reports/general'
 
 export default {
-  components: {
-    ModalReport
-  },
   apollo: {
     cities: {
       query: cities
@@ -112,17 +107,6 @@ export default {
       </h6>
     </template>
     <template #body>
-      <ModalReport
-        id="generalReportModal"
-        v-model="modal"
-        :src="src"
-        @hidden="onModalHidden"
-      >
-        <template #title>
-          Relatório geral de pedidos
-        </template>
-      </ModalReport>
-
       <h6 class="fw-bold">
         Filtros
       </h6>
