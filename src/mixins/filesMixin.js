@@ -22,12 +22,6 @@ export default {
         file => this.$helpers.strContainsAny(file.type, validTypes)
       )
 
-      if (files.length !== validFiles.length) {
-        this.$toast.error('Alguns arquivos estão no formato inválido, por isso não foram enviados.', {
-          duration: 7000
-        })
-      }
-
       return validFiles
     },
     /**
