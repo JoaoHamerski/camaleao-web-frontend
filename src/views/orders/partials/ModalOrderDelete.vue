@@ -15,7 +15,6 @@ export default {
   },
   data () {
     return {
-      preConfirmed: false,
       orderCode: '',
       icons: {
         faTrashAlt
@@ -25,6 +24,10 @@ export default {
   },
   computed: {
     isPreConfirmed () {
+      if (!this.order.code) {
+        return true
+      }
+
       return this.orderCode === this.order.code
     },
     clientKey () {
@@ -87,7 +90,10 @@ export default {
           <div>Isso deleterá todos os pagamentos, anexos e anotações do pedido.</div>
         </div>
 
-        <div class="mt-3">
+        <div
+          v-if="order.code"
+          class="mt-3"
+        >
           <AppInput
             id="code"
             v-model="orderCode"
@@ -97,22 +103,28 @@ export default {
           </AppInput>
         </div>
 
-        <div class="d-flex justify-content-between mt-5">
-          <AppButton
-            class="fw-bold"
-            color="success"
-            :disabled="!isPreConfirmed"
-            :loading="isLoading"
-            @click="deleteOrder"
-          >
-            CONFIRMAR
-          </AppButton>
-          <AppButton
-            data-bs-dismiss="modal"
-            color="light"
-          >
-            Cancelar
-          </AppButton>
+        <div class="row mt-5">
+          <div class="col">
+            <AppButton
+              class="fw-bold"
+              color="success"
+              :disabled="!isPreConfirmed"
+              :loading="isLoading"
+              block
+              @click="deleteOrder"
+            >
+              CONFIRMAR
+            </AppButton>
+          </div>
+          <div class="col">
+            <AppButton
+              data-bs-dismiss="modal"
+              color="light"
+              block
+            >
+              Cancelar
+            </AppButton>
+          </div>
         </div>
       </div>
     </template>

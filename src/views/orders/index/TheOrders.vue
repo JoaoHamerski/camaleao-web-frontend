@@ -111,20 +111,42 @@ export default {
       return ''
     },
     redirectToOrder (order) {
+      if (!order.client) {
+        this.$router.push({
+          name: 'orders.show.pre-registered',
+          params: {
+            orderKey: order.id
+          }
+        })
+
+        return
+      }
+
       this.$router.push({
         name: 'orders.show',
         params: {
           clientKey: order.client.id,
-          orderKey: order.code
+          orderKey: order.id
         }
       })
     },
     orderUrl (order) {
+      if (!order.client) {
+        const resolvedRoute = this.$router.resolve({
+          name: 'orders.show.pre-registered',
+          params: {
+            orderKey: order.id
+          }
+        })
+
+        return resolvedRoute.href
+      }
+
       const resolvedRoute = this.$router.resolve({
         name: 'orders.show',
         params: {
           clientKey: order.client.id,
-          orderKey: order.code
+          orderKey: order.id
         }
       })
 
@@ -188,7 +210,12 @@ export default {
           @click:item="redirectToOrder"
         >
           <template #[`items.client`]="{ item }">
-            {{ item.client.name }}
+            <template v-if="item.client">
+              {{ item.client.name }}
+            </template>
+            <template v-else>
+              N/A
+            </template>
           </template>
         </AppTable>
       </template>
