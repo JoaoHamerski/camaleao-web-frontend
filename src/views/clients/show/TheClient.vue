@@ -28,8 +28,7 @@ export default {
           orderPage: this.page,
           orderWhere: this.orderWhere
         }
-      },
-      fetchPolicy: 'network-only'
+      }
     }
   },
   data () {
@@ -85,6 +84,7 @@ export default {
         </AppButton>
       </div>
       <ClientCard
+        :is-loading="isLoading"
         :client="client"
       />
     </div>
