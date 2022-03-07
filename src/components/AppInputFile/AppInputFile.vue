@@ -23,10 +23,6 @@ export default {
       type: String,
       required: true
     },
-    value: {
-      type: Array,
-      default: () => ([])
-    },
     centered: {
       type: Boolean,
       default: false
@@ -42,10 +38,23 @@ export default {
     error: {
       type: [String, Boolean],
       default: false
+    },
+    defaultMargin: {
+      type: Boolean,
+      default: true
+    },
+    draggable: {
+      type: Boolean,
+      default: true
+    },
+    disableInputArea: {
+      type: Boolean,
+      default: false
     }
   },
   data () {
     return {
+      value: '',
       DRAG_STATES,
       dragState: DRAG_STATES.DRAG_LEAVE
     }
@@ -58,8 +67,10 @@ export default {
   mounted () {
     const preventEvents = ['dragover', 'drop']
 
-    for (const event of preventEvents) {
-      window.addEventListener(event, preventDefault, false)
+    if (this.draggable) {
+      for (const event of preventEvents) {
+        window.addEventListener(event, preventDefault, false)
+      }
     }
   },
   methods: {
@@ -68,6 +79,7 @@ export default {
       this.dragState = DRAG_STATES.DRAG_LEAVE
     },
     onInputChange (event) {
+      this.value = null
       this.$emit('input', event.target.files)
     }
   }
@@ -75,7 +87,7 @@ export default {
 </script>
 
 <template>
-  <div class="mb-3">
+  <div :class="defaultMargin && 'mb-3'">
     <label
       v-if="hasLabel"
       :for="id"
@@ -93,22 +105,24 @@ export default {
       >(opcional)</span>
     </label>
 
-    <div
-      class="file-input-area"
-      @drop.stop.prevent="onFileDrop"
-    >
-      <InputFileButton
-        v-if="dragState === DRAG_STATES.DRAG_LEAVE"
-        key="inputFileButton"
-        v-bind="{id, centered, error}"
-        @dragenter.prevent.stop="dragState = DRAG_STATES.DRAG_ENTER"
-      />
-      <InputFileDragLabel
-        v-else-if="dragState === DRAG_STATES.DRAG_ENTER"
-        key="inputFileDragLabel"
-        @dragleave.prevent.stop="dragState = DRAG_STATES.DRAG_LEAVE"
-      />
-    </div>
+    <template>
+      <div
+        :class="!disableInputArea && 'file-input-area'"
+        @drop.stop.prevent="onFileDrop"
+      >
+        <InputFileButton
+          v-if="dragState === DRAG_STATES.DRAG_LEAVE"
+          key="inputFileButton"
+          v-bind="{id, centered, error}"
+          @dragenter.prevent.stop="dragState = DRAG_STATES.DRAG_ENTER"
+        />
+        <InputFileDragLabel
+          v-else-if="dragState === DRAG_STATES.DRAG_ENTER"
+          key="inputFileDragLabel"
+          @dragleave.prevent.stop="dragState = DRAG_STATES.DRAG_LEAVE"
+        />
+      </div>
+    </template>
 
     <div
       v-if="error"
@@ -120,6 +134,7 @@ export default {
     <input
       :id="id"
       ref="input"
+      :value="value"
       class="d-none"
       type="file"
       :multiple="multiple"
