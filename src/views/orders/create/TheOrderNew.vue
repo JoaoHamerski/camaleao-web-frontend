@@ -1,10 +1,11 @@
 <script>
-import { client } from '@/graphql/Client.gql'
-
 import {
   faBoxOpen,
   faArrowCircleLeft
 } from '@fortawesome/free-solid-svg-icons'
+import { client } from '@/graphql/Client.gql'
+import { redirectToClient, redirectToOrder } from '@/utils/redirects'
+
 import OrderForm from '../form/OrderForm'
 
 export default {
@@ -28,6 +29,7 @@ export default {
   },
   data () {
     return {
+      client: {},
       icons: {
         faBoxOpen,
         faArrowCircleLeft
@@ -35,25 +37,11 @@ export default {
     }
   },
   methods: {
-    onSuccess ({ clientId, orderCode }) {
+    redirectToClient,
+    redirectToOrder,
+    onSuccess ({ clientId, orderId }) {
       this.$toast.success('Pedido criado!')
-      this.redirectToOrder(clientId, orderCode)
-    },
-    redirectToOrder (clientKey, orderKey) {
-      return this.$router.push({
-        name: 'orders.show',
-        params: {
-          clientKey, orderKey
-        }
-      })
-    },
-    redirectToClient () {
-      return this.$router.push({
-        name: 'clients.show',
-        params: {
-          clientKey: this.$route.params.clientKey
-        }
-      })
+      this.redirectToOrder(clientId, orderId)
     }
   }
 }
@@ -65,7 +53,7 @@ export default {
       class="mb-2"
       outlined
       :icon="icons.faArrowCircleLeft"
-      @click="redirectToClient"
+      @click="redirectToClient(client)"
     >
       Cliente
     </AppButton>

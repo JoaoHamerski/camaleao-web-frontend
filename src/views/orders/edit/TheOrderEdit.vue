@@ -1,29 +1,33 @@
 <script>
+import { isEmpty } from 'lodash-es'
 import {
   faBoxOpen,
   faArrowCircleLeft
 } from '@fortawesome/free-solid-svg-icons'
 import { order } from '@/graphql/Order.gql'
-
-import { isEmpty } from 'lodash-es'
+import { redirectToOrder, redirectToPreRegisteredOrder } from '@/utils/redirects'
+import orderStatesMixin from '../orderStatesMixin'
 
 import OrderForm from '../form/OrderForm'
+import OrderReminder from '../show/partials/OrderReminder'
 
 export default {
   metaInfo () {
     return {
-      title: 'Alterar pedido ' + this.order.code
+      title: this.title
     }
   },
   components: {
-    OrderForm
+    OrderForm,
+    OrderReminder
   },
+  mixins: [orderStatesMixin],
   apollo: {
     order: {
       query: order,
       variables () {
         return {
-          code: this.orderKey,
+          id: this.orderKey,
           client_id: this.clientKey
         }
       },
@@ -48,6 +52,13 @@ export default {
     }
   },
   computed: {
+    title () {
+      if (this.isOrderPreRegistered) {
+        return 'Concluir pedido'
+      }
+
+      return this.order.code
+    },
     clientKey () {
       return this.$route.params.clientKey
     },
@@ -56,24 +67,29 @@ export default {
     },
     loaded () {
       return this.clothingTypesLoaded && !isEmpty(this.order)
+    },
+    showReminder () {
+      return this.isOrderPreRegistered && this.order.reminder
     }
   },
   methods: {
     isEmpty,
-    redirectToOrder (clientKey, orderKey) {
-      this.$router.push({
-        name: 'orders.show',
-        params: {
-          clientKey, orderKey
-        }
-      })
-    },
-    onSuccess ({ clientId, orderCode }) {
+    redirectToOrder,
+    redirectToPreRegisteredOrder,
+    onSuccess ({ clientId, orderId }) {
       this.$toast.success('Pedido atualizado!')
-      this.redirectToOrder(clientId, orderCode)
+      this.redirectToOrder(clientId, orderId)
     },
     onClothingTypesLoaded () {
       this.clothingTypesLoaded = true
+    },
+    redirectBackToOrder () {
+      if (!this.order.client) {
+        this.redirectToPreRegisteredOrder(this.order)
+        return
+      }
+
+      this.redirectToOrder(this.order.client, this.order)
     }
   }
 }
@@ -85,7 +101,7 @@ export default {
       class="mb-2"
       outlined
       :icon="icons.faArrowCircleLeft"
-      @click="redirectToOrder(clientKey, orderKey)"
+      @click="redirectBackToOrder"
     >
       Pedido
     </AppButton>
@@ -96,14 +112,23 @@ export default {
             :icon="icons.faBoxOpen"
             class="me-1"
           />
-          Alterar pedido -
-          {{ $helpers.fallback(order, 'name', '[SEM NOME]') }}
-          DE
-          {{ $helpers.fallback(order.client, 'name') }}
+          <template v-if="isOrderPreRegistered">
+            Concluir registro {{ order.code ? `- ${order.code}` : '' }}
+          </template>
+          <template v-else>
+            Alterar pedido -
+            {{ $helpers.fallback(order, 'name', '[SEM NOME]') }}
+            DE
+            {{ $helpers.fallback(order.client, 'name') }}
+          </template>
         </h6>
       </template>
 
       <template #body>
+        <OrderReminder v-if="showReminder">
+          {{ order.reminder }}
+        </OrderReminder>
+
         <OrderForm
           ref="orderForm"
           :is-edit="true"
