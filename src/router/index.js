@@ -20,6 +20,7 @@ import clothingTypesRoutes from '@/views/clothing-types/routes'
 import productionRoutes from '@/views/production/routes'
 import productionUsersRoutes from '@/views/production-users/routes'
 import myAccountRoutes from '@/views/my-account/routes'
+import weeklyProductionRoutes from '@/views/weekly-production/routes'
 
 Vue.use(VueRouter)
 
@@ -56,7 +57,8 @@ const routes = [
   ...clothingTypesRoutes,
   ...productionRoutes,
   ...productionUsersRoutes,
-  ...myAccountRoutes
+  ...myAccountRoutes,
+  ...weeklyProductionRoutes
 ]
 
 const router = new VueRouter({
