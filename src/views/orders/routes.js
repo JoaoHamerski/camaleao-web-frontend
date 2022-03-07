@@ -52,8 +52,26 @@ const children = [
     }
   },
   {
+    name: 'orders.show.pre-registered',
+    path: '/pedidos/:orderKey',
+    component: TheOrder,
+    meta: {
+      middleware: [role],
+      roles: [roles.ATENDIMENTO, roles.GERENCIA]
+    }
+  },
+  {
     name: 'orders.edit',
     path: '/clientes/:clientKey/pedidos/:orderKey/editar',
+    component: TheOrderEdit,
+    meta: {
+      middleware: [role],
+      roles: [roles.ATENDIMENTO, roles.GERENCIA]
+    }
+  },
+  {
+    name: 'orders.edit.pre-registered',
+    path: '/pedidos/:orderKey/editar',
     component: TheOrderEdit,
     meta: {
       middleware: [role],
