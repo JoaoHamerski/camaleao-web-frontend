@@ -14,7 +14,8 @@ import {
   faBuilding,
   faTshirt,
   faBox,
-  faUser
+  faUser,
+  faCalendarAlt
 } from '@fortawesome/free-solid-svg-icons'
 
 import SidebarItem from './SidebarItem'
@@ -59,7 +60,8 @@ export default {
         faBuilding,
         faTshirt,
         faBox,
-        faUser
+        faUser,
+        faCalendarAlt
       }
     }
   },
@@ -110,6 +112,13 @@ export default {
         :to="{name: 'daily-cash.index'}"
       >
         Caixa diário
+      </SidebarItem>
+      <SidebarItem
+        v-if="$helpers.canView(roles.HIGH_LEVEL)"
+        :to="{name: 'weekly-production.index'}"
+        :icon="icons.faCalendarAlt"
+      >
+        Produção semanal
       </SidebarItem>
       <SidebarItemCollapsible
         v-if="$helpers.canView(roles.HIGH_LEVEL)"
