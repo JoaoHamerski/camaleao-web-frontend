@@ -1,7 +1,4 @@
 <script>
-import { isEmpty } from 'lodash-es'
-import { orderToggle, order } from '@/graphql/Order.gql'
-
 import {
   faCog,
   faFileInvoice,
@@ -13,6 +10,9 @@ import {
   faBoxOpen
 } from '@fortawesome/free-solid-svg-icons'
 
+import { isEmpty } from 'lodash-es'
+import { orderToggle, order } from '@/graphql/Order.gql'
+
 export default {
   props: {
     order: {
@@ -20,6 +20,10 @@ export default {
       default: () => {}
     },
     isLoading: {
+      type: Boolean,
+      default: false
+    },
+    isReportLoading: {
       type: Boolean,
       default: false
     }
@@ -39,6 +43,9 @@ export default {
     }
   },
   computed: {
+    isReportDisabled () {
+      return !this.order || !this.order.code
+    },
     clientKey () {
       return this.$route.params.clientKey
     },
@@ -89,6 +96,7 @@ export default {
     },
     async toggleOrder () {
       const isOrderOpen = this.order.closed_at === null
+
       const getQueryVariables = () => {
         if (this.order.client) {
           return {
@@ -136,6 +144,11 @@ export default {
       this.$emit('open-modal', {
         modal: 'change-status'
       })
+    },
+    onGenerateReportClick () {
+      this.$emit('open-modal', {
+        modal: 'report'
+      })
     }
   }
 }
@@ -158,7 +171,9 @@ export default {
       <AppButton
         class="me-1"
         :icon="icons.faFileInvoice"
-        :disabled="!order"
+        :disabled="isReportDisabled"
+        :loading="isReportLoading"
+        @click.prevent="onGenerateReportClick"
       >
         Gerar relatório
       </AppButton>

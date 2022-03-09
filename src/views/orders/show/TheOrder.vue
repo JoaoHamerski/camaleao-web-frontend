@@ -1,6 +1,6 @@
 <script>
 import { faArrowAltCircleLeft } from '@fortawesome/free-solid-svg-icons'
-import { order } from '@/graphql/Order.gql'
+import { order, orderReport } from '@/graphql/Order.gql'
 import { redirectToClient, redirectToClients } from '@/utils/redirects'
 import orderStatesMixin from '../orderStatesMixin'
 
@@ -65,6 +65,11 @@ export default {
       modalOrderDelete: {
         value: false
       },
+      modalOrderReport: {
+        value: false,
+        src: '',
+        loading: false
+      },
       icons: {
         faArrowAltCircleLeft
       }
@@ -100,6 +105,24 @@ export default {
     closeModal (modal) {
       this[modal].value = false
     },
+    async openModalReport () {
+      this.modalOrderReport.loading = true
+
+      const { data } = await this.$apollo.query({
+        query: orderReport,
+        variables: {
+          id: this.order.id
+        },
+        fetchPolicy: 'network-only'
+      })
+
+      this.modalOrderReport.loading = false
+      this.modalOrderReport.src = data.orderReport
+      this.openModal('modalOrderReport')
+    },
+    onCloseModalReport () {
+      this.modalOrderReport.src = ''
+    },
     openModalOrderPayment ({ payment, isEdit }) {
       this.modalOrderPayment.isEdit = isEdit
       this.modalOrderPayment.payment = payment || null
@@ -134,6 +157,10 @@ export default {
 
       if (modal === 'change-status') {
         this.openModal('modalOrderStatus')
+      }
+
+      if (modal === 'report') {
+        this.openModalReport()
       }
     }
   }
@@ -183,9 +210,19 @@ export default {
         @success="onOrderDeleted"
       />
 
+      <AppFileModal
+        v-if="!isLoading"
+        id="orderReport"
+        v-model="modalOrderReport.value"
+        :src="modalOrderReport.src"
+        title="Relatório do pedido"
+        @hidden="onCloseModalReport"
+      />
+
       <TheOrderHeader
         :order="order"
         :is-loading="isLoading"
+        :is-report-loading="modalOrderReport.loading"
         @open-modal="onOpenModalRequest"
       />
 
