@@ -123,6 +123,17 @@ query order ($id: ID! $client_id: ID) {
     ...OrderParts
   }
 }
+query orderReport ($id: ID!) {
+  orderReport (id: $id)
+}
+
+query ordersReport ($input: OrdersReportInput!) {
+  ordersReport (input: $input)
+}
+
+query ordersReportProductionDate ($input: OrdersReportProductionDateInput!) {
+  ordersReportProductionDate (input: $input)
+}
 
 mutation orderUpdate ($id: ID! $input: OrderInput!) {
   orderUpdate (id: $id input: $input) {
@@ -147,3 +158,4 @@ mutation orderCreate ($client_id: ID! $input: OrderInput!) {
     ...OrderParts
   }
 }
+
