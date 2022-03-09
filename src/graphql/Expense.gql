@@ -42,6 +42,10 @@ query expenses (
   }
 }
 
+query expensesReport ($start_date: String! $final_date: String) {
+  expensesReport(start_date: $start_date final_date: $final_date)
+}
+
 mutation expenseCreate ($input: ExpenseInput!) {
   expenseCreate (input: $input) {
     id
