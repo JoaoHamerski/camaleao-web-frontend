@@ -40,6 +40,10 @@ export default {
       page: 1,
       search: '',
       vias: [],
+      modalReport: {
+        value: false,
+        src: ''
+      },
       expenses: {
         data: [],
         paginatorInfo: {}
@@ -53,6 +57,13 @@ export default {
     }
   },
   methods: {
+    onReportGenerated (src) {
+      this.modalReport.src = src
+      this.modalReport.value = true
+    },
+    onCloseModalReport () {
+      this.modalReport.src = ''
+    },
     onSearch (search) {
       this.search = search
     },
@@ -72,7 +83,18 @@ export default {
 
 <template>
   <div class="mt-5">
-    <TheExpensesReportCard class="mb-2" />
+    <AppFileModal
+      id="expensesReport"
+      v-model="modalReport.value"
+      :src="modalReport.src"
+      title="Relatório das despesas"
+      @hidden="onCloseModalReport"
+    />
+
+    <TheExpensesReportCard
+      class="mb-2"
+      @report-generated="onReportGenerated"
+    />
 
     <TheExpensesHeader
       :vias="vias"
