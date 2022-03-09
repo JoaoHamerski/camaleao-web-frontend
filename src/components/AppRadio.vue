@@ -85,6 +85,12 @@ export default {
       </label>
     </div>
     <div
+      v-if="$slots.hint"
+      class="small text-secondary"
+    >
+      <slot name="hint" />
+    </div>
+    <div
       v-if="hasError"
       class="small text-danger"
     >
