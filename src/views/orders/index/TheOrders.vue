@@ -40,6 +40,10 @@ export default {
         page: 1,
         ...QUERIES.OLDER
       },
+      modalReport: {
+        value: false,
+        src: ''
+      },
       orders: {
         data: [],
         paginatorInfo: {}
@@ -151,6 +155,13 @@ export default {
       })
 
       return resolvedRoute.href
+    },
+    onReportGenerated (src) {
+      this.modalReport.src = src
+      this.modalReport.value = true
+    },
+    onCloseModalReport () {
+      this.modalReport.src = ''
     }
   }
 }
@@ -158,8 +169,15 @@ export default {
 
 <template>
   <div class="mx-auto mt-5">
-    <FilterGeneralReportCard class="mb-2" />
-    <FilterProductionDateReportCard class="mb-2" />
+    <FilterGeneralReportCard
+      class="mb-2"
+      @report-generated="onReportGenerated"
+    />
+
+    <FilterProductionDateReportCard
+      class="mb-2"
+      @report-generated="onReportGenerated"
+    />
 
     <FilterSortButtons
       v-model="buttonSelected"
@@ -172,6 +190,14 @@ export default {
       class="mb-3"
       @search="onCodeSearch"
       @clear-search="onSearchClear"
+    />
+
+    <AppFileModal
+      id="orderReport"
+      v-model="modalReport.value"
+      :src="modalReport.src"
+      title="Relatório do pedido"
+      @hidden="onCloseModalReport"
     />
 
     <AppCard :has-body-padding="false">
