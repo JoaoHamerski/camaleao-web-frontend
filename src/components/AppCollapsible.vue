@@ -1,27 +1,76 @@
 <script>
 import { faChevronDown } from '@fortawesome/free-solid-svg-icons'
+import { Collapse } from 'bootstrap'
 
 export default {
   props: {
-    id: {
-      type: String,
-      required: true
+    value: {
+      type: Boolean,
+      default: false
     },
     headerClass: {
       type: String,
       default: ''
     },
-    active: {
+    hideArrow: {
       type: Boolean,
       default: false
     }
   },
   data () {
     return {
-      isActive: this.active,
+      collapse: null,
       icons: {
         faChevronDown
       }
+    }
+  },
+  watch: {
+    value (val) {
+      if (val) {
+        this.collapse.show()
+        return
+      }
+
+      this.collapse.hide()
+    }
+  },
+  mounted () {
+    this.collapse = new Collapse(this.$refs.collapse, {
+      toggle: this.value
+    })
+
+    this.$refs.collapse.addEventListener(
+      'show.bs.collapse',
+      this.emitOnShow
+    )
+
+    this.$refs.collapse.addEventListener(
+      'hide.bs.collapse',
+      this.emitOnHide
+    )
+  },
+  beforeDestroy () {
+    this.$refs.collapse.removeEventListener(
+      'show.bs.collapse',
+      this.emitOnShow
+    )
+
+    this.$refs.collapse.removeEventListener(
+      'hide.bs.collapse',
+      this.emitOnHide
+    )
+  },
+  methods: {
+    emitOnShow () {
+      this.$emit('show')
+    },
+    emitOnHide () {
+      this.$emit('hide')
+    },
+    toggleCollapse () {
+      this.$emit('input', !this.value)
+      this.collapse.toggle()
     }
   }
 }
@@ -30,24 +79,24 @@ export default {
 <template>
   <div>
     <div
-      data-bs-toggle="collapse"
-      :data-bs-target="`#${id}`"
-      :aria-controls="id"
+      role="button"
       class="d-flex justify-content-between clickable collapsed"
       :class="headerClass"
+      :aria-expanded="value ? 'true' : 'false'"
+      @click.prevent="toggleCollapse"
     >
       <slot name="header" />
-      <div>
+      <div v-if="!hideArrow">
         <FontAwesomeIcon
           class="fa-icon"
           :icon="icons.faChevronDown"
         />
       </div>
     </div>
+
     <div
-      :id="id"
+      ref="collapse"
       class="collapse"
-      :class="isActive && 'show'"
     >
       <slot name="body" />
     </div>
@@ -55,6 +104,17 @@ export default {
 </template>
 
 <style lang="scss" scoped>
+  $transition-collapse:         height .15s ease;
+  $transition-collapse-width:   width .15s ease;
+
+  .collapsing {
+    transition: $transition-collapse;
+
+    &.collapse-horizontal {
+      transition: $transition-collapse-width;
+    }
+  }
+
   .fa-icon {
     transition: all .2s;
   }
