@@ -1,7 +1,6 @@
 <script>
 import { faArrowAltCircleLeft } from '@fortawesome/free-solid-svg-icons'
 import { order, orderReport } from '@/graphql/Order.gql'
-import { redirectToClient, redirectToClients } from '@/utils/redirects'
 import orderStatesMixin from '../orderStatesMixin'
 
 import ClientCard from '@/views/clients/partials/ClientCard'
@@ -98,7 +97,6 @@ export default {
     }
   },
   methods: {
-    redirectToClient,
     openModal (modal) {
       this[modal].value = true
     },
@@ -139,11 +137,11 @@ export default {
 
       this.$nextTick(() => {
         if (!this.order.client) {
-          redirectToClients()
-          return
+          // redirectToClients()
+          // return
         }
 
-        redirectToClient(this.order.client)
+        // redirectToClient(this.order.client)
       })
     },
     onOpenModalRequest ({ modal, payload }) {

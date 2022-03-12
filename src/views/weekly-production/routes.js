@@ -1,7 +1,8 @@
-import Layout from './Layout'
+import Layout from '@/views/Layout'
 
 import role from '@/middleware/role'
 import roles from '@/constants/roles'
+import { weeklyProduction } from '@/constants/route-names'
 
 const TheWeeklyProduction = () => import(
   /* webpackChunkName: "weekly-production" */
@@ -10,7 +11,7 @@ const TheWeeklyProduction = () => import(
 
 const children = [
   {
-    name: 'weekly-production.index',
+    name: weeklyProduction.index,
     path: '/producao-semanal',
     component: TheWeeklyProduction,
     meta: {

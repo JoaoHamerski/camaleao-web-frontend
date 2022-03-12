@@ -4,7 +4,6 @@ import {
   faArrowCircleLeft
 } from '@fortawesome/free-solid-svg-icons'
 import { client } from '@/graphql/Client.gql'
-import { redirectToClient, redirectToOrder } from '@/utils/redirects'
 
 import OrderForm from '../form/OrderForm'
 
@@ -37,8 +36,6 @@ export default {
     }
   },
   methods: {
-    redirectToClient,
-    redirectToOrder,
     onSuccess ({ clientId, orderId }) {
       this.$toast.success('Pedido criado!')
       this.redirectToOrder(clientId, orderId)
@@ -53,7 +50,7 @@ export default {
       class="mb-2"
       outlined
       :icon="icons.faArrowCircleLeft"
-      @click="redirectToClient(client)"
+      @click="$helpers.redirectTo('clients.show', {client})"
     >
       Cliente
     </AppButton>

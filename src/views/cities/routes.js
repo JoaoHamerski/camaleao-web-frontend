@@ -1,7 +1,8 @@
-import Layout from './Layout'
+import Layout from '@/views/Layout'
 
 import role from '@/middleware/role'
 import roles from '@/constants/roles'
+import { citiesRoutes } from '@/constants/route-names'
 
 const TheCities = () => import(
   /* webpackChunkName: "cities" */
@@ -10,7 +11,7 @@ const TheCities = () => import(
 
 const children = [
   {
-    name: 'cities.index',
+    name: citiesRoutes.index,
     path: '/gerenciamento/cidades',
     component: TheCities,
     meta: {

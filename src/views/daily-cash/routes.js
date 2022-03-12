@@ -1,7 +1,8 @@
-import Layout from './Layout'
+import Layout from '@/views/Layout'
 
 import role from '@/middleware/role'
 import roles from '@/constants/roles'
+import { dailyCash } from '@/constants/route-names'
 
 const TheDailyCash = () => import(
   /* webpackChunkName: "daily-cash" */
@@ -10,7 +11,7 @@ const TheDailyCash = () => import(
 
 const children = [
   {
-    name: 'daily-cash.index',
+    name: dailyCash.index,
     path: 'caixa-diario',
     component: TheDailyCash,
     meta: {

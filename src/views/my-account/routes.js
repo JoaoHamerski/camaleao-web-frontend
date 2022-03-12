@@ -1,6 +1,7 @@
-import Layout from './Layout'
+import Layout from '@/views/Layout'
 
 import auth from '@/middleware/auth'
+import { myAccount } from '@/constants/route-names'
 
 const TheMyAccount = () => import(
   /* webpackChunkName: "my-acount" */
@@ -9,7 +10,7 @@ const TheMyAccount = () => import(
 
 const children = [
   {
-    name: 'my-account.index',
+    name: myAccount.index,
     path: '/minha-conta',
     component: TheMyAccount,
     meta: {

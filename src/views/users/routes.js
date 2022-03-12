@@ -1,7 +1,8 @@
-import Layout from './Layout'
+import Layout from '@/views/Layout'
 
 import role from '@/middleware/role'
 import roles from '@/constants/roles'
+import { users } from '@/constants/route-names'
 
 const TheUsers = () => import(
   /* webpackChunkName: "users" */
@@ -10,7 +11,7 @@ const TheUsers = () => import(
 
 const children = [
   {
-    name: 'users.index',
+    name: users.index,
     path: '/gerenciamento/usuarios',
     component: TheUsers,
     meta: {

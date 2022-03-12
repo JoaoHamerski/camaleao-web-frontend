@@ -1,7 +1,8 @@
-import Layout from './Layout'
+import Layout from '@/views/Layout'
 
 import role from '@/middleware/role'
 import roles from '@/constants/roles'
+import { productionUsers } from '@/constants/route-names'
 
 const TheProductionUsers = () => import(
   /* webpackChunkName: "production-users" */
@@ -10,7 +11,7 @@ const TheProductionUsers = () => import(
 
 const children = [
   {
-    name: 'production-users.index',
+    name: productionUsers.index,
     path: '/usuarios-producao',
     component: TheProductionUsers,
     meta: {

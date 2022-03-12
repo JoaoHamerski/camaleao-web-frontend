@@ -1,7 +1,8 @@
-import Layout from './Layout'
+import Layout from '@/views/Layout'
 
 import role from '@/middleware/role'
 import roles from '@/constants/roles'
+import { clients } from '@/constants/route-names'
 
 const TheClients = () => import(
   /* webpackChunkName: "clients" */
@@ -15,7 +16,7 @@ const TheClient = () => import(
 
 const children = [
   {
-    name: 'clients.index',
+    name: clients.index,
     path: '/clientes',
     component: TheClients,
     meta: {
@@ -24,7 +25,7 @@ const children = [
     }
   },
   {
-    name: 'clients.show',
+    name: clients.show,
     path: '/clientes/:clientKey/pedidos',
     component: TheClient,
     meta: {

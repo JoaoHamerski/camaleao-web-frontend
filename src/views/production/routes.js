@@ -1,7 +1,8 @@
-import Layout from './Layout'
+import Layout from '@/views/Layout'
 
 import role from '@/middleware/role'
 import roles from '@/constants/roles'
+import { production } from '@/constants/route-names'
 
 const TheProduction = () => import(
   /* webpackChunkName: "production" */
@@ -10,7 +11,7 @@ const TheProduction = () => import(
 
 const children = [
   {
-    name: 'production.index',
+    name: production.index,
     path: '/producao',
     component: TheProduction,
     meta: {

@@ -1,7 +1,8 @@
-import Layout from './Layout'
+import Layout from '@/views/Layout'
 
 import role from '@/middleware/role'
 import roles from '@/constants/roles'
+import { orders } from '@/constants/route-names'
 
 const TheOrders = () => import(
   /* webpackChunkName: "orders" */
@@ -25,7 +26,7 @@ const TheOrderEdit = () => import(
 
 const children = [
   {
-    name: 'orders.index',
+    name: orders.index,
     path: '/pedidos',
     component: TheOrders,
     meta: {
@@ -34,7 +35,7 @@ const children = [
     }
   },
   {
-    name: 'orders.create',
+    name: orders.create,
     path: '/clientes/:clientKey/novo-pedido',
     component: TheOrderNew,
     meta: {
@@ -43,7 +44,7 @@ const children = [
     }
   },
   {
-    name: 'orders.show',
+    name: orders.show,
     path: '/clientes/:clientKey/pedidos/:orderKey',
     component: TheOrder,
     meta: {
@@ -52,7 +53,7 @@ const children = [
     }
   },
   {
-    name: 'orders.show.pre-registered',
+    name: orders.showPreRegistered,
     path: '/pedidos/:orderKey',
     component: TheOrder,
     meta: {
@@ -61,7 +62,7 @@ const children = [
     }
   },
   {
-    name: 'orders.edit',
+    name: orders.edit,
     path: '/clientes/:clientKey/pedidos/:orderKey/editar',
     component: TheOrderEdit,
     meta: {
@@ -70,7 +71,7 @@ const children = [
     }
   },
   {
-    name: 'orders.edit.pre-registered',
+    name: orders.editPreRegistered,
     path: '/pedidos/:orderKey/editar',
     component: TheOrderEdit,
     meta: {

@@ -1,5 +1,5 @@
 <script>
-import TheLayout from '../TheLayout'
+import TheLayout from '../MainLayout'
 
 export default {
   name: 'ProductionLayout',

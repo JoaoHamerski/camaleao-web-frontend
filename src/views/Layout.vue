@@ -25,16 +25,16 @@ export default {
   >
     <TheHeaderbar :auth-user="authUser" />
     <TheSidebar :auth-user="authUser" />
+
     <div id="content">
       <div class="container">
-        <slot />
+        <router-view v-slot="{ Component, route }">
+          <Component
+            :is="Component"
+            :key="route.path"
+          />
+        </router-view>
       </div>
     </div>
-  </div>
-  <div
-    v-else
-    class="d-flex justify-content-center align-items-center"
-  >
-    <AppSpinner />
   </div>
 </template>

@@ -1,7 +1,8 @@
-import Layout from './Layout'
+import Layout from '@/views/Layout'
 
 import role from '@/middleware/role'
 import roles from '@/constants/roles'
+import { branches } from '@/constants/route-names'
 
 const TheBranches = () => import(
   /* webpackChunkName: "branches" */
@@ -10,7 +11,7 @@ const TheBranches = () => import(
 
 const children = [
   {
-    name: 'branches.index',
+    name: branches.index,
     path: '/gerenciamento/filiais',
     component: TheBranches,
     meta: {

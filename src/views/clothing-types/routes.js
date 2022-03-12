@@ -1,8 +1,8 @@
-import Layout from './Layout'
+import Layout from '@/views/Layout'
 
 import role from '@/middleware/role'
 import roles from '@/constants/roles'
-
+import { clothingTypes } from '@/constants/route-names'
 const TheClothingTypes = () => import(
   /* webpackChunkName: "clothing-types" */
   './index/TheClothingTypes'
@@ -10,7 +10,7 @@ const TheClothingTypes = () => import(
 
 const children = [
   {
-    name: 'clothing-types.index',
+    name: clothingTypes.index,
     path: 'gerenciamento/tipos-de-roupas',
     component: TheClothingTypes,
     meta: {

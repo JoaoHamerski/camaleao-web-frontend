@@ -5,7 +5,6 @@ import {
   faArrowCircleLeft
 } from '@fortawesome/free-solid-svg-icons'
 import { order } from '@/graphql/Order.gql'
-import { redirectToOrder, redirectToPreRegisteredOrder } from '@/utils/redirects'
 import orderStatesMixin from '../orderStatesMixin'
 
 import OrderForm from '../form/OrderForm'
@@ -74,8 +73,6 @@ export default {
   },
   methods: {
     isEmpty,
-    redirectToOrder,
-    redirectToPreRegisteredOrder,
     onSuccess ({ clientId, orderId }) {
       this.$toast.success('Pedido atualizado!')
       this.redirectToOrder(clientId, orderId)
@@ -85,11 +82,11 @@ export default {
     },
     redirectBackToOrder () {
       if (!this.order.client) {
-        this.redirectToPreRegisteredOrder(this.order)
+        this.redirectTo('orders.show.pre-registered', { order: this.order })
         return
       }
 
-      this.redirectToOrder(this.order.client, this.order)
+      this.redirectTo('orders.show', { client: this.order.client, order: this.order })
     }
   }
 }
