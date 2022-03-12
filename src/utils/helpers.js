@@ -4,9 +4,11 @@
  */
 import { apolloClientInstance } from '@/vue-apollo'
 import { configGet } from '@/graphql/Config.gql'
-import store from '@/store'
 
-import { isNil, flattenDeep } from 'lodash-es'
+import store from '@/store'
+import router from '@/router'
+
+import { map, isObject, isNil, flattenDeep } from 'lodash-es'
 import { formatCurrencyBRL } from '@/utils/formatters'
 
 const fallback = (object, prop, fallbackString = 'N/A') => {
@@ -84,6 +86,99 @@ export const canView = (...roleIds) => {
   return roleIds.includes(+authUser.role.id)
 }
 
+/**
+ * @method
+ * Retorna cada key do objeto de keys passados
+ *
+ * @param {object} keys - Objeto de chaves que será
+ *  retornado respectivamente como array
+ *
+ * @param {(object|string)} routeKeyNames - A chave a ser retornada de cada "keys",
+ * pode ser um objeto com o nome da chave de "keys", ou apenas uma string,
+ * que será usada para todos os objetos de "keys"
+ *
+ * @return {array}
+ */
+const getKeysOf = (keys, routeKeyNames = 'id') => {
+  return map(keys, (item, key) => {
+    if (!isObject(item)) {
+      return item
+    }
+
+    if (isObject(routeKeyNames)) {
+      return item[routeKeyNames[key]]
+    }
+
+    return item[routeKeyNames]
+  })
+}
+
+/**
+ * @method
+ * Retorna o parâmetro "params" formatado para o vue router RawLocation type
+ *
+ * @param {object} keys - Chaves das rotas usada para criar os parâmetros,
+ * sempre com pósfixo "Key". E.g.: nameKey
+ * @param {(object|string)} [routeKeyNames=id] - A chave de cada rota informada em "keys" |
+ * Uma string como chave geral para todas as rotas
+ * @param {string} - Pósfixo das rotas
+ *
+ * @return {object}
+ */
+const getRouteParams = (keys, routeKeyNames = 'id', postfix = 'Key') => {
+  const routeKeys = getKeysOf(keys, routeKeyNames)
+  const keyNames = Object.keys(keys)
+  const params = {}
+
+  routeKeys.map((value, index) => {
+    params[keyNames[index] + postfix] = value
+  })
+
+  return params
+}
+
+/**
+ * Redirectiona para a rota informada.
+ *
+ * @param {string} name - Nome da rota
+ * @param {object} keys - Keys das rotas, sem o pósfixo "Key"
+ * @param {(object|string)} [routeKeyNames=id] - Objeto com cada keyName das keys | keyName geral como string
+ * @return {void}
+ */
+export const redirectTo = (name, keys = null, routeKeyNames = 'id') => {
+  if (!keys) {
+    router.push({ name })
+    return
+  }
+
+  router.push({
+    name,
+    params: getRouteParams(keys, routeKeyNames)
+  })
+}
+
+/**
+ * Gera a url da rota informada.
+ *
+ * @param {string} name - Nome da rota
+ * @param {object} keys - Keys das rotas, sem o pósfixo "Key"
+ * @param {(object|string)} [routeKeyNames=id] - Objeto com cada keyName das keys | keyName geral como string
+ * @return {string}
+ */
+export const getUrl = (name, keys = null, routeKeyNames = 'id') => {
+  if (!keys) {
+    router.push({ name })
+    return
+  }
+
+  const resolvedRoute = router.resolve({
+    name,
+    params: getRouteParams(keys, routeKeyNames)
+  })
+
+  return resolvedRoute.href
+}
+
 export default {
   fallback,
   toBRL,
@@ -92,5 +187,7 @@ export default {
   stripNonDigits,
   isNumeric,
   getConfig,
-  canView
+  canView,
+  redirectTo,
+  getUrl
 }
