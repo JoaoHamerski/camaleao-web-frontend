@@ -14,7 +14,7 @@ export const renderPasswordToggleButton = function (h, context) {
     <button
       class={'btn btn-outline-primary ' + (context.isDisabled && 'cursor-disabled')}
       disabled={context.isDisabled}
-      vOn:click_prevent={context.togglePassord}
+      vOn:click_prevent={context.togglePassword}
     >
       { renderEyeStateIcon(context.isTypePassword)}
     </button>

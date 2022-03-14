@@ -159,7 +159,7 @@ export default {
       // Fix cursor not be placed at end of input on focus
       setTimeout(() => { input.setSelectionRange(length, length) }, 0)
     },
-    togglePassord () {
+    togglePassword () {
       this.inputType = this.isTypePassword
         ? 'text'
         : 'password'
