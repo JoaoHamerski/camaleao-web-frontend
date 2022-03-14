@@ -118,14 +118,14 @@ const getKeysOf = (keys, routeKeyNames = 'id') => {
  * Retorna o parâmetro "params" formatado para o vue router RawLocation type
  *
  * @param {object} keys - Chaves das rotas usada para criar os parâmetros,
- * sempre com pósfixo "Key". E.g.: nameKey
+ * sempre com sufixo "Key". E.g.: nameKey
  * @param {(object|string)} [routeKeyNames=id] - A chave de cada rota informada em "keys" |
  * Uma string como chave geral para todas as rotas
- * @param {string} - Pósfixo das rotas
+ * @param {string} - Sufixo das rotas
  *
  * @return {object}
  */
-const getRouteParams = (keys, routeKeyNames = 'id', postfix = 'Key') => {
+export const getRouteParams = (keys, routeKeyNames = 'id', postfix = 'Key') => {
   const routeKeys = getKeysOf(keys, routeKeyNames)
   const keyNames = Object.keys(keys)
   const params = {}
@@ -138,10 +138,10 @@ const getRouteParams = (keys, routeKeyNames = 'id', postfix = 'Key') => {
 }
 
 /**
- * Redirectiona para a rota informada.
+ * Redireciona para a rota informada.
  *
  * @param {string} name - Nome da rota
- * @param {object} keys - Keys das rotas, sem o pósfixo "Key"
+ * @param {object} keys - Keys das rotas, sem o sufixo "Key"
  * @param {(object|string)} [routeKeyNames=id] - Objeto com cada keyName das keys | keyName geral como string
  * @return {void}
  */
@@ -161,7 +161,7 @@ export const redirectTo = (name, keys = null, routeKeyNames = 'id') => {
  * Gera a url da rota informada.
  *
  * @param {string} name - Nome da rota
- * @param {object} keys - Keys das rotas, sem o pósfixo "Key"
+ * @param {object} keys - Keys das rotas, sem o sufixo "Key"
  * @param {(object|string)} [routeKeyNames=id] - Objeto com cada keyName das keys | keyName geral como string
  * @return {string}
  */
@@ -188,6 +188,7 @@ export default {
   isNumeric,
   getConfig,
   canView,
+  getRouteParams,
   redirectTo,
   getUrl
 }
