@@ -1,0 +1,7 @@
+/// Tippy library temas, sempre com sufixo "-theme"
+.production-theme {
+  &.tippy-tooltip {
+    box-shadow: 0 2px 10px rgba(0, 0, 0, .15);
+    padding: 0;
+  }
+}
