@@ -91,6 +91,11 @@ export const MaskedInputGroup = function (h, context, element) {
 }
 
 const emitDate = (context, event) => {
+  if (event === null) {
+    context.$emit('input', null)
+    return
+  }
+
   if (context.type === 'week') {
     const [day, month, year] = event.split('/')
     const date = DateTime.local(+year, +month, +day)
