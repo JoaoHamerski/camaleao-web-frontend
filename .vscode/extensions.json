@@ -1,0 +1,10 @@
+{
+  "recommendations": [
+    "mgmcdermott.vscode-language-babel",
+    "dbaeumer.vscode-eslint",
+    "kumar-harsh.graphql-for-vscode",
+    "octref.vetur",
+    "streetsidesoftware.code-spell-checker",
+    "streetsidesoftware.code-spell-checker-portuguese-brazilian"
+  ]
+}
