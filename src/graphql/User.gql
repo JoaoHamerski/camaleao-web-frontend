@@ -1,13 +1,17 @@
-query users {
-  users {
+fragment User on User {
+  id
+  name
+  email
+  created_at
+  role {
     id
     name
-    email
-    created_at
-    role {
-      id
-      name
-    }
+  }
+}
+
+query users {
+  users {
+    ...User
   }
 }
 
