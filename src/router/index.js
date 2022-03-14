@@ -21,6 +21,7 @@ import productionRoutes from '@/views/production/routes'
 import productionUsersRoutes from '@/views/production-users/routes'
 import myAccountRoutes from '@/views/my-account/routes'
 import weeklyProductionRoutes from '@/views/weekly-production/routes'
+import activitiesRoutes from '@/views/activities/routes'
 
 Vue.use(VueRouter)
 
@@ -45,19 +46,20 @@ const routes = [
     path: '/testes',
     component: TheTest
   },
+  ...activitiesRoutes,
   ...authRoutes,
-  ...clientsRoutes,
-  ...ordersRoutes,
-  ...dailyCashRoutes,
-  ...cashFlowRoutes,
-  ...expensesRoutes,
-  ...usersRoutes,
-  ...citiesRoutes,
   ...branchesRoutes,
+  ...cashFlowRoutes,
+  ...citiesRoutes,
+  ...clientsRoutes,
   ...clothingTypesRoutes,
+  ...dailyCashRoutes,
+  ...expensesRoutes,
+  ...myAccountRoutes,
+  ...ordersRoutes,
   ...productionRoutes,
   ...productionUsersRoutes,
-  ...myAccountRoutes,
+  ...usersRoutes,
   ...weeklyProductionRoutes
 ]
 
