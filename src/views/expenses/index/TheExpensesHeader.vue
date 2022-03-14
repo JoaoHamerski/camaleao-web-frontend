@@ -35,11 +35,6 @@ export default {
       modalExpensesTypes: false
     }
   },
-  computed: {
-    authUser () {
-      return this.$store.getters['auth/authUser']
-    }
-  },
   methods: {
     onSearchClick () {
       this.$emit('search', this.search)
@@ -56,15 +51,6 @@ export default {
     },
     onExpenseRegisterSuccess () {
       this.modalExpensesRegister = false
-      this.$emit('refresh-expenses')
-    },
-    onExpenseTypeRegisterSuccess ({ action }) {
-      if (action === 'update') {
-        this.$emit('refresh-all')
-        return
-      }
-
-      this.$emit('refresh-expense-types')
     }
   }
 }
@@ -80,10 +66,9 @@ export default {
     />
 
     <ModalExpensesTypes
-      v-if="+authUser.role.id === roles.GERENCIA"
+      v-if="$helpers.canView(roles.GERENCIA)"
       v-model="modalExpensesTypes"
       :expense-types="expenseTypes"
-      @success="onExpenseTypeRegisterSuccess"
     />
 
     <div class="d-flex justify-content-between mb-2">
@@ -97,7 +82,7 @@ export default {
       </AppButton>
 
       <AppButton
-        v-if="+authUser.role.id === roles.GERENCIA"
+        v-if="$helpers.canView(roles.GERENCIA)"
         outlined
         :icon="icons.faList"
         @click="onExpensesTypesClick"

@@ -7,8 +7,8 @@ import { DateTime } from 'luxon'
 import { payments, paymentsPendencies } from '@/graphql/Payment.gql'
 
 import DailyPaymentModal from './partials/DailyPaymentModal'
-import TheDailyCashHeader from './partials/TheDailyCashHeader'
-import TheDailyCashBody from './partials/TheDailyCashBody'
+import TheDailyCashHeader from './TheDailyCashHeader'
+import TheDailyCashBody from './TheDailyCashBody'
 
 export default {
   metaInfo () {
@@ -29,8 +29,7 @@ export default {
           created_at: this.date,
           pendencies: this.pendencies
         }
-      },
-      deep: true
+      }
     },
     paymentsPendencies: {
       query: paymentsPendencies
@@ -38,11 +37,11 @@ export default {
   },
   data () {
     return {
+      payments: [],
+      paymentsPendencies: [],
+      modalPayment: false,
       pendencies: false,
       date: DateTime.now().toISODate(),
-      payments: [],
-      paymentModal: false,
-      paymentsPendencies: [],
       icons: {
         faCashRegister
       }
@@ -55,31 +54,19 @@ export default {
   },
   methods: {
     formatDatetime,
-    async onLoadPendenciesFromDate (date) {
+    onLoadPendenciesFromDate (date) {
       this.pendencies = true
       this.date = date
     },
     onNewEntryClick () {
-      this.paymentModal = true
+      this.modalPayment = true
     },
     onPaymentSuccess () {
-      this.paymentModal = false
-      this.refreshPayments()
-    },
-    onDailyPaymentSuccess () {
-      this.refreshPayments()
-      this.refreshPendencies()
-    },
-    refreshPendencies () {
-      this.$apollo.queries.paymentsPendencies.refetch()
-    },
-    refreshPayments () {
-      this.$apollo.queries.payments.refetch()
+      this.modalPayment = false
     },
     resetPayments () {
       this.date = DateTime.now().toISODate()
       this.pendencies = false
-      this.refreshPayments()
     }
   }
 }
@@ -93,7 +80,6 @@ export default {
       :active-date="formatDatetime(date)"
       @on-new-entry-click="onNewEntryClick"
       @load-pendencies-from-date="onLoadPendenciesFromDate"
-      @reset-payments="resetPayments"
     />
 
     <AppCard>
@@ -106,16 +92,15 @@ export default {
           Caixa Diário
         </h6>
       </template>
+
       <template #body>
         <AppLoading v-if="isLoading" />
-        <DailyPaymentModal
-          v-model="paymentModal"
-          @success="onPaymentSuccess"
-        />
+
+        <DailyPaymentModal v-model="modalPayment" />
+
         <TheDailyCashBody
           :payments="payments"
           :date="formatDatetime(date, 'dd/MM/y')"
-          @daily-payment-success="onDailyPaymentSuccess"
         />
       </template>
     </AppCard>

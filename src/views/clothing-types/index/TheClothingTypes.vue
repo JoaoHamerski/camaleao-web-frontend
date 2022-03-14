@@ -45,9 +45,6 @@ export default {
     }
   },
   methods: {
-    refresh () {
-      this.$apollo.queries.clothingTypes.refetch()
-    },
     onPrintCommissionClick () {
       this.printCommissionModal = true
     },
@@ -115,7 +112,6 @@ export default {
       :clothing-types="clothingTypes"
       :is-loading="isLoading"
       @action="onActionClicked"
-      @refresh="refresh"
     />
   </div>
 </template>

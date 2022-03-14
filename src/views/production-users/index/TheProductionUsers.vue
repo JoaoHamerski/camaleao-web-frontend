@@ -4,6 +4,12 @@ import { commissionsUsers } from '@/graphql/Production.gql'
 import TheProductionUsersCommission from './TheProductionUsersCommission'
 import TheProductionUsersCard from './TheProductionUsersCard'
 
+export const OPTIONS = {
+  ALL: 'all',
+  CONFIRMED: 'confirmed',
+  PENDING: 'pending'
+}
+
 export default {
   metaInfo: {
     title () {
@@ -48,7 +54,7 @@ export default {
       this.where = {}
       this.orderBy = []
 
-      if (value === 'confirmed') {
+      if (value === OPTIONS.CONFIRMED) {
         this.where = {
           column: 'CONFIRMED_AT',
           operator: 'IS_NOT_NULL'
@@ -62,7 +68,7 @@ export default {
         return
       }
 
-      if (value === 'pending') {
+      if (value === OPTIONS.PENDING) {
         this.where = {
           column: 'CONFIRMED_AT',
           operator: 'IS_NULL'

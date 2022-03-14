@@ -1,8 +1,12 @@
 <script>
-import { faEdit, faCheck, faTimes, faHandHoldingUsd } from '@fortawesome/free-solid-svg-icons'
+import {
+  faEdit,
+  faCheck,
+  faTimes,
+  faHandHoldingUsd
+} from '@fortawesome/free-solid-svg-icons'
 import { formatDatetime } from '@/utils/formatters'
 import { paymentConfirm } from '@/graphql/Payment.gql'
-import { order } from '@/graphql/Order.gql'
 import roles from '@/constants/roles'
 
 import ModalOrderPayment from '../../partials/ModalOrderPayment'
@@ -53,16 +57,7 @@ export default {
       try {
         await this.$apollo.mutate({
           mutation: paymentConfirm,
-          variables: { id, confirmation },
-          refetchQueries: [
-            {
-              query: order,
-              variables: {
-                code: this.$route.params.orderKey,
-                client_id: this.$route.params.clientKey
-              }
-            }
-          ]
+          variables: { id, confirmation }
         })
 
         this.$toast.success(

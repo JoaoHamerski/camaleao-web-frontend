@@ -1,10 +1,6 @@
 <script>
 import { vias } from '@/graphql/Via.gql'
-import { order } from '@/graphql/Order.gql'
-import { cashFlowEntries } from '@/graphql/CashFlow.gql'
 import { paymentCreate, paymentUpdate } from '@/graphql/Payment.gql'
-
-import { orderQueryVariables } from '../show/TheOrder'
 
 import Form from '@/utils/Form'
 import { maskCurrencyBRL, maskDate } from '@/utils/masks'
@@ -80,11 +76,7 @@ export default {
               order_id: this.order.id,
               ...this.form.data()
             }
-          },
-          refetchQueries: [
-            { query: order, variables: orderQueryVariables(this) },
-            { query: cashFlowEntries, variables: { page: 1, first: 10, where: {} } }
-          ]
+          }
         })
 
         handleSuccess(this, { message: 'Pagamento registrado!', resetForm: true })
@@ -102,10 +94,7 @@ export default {
               order_id: this.order.id,
               ...this.form.data()
             }
-          },
-          refetchQueries: [
-            { query: order, variables: orderQueryVariables(this) }
-          ]
+          }
         })
 
         handleSuccess(this, { message: 'Pagamento atualizado!' })

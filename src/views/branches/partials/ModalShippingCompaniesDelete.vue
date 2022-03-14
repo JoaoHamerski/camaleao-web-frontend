@@ -2,7 +2,6 @@
 import { faTrashAlt } from '@fortawesome/free-solid-svg-icons'
 import { shippingCompanyDelete } from '@/graphql/ShippingCompany.gql'
 import { handleSuccess } from '@/utils/forms'
-import { branches } from '@/graphql/Branch.gql'
 
 export default {
   props: {
@@ -28,10 +27,7 @@ export default {
           mutation: shippingCompanyDelete,
           variables: {
             id: this.company.id
-          },
-          refetchQueries: [
-            { query: branches }
-          ]
+          }
         })
 
         handleSuccess(this, { message: 'Transportadora deletada!' })

@@ -11,7 +11,8 @@ import {
 } from '@fortawesome/free-solid-svg-icons'
 
 import { isEmpty } from 'lodash-es'
-import { orderToggle, order } from '@/graphql/Order.gql'
+import { orderToggle } from '@/graphql/Order.gql'
+import { orders } from '@/constants/route-names'
 
 export default {
   props: {
@@ -24,6 +25,18 @@ export default {
       default: false
     },
     isReportLoading: {
+      type: Boolean,
+      default: false
+    },
+    isOrderClosed: {
+      type: Boolean,
+      default: false
+    },
+    isOrderPaid: {
+      type: Boolean,
+      default: false
+    },
+    isOrderPreRegistered: {
       type: Boolean,
       default: false
     }
@@ -46,22 +59,16 @@ export default {
     isReportDisabled () {
       return !this.order || !this.order.code
     },
-    clientKey () {
-      return this.$route.params.clientKey
-    },
-    orderKey () {
-      return this.$route.params.orderKey
-    },
     paymentBtnDisabledMessage () {
       if (isEmpty(this.order)) {
         return true
       }
 
-      if (this.order.states.includes('PAID')) {
+      if (this.isOrderPaid) {
         return 'Pedido já pago'
       }
 
-      if (this.order.states.includes('CLOSED')) {
+      if (this.isOrderClosed) {
         return 'Não é possível registrar pagamento em pedidos fechados.'
       }
 
@@ -75,54 +82,38 @@ export default {
   methods: {
     isEmpty,
     redirectToOrderEdit () {
+      const { clientKey, orderKey } = this.$route.params
+
       if (!this.order.client) {
-        this.$router.push({
-          name: 'orders.edit.pre-registered',
-          params: {
-            orderKey: this.$route.params.orderKey
-          }
-        })
+        this.$helpers.redirectTo(
+          orders.editPreRegistered,
+          { order: this.order }
+        )
 
         return
       }
 
-      this.$router.push({
-        name: 'orders.edit',
-        params: {
-          clientKey: this.$route.params.clientKey,
-          orderKey: this.$route.params.orderKey
-        }
+      this.$helpers.redirectTo(orders.edit, {
+        client: clientKey,
+        order: orderKey
       })
     },
     async toggleOrder () {
       const isOrderOpen = this.order.closed_at === null
-
-      const getQueryVariables = () => {
-        if (this.order.client) {
-          return {
-            id: this.order.id,
-            client_id: this.order.client.id
-          }
-        }
-
-        return {
-          id: this.order.id
-        }
-      }
 
       try {
         await this.$apollo.mutate({
           mutation: orderToggle,
           variables: {
             id: this.order.id
-          },
-          refetchQueries: [{
-            query: order,
-            variables: getQueryVariables()
-          }]
+          }
         })
 
-        this.$toast.success(isOrderOpen ? 'Pedido fechado' : 'Pedido reaberto')
+        this.$toast.success(
+          isOrderOpen
+            ? 'Pedido fechado'
+            : 'Pedido reaberto'
+        )
       } catch (error) {
         this.$toast.error('Ops! Algo deu errado.')
       }
@@ -191,9 +182,9 @@ export default {
         aria-labelledby="dropdownOptions"
       >
         <AppDropdownItem
-          :disabled-message="order.states.includes('CLOSED') && 'Não é possível editar pedidos fechados.'"
+          :disabled-message="isOrderClosed && 'Não é possível editar pedidos fechados.'"
           :icon="icons.faEdit"
-          :text="order.states.includes('PRE-REGISTERED') ? 'Concluir registro' : 'Editar'"
+          :text="isOrderPreRegistered ? 'Concluir registro' : 'Editar'"
           icon-color="primary"
           @click.prevent="redirectToOrderEdit"
         />
@@ -208,7 +199,7 @@ export default {
         <div class="dropdown-divider" />
 
         <AppDropdownItem
-          :disabled-message="order.states.includes('CLOSED') && 'Não é possível alterar status de pedidos fechados.'"
+          :disabled-message="isOrderClosed && 'Não é possível alterar status de pedidos fechados.'"
           :icon="icons.faExchangeAlt"
           text="Alterar status"
           icon-color="primary"
@@ -216,9 +207,9 @@ export default {
         />
 
         <AppDropdownItem
-          :disabled-message="!order.states.includes('PAID') && 'Não é possível fechar pedidos com pendência financeira.'"
-          :icon="!order.states.includes('CLOSED') ? icons.faTimesCircle : icons.faBoxOpen"
-          :text="!order.states.includes('CLOSED') ? 'Fechar pedido' : 'Reabrir pedido'"
+          :disabled-message="!isOrderPaid && 'Não é possível fechar pedidos com pendência financeira.'"
+          :icon="!isOrderClosed ? icons.faTimesCircle : icons.faBoxOpen"
+          :text="!isOrderClosed ? 'Fechar pedido' : 'Reabrir pedido'"
           icon-color="primary"
           @click.prevent="toggleOrder"
         />

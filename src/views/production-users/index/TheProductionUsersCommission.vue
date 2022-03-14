@@ -130,6 +130,7 @@ export default {
 
         <div class="d-flex">
           <AppButton
+            color="success"
             btn-class="fw-bold"
             :loading="isLoading"
           >

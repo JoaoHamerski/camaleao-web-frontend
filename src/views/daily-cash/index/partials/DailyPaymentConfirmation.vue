@@ -10,23 +10,6 @@ import {
 } from '@fortawesome/free-solid-svg-icons'
 
 export default {
-  chimera: {
-    _assignPayment () {
-      return {
-        method: 'POST',
-        url: `/api/payments/${this.payment.id}/confirm`,
-        auto: false,
-        on: {
-          success () {
-            this.$emit('success')
-          },
-          error () {
-            this.$emit('payment-error', this.payment)
-          }
-        }
-      }
-    }
-  },
   props: {
     payment: {
       type: Object,
@@ -56,8 +39,8 @@ export default {
       return this.loadingConfirmBtn || this.loadingDeclineBtn
     },
     showConfirmationButtons () {
-      return +this.authUser.role.id === +roles.GERENCIA
-      && this.confirmation === null
+      return this.$helpers.canView(roles.GERENCIA)
+        && this.confirmation === null
     },
     authUser () {
       return this.$store.getters['auth/authUser']
@@ -88,7 +71,7 @@ export default {
 
         this.$emit('success')
       } catch (error) {
-        this.$emit('payment-error', this.payment)
+        this.$emit('error', this.payment)
       }
 
       this.loadingDeclineBtn = false

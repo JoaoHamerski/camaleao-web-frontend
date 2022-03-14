@@ -1,23 +1,23 @@
 <script>
-import { faBoxes, faQuestionCircle } from '@fortawesome/free-solid-svg-icons'
-import { TippyComponent } from 'vue-tippy'
+import { faBoxes } from '@fortawesome/free-solid-svg-icons'
 import { ordersIndex } from '@/graphql/Order.gql'
 import { QUERIES } from './constants'
 
 import FilterGeneralReportCard from './partials/FilterGeneralReportCard'
 import FilterProductionDateReportCard from './partials/FilterProductionDateReportCard'
 import FilterSortButtons from './partials/FilterSortButtons'
-import OrdersListLegend from '../../orders/partials/OrdersListLegend'
 import FilterSearchInput from './partials/FilterSearchInput'
+import TheOrdersTable from './TheOrdersTable'
+import OrdersQuestionIconTippy from '@/views/orders/partials/OrdersQuestionIconTippy'
 
 export default {
   components: {
-    Tippy: TippyComponent,
     FilterGeneralReportCard,
     FilterProductionDateReportCard,
     FilterSortButtons,
     FilterSearchInput,
-    OrdersListLegend
+    TheOrdersTable,
+    OrdersQuestionIconTippy
   },
   metaInfo () {
     return {
@@ -49,8 +49,7 @@ export default {
         paginatorInfo: {}
       },
       icons: {
-        faBoxes,
-        faQuestionCircle
+        faBoxes
       }
     }
   },
@@ -58,16 +57,8 @@ export default {
     isLoading () {
       return !!this.$apollo.queries.orders.loading
     },
-    headers () {
-      return [
-        { text: 'Cliente', value: 'client' },
-        { text: 'Cód. pedido', value: 'code' },
-        { text: 'Quantidade', value: 'quantity' },
-        { text: 'Valor total', value: 'price', format: 'currencyBRL' },
-        { text: 'Total pago', value: 'total_paid', format: 'currencyBRL' },
-        { text: 'Produção', value: 'production_date', format: 'datetime' },
-        { text: 'Entrega', value: 'delivery_date', format: 'datetime' }
-      ]
+    hasSearchMade () {
+      return this.buttonSelected === ''
     }
   },
   methods: {
@@ -76,7 +67,7 @@ export default {
 
       this.code = ''
 
-      this.params = { ...this.params, ...query }
+      this.params = { ...this.params, ...query, page: 1 }
     },
     onCodeSearch () {
       this.buttonSelected = ''
@@ -89,72 +80,16 @@ export default {
         }
       }
     },
+    restartFilter () {
+      this.buttonSelected = 'priority'
+      this.code = ''
+    },
     onSearchClear () {
-      if (this.buttonSelected === '') {
-        this.buttonSelected = 'priority'
-        this.code = ''
-        this.onFilterButtonsChanged(this.buttonSelected)
-        return
+      if (this.hasSearchMade) {
+        this.restartFilter()
       }
 
       this.onFilterButtonsChanged(this.buttonSelected)
-    },
-    orderClass (order) {
-      if (order.states.includes('PRE-REGISTERED')) {
-        return 'table-warning'
-      }
-
-      if (order.states.includes('CLOSED')) {
-        return 'table-secondary'
-      }
-
-      if (order.states.includes('PAID')) {
-        return 'table-success'
-      }
-
-      return ''
-    },
-    redirectToOrder (order) {
-      if (!order.client) {
-        this.$router.push({
-          name: 'orders.show.pre-registered',
-          params: {
-            orderKey: order.id
-          }
-        })
-
-        return
-      }
-
-      this.$router.push({
-        name: 'orders.show',
-        params: {
-          clientKey: order.client.id,
-          orderKey: order.id
-        }
-      })
-    },
-    orderUrl (order) {
-      if (!order.client) {
-        const resolvedRoute = this.$router.resolve({
-          name: 'orders.show.pre-registered',
-          params: {
-            orderKey: order.id
-          }
-        })
-
-        return resolvedRoute.href
-      }
-
-      const resolvedRoute = this.$router.resolve({
-        name: 'orders.show',
-        params: {
-          clientKey: order.client.id,
-          orderKey: order.id
-        }
-      })
-
-      return resolvedRoute.href
     },
     onReportGenerated (src) {
       this.modalReport.src = src
@@ -207,43 +142,17 @@ export default {
             <FontAwesomeIcon
               :icon="icons.faBoxes"
               fixed-width
-            /> Todos os pedidos
+            />
+            Todos os pedidos
           </h6>
-          <tippy
-            to="icon-question"
-            placement="bottom"
-            arrow
-            theme="light-border"
-            :duration="150"
-          >
-            <OrdersListLegend />
-          </tippy>
-          <FontAwesomeIcon
-            name="icon-question"
-            :icon="icons.faQuestionCircle"
-          />
+          <OrdersQuestionIconTippy />
         </div>
       </template>
 
       <template #body>
         <AppLoading v-if="isLoading" />
 
-        <AppTable
-          :headers="headers"
-          :items="orders.data"
-          :row-url="orderUrl"
-          :row-class="orderClass"
-          @click:item="redirectToOrder"
-        >
-          <template #[`items.client`]="{ item }">
-            <template v-if="item.client">
-              {{ item.client.name }}
-            </template>
-            <template v-else>
-              N/A
-            </template>
-          </template>
-        </AppTable>
+        <TheOrdersTable :items="orders.data" />
       </template>
     </AppCard>
 

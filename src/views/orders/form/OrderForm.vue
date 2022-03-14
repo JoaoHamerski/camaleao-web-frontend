@@ -3,8 +3,7 @@
 import Form from '@/utils/Form'
 import { formatDatetime } from '@/utils/formatters'
 import { map, pick } from 'lodash-es'
-import { orderCreate, orderUpdate, order } from '@/graphql/Order.gql'
-import { clientsShow } from '@/graphql/Client.gql'
+import { orderCreate, orderUpdate } from '@/graphql/Order.gql'
 import { handleError } from '@/utils/forms'
 
 import OrderFormClient from './OrderFormClient'
@@ -12,16 +11,6 @@ import OrderFormBasicInfo from './OrderFormBasicInfo'
 import OrderFormValues from './OrderFormValues'
 import OrderFormProduction from './OrderFormProduction'
 import OrderFormFiles from './OrderFormFiles'
-
-const refetchQueriesOnUpdate = (context) => {
-  return [{
-    query: order,
-    variables: {
-      id: context.$route.params.orderKey,
-      client_id: context.$route.params.clientKey
-    }
-  }]
-}
 
 export default {
   components: {
@@ -81,7 +70,7 @@ export default {
     getFile (item) {
       return item.base64 || item
     },
-    getFomattedForm () {
+    getFormattedForm () {
       const form = { ...this.form.data() }
 
       form.client_id = form.client_id?.id || ''
@@ -92,7 +81,7 @@ export default {
       return form
     },
     async update () {
-      const data = this.getFomattedForm()
+      const data = this.getFormattedForm()
 
       try {
         const { data: { orderUpdate: { id, client } } } = await this.$apollo.mutate({
@@ -100,8 +89,7 @@ export default {
           variables: {
             id: this.order.id,
             input: { ...data }
-          },
-          refetchQueries: refetchQueriesOnUpdate(this)
+          }
         })
 
         this.$emit('success', { orderId: id, clientId: client.id })
@@ -110,7 +98,7 @@ export default {
       }
     },
     async store () {
-      const data = this.getFomattedForm()
+      const data = this.getFormattedForm()
 
       try {
         const { data: { orderCreate: { id } } } = await this.$apollo.mutate({
@@ -118,15 +106,7 @@ export default {
           variables: {
             client_id: this.clientKey,
             input: { ...data }
-          },
-          refetchQueries: [{
-            query: clientsShow,
-            variables: {
-              id: this.clientKey,
-              orderPage: 1,
-              orderWhere: {}
-            }
-          }]
+          }
         })
 
         this.$emit('success', { orderId: id, clientId: this.clientKey })

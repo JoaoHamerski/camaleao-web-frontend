@@ -128,7 +128,7 @@ export default {
         </small>
       </div>
 
-      <div class="text-secondary">
+      <div class="text-secondary text-subtitle">
         <div>
           <FontAwesomeIcon
             :icon="icons.faExclamationCircle"

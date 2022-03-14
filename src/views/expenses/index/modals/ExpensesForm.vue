@@ -278,22 +278,28 @@ export default {
       Data
     </AppInput>
 
-    <div class="d-flex justify-content-between mt-4">
-      <AppButton
-        color="success"
-        btn-class="fw-bold"
-        :loading="isLoading"
-        @click="onSubmit"
-      >
-        {{ isEdit ? 'Atualizar' : 'Registrar' }}
-      </AppButton>
-      <AppButton
-        type="button"
-        color="light"
-        data-bs-dismiss="modal"
-      >
-        Fechar
-      </AppButton>
+    <div class="row mt-4">
+      <div class="col">
+        <AppButton
+          color="success"
+          btn-class="fw-bold"
+          :loading="isLoading"
+          block
+          @click="onSubmit"
+        >
+          {{ isEdit ? 'Atualizar' : 'Registrar' }}
+        </AppButton>
+      </div>
+      <div class="col">
+        <AppButton
+          type="button"
+          color="light"
+          data-bs-dismiss="modal"
+          block
+        >
+          Fechar
+        </AppButton>
+      </div>
     </div>
   </AppForm>
 </template>

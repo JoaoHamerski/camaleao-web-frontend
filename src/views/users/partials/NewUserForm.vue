@@ -1,6 +1,6 @@
 <script>
 import { userCreate } from '@/graphql/User.gql'
-import { handleSuccess, handleError } from '@/utils/forms'
+import { handleError } from '@/utils/forms'
 import Form from '@/utils/Form'
 
 export default {
@@ -36,7 +36,7 @@ export default {
           }
         })
 
-        handleSuccess(this, { message: 'Usuário cadastrado!' })
+        this.$toast.success('Usuário cadastrado!')
       } catch (error) {
         handleError(this, error)
       }

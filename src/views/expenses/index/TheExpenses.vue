@@ -66,16 +66,6 @@ export default {
     },
     onSearch (search) {
       this.search = search
-    },
-    refreshExpenses () {
-      this.$apollo.queries.expenses.refetch()
-    },
-    refreshExpenseTypes () {
-      this.$apollo.queries.expenseTypes.refetch()
-    },
-    refreshAll () {
-      this.refreshExpenseTypes()
-      this.refreshExpenses()
     }
   }
 }
@@ -100,9 +90,6 @@ export default {
       :vias="vias"
       :expense-types="expenseTypes"
       @search="onSearch"
-      @refresh-all="refreshAll"
-      @refresh-expenses="refreshExpenses"
-      @refresh-expense-types="refreshExpenseTypes"
     />
 
     <TheExpensesBody
@@ -112,7 +99,6 @@ export default {
       :pagination="expenses.paginatorInfo"
       :page.sync="page"
       :is-loading="isLoading"
-      @refresh-expenses="refreshExpenses"
     />
   </div>
 </template>

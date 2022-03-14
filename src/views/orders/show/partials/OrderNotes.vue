@@ -5,8 +5,8 @@ import {
   faCheck,
   faTimes
 } from '@fortawesome/free-solid-svg-icons'
+
 import { noteCreate, noteUpdate } from '@/graphql/Note.gql'
-import { order } from '@/graphql/Order.gql'
 import { formatDatetime } from '@/utils/formatters'
 import Form from '@/utils/Form'
 import { handleError } from '@/utils/forms'
@@ -54,23 +54,15 @@ export default {
       try {
         await this.$apollo.mutate({
           mutation: noteUpdate,
-          variables: { id, text },
-          refetchQueries: [
-            {
-              query: order,
-              variables: {
-                code: this.$route.params.orderKey,
-                client_id: this.$route.params.clientKey
-              }
-            }
-          ]
+          variables: { id, text }
         })
+
+        this.editNote.note = {}
       } catch (error) {
-        handleError(error)
+        handleError(this, error)
       }
 
       this.editNote.isLoading = false
-      this.editNote.note = {}
     },
     async onCreate () {
       const { text } = this.form.data()
@@ -83,23 +75,15 @@ export default {
           variables: {
             order_id: this.orderId,
             text
-          },
-          refetchQueries: [
-            {
-              query: order,
-              variables: {
-                code: this.$route.params.orderKey,
-                client_id: this.$route.params.clientKey
-              }
-            }
-          ]
+          }
         })
+
+        this.newNote.value = false
       } catch (error) {
-        handleError(error)
+        handleError(this, error)
       }
 
       this.newNote.isLoading = false
-      this.newNote.value = false
     },
     onNewNoteClick () {
       this.form.reset()
@@ -143,7 +127,7 @@ export default {
     >
       <li
         v-if="newNote.value"
-        class="list-group-item"
+        class="list-group-item d-flex align-items-center"
       >
         <AppForm
           :form="form"
@@ -156,6 +140,8 @@ export default {
                 v-model="form.text"
                 name="text"
                 placeholder="Digite a anotação..."
+                :default-margin="false"
+                :error="form.errors.get('text')"
               />
             </div>
             <div class="ms-2">
@@ -196,6 +182,7 @@ export default {
                 <AppInput
                   v-model="form.text"
                   name="text"
+                  :default-margin="false"
                 />
               </div>
               <div class="ms-2">

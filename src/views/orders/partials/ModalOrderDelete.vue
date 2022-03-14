@@ -98,6 +98,7 @@ export default {
             id="code"
             v-model="orderCode"
             name="code"
+            placeholder="Digite o código do pedido..."
           >
             Confirme o código do pedido ({{ order.code }}):
           </AppInput>

@@ -27,14 +27,7 @@ export default {
       query: cities
     },
     shippingCompanies: {
-      query: shippingCompanies,
-      result ({ loading, data }) {
-        if (!loading) {
-          this.shippingCompanies = data.shippingCompanies.map(
-            item => ({ isEdit: false, ...item })
-          )
-        }
-      }
+      query: shippingCompanies
     }
   },
   data () {
@@ -59,12 +52,6 @@ export default {
     }
   },
   methods: {
-    refreshShippingCompanies () {
-      this.$apollo.queries.shippingCompanies.refetch()
-    },
-    refreshBranches () {
-      this.$apollo.queries.branches.refetch()
-    },
     onNewBranchClick () {
       this.modalNewBranch = true
     },
@@ -110,7 +97,6 @@ export default {
       v-model="modalShippingCompanies"
       :shipping-companies="shippingCompanies"
       :is-loading="isShippingCompaniesLoading"
-      @refresh="refreshShippingCompanies"
     />
 
     <TheBranchesCard
@@ -118,7 +104,6 @@ export default {
       :cities="cities"
       :shipping-companies="shippingCompanies"
       :is-loading="isBranchesLoading"
-      @refresh="refreshBranches"
     />
   </div>
 </template>

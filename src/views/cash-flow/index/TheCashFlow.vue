@@ -26,10 +26,12 @@ export default {
           where: this.where
         }
       },
-      result () {
-        const { start_date, final_date } = this.filterForm
+      result ({ loading }) {
+        if (!loading) {
+          const { start_date, final_date } = this.filterForm
 
-        this.filterDates = { start_date, final_date }
+          this.filterDates = { start_date, final_date }
+        }
       },
       error (error) {
         handleError(this, error, { formProp: 'filterForm' })
@@ -80,14 +82,13 @@ export default {
       this.filterDates = {}
       this.where = {}
     },
-    async submitStatistics (formData) {
+    async submitStatistics ({ start_date, final_date }) {
       try {
         const { data } = await this.$apollo.query({
           query: cashFlowStatistics,
           variables: {
             input: {
-              start_date: formData.start_date,
-              final_date: formData.final_date
+              start_date, final_date
             }
           }
         })

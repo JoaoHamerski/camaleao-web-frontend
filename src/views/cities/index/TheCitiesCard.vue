@@ -32,16 +32,16 @@ export default {
   data () {
     return {
       selectedCities: [],
-      editCitiesModal: false,
-      editCityModal: {
+      modalEditCities: false,
+      modalEditCity: {
         value: false,
         city: {}
       },
-      deleteCityModal: {
+      modalDeleteCity: {
         value: false,
         city: {}
       },
-      showCityClientsModal: {
+      modalShowCityClients: {
         value: false,
         city: {}
       },
@@ -55,30 +55,29 @@ export default {
       this.selectedCities.push(city)
     },
     removeCity (city) {
-      const index = this.selectedCities.findIndex(_city => _city.id === city.id)
+      const index = this.selectedCities.findIndex(
+        _city => _city.id === city.id
+      )
 
       this.selectedCities.splice(index, 1)
     },
     onDeleteCitySuccess () {
-      this.deleteCityModal.value = false
-      this.deleteCityModal.city = {}
-      this.$emit('refresh')
+      this.modalDeleteCity.value = false
+      this.modalDeleteCity.city = {}
     },
     onEditCitiesClick () {
-      this.editCitiesModal = true
+      this.modalEditCities = true
     },
     onEditCitiesSuccess () {
-      this.editCitiesModal = false
+      this.modalEditCities = false
       this.selectedCities.splice(0, this.selectedCities.length)
-      this.$emit('refresh')
     },
     onEditCitySuccess () {
-      this.editCityModal.value = false
-      this.editCityModal.city = {}
-      this.$emit('refresh')
+      this.modalEditCity.value = false
+      this.modalEditCity.city = {}
     },
     onEditCityModalHidden () {
-      this.editCityModal.city = {}
+      this.modalEditCity.city = {}
     },
     getStateNameAndAbbr (city) {
       return city.state
@@ -95,18 +94,18 @@ export default {
     },
     onCityActionClicked ({ city, action }) {
       if (action === 'show') {
-        this.showCityClientsModal.city = city
-        this.showCityClientsModal.value = true
+        this.modalShowCityClients.city = city
+        this.modalShowCityClients.value = true
       }
 
       if (action === 'edit') {
-        this.editCityModal.city = city
-        this.editCityModal.value = true
+        this.modalEditCity.city = city
+        this.modalEditCity.value = true
       }
 
       if (action === 'delete') {
-        this.deleteCityModal.city = city
-        this.deleteCityModal.value = true
+        this.modalDeleteCity.city = city
+        this.modalDeleteCity.value = true
       }
     }
   }
@@ -127,34 +126,34 @@ export default {
     <template #body>
       <div>
         <EditCitiesModal
-          v-model="editCitiesModal"
+          v-model="modalEditCities"
           :states="states"
           :selected-cities="selectedCities"
           @success="onEditCitiesSuccess"
         />
 
         <EditCityModal
-          v-model="editCityModal.value"
-          :city="editCityModal.city"
+          v-model="modalEditCity.value"
+          :city="modalEditCity.city"
           :states="states"
           @hidden="onEditCityModalHidden"
           @success="onEditCitySuccess"
         />
 
         <DeleteCityModal
-          v-model="deleteCityModal.value"
-          :city="deleteCityModal.city"
+          v-model="modalDeleteCity.value"
+          :city="modalDeleteCity.city"
           @success="onDeleteCitySuccess"
         />
 
         <ShowCityClientsModal
-          v-model="showCityClientsModal.value"
-          :city="showCityClientsModal.city"
+          v-model="modalShowCityClients.value"
+          :city="modalShowCityClients.city"
         />
 
-        <div><b>Multiplas ações</b></div>
+        <div><b>Múltiplas ações</b></div>
         <div class="text-secondary">
-          <small>Selecione multiplas cidades abaixo para editar várias de uma vez.</small>
+          <small>Selecione múltiplas cidades abaixo para editar várias de uma vez.</small>
         </div>
 
         <template v-if="selectedCities.length">

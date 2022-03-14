@@ -2,7 +2,7 @@
 import { faEdit } from '@fortawesome/free-solid-svg-icons'
 import Form from '@/utils/Form'
 import { handleError, handleSuccess } from '@/utils/forms'
-import { authUser, authUpdate } from '@/graphql/Auth.gql'
+import { authUpdate } from '@/graphql/Auth.gql'
 
 export default {
   props: {
@@ -45,8 +45,7 @@ export default {
       try {
         await this.$apollo.mutate({
           mutation: authUpdate,
-          variables: { input },
-          refetchQueries: [{ query: authUser }]
+          variables: { input }
         })
 
         handleSuccess(this, { message: 'Dados atualizados!' })

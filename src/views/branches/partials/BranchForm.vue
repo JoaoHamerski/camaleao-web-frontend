@@ -67,7 +67,7 @@ export default {
 
       return city.name
     },
-    isToAppendAlreadyOnBranch (city, isCitiesInput) {
+    isCityAlreadyOnBranch (city, isCitiesInput) {
       if (this.isEdit) {
         return isCitiesInput
           && city.branch
@@ -80,7 +80,7 @@ export default {
     customCityLabel (city, isCitiesInput = false) {
       const cityName = this.getCityName(city)
 
-      if (this.isToAppendAlreadyOnBranch(city, isCitiesInput)) {
+      if (this.isCityAlreadyOnBranch(city, isCitiesInput)) {
         return `${cityName} - (Já em uma filial)`
       }
 

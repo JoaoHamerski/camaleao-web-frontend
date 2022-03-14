@@ -4,7 +4,7 @@ import { faMinus, faQuestionCircle, faExclamationCircle } from '@fortawesome/fre
 import { formatDatetime } from '@/utils/formatters'
 import { TippyComponent } from 'vue-tippy'
 import 'tippy.js/themes/light-border.css'
-
+import { orders } from '@/constants/route-names'
 import CommissionDetails from '@/views/production/partials/CommissionDetails'
 
 export default {
@@ -21,6 +21,7 @@ export default {
   data () {
     return {
       roles,
+      orders,
       icons: {
         faMinus,
         faQuestionCircle,
@@ -74,7 +75,10 @@ export default {
       <div>
         <a
           class="text-decoration-none fw-bold"
-          :href="orderUrl(item.commission.order.client.id, item.commission.order.code)"
+          :href="$helpers.getUrl(orders.show, {
+            client: item.commission.order.client,
+            order: item.commission.order
+          })"
           target="_blank"
         >{{ item.commission.order.code }}</a>
       </div>

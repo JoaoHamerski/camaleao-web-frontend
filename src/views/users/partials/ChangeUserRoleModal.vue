@@ -1,7 +1,10 @@
 <script>
-import { userChangeRole } from '@/graphql/User.gql'
+import { faUserEdit, faUserCircle } from '@fortawesome/free-solid-svg-icons'
 
 import { isEmpty } from 'lodash-es'
+import { handleSuccess } from '@/utils/forms'
+
+import { userChangeRole } from '@/graphql/User.gql'
 
 export default {
   props: {
@@ -21,7 +24,11 @@ export default {
   data () {
     return {
       selectedRole: '',
-      isLoading: false
+      isLoading: false,
+      icons: {
+        faUserEdit,
+        faUserCircle
+      }
     }
   },
   methods: {
@@ -38,8 +45,7 @@ export default {
           }
         })
 
-        this.$emit('success')
-        this.$toast.success('Privilégio alterado!')
+        handleSuccess(this, { message: 'Privilégio alterado!' })
       } catch (error) {
         this.$toast.error('Ops! Algo deu errrado, tente novamente!')
       }
@@ -65,10 +71,20 @@ export default {
     @show="onModalShow"
   >
     <template #title>
+      <FontAwesomeIcon
+        :icon="icons.faUserEdit"
+        fixed-width
+      />
       Alterar privilégio de usuário
     </template>
     <template #body>
       <div v-if="!isEmpty(user)">
+        <div class="text-center text-primary mb-3">
+          <FontAwesomeIcon
+            :icon="icons.faUserCircle"
+            size="4x"
+          />
+        </div>
         <h5 class="text-center fw-bold mb-2">
           {{ user.name }}
         </h5>

@@ -21,7 +21,9 @@ export default {
       query: citiesIndex,
       result ({ data, loading }) {
         if (!loading) {
-          this.cities = data.cities.map(city => ({ isSelected: false, ...city }))
+          this.cities = data.cities.map(
+            city => ({ isSelected: false, ...city })
+          )
         }
       }
     },
@@ -46,13 +48,9 @@ export default {
   methods: {
     onNewCitySuccess () {
       this.newCityModal = false
-      this.refresh()
     },
     onNewCityClick () {
       this.newCityModal = true
-    },
-    refresh () {
-      this.$apollo.queries.cities.refetch()
     }
   }
 }
@@ -81,7 +79,6 @@ export default {
       :cities="cities"
       :states="states"
       :is-loading="isLoading"
-      @refresh="refresh"
     />
   </div>
 </template>

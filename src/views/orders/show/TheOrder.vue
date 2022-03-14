@@ -1,7 +1,10 @@
 <script>
 import { faArrowAltCircleLeft } from '@fortawesome/free-solid-svg-icons'
+
+import { isEmpty } from 'lodash-es'
 import { order, orderReport } from '@/graphql/Order.gql'
 import orderStatesMixin from '../orderStatesMixin'
+import { clients } from '@/constants/route-names'
 
 import ClientCard from '@/views/clients/partials/ClientCard'
 import TheOrderHeader from './TheOrderHeader'
@@ -12,23 +15,24 @@ import ModalOrderPayment from '../partials/ModalOrderPayment'
 import ModalOrderStatus from '../partials/ModalOrderStatus'
 import ModalOrderDelete from '../partials/ModalOrderDelete'
 
-export const orderQueryVariables = (context) => {
-  if (context.clientKey === undefined) {
-    return {
-      id: context.orderKey
-    }
-  }
-
-  return {
-    id: context.orderKey,
-    client_id: context.clientKey
-  }
-}
-
 export default {
   metaInfo () {
-    return {
-      title: `${this.order?.client?.name || 'PRE-REGISTRO'} - Pedidos`
+    if (isEmpty(this.order)) {
+      return {
+        title: 'Carregando...'
+      }
+    }
+
+    if (this.isOrderPreRegistered) {
+      return {
+        title: 'PRE-REGISTRO'
+      }
+    }
+
+    if (this.order) {
+      return {
+        title: this.order.code
+      }
     }
   },
   components: {
@@ -46,13 +50,19 @@ export default {
     order: {
       query: order,
       variables () {
-        return orderQueryVariables(this)
+        const { clientKey, orderKey } = this.$route.params
+
+        return {
+          id: orderKey,
+          client_id: clientKey
+        }
       }
     }
   },
   data () {
     return {
       order: {},
+      clients,
       modalOrderPayment: {
         payment: null,
         value: false,
@@ -75,12 +85,6 @@ export default {
     }
   },
   computed: {
-    clientKey () {
-      return this.$route.params.clientKey
-    },
-    orderKey () {
-      return this.$route.params.orderKey
-    },
     isLoading () {
       return !!this.$apollo.queries.order.loading
     },
@@ -137,11 +141,14 @@ export default {
 
       this.$nextTick(() => {
         if (!this.order.client) {
-          // redirectToClients()
-          // return
+          this.$helpers.redirectTo(clients.index)
+          return
         }
 
-        // redirectToClient(this.order.client)
+        this.$helpers.redirectTo(
+          clients.show,
+          { client: this.order.client }
+        )
       })
     },
     onOpenModalRequest ({ modal, payload }) {
@@ -174,7 +181,7 @@ export default {
         class="mb-1"
         outlined
         :disabled-message="!order.client && 'O pedido não possui cliente'"
-        @click="redirectToClient(order.client)"
+        @click="$helpers.redirectTo(clients.show, {client: order.client})"
       >
         <FontAwesomeIcon :icon="icons.faArrowAltCircleLeft" />
         Cliente
@@ -232,6 +239,8 @@ export default {
           <TheOrderCardHeader
             :order="order"
             :is-order-closed="isOrderClosed"
+            :is-order-paid="isOrderPaid"
+            :is-order-pre-registered="isOrderPreRegistered"
           />
         </template>
 

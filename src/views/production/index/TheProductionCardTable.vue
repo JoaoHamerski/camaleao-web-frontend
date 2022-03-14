@@ -7,7 +7,7 @@ import {
 } from '@fortawesome/free-solid-svg-icons'
 import { formatDatetime } from '@/utils/formatters'
 import { TippyComponent } from 'vue-tippy'
-import { commissionsUser, commissionConfirmProduction } from '@/graphql/Production.gql'
+import { commissionConfirmProduction } from '@/graphql/Production.gql'
 import 'tippy.js/themes/light-border.css'
 
 import CommissionDetails from '../partials/CommissionDetails'
@@ -70,8 +70,7 @@ export default {
           mutation: commissionConfirmProduction,
           variables: {
             id
-          },
-          refetchQueries: [{ query: commissionsUser }]
+          }
         })
 
         this.$toast.success('Comissão confirmada!')

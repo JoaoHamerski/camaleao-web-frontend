@@ -6,8 +6,7 @@ import {
   faTimes
 } from '@fortawesome/free-solid-svg-icons'
 import { shippingCompanyEdit } from '@/graphql/ShippingCompany.gql'
-import { branches } from '@/graphql/Branch.gql'
-import { handleSuccess, handleError } from '@/utils/forms'
+import { handleError } from '@/utils/forms'
 import Form from '@/utils/Form'
 
 export default {
@@ -23,7 +22,10 @@ export default {
   },
   data () {
     return {
-      isLoading: false,
+      edit: {
+        id: '',
+        isLoading: false
+      },
       form: new Form({
         name: ''
       }),
@@ -44,10 +46,13 @@ export default {
     }
   },
   methods: {
+    isEditing ({ id }) {
+      return this.edit.id === id
+    },
     async onSubmitEdit ({ id }) {
       const data = this.form.data()
 
-      this.isLoading = true
+      this.edit.isLoading = true
 
       try {
         await this.$apollo.mutate({
@@ -55,30 +60,26 @@ export default {
           variables: {
             id,
             name: data.name
-          },
-          refetchQueries: [
-            { query: branches }
-          ]
+          }
         })
 
-        handleSuccess(this, { message: 'Transportadora editada!' })
+        this.edit.id = ''
+        this.$toast.success('Transportadora editada!')
       } catch (error) {
         handleError(this, error)
       }
 
-      this.isLoading = false
+      this.edit.isLoading = false
     },
-    onEditClick (item) {
-      this.setCompaniesDefaultEditState()
-
-      item.isEdit = true
-      this.form.name = item.name
+    onEditClick ({ id, name }) {
+      this.edit.id = id
+      this.form.name = name
       this.$nextTick(() => {
         this.$refs.editCompanyNameInput.focusInput()
       })
     },
     onCancelEditClick (item) {
-      item.isEdit = false
+      this.edit.id = ''
     },
     onActionButtonClick (action, item) {
       this.$emit('action', { action, item })
@@ -94,7 +95,7 @@ export default {
   >
     <template #[`items.name`]="{ item }">
       <div class="w-100">
-        <template v-if="item.isEdit">
+        <template v-if="isEditing(item)">
           <AppForm
             :form="form"
             :on-submit="() => onSubmitEdit(item)"
@@ -117,7 +118,7 @@ export default {
     </template>
     <template #[`items.actions`]="{ item }">
       <div
-        v-if="item.isEdit"
+        v-if="isEditing(item)"
       >
         <AppButton
           v-tippy
@@ -126,7 +127,7 @@ export default {
           :icon="icons.faCheck"
           class="me-1"
           content="Salvar"
-          :loading="isLoading"
+          :loading="edit.isLoading"
           @click.prevent="onSubmitEdit(item)"
         />
         <AppButton
@@ -135,6 +136,7 @@ export default {
           btn-class="btn-sm"
           color="light"
           :icon="icons.faTimes"
+          :disabled="edit.isLoading"
           content="Cancelar"
           @click.prevent="onCancelEditClick(item)"
         />

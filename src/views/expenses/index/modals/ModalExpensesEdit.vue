@@ -3,7 +3,7 @@
 import { isEmpty } from 'lodash-es'
 import { formatCurrencyBRL, formatDatetime } from '@/utils/formatters'
 import { faEdit } from '@fortawesome/free-solid-svg-icons'
-import ExpensesForm from '../ExpensesForm'
+import ExpensesForm from './ExpensesForm'
 
 export default {
   components: {

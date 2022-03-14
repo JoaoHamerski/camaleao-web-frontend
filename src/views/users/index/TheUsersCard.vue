@@ -42,7 +42,6 @@ export default {
   },
   methods: {
     onDeleteUserSuccess () {
-      this.$emit('refresh')
       this.deleteUser.modal = false
       this.deleteUser.user = {}
     },
@@ -50,7 +49,6 @@ export default {
       this.deleteUser.user = {}
     },
     onChangeUserRoleSuccess () {
-      this.$emit('refresh')
       this.changeUserRole.modal = false
       this.changeUserRole.user = {}
     },
@@ -71,7 +69,7 @@ export default {
         return
       }
 
-      throw new Error('Nenhuma action foi identificado no evento')
+      throw new Error('Nenhuma action foi identificada no evento')
     }
   }
 }
@@ -105,6 +103,7 @@ export default {
       />
 
       <AppLoading v-show="isLoading" />
+
       <TheUsersCardTable
         :items="users"
         @action-button-clicked="onActionButtonClicked"

@@ -52,15 +52,11 @@ export default {
         this.$refs.newShippingCompanyInput.focusInput()
       })
     },
-    onShippingCompanyEdit () {
-      this.refresh()
-    },
     onCancelNewCompanyClick () {
       this.newCompany = false
     },
     onDeleteSuccess () {
       this.companyToDelete = null
-      this.refresh()
     },
     onDeleteCancel () {
       this.companyToDelete = null
@@ -70,9 +66,6 @@ export default {
         this.setCompaniesDefaultEditState()
         this.companyToDelete = item
       }
-    },
-    refresh () {
-      this.$emit('refresh')
     },
     async onSubmit () {
       const data = this.form.data()
@@ -87,7 +80,6 @@ export default {
           }
         })
 
-        this.refresh()
         this.$toast.success('Transportadora registrada!')
         this.form.reset()
       } catch (error) {
@@ -150,7 +142,6 @@ export default {
           <ModalShippingCompaniesTable
             :items="shippingCompanies"
             :set-companies-default-edit-state="setCompaniesDefaultEditState"
-            @success="onShippingCompanyEdit"
             @action="onAction"
           />
 

@@ -1,8 +1,12 @@
 <script>
+
+import { OPTIONS } from '../index/TheProductionUsers'
+
 export default {
   data () {
     return {
-      value: 'all'
+      value: OPTIONS.ALL,
+      OPTIONS
     }
   },
   methods: {
@@ -20,23 +24,23 @@ export default {
   <nav class="nav nav-pills flex-column flex-sm-row">
     <a
       class="flex-sm-fill text-sm-center nav-link"
-      :class="{'active fw-bold': value === 'all'}"
+      :class="{'active fw-bold': value === OPTIONS.ALL}"
       aria-current="page"
       href="#"
-      @click.prevent="onTabClick('all')"
+      @click.prevent="onTabClick(OPTIONS.ALL)"
     >TODOS</a>
 
     <a
       class="flex-sm-fill text-sm-center nav-link"
-      :class="{'active fw-bold': value === 'confirmed'}"
+      :class="{'active fw-bold': value === OPTIONS.CONFIRMED}"
       href="#"
-      @click.prevent="onTabClick('confirmed')"
+      @click.prevent="onTabClick(OPTIONS.CONFIRMED)"
     >CONFIRMADOS</a>
     <a
       class="flex-sm-fill text-sm-center nav-link"
-      :class="{'active fw-bold': value === 'pending'}"
+      :class="{'active fw-bold': value === OPTIONS.PENDING}"
       href="#"
-      @click.prevent="onTabClick('pending')"
+      @click.prevent="onTabClick(OPTIONS.PENDING)"
     >PENDENTES</a>
   </nav>
 </template>

@@ -3,6 +3,7 @@ import {
   faBoxOpen,
   faArrowCircleLeft
 } from '@fortawesome/free-solid-svg-icons'
+import { orders, clients } from '@/constants/route-names'
 import { client } from '@/graphql/Client.gql'
 
 import OrderForm from '../form/OrderForm'
@@ -29,6 +30,7 @@ export default {
   data () {
     return {
       client: {},
+      clients,
       icons: {
         faBoxOpen,
         faArrowCircleLeft
@@ -38,7 +40,10 @@ export default {
   methods: {
     onSuccess ({ clientId, orderId }) {
       this.$toast.success('Pedido criado!')
-      this.redirectToOrder(clientId, orderId)
+      this.$helpers.redirectTo(orders.show, {
+        client: clientId,
+        order: orderId
+      })
     }
   }
 }
@@ -50,7 +55,7 @@ export default {
       class="mb-2"
       outlined
       :icon="icons.faArrowCircleLeft"
-      @click="$helpers.redirectTo('clients.show', {client})"
+      @click="$helpers.redirectTo(clients.show, {client})"
     >
       Cliente
     </AppButton>

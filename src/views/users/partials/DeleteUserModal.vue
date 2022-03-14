@@ -4,7 +4,7 @@ import { faTrashAlt } from '@fortawesome/free-solid-svg-icons'
 import { formatDatetime } from '@/utils/formatters'
 import { isEmpty } from 'lodash-es'
 import Form from '@/utils/Form'
-import { handleError, handleSuccess } from '@/utils/forms'
+import { handleSuccess, handleError } from '@/utils/forms'
 
 export default {
   props: {

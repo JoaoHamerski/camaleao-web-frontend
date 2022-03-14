@@ -154,23 +154,29 @@ export default {
       </div>
     </div>
 
-    <div class="d-flex justify-content-between">
-      <AppButton
-        color="success"
-        class="fw-bold"
-        :loading="isLoading"
-        @click.prevent="onSubmit"
-      >
-        Registrar
-      </AppButton>
+    <div class="row">
+      <div class="col">
+        <AppButton
+          color="success"
+          class="fw-bold"
+          :loading="isLoading"
+          block
+          @click.prevent="onSubmit"
+        >
+          Registrar
+        </AppButton>
+      </div>
 
-      <AppButton
-        color="light"
-        data-bs-dismiss="modal"
-        type="button"
-      >
-        Cancelar
-      </AppButton>
+      <div class="col">
+        <AppButton
+          color="light"
+          data-bs-dismiss="modal"
+          type="button"
+          block
+        >
+          Cancelar
+        </AppButton>
+      </div>
     </div>
   </AppForm>
 </template>

@@ -28,11 +28,9 @@ export default {
       return +this.commission.pivot.role.id === roles.ESTAMPA
     },
     roleName () {
-      const role = this.role
+      return this.role
         ? this.role.name
         : this.commission.pivot.role.name
-
-      return role.toUpperCase()
     }
   }
 }
@@ -44,7 +42,9 @@ export default {
       <h6 class="fw-bold mb-0">
         Detalhes da comissão
       </h6>
-      <div><small>{{ roleName }}</small></div>
+      <div class="text-uppercase">
+        <small>{{ roleName }}</small>
+      </div>
     </div>
 
     <div class="bg-light">
@@ -57,10 +57,3 @@ export default {
     </div>
   </div>
 </template>
-
-<style lang="scss">
-.tippy-tooltip.commission-theme {
-  box-shadow: 0 2px 10px rgba(0, 0, 0, .15);
-  padding: 0;
-}
-</style>

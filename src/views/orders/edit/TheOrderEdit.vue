@@ -4,16 +4,30 @@ import {
   faBoxOpen,
   faArrowCircleLeft
 } from '@fortawesome/free-solid-svg-icons'
+
 import { order } from '@/graphql/Order.gql'
 import orderStatesMixin from '../orderStatesMixin'
+import { orders } from '@/constants/route-names'
 
 import OrderForm from '../form/OrderForm'
 import OrderReminder from '../show/partials/OrderReminder'
 
 export default {
   metaInfo () {
+    if (isEmpty(this.order)) {
+      return {
+        title: 'Carregando...'
+      }
+    }
+
+    if (this.isOrderPreRegistered) {
+      return {
+        title: 'Concluir registro'
+      }
+    }
+
     return {
-      title: this.title
+      title: `${this.order.code} - Editar`
     }
   },
   components: {
@@ -25,23 +39,28 @@ export default {
     order: {
       query: order,
       variables () {
+        const { clientKey, orderKey } = this.$route.params
+
         return {
-          id: this.orderKey,
-          client_id: this.clientKey
+          id: orderKey,
+          client_id: clientKey
         }
       },
-      result ({ data }) {
-        this.$nextTick(() => {
-          this.$refs.orderForm.$emit(
-            'order-loaded',
-            { order: data.order }
-          )
-        })
+      result ({ data, loading }) {
+        if (!loading) {
+          this.$nextTick(() => {
+            this.$refs.orderForm.$emit(
+              'order-loaded',
+              { order: data.order }
+            )
+          })
+        }
       }
     }
   },
   data () {
     return {
+      orders,
       order: {},
       clothingTypesLoaded: false,
       icons: {
@@ -51,19 +70,6 @@ export default {
     }
   },
   computed: {
-    title () {
-      if (this.isOrderPreRegistered) {
-        return 'Concluir pedido'
-      }
-
-      return this.order.code
-    },
-    clientKey () {
-      return this.$route.params.clientKey
-    },
-    orderKey () {
-      return this.$route.params.orderKey
-    },
     loaded () {
       return this.clothingTypesLoaded && !isEmpty(this.order)
     },
@@ -75,18 +81,28 @@ export default {
     isEmpty,
     onSuccess ({ clientId, orderId }) {
       this.$toast.success('Pedido atualizado!')
-      this.redirectToOrder(clientId, orderId)
+      this.$helpers.redirect(orders.show, {
+        client: clientId,
+        order: orderId
+      })
     },
     onClothingTypesLoaded () {
       this.clothingTypesLoaded = true
     },
     redirectBackToOrder () {
       if (!this.order.client) {
-        this.redirectTo('orders.show.pre-registered', { order: this.order })
+        this.redirectTo(
+          orders.showPreRegistered,
+          { order: this.order }
+        )
+
         return
       }
 
-      this.redirectTo('orders.show', { client: this.order.client, order: this.order })
+      this.redirectTo(
+        orders.show,
+        { client: this.order.client, order: this.order }
+      )
     }
   }
 }
@@ -98,10 +114,11 @@ export default {
       class="mb-2"
       outlined
       :icon="icons.faArrowCircleLeft"
-      @click="redirectBackToOrder"
+      @click="$helpers.redirectTo(orders.show, {order, client: order.client})"
     >
       Pedido
     </AppButton>
+
     <AppCard color="primary">
       <template #header>
         <h6 class="d-flex fw-bold align-items-center mb-0">
@@ -133,6 +150,7 @@ export default {
           @success="onSuccess"
           @clothing-types-loaded="onClothingTypesLoaded"
         />
+
         <AppLoading v-if="!loaded" />
       </template>
     </AppCard>

@@ -41,14 +41,10 @@ export default {
   },
   methods: {
     onNewUserSuccess () {
-      this.refresh()
       this.newUserModal = false
     },
     onNewUserClick () {
       this.newUserModal = true
-    },
-    refresh () {
-      this.$apollo.queries.users.refetch()
     }
   }
 }
@@ -76,7 +72,6 @@ export default {
       :users="users"
       :roles="roles"
       :is-loading="isLoading"
-      @refresh="refresh"
     />
   </div>
 </template>

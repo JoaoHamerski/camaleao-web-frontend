@@ -1,17 +1,24 @@
 <script>
-import ClientCard from '../partials/ClientCard'
+import { isEmpty } from 'lodash'
 import { faPlus, faArrowAltCircleLeft } from '@fortawesome/free-solid-svg-icons'
 import { clientsShow } from '@/graphql/Client.gql'
 
 import 'tippy.js/themes/light-border.css'
 
+import ClientCard from '../partials/ClientCard'
 import ClientOrdersCard from './ClientOrdersCard'
 import ClientOrdersHeader from './ClientOrdersHeader'
 
 export default {
   metaInfo () {
+    if (isEmpty(this.client)) {
+      return {
+        title: 'Carregando...'
+      }
+    }
+
     return {
-      title: this.client?.name || ''
+      title: this.client.name
     }
   },
   components: {
@@ -24,7 +31,7 @@ export default {
       query: clientsShow,
       variables () {
         return {
-          id: this.clientKey,
+          id: this.$route.params.clientKey,
           orderPage: this.page,
           orderWhere: this.orderWhere
         }
@@ -34,7 +41,6 @@ export default {
   data () {
     return {
       page: 1,
-      code: '',
       client: null,
       orderWhere: {},
       icons: {
@@ -46,9 +52,6 @@ export default {
   computed: {
     isLoading () {
       return !!this.$apollo.queries.client.loading
-    },
-    clientKey () {
-      return this.$route.params.clientKey
     },
     orders () {
       return this.client?.orders || {}
@@ -62,9 +65,11 @@ export default {
         value: `%${code}%`
       }
 
+      this.page = 1
       this.orderWhere = where
     },
     onSearchClear () {
+      this.page = 1
       this.orderWhere = {}
     }
   }
@@ -83,6 +88,7 @@ export default {
           Clientes
         </AppButton>
       </div>
+
       <ClientCard
         :is-loading="isLoading"
         :client="client"
@@ -91,7 +97,6 @@ export default {
 
     <div class="col-9">
       <ClientOrdersHeader
-        :code="code"
         @search="handleSearch"
         @clear-search="onSearchClear"
       />

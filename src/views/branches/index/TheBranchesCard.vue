@@ -48,12 +48,10 @@ export default {
     onDeleteSuccess () {
       this.modalDeleteBranch.value = false
       this.modalDeleteBranch.branch = null
-      this.$emit('refresh')
     },
     onEditSuccess () {
       this.modalEditBranch.value = false
       this.modalEditBranch.branch = null
-      this.$emit('refresh')
     },
     onActionClicked ({ item, action }) {
       if (action === 'edit') {

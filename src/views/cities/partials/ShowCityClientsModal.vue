@@ -1,5 +1,8 @@
 <script>
+import { get } from 'lodash-es'
+import { faUsers } from '@fortawesome/free-solid-svg-icons'
 import { clientsIndex } from '@/graphql/Client.gql'
+import { clients as clientsRoutes } from '@/constants/route-names'
 
 export default {
   apollo: {
@@ -38,7 +41,11 @@ export default {
     return {
       page: 1,
       skipQuery: true,
-      clients: {}
+      clientsRoutes,
+      clients: {},
+      icons: {
+        faUsers
+      }
     }
   },
   computed: {
@@ -53,6 +60,7 @@ export default {
     }
   },
   methods: {
+    get,
     onModalShow () {
       this.skipQuery = false
     },
@@ -81,9 +89,13 @@ export default {
     @show="onModalShow"
   >
     <template #title>
+      <FontAwesomeIcon
+        :icon="icons.faUsers"
+        fixed-width
+      />
       Clientes de
       <template v-if="value">
-        {{ city.name }} - {{ city.state.abbreviation }}
+        {{ city.name }} - {{ get(city, 'state.abbreviation', 'N/A') }}
       </template>
     </template>
 
@@ -96,7 +108,7 @@ export default {
         <template #[`items.name`]="{ item }">
           <a
             target="_blank"
-            :href="getClientUrl(item)"
+            :href="$helpers.getUrl(clientsRoutes.show, {client: item})"
             class="text-decoration-none"
           >{{ item.name }}</a>
         </template>

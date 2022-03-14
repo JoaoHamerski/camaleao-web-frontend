@@ -7,7 +7,7 @@ import {
   faEdit,
   faExclamationCircle
 } from '@fortawesome/free-solid-svg-icons'
-import { clothingTypeUpdate, clothingTypes } from '@/graphql/ClothingType.gql'
+import { clothingTypeUpdate } from '@/graphql/ClothingType.gql'
 
 export default {
   props: {
@@ -45,11 +45,7 @@ export default {
             input: {
               is_hidden: !clothingType.is_hidden
             }
-          },
-          refetchQueries: [
-            { query: clothingTypes },
-            { query: clothingTypes, variables: { is_hidden: false } }
-          ]
+          }
         })
 
         if (clothingType.is_hidden) {

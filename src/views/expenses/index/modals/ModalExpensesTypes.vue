@@ -56,10 +56,7 @@ export default {
           }
         })
 
-        handleSuccess(this, {
-          message: 'Tipo de despesa registrado!',
-          payload: { action: 'create' }
-        })
+        handleSuccess(this, { message: 'Tipo de despesa registrado!' })
       } catch (error) {
         handleError(this, error)
       }
@@ -80,10 +77,7 @@ export default {
           }
         })
 
-        handleSuccess(this, {
-          message: 'Tipo de despesa atualizado!',
-          payload: { action: 'update' }
-        })
+        handleSuccess(this, { message: 'Tipo de despesa atualizado!' })
       } catch (error) {
         handleError(this, error)
       }

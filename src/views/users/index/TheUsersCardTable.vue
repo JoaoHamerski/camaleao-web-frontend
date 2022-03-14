@@ -23,10 +23,16 @@ export default {
       return [
         { text: 'Nome', value: 'name' },
         { text: 'E-mail', value: 'email' },
-        { text: 'Nível de usuário', value: 'role' },
+        { text: 'Nível de usuário', value: 'role.name' },
         { text: 'Alterar nível', value: 'change_role', align: 'center' },
         { text: 'Deletar', value: 'delete', align: 'center' }
       ]
+    },
+    cantChangeOwnLevelMessage () {
+      return 'Não é possível alterar o próprio nível de usuário'
+    },
+    cantDeleteOwnAccountMessage () {
+      return 'Use o menu Minha conta para deletar a própria conta'
     }
   },
   methods: {
@@ -35,6 +41,9 @@ export default {
     },
     onDeleteUserClick (user) {
       this.$emit('action-button-clicked', { user, action: 'delete_user' })
+    },
+    isAuthUser (user) {
+      return user.id === this.authUser.id
     }
   }
 }
@@ -45,13 +54,9 @@ export default {
     :headers="headers"
     :items="items"
   >
-    <template #[`items.role`]="{ item }">
-      {{ item.role.name }}
-    </template>
-
     <template #[`items.change_role`]="{ item }">
       <AppButton
-        :disabled="+item.id === +authUser.id"
+        :disabled-message="isAuthUser(item) && cantChangeOwnLevelMessage"
         btn-class="btn-sm"
         :icon="icons.faUserEdit"
         outlined
@@ -61,7 +66,7 @@ export default {
 
     <template #[`items.delete`]="{ item }">
       <AppButton
-        :disabled="+item.id === +authUser.id"
+        :disabled-message="isAuthUser(item) && cantDeleteOwnAccountMessage"
         btn-class="btn-sm"
         color="danger"
         :icon="icons.faTrashAlt"
