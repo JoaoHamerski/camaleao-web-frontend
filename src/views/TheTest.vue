@@ -1,21 +1,16 @@
 <script>
+/**
+ * @file
+ * View para testes de componentes e etc...
+ * Acessada via /testes
+ */
 export default {
-  data () {
-    return {
-      date: ''
-    }
-  }
+  //
 }
 </script>
 
 <template>
   <div>
-    <AppInput
-      v-model="date"
-      type="week"
-      name="algo"
-    />
-
-    {{ date }}
+    <!--  -->
   </div>
 </template>

@@ -5,8 +5,6 @@ import middlewarePipeline from '@/router/middlewarePipeline'
 import store from '@/store'
 import roles from '@/constants/roles'
 
-import TheTest from '@/views/TheTest'
-
 import authRoutes from '@/views/auth/routes'
 import clientsRoutes from '@/views/clients/routes'
 import ordersRoutes from '@/views/orders/routes'
@@ -25,6 +23,12 @@ import activitiesRoutes from '@/views/activities/routes'
 
 Vue.use(VueRouter)
 
+const isUserFromProduction = (user) => {
+  const productionRoles = [roles.ESTAMPA, roles.COSTURA]
+
+  return productionRoles.includes(+user.role.id)
+}
+
 const routes = [
   {
     path: '/',
@@ -34,17 +38,13 @@ const routes = [
     beforeEnter: async (to, from, next) => {
       const authUser = store.getters['auth/authUser']
 
-      if ([roles.ESTAMPA, roles.COSTURA].includes(+authUser.role.id)) {
+      if (isUserFromProduction(authUser)) {
         next('/producao')
         return
       }
 
       next('/clientes')
     }
-  },
-  {
-    path: '/testes',
-    component: TheTest
   },
   ...activitiesRoutes,
   ...authRoutes,
@@ -62,6 +62,13 @@ const routes = [
   ...usersRoutes,
   ...weeklyProductionRoutes
 ]
+
+if (process.env.NODE_ENV === 'development') {
+  routes.push({
+    path: '/testes',
+    component: () => import('@/views/TheTest')
+  })
+}
 
 const router = new VueRouter({
   mode: 'history',
