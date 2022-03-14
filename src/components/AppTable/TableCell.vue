@@ -34,7 +34,9 @@ function renderValue (h, context) {
 function renderLinkCell (h, context) {
   return (
     <a
-      href={context.url}
+      vOn:mouseup_prevent={context.onLinkClicked}
+      vOn:click={context.prevent}
+      href={context.url()}
       class={classNames([
         'd-block text-decoration-none',
         !context.hasDecoration && 'text-dark'
@@ -51,7 +53,13 @@ function renderNormalCell (h, context) {
 
 function renderCell (h, context, element) {
   return (
-    <td nowrap={context.nowrap} class={`text-${context.align}`}>
+    <td
+      nowrap={context.nowrap}
+      class={classNames([
+        `text-${context.align}`,
+        { 'has-link': context.hasRowLinks }
+      ])}
+    >
       { element }
     </td>
   )
@@ -59,19 +67,19 @@ function renderCell (h, context, element) {
 
 export default {
   props: {
+    value: undefined,
     isUsingSlot: {
       type: Boolean,
       default: false
     },
     url: {
-      type: String,
-      default: ''
+      type: Function,
+      default: () => {}
     },
-    value: undefined,
     format: {
       type: String,
       default: null,
-      validator: (value) => VALID_FORMATTERS.indexOf(value) !== -1
+      validator: (value) => VALID_FORMATTERS.includes(value)
     },
     formatting: undefined,
     hasDecoration: {
@@ -89,6 +97,16 @@ export default {
     nowrap: {
       type: Boolean,
       default: false
+    }
+  },
+  methods: {
+    prevent (event) {
+      event.preventDefault()
+    },
+    onLinkClicked (event) {
+      if (event.which === 1) {
+        this.$emit('clicked')
+      }
     }
   },
   render (h) {
