@@ -28,10 +28,6 @@ export default {
     order: {
       type: Object,
       default: () => {}
-    },
-    redirectToClient: {
-      type: Function,
-      default: () => {}
     }
   },
   data () {

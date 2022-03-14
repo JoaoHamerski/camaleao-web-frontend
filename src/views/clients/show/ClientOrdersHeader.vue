@@ -28,6 +28,7 @@ export default {
   <div>
     <div class="d-flex justify-content-between">
       <AppButton
+        btn-class="fw-bold"
         color="primary"
         @click="$helpers.redirectTo(orders.create, {client: $route.params.clientKey})"
       >

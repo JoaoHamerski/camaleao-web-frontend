@@ -81,7 +81,7 @@ export default {
     isEmpty,
     onSuccess ({ clientId, orderId }) {
       this.$toast.success('Pedido atualizado!')
-      this.$helpers.redirect(orders.show, {
+      this.$helpers.redirectTo(orders.show, {
         client: clientId,
         order: orderId
       })
