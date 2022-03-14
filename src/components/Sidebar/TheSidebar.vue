@@ -15,7 +15,8 @@ import {
   faTshirt,
   faBox,
   faUser,
-  faCalendarAlt
+  faCalendarAlt,
+  faListAlt
 } from '@fortawesome/free-solid-svg-icons'
 
 import SidebarItem from './SidebarItem'
@@ -61,7 +62,8 @@ export default {
         faTshirt,
         faBox,
         faUser,
-        faCalendarAlt
+        faCalendarAlt,
+        faListAlt
       }
     }
   },
@@ -200,6 +202,13 @@ export default {
         :icon="icons.faUser"
       >
         Minha conta
+      </SidebarItem>
+      <SidebarItem
+        v-if="$helpers.canView(roles.GERENCIA)"
+        :to="{name: 'activities.index'}"
+        :icon="icons.faListAlt"
+      >
+        Atividades
       </SidebarItem>
       <SidebarItem
         to="/sair"
