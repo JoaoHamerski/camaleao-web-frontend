@@ -134,6 +134,7 @@ export default {
               :to="`detailsTriggerFor${item.id}`"
               placement="right"
               max-width="500"
+              :interactive="true"
             >
               <CommissionDetails :commission="item" />
             </Tippy>

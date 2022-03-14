@@ -104,9 +104,10 @@ export default {
           <Tippy
             :for="`tippy__${item.id}`"
             max-width="500"
-            theme="light-border commission"
+            theme="light-border production"
             trigger="click"
             placement="left"
+            :interactive="true"
           >
             <CommissionDetails
               :commission="item.commission"
