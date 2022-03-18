@@ -1,9 +1,15 @@
 import Vue from 'vue'
 import VueApollo from 'vue-apollo'
+import possibleTypes from './fragmentTypes.json'
 import { createApolloClient, restartWebsockets } from 'vue-cli-plugin-apollo/graphql-client'
+import { InMemoryCache, IntrospectionFragmentMatcher } from 'apollo-cache-inmemory'
 
 // Install the vue plugin
 Vue.use(VueApollo)
+
+const fragmentMatcher = new IntrospectionFragmentMatcher({
+  introspectionQueryResultData: possibleTypes
+})
 
 // Name of the localStorage item
 const AUTH_TOKEN = 'apollo-token'
@@ -26,7 +32,7 @@ const defaultOptions = {
   // You need to pass a `wsEndpoint` for this to work
   websocketsOnly: false,
   // Is being rendered on the server?
-  ssr: false
+  ssr: false,
 
   // Override default apollo link
   // note: don't override httpLink here, specify httpLink options in the
@@ -34,7 +40,7 @@ const defaultOptions = {
   // link: myLink
 
   // Override default cache
-  // cache: myCache
+  cache: new InMemoryCache({ fragmentMatcher })
 
   // Override the way the Authorization header is set
   // getAuth: (tokenName) => ...
