@@ -10,7 +10,7 @@ export default {
     },
     isOrderClosed: {
       type: Boolean,
-      default: false
+      required: true
     }
   },
   data () {

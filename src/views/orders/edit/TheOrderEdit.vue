@@ -91,7 +91,7 @@ export default {
     },
     redirectBackToOrder () {
       if (!this.order.client) {
-        this.redirectTo(
+        this.$helpers.redirectTo(
           orders.showPreRegistered,
           { order: this.order }
         )
@@ -99,7 +99,7 @@ export default {
         return
       }
 
-      this.redirectTo(
+      this.$helpers.redirectTo(
         orders.show,
         { client: this.order.client, order: this.order }
       )
@@ -114,7 +114,7 @@ export default {
       class="mb-2"
       outlined
       :icon="icons.faArrowCircleLeft"
-      @click="$helpers.redirectTo(orders.show, {order, client: order.client})"
+      @click="redirectBackToOrder"
     >
       Pedido
     </AppButton>

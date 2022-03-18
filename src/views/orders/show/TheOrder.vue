@@ -228,6 +228,9 @@ export default {
         :order="order"
         :is-loading="isLoading"
         :is-report-loading="modalOrderReport.loading"
+        :is-order-closed="isOrderClosed"
+        :is-order-paid="isOrderPaid"
+        :is-order-pre-registered="isOrderPreRegistered"
         @open-modal="onOpenModalRequest"
       />
 
@@ -239,8 +242,6 @@ export default {
           <TheOrderCardHeader
             :order="order"
             :is-order-closed="isOrderClosed"
-            :is-order-paid="isOrderPaid"
-            :is-order-pre-registered="isOrderPreRegistered"
           />
         </template>
 

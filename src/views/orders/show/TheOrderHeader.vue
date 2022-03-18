@@ -30,15 +30,15 @@ export default {
     },
     isOrderClosed: {
       type: Boolean,
-      default: false
+      required: true
     },
     isOrderPaid: {
       type: Boolean,
-      default: false
+      required: true
     },
     isOrderPreRegistered: {
       type: Boolean,
-      default: false
+      required: true
     }
   },
   data () {
@@ -184,7 +184,7 @@ export default {
         <AppDropdownItem
           :disabled-message="isOrderClosed && 'Não é possível editar pedidos fechados.'"
           :icon="icons.faEdit"
-          :text="isOrderPreRegistered ? 'Concluir registro' : 'Editar'"
+          :text="isOrderPreRegistered ? 'Concluir cadastro' : 'Editar'"
           icon-color="primary"
           @click.prevent="redirectToOrderEdit"
         />
