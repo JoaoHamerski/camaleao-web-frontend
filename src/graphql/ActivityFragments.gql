@@ -9,5 +9,11 @@ fragment UserCauser on User {
 
 fragment OrderSubject on Order {
   id
-  code
+  client {
+    id
+  }
+}
+
+fragment ClientSubject on Client {
+  id
 }
