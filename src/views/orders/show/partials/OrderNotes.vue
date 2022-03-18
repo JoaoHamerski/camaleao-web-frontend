@@ -1,17 +1,17 @@
 <script>
-import {
-  faStickyNote,
-  faEdit,
-  faCheck,
-  faTimes
-} from '@fortawesome/free-solid-svg-icons'
+import { faStickyNote } from '@fortawesome/free-solid-svg-icons'
 
-import { noteCreate, noteUpdate } from '@/graphql/Note.gql'
+import { noteDelete } from '@/graphql/Note.gql'
 import { formatDatetime } from '@/utils/formatters'
 import Form from '@/utils/Form'
-import { handleError } from '@/utils/forms'
+import OrderNotesForm from './OrderNotesForm'
+import OrderNotesActionButtons from './OrderNotesActionButtons'
 
 export default {
+  components: {
+    OrderNotesForm,
+    OrderNotesActionButtons
+  },
   props: {
     orderId: {
       type: String,
@@ -25,10 +25,12 @@ export default {
   data () {
     return {
       newNote: {
-        value: false,
-        isLoading: false
+        value: false
       },
       editNote: {
+        note: {}
+      },
+      deleteNote: {
         note: {},
         isLoading: false
       },
@@ -36,71 +38,55 @@ export default {
         text: ''
       }),
       icons: {
-        faEdit,
-        faStickyNote,
-        faCheck,
-        faTimes
+        faStickyNote
       }
     }
   },
   methods: {
     formatDatetime,
-    async onUpdate () {
-      const { id } = this.editNote.note
-      const { text } = this.form.data()
-
-      this.editNote.isLoading = true
+    async onDelete () {
+      const { id } = this.deleteNote.note
+      this.deleteNote.isLoading = true
 
       try {
         await this.$apollo.mutate({
-          mutation: noteUpdate,
-          variables: { id, text }
+          mutation: noteDelete,
+          variables: { id }
         })
 
-        this.editNote.note = {}
+        this.$toast.success('Nota deletada!')
       } catch (error) {
-        handleError(this, error)
+        this.$toast.error('Ops! Algo deu errado, tente novamente!')
       }
 
-      this.editNote.isLoading = false
-    },
-    async onCreate () {
-      const { text } = this.form.data()
-
-      this.newNote.isLoading = true
-
-      try {
-        await this.$apollo.mutate({
-          mutation: noteCreate,
-          variables: {
-            order_id: this.orderId,
-            text
-          }
-        })
-
-        this.newNote.value = false
-      } catch (error) {
-        handleError(this, error)
-      }
-
-      this.newNote.isLoading = false
+      this.deleteNote.note = {}
+      this.deleteNote.isLoading = false
     },
     onNewNoteClick () {
       this.form.reset()
       this.editNote.note = {}
       this.newNote.value = !this.newNote.value
     },
-    onCancelNewNoteClick () {
-      this.newNote.value = false
-    },
-    onEditClick (note) {
+    onEditNote (note) {
       this.form.reset()
       this.newNote.value = false
       this.form.text = note.text
       this.editNote.note = note
     },
-    onCancelEditClick () {
+    dismissNewNote () {
+      this.newNote.value = false
+    },
+    dismissEditNote () {
       this.editNote.note = {}
+    },
+    onDeleteNote (note) {
+      this.deleteNote.note = note
+    },
+    onConfirmDelete () {
+      this.onDelete()
+    },
+    onCancelDelete () {
+      this.deleteNote.note = {}
     }
   }
 }
@@ -129,41 +115,11 @@ export default {
         v-if="newNote.value"
         class="list-group-item d-flex align-items-center"
       >
-        <AppForm
-          :form="form"
-          :on-submit="onCreate"
-          class="w-100"
-        >
-          <div class="d-flex">
-            <div class="flex-grow-1">
-              <AppInput
-                v-model="form.text"
-                name="text"
-                placeholder="Digite a anotação..."
-                :default-margin="false"
-                :error="form.errors.get('text')"
-              />
-            </div>
-            <div class="ms-2">
-              <AppButton
-                :loading="newNote.isLoading"
-                tooltip="Registrar"
-                class="me-2"
-                :icon="icons.faCheck"
-                color="success"
-                @click.prevent="onCreate"
-              />
-              <AppButton
-                :disabled="newNote.isLoading"
-                tooltip="Cancelar"
-                type="button"
-                :icon="icons.faTimes"
-                color="light"
-                @click.prevent="onCancelNewNoteClick"
-              />
-            </div>
-          </div>
-        </AppForm>
+        <OrderNotesForm
+          :order-id="orderId"
+          @cancel="dismissNewNote"
+          @success="dismissNewNote"
+        />
       </li>
 
       <li
@@ -172,40 +128,13 @@ export default {
         class="list-group-item text-subtitle d-flex justify-content-between align-items-center"
       >
         <template v-if="editNote.note.id === note.id">
-          <AppForm
-            :form="form"
-            :on-submit="onUpdate"
-            class="w-100"
-          >
-            <div class="d-flex justify-content-between">
-              <div class="flex-grow-1">
-                <AppInput
-                  v-model="form.text"
-                  name="text"
-                  :default-margin="false"
-                />
-              </div>
-              <div class="ms-2">
-                <AppButton
-                  tooltip="Concluir"
-                  :icon="icons.faCheck"
-                  color="success"
-                  class="me-2"
-                  :loading="editNote.isLoading && editNote.note.id === note.id"
-                  @click.prevent="onUpdate"
-                />
-
-                <AppButton
-                  tooltip="Cancelar "
-                  type="buttoon"
-                  :icon="icons.faTimes"
-                  color="light"
-                  :disabled="editNote.isLoading && editNote.note.id === note.id"
-                  @click.prevent="onCancelEditClick"
-                />
-              </div>
-            </div>
-          </AppForm>
+          <OrderNotesForm
+            :is-edit="true"
+            :order-id="orderId"
+            :note="editNote.note"
+            @cancel="dismissEditNote"
+            @success="dismissEditNote"
+          />
         </template>
         <template v-else>
           <div>
@@ -216,15 +145,15 @@ export default {
               {{ formatDatetime(note.created_at, "dd/MM/y 'ás' HH:mm") }}
             </small>
           </div>
-          <div>
-            <AppButton
-              tooltip="Editar"
-              btn-class="btn-sm"
-              outlined
-              :icon="icons.faEdit"
-              @click.prevent="onEditClick(note)"
-            />
-          </div>
+
+          <OrderNotesActionButtons
+            :note="note"
+            :delete-note="deleteNote"
+            @edit="onEditNote"
+            @delete="onDeleteNote"
+            @cancel-delete="onCancelDelete"
+            @confirm-delete="onConfirmDelete"
+          />
         </template>
       </li>
     </ul>

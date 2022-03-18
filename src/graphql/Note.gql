@@ -17,3 +17,9 @@ mutation noteUpdate ($id: ID! $text: String!) {
     id
   }
 }
+
+mutation noteDelete ($id: ID!) {
+  noteDelete (id: $id) {
+    id
+  }
+}
