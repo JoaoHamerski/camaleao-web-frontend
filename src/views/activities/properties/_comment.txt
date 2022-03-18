@@ -1,0 +1,6 @@
+Os arquivos deste diretório mapeiam o log de atividades,
+o nome do arquivo deve referenciar o campo "log_name"
+do model na tabela "activity_log".
+
+Os arquivos são carregados dinamicamente dando match entre
+o nome do arquivo desse diretório e campo "log_name" da tabela "activity_log".
