@@ -1,5 +1,5 @@
 <script>
-import { faList, faUserPlus } from '@fortawesome/free-solid-svg-icons'
+import { faUserPlus } from '@fortawesome/free-solid-svg-icons'
 import { formatPhone } from '@/utils/formatters'
 
 import { clientsIndex } from '@/graphql/Client.gql'
@@ -44,7 +44,6 @@ export default {
         paginatorInfo: {}
       },
       icons: {
-        faList,
         faUserPlus
       }
     }
@@ -56,9 +55,6 @@ export default {
   },
   methods: {
     formatPhone,
-    refresh () {
-      this.$apollo.queries.clients.refetch()
-    },
     onSearch (query) {
       this.query = { ...this.query, ...query, page: 1 }
     },

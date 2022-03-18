@@ -48,7 +48,15 @@ export default {
     :headers="headers"
   >
     <template #[`items.city`]="{ item }">
-      {{ getCityName(item.city) }}
+      <span
+        v-if="!item.city"
+        class="fw-bold text-danger"
+      >
+        [DELETADA]
+      </span>
+      <span v-else>
+        {{ getCityName(item.city) }}
+      </span>
     </template>
 
     <template #[`items.shipping_company`]="{ item }">

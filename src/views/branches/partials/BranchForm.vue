@@ -48,7 +48,7 @@ export default {
       const branchCitiesIds = map(this.branch.cities, 'id')
 
       this.form.branch_id = this.cities.find(
-        city => city.id === this.branch.city.id
+        city => city.id === this.branch?.city?.id || ''
       )
 
       this.form.shipping_company_id = this.shippingCompanies.find(

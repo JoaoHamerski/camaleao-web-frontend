@@ -57,7 +57,6 @@ export default {
     },
     onNewBranch () {
       this.modalNewBranch = false
-      this.refreshBranches()
     },
     onShippingCompaniesClick () {
       this.modalShippingCompanies = true

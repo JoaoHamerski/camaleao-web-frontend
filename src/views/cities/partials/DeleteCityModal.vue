@@ -123,7 +123,10 @@ export default {
         <h5 class="text-center text-primary fw-bold mt-4 mb-0">
           {{ city.name }}
         </h5>
-        <small class="d-block fw-bold text-center">
+        <small
+          v-if="city.state"
+          class="d-block fw-bold text-center"
+        >
           {{ city.state.name }} ({{ city.state.abbreviation }})
         </small>
       </div>

@@ -35,7 +35,6 @@ export default {
     },
     onNewClientSuccess () {
       this.newClientModal = false
-      this.refresh()
     },
     getFormattedSearch () {
       if (this.form.option === COLUMNS.PHONE) {

@@ -1,5 +1,5 @@
 <script>
-import { faList } from '@fortawesome/free-solid-svg-icons'
+import { faUsers } from '@fortawesome/free-solid-svg-icons'
 import TheClientsCardTable from './TheClientsCardTable'
 
 export default {
@@ -19,7 +19,7 @@ export default {
   data () {
     return {
       icons: {
-        faList
+        faUsers
       }
     }
   }
@@ -36,7 +36,7 @@ export default {
     <template #header>
       <h6 class="fw-bold mb-0">
         <FontAwesomeIcon
-          :icon="icons.faList"
+          :icon="icons.faUsers"
           fixed-width
           class="me-1"
         />
