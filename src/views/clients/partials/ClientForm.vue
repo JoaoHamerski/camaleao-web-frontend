@@ -30,8 +30,9 @@ export default {
     },
     branches: {
       query: branches,
-      result ({ loading }) {
+      result ({ data, loading }) {
         if (!loading) {
+          this.branches = data.branches.filter((branch) => !!branch.city)
           this.loaded.branches = true
         }
       }
@@ -174,6 +175,10 @@ export default {
       return `${name} - ${state.abbreviation}`
     },
     customLabelBranch ({ city }) {
+      if (!city) {
+        return 'N/A'
+      }
+
       const { state } = city
 
       if (state === null) {
@@ -184,11 +189,11 @@ export default {
     },
     onCitySelected (city) {
       this.form.branch_id = this.branches.find(
-        branch => branch.id === city?.branch?.id
+        branch => branch.id === city?.branch?.id || ''
       )
 
       this.form.shipping_company_id = this.shippingCompanies.find(
-        company => company.id === city.branch?.shipping_company?.id
+        company => company.id === city.branch?.shipping_company?.id || ''
       )
     }
   }
