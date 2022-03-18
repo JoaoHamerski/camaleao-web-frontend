@@ -11,7 +11,7 @@ import {
 } from '@fortawesome/free-solid-svg-icons'
 
 import { isEmpty } from 'lodash-es'
-import { orderToggle } from '@/graphql/Order.gql'
+import { ToggleOrder } from '@/graphql/Order.gql'
 import { orders } from '@/constants/route-names'
 
 export default {
@@ -103,7 +103,7 @@ export default {
 
       try {
         await this.$apollo.mutate({
-          mutation: orderToggle,
+          mutation: ToggleOrder,
           variables: {
             id: this.order.id
           }

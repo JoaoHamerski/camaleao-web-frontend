@@ -88,7 +88,7 @@ export default {
         <b class="small text-secondary">Status</b>
         <h5
           class="fw-bold"
-          :class="order.status.is_avaliable ? 'text-success' : 'text-warning'"
+          :class="order.status.is_available ? 'text-success' : 'text-warning'"
         >
           {{ order.status.text }}
         </h5>

@@ -1,6 +1,6 @@
 <script>
 import { faBoxes } from '@fortawesome/free-solid-svg-icons'
-import { ordersIndex } from '@/graphql/Order.gql'
+import { GetOrdersSimplified } from '@/graphql/Order.gql'
 import { QUERIES } from './constants'
 
 import FilterGeneralReportCard from './partials/FilterGeneralReportCard'
@@ -26,7 +26,7 @@ export default {
   },
   apollo: {
     orders: {
-      query: ordersIndex,
+      query: GetOrdersSimplified,
       variables () {
         return { ...this.params }
       }

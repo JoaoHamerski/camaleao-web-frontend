@@ -84,7 +84,7 @@ export default {
     },
     getClientUrl (value) {
       if (this.item.subject) {
-        const { client: { id } } = this.item.subject
+        const id = this.item.subject?.client?.id || this.item.subject.id
         const url = this.$helpers.getUrl(
           'clients.show',
           { client: id }

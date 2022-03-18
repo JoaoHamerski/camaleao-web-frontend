@@ -1,67 +1,5 @@
 
 fragment OrderParts on Order {
-  client {
-    id
-    name
-    phone
-    total_owing
-    shipping_company {
-      id
-      name
-    }
-
-    branch {
-      id
-      city {
-        id
-        name
-      }
-    }
-
-    city {
-      id
-      name
-    }
-  }
-
-  status {
-    id
-    text
-    is_avaliable
-  }
-
-  clothing_types {
-    id
-    key
-    name
-    is_hidden
-    commission
-    quantity
-    value
-    total_value
-  }
-
-  payments {
-    id
-    value
-    date
-    note
-    via {
-      id
-      name
-    }
-
-    confirmed_at
-    is_confirmed
-    created_at
-  }
-
-  notes {
-    id
-    text
-    created_at
-  }
-
   id
   code
   name
@@ -83,13 +21,119 @@ fragment OrderParts on Order {
   reminder
 }
 
-query ordersIndex (
+fragment OrderSimplifiedParts on Order {
+  id
+  code
+  quantity
+  price
+  total_paid
+  production_date
+  delivery_date
+  states
+  total_owing
+  client {
+    id
+    name
+  }
+}
+
+fragment ShippingCompanyParts on Client {
+  shipping_company {
+    id
+    name
+  }
+}
+
+fragment BranchParts on Client {
+  branch {
+    id
+    city {
+      id
+      name
+    }
+  }
+}
+
+fragment CityParts on Client {
+  city {
+    id
+    name
+  }
+}
+
+fragment ClientParts on Order {
+  client {
+    id
+    name
+    phone
+    total_owing
+    ...BranchParts
+    ...CityParts
+    ...ShippingCompanyParts
+  }
+}
+
+fragment StatusParts on Order {
+  status {
+    id
+    text
+    is_available
+  }
+}
+
+fragment ClothingTypesParts on Order {
+  clothing_types {
+    id
+    key
+    name
+    is_hidden
+    commission
+    quantity
+    value
+    total_value
+  }
+}
+
+fragment PaymentsPart on Order {
+  payments {
+    id
+    value
+    date
+    note
+    confirmed_at
+    is_confirmed
+    created_at
+    via {
+      id
+      name
+    }
+  }
+}
+
+fragment NotesParts on Order {
+  notes {
+    id
+    text
+    created_at
+  }
+}
+
+fragment OrderType on Order {
+  ...OrderParts
+  ...ClientParts
+  ...StatusParts
+  ...ClothingTypesParts
+  ...PaymentsPart
+  ...NotesParts
+}
+
+query GetOrdersSimplified (
   $page: Int
   $orderBy: [QueryOrdersOrderByOrderByClause!]
   $where: QueryOrdersWhereWhereConditions
 ) {
   orders (
-    first: 10 
+    first: 10
     page: $page
     orderBy: $orderBy
     where: $where
@@ -101,61 +145,49 @@ query ordersIndex (
     }
 
     data {
-      id
-      code
-      quantity
-      price
-      total_paid
-      production_date
-      delivery_date
-      states
-      total_owing
-      client {
-        id
-        name
-      }
+      ...OrderSimplifiedParts
     }
   }
 }
 
-query order ($id: ID! $client_id: ID) {
+query GetOrder ($id: ID! $client_id: ID) {
   order (id: $id client_id: $client_id) {
-    ...OrderParts
+    ...OrderType
   }
 }
-query orderReport ($id: ID!) {
+query GetOrderReport ($id: ID!) {
   orderReport (id: $id)
 }
 
-query ordersReport ($input: OrdersReportInput!) {
+query GetOrdersReport ($input: OrdersReportInput!) {
   ordersReport (input: $input)
 }
 
-query ordersReportProductionDate ($input: OrdersReportProductionDateInput!) {
+query GetOrdersByProductionDate ($input: OrdersReportProductionDateInput!) {
   ordersReportProductionDate (input: $input)
 }
 
-mutation orderUpdate ($id: ID! $input: OrderInput!) {
+mutation UpdateOrder ($id: ID! $input: OrderInput!) {
   orderUpdate (id: $id input: $input) {
-    ...OrderParts
+    ...OrderType
   }
 }
 
-mutation orderToggle ($id: ID!) {
+mutation ToggleOrder ($id: ID!) {
   orderToggle (id: $id) {
-    id
+    ...OrderType
   }
 }
 
-mutation orderDelete ($id: ID!) {
+mutation DeleteOrder ($id: ID!) {
   orderDelete (id: $id) {
-    id
+    ...OrderType
   }
 }
 
-mutation orderCreate ($client_id: ID! $input: OrderInput!) {
+mutation CreateOrder ($client_id: ID! $input: OrderInput!) {
   orderCreate (client_id: $client_id input: $input) {
-    ...OrderParts
+    ...OrderType
   }
 }
 

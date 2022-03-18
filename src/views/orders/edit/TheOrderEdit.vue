@@ -5,7 +5,7 @@ import {
   faArrowCircleLeft
 } from '@fortawesome/free-solid-svg-icons'
 
-import { order } from '@/graphql/Order.gql'
+import { GetOrder } from '@/graphql/Order.gql'
 import orderStatesMixin from '../orderStatesMixin'
 import { orders } from '@/constants/route-names'
 
@@ -37,7 +37,7 @@ export default {
   mixins: [orderStatesMixin],
   apollo: {
     order: {
-      query: order,
+      query: GetOrder,
       variables () {
         const { clientKey, orderKey } = this.$route.params
 

@@ -13,9 +13,9 @@ query weeklyProduction ($date: String!) {
       status {
         id
         text
-        is_avaliable
+        is_available
       }
-      
+
       client {
         id
         name

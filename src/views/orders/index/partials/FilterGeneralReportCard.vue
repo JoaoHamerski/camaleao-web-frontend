@@ -3,7 +3,7 @@ import { faClipboardList } from '@fortawesome/free-solid-svg-icons'
 import { maskDate } from '@/utils/masks'
 import { cities } from '@/graphql/City.gql'
 import { status } from '@/graphql/Status.gql'
-import { ordersReport } from '@/graphql/Order.gql'
+import { GetOrdersReport } from '@/graphql/Order.gql'
 import Form from '@/utils/Form'
 
 export default {
@@ -65,7 +65,7 @@ export default {
       this.isLoading = true
 
       const { data } = await this.$apollo.query({
-        query: ordersReport,
+        query: GetOrdersReport,
         variables: {
           input
         },

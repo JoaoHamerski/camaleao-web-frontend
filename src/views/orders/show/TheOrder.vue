@@ -2,7 +2,7 @@
 import { faArrowAltCircleLeft } from '@fortawesome/free-solid-svg-icons'
 
 import { isEmpty } from 'lodash-es'
-import { order, orderReport } from '@/graphql/Order.gql'
+import { GetOrder, GetOrderReport } from '@/graphql/Order.gql'
 import orderStatesMixin from '../orderStatesMixin'
 import { clients } from '@/constants/route-names'
 
@@ -48,7 +48,7 @@ export default {
   mixins: [orderStatesMixin],
   apollo: {
     order: {
-      query: order,
+      query: GetOrder,
       variables () {
         const { clientKey, orderKey } = this.$route.params
 
@@ -111,7 +111,7 @@ export default {
       this.modalOrderReport.loading = true
 
       const { data } = await this.$apollo.query({
-        query: orderReport,
+        query: GetOrderReport,
         variables: {
           id: this.order.id
         },

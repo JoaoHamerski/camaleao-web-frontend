@@ -1,6 +1,6 @@
 <script>
 import { faTrashAlt } from '@fortawesome/free-solid-svg-icons'
-import { orderDelete } from '@/graphql/Order.gql'
+import { DeleteOrder } from '@/graphql/Order.gql'
 
 export default {
   props: {
@@ -40,7 +40,7 @@ export default {
   methods: {
     async delete () {
       await this.$apollo.mutate({
-        mutation: orderDelete,
+        mutation: DeleteOrder,
         variables: {
           id: this.order.id
         }

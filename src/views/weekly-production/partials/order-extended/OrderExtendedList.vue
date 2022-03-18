@@ -107,8 +107,8 @@ export default {
       v-tippy="{placement: 'right'}"
       content="Status do pedido"
       class="border-x-0"
-      :icon="order.status.is_avaliable ? icons.faCheckCircle : icons.faDotCircle"
-      :class="order.status.is_avaliable ? 'text-success fw-bold' : 'text-warning fw-bold'"
+      :icon="order.status.is_available ? icons.faCheckCircle : icons.faDotCircle"
+      :class="order.status.is_available ? 'text-success fw-bold' : 'text-warning fw-bold'"
     >
       {{ order.status.text }}
     </OrderListItem>

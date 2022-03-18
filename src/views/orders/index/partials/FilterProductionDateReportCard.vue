@@ -1,7 +1,7 @@
 <script>
 import { faClipboardList } from '@fortawesome/free-solid-svg-icons'
 import { maskDate } from '@/utils/masks'
-import { ordersReportProductionDate } from '@/graphql/Order.gql'
+import { GetOrdersByProductionDate } from '@/graphql/Order.gql'
 import Form from '@/utils/Form'
 import { handleError } from '@/utils/forms'
 
@@ -35,7 +35,7 @@ export default {
 
       try {
         const { data } = await this.$apollo.query({
-          query: ordersReportProductionDate,
+          query: GetOrdersByProductionDate,
           variables: {
             input
           },

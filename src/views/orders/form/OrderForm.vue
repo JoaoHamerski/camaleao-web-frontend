@@ -3,7 +3,7 @@
 import Form from '@/utils/Form'
 import { formatDatetime } from '@/utils/formatters'
 import { map, pick } from 'lodash-es'
-import { orderCreate, orderUpdate } from '@/graphql/Order.gql'
+import { CreateOrder, UpdateOrder } from '@/graphql/Order.gql'
 import { handleError } from '@/utils/forms'
 
 import OrderFormClient from './OrderFormClient'
@@ -81,7 +81,7 @@ export default {
 
       try {
         const { data: { orderUpdate: { id, client } } } = await this.$apollo.mutate({
-          mutation: orderUpdate,
+          mutation: UpdateOrder,
           variables: {
             id: this.order.id,
             input: { ...data }
@@ -98,7 +98,7 @@ export default {
 
       try {
         const { data: { orderCreate: { id } } } = await this.$apollo.mutate({
-          mutation: orderCreate,
+          mutation: CreateOrder,
           variables: {
             client_id: this.clientKey,
             input: { ...data }
