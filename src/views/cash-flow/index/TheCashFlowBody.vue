@@ -2,8 +2,6 @@
 import { faCashRegister, faExclamationCircle } from '@fortawesome/free-solid-svg-icons'
 import { isEmpty } from 'lodash-es'
 
-import 'tippy.js/themes/light-border.css'
-
 import CashFlowBodyTable from './partials/CashFlowBodyTable'
 import CashFlowBodyStatistics from './partials/CashFlowBodyStatstics'
 

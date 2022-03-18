@@ -3,7 +3,6 @@ import roles from '@/constants/roles'
 import { faMinus, faQuestionCircle, faExclamationCircle } from '@fortawesome/free-solid-svg-icons'
 import { formatDatetime } from '@/utils/formatters'
 import { TippyComponent } from 'vue-tippy'
-import 'tippy.js/themes/light-border.css'
 import { orders } from '@/constants/route-names'
 import CommissionDetails from '@/views/production/partials/CommissionDetails'
 
@@ -104,7 +103,7 @@ export default {
           <Tippy
             :for="`tippy__${item.id}`"
             max-width="500"
-            theme="light-border production"
+            theme="light-border no-padding"
             trigger="click"
             placement="left"
             :interactive="true"

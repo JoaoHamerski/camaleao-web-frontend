@@ -3,8 +3,6 @@ import { isEmpty } from 'lodash'
 import { faPlus, faArrowAltCircleLeft } from '@fortawesome/free-solid-svg-icons'
 import { clientsShow } from '@/graphql/Client.gql'
 
-import 'tippy.js/themes/light-border.css'
-
 import ClientCard from '../partials/ClientCard'
 import ClientOrdersCard from './ClientOrdersCard'
 import ClientOrdersHeader from './ClientOrdersHeader'

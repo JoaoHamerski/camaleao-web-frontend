@@ -8,7 +8,6 @@ import {
 import { formatDatetime } from '@/utils/formatters'
 import { TippyComponent } from 'vue-tippy'
 import { commissionConfirmProduction } from '@/graphql/Production.gql'
-import 'tippy.js/themes/light-border.css'
 
 import CommissionDetails from '../partials/CommissionDetails'
 
@@ -129,7 +128,7 @@ export default {
             />
 
             <Tippy
-              theme="production light-border"
+              theme="no-padding light-border"
               trigger="click"
               :to="`detailsTriggerFor${item.id}`"
               placement="right"
