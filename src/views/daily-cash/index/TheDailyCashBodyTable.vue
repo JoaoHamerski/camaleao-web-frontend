@@ -65,7 +65,7 @@ export default {
       <a
         :href="$helpers.getUrl(
           orders.show,
-          {client: item.order.id, order: item.order.client.id}
+          {client: item.order.client, order: item.order}
         )"
         target="_blank"
         class="text-decoration-none fw-bold"
@@ -74,7 +74,7 @@ export default {
 
     <template #[`items.client`]="{ item }">
       <a
-        :href="''"
+        :href="$helpers.getUrl(clients.show, {client: item.order.client})"
         target="_blank"
         class="text-decoration-none fw-bold"
       >{{ item.order.client.name }}</a>
