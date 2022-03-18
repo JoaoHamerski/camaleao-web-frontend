@@ -179,6 +179,19 @@ export const getUrl = (name, keys = null, routeKeyNames = 'id') => {
   return resolvedRoute.href
 }
 
+export const replaceStrArray = (search, replace, subject) => {
+  const segments = subject.split(search)
+
+  const result = []
+  result.push(segments.shift())
+
+  for (const segment of segments) {
+    result.push((replace.shift() || search) + segment)
+  }
+
+  return result.join('')
+}
+
 export default {
   fallback,
   toBRL,
@@ -190,5 +203,6 @@ export default {
   canView,
   getRouteParams,
   redirectTo,
-  getUrl
+  getUrl,
+  replaceStrArray
 }
