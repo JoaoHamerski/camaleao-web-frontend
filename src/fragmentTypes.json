@@ -1,0 +1,1 @@
+{"__schema":{"types":[{"kind":"UNION","name":"Subject","possibleTypes":[{"name":"Order"},{"name":"Client"},{"name":"Payment"},{"name":"Note"},{"name":"Expense"},{"name":"User"},{"name":"City"},{"name":"ShippingCompany"},{"name":"Branch"},{"name":"ClothingType"},{"name":"CommissionUser"},{"name":"AppConfig"}]},{"kind":"UNION","name":"Causer","possibleTypes":[{"name":"User"}]}]}}
