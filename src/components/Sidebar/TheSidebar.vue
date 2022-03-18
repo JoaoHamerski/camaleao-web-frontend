@@ -2,7 +2,6 @@
 import roles from '@/constants/roles'
 import { mapGetters, mapActions } from 'vuex'
 import {
-  faList,
   faSignOutAlt,
   faBoxes,
   faCashRegister,
@@ -49,14 +48,13 @@ export default {
         GERENCIA
       },
       icons: {
-        faList,
+        faUsers,
         faSignOutAlt,
         faBoxes,
         faCashRegister,
         faDollarSign,
         faFunnelDollar,
         faCog,
-        faUsers,
         faCity,
         faBuilding,
         faTshirt,
@@ -96,7 +94,7 @@ export default {
       </SidebarItem>
       <SidebarItem
         v-if="$helpers.canView(roles.HIGH_LEVEL)"
-        :icon="icons.faList"
+        :icon="icons.faUsers"
         :to="{name: 'clients.index'}"
       >
         Clientes
