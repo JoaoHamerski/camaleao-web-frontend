@@ -1,9 +1,18 @@
 <script>
+import ActivityItemChangesProps from './ActivityItemChangesProps'
+
 export default {
+  components: {
+    ActivityItemChangesProps
+  },
   props: {
     item: {
       type: Object,
       default: () => ({})
+    },
+    propsMap: {
+      type: Object,
+      required: true
     }
   },
   data () {
@@ -38,22 +47,11 @@ export default {
 
     <template #body>
       <div class="activity-item-changes">
-        <div>
-          <div class="text-subtitle fw-bold">
-            Antes:
-          </div>
-          <div>
-            {{ old }}
-          </div>
-        </div>
-        <div>
-          <div class="text-subtitle fw-bold">
-            Depois:
-          </div>
-          <div>
-            {{ updated }}
-          </div>
-        </div>
+        <ActivityItemChangesProps
+          :props-old="old"
+          :props-updated="updated"
+          :map="propsMap"
+        />
       </div>
     </template>
   </AppCollapsible>

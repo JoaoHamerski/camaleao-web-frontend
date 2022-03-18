@@ -1,15 +1,15 @@
 <script>
-import { faBoxes } from '@fortawesome/free-solid-svg-icons'
-import { formatDatetime } from '@/utils/formatters'
-import ActivityItemChanges from './ActivityItemChanges'
 
-const ICONS_MAP = {
-  orders: faBoxes
-}
+import { map, upperFirst } from 'lodash-es'
+import { formatDatetime, formatCurrencyBRL, formatPhone } from '@/utils/formatters'
+
+import ActivityItemChanges from './ActivityItemChanges'
+import ActivityItemText from './ActivityItemText'
 
 export default {
   components: {
-    ActivityItemChanges
+    ActivityItemChanges,
+    ActivityItemText
   },
   props: {
     item: {
@@ -17,69 +17,134 @@ export default {
       default: () => ({})
     }
   },
-  data () {
-    return {
-      icons: { ...ICONS_MAP }
-    }
-  },
   computed: {
+    isConfig () {
+      return this.item.log_name.startsWith('configs')
+    },
+    renderPropChanges () {
+      return this.description.type === 'updated'
+        && !this.isConfig
+    },
+    properties () {
+      const filename = this.item.log_name
+
+      return require(`../properties/${filename}.map.json`)
+    },
     description () {
       return JSON.parse(this.item.description)
     },
-    text () {
-      const { text, subjectProp, causerProp } = this.description
+    attributes () {
+      const properties = JSON.parse(this.item.properties)
 
-      const causer = this.getCauser(causerProp)
-      const subject = this.getSubject(subjectProp)
+      return properties?.attributes || {}
+    },
+    text () {
+      const { placeholderText, causerProps, subjectProps, attributesProps } = this.description
+
+      const causerReplacedText = this.$helpers.replaceStrArray(
+        ':causer',
+        this.getValuesToReplace(causerProps, true),
+        placeholderText
+      )
+
+      const subjectReplacedText = this.$helpers.replaceStrArray(
+        ':subject',
+        this.getValuesToReplace(subjectProps, false),
+        causerReplacedText
+      )
+
+      const text = this.$helpers.replaceStrArray(
+        ':attribute',
+        this.getValuesToReplace(attributesProps, false),
+        subjectReplacedText
+      )
 
       return text
-        .replace(':causer', causer)
-        .replace(':subject', subject)
     }
   },
   methods: {
     formatDatetime,
-    getCauser (causerProp) {
-      if (this.item.causer) {
-        return `<b>${this.item.causer[causerProp]}</b>`
-      }
-
-      return `<del>${this.description.causer}</del>`
+    formatCurrencyBRL,
+    formatPhone,
+    getFormattedHref (url, text) {
+      return `<a class="text-decoration-none" href="${url}" target="_blank">${text}</a>`
     },
-    getSubject (subjectProp) {
+    getOrderUrl (value) {
       if (this.item.subject) {
-        return `<b>${this.item.subject[subjectProp]}</b>`
+        const { id, client } = this.item.subject
+        const url = this.$helpers.getUrl(
+          'orders.show',
+          { client: client.id, order: id }
+        )
+
+        return this.getFormattedHref(url, value)
       }
 
-      return `<del class="fw-bold">${this.description.subject}</del>`
+      return value
+    },
+    getClientUrl (value) {
+      if (this.item.subject) {
+        const { client: { id } } = this.item.subject
+        const url = this.$helpers.getUrl(
+          'clients.show',
+          { client: id }
+        )
+
+        return this.getFormattedHref(url, value)
+      }
+
+      return value
+    },
+    getFormattedValue (key, value) {
+      const property = this.properties[key]
+
+      if (property === undefined) {
+        return value
+      }
+
+      if (property.format) {
+        const method = 'format' + upperFirst(property.format)
+
+        return this[method](value)
+      }
+
+      if (property.link) {
+        return this[property.method](value)
+      }
+
+      return value
+    },
+    getValuesToReplace (props, isCauser) {
+      return map(props, (value, prop) => {
+        if (isCauser && this.item.causer) {
+          return `<span class="fw-bold">${this.item.causer[prop]}</span>`
+        }
+
+        if (isCauser && !this.item.causer) {
+          return '<span class="fw-bold">[Não identificável]</span>'
+        }
+
+        if (!isCauser) {
+          return `<span class="fw-bold">${this.getFormattedValue(prop, value)}</span>`
+        }
+
+        return '-'
+      })
     }
   }
 }
 </script>
 
 <template>
-  <!-- eslint-disable vue/no-v-html -->
   <li class="list-group-item">
-    <div class="d-flex justify-content-between align-items-center">
-      <div>
-        <FontAwesomeIcon
-          :icon="icons.orders"
-          fixed-width
-          class="text-primary me-2"
-        />
-        <span v-html="text" />
-      </div>
-      <div class="small text-center">
-        <div>
-          {{ formatDatetime(item.created_at) }}
-        </div>
-        <div>{{ formatDatetime(item.created_at, 'HH:mm') }}</div>
-      </div>
-    </div>
+    <ActivityItemText
+      v-bind="{item, text, description, attributes}"
+    />
 
     <ActivityItemChanges
-      v-if="description.type === 'updated'"
+      v-if="renderPropChanges"
       :item="item"
+      :props-map="properties"
     />
   </li>
 </template>
