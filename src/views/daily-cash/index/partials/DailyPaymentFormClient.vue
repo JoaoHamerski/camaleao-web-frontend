@@ -1,6 +1,6 @@
 <script>
 import { formatPhone } from '@/utils/formatters'
-import { clientsIndex } from '@/graphql/Client.gql'
+import { GetClientsForForm } from '@/graphql/Resources.gql'
 import { stripNonDigits, isNumeric } from '@/utils/helpers'
 
 const whereClientsClause = (query) => {
@@ -72,7 +72,7 @@ export default {
       this.clients.isLoading = true
 
       const { data: { clients: { data } } } = await this.$apollo.query({
-        query: clientsIndex,
+        query: GetClientsForForm,
         variables: {
           where: whereClientsClause(query),
           page: 1

@@ -1,6 +1,6 @@
 <script>
 import { formatPhone } from '@/utils/formatters'
-import { clientsIndex } from '@/graphql/Client.gql'
+import { GetClientsForForm } from '@/graphql/Resources.gql'
 
 export default {
   props: {
@@ -41,7 +41,7 @@ export default {
       }
 
       const { data: { clients } } = await this.$apollo.query({
-        query: clientsIndex,
+        query: GetClientsForForm,
         variables: {
           where: this.getWhereClause(query),
           orderBy: [{ column: 'NAME', order: 'ASC' }]

@@ -1,13 +1,13 @@
 <script>
 import { get } from 'lodash-es'
 import { faUsers } from '@fortawesome/free-solid-svg-icons'
-import { clientsIndex } from '@/graphql/Client.gql'
+import { GetClientsForCityModal } from '@/graphql/Resources.gql'
 import { clients as clientsRoutes } from '@/constants/route-names'
 
 export default {
   apollo: {
     clients: {
-      query: clientsIndex,
+      query: GetClientsForCityModal,
       variables () {
         return {
           page: this.page,

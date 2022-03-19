@@ -1,18 +1,26 @@
 <script>
 import { isEmpty } from 'lodash-es'
-import { formatCurrencyBRL } from '@/utils/formatters'
-import { maskCurrencyBRL } from '@/utils/masks'
-import { ordersIndex } from '@/graphql/Order.gql'
-
 import { faQuestionCircle } from '@fortawesome/free-solid-svg-icons'
 
-const whereOrdersClause = (query, clientId) => {
-  return {
-    AND: [
-      { column: 'CLIENT_ID', operator: 'EQ', value: clientId },
+import { formatCurrencyBRL } from '@/utils/formatters'
+import { maskCurrencyBRL } from '@/utils/masks'
+import { GetOrdersForForm } from '@/graphql/Resources.gql'
+
+const whereOrdersClause = (query, client) => {
+  const clientId = client?.id || client
+
+  const AND = [
+    { column: 'CLIENT_ID', operator: 'EQ', value: clientId },
+    { column: 'PRICE', operator: 'IS_NOT_NULL' }
+  ]
+
+  if (!isEmpty(query)) {
+    AND.push(
       { column: 'CODE', operator: 'LIKE', value: `%${query}%` }
-    ]
+    )
   }
+
+  return { AND }
 }
 
 export default {
@@ -36,11 +44,16 @@ export default {
     }
   },
   computed: {
-    apiUrl () {
-      return this.$store.getters.apiURL
-    },
     clientExists () {
-      return typeof this.form.client.id === 'object' && !isEmpty(this.form.client.id)
+      return typeof this.form.client.id === 'object'
+        && !isEmpty(this.form.client.id)
+    }
+  },
+  watch: {
+    'form.client.id': {
+      async handler () {
+        await this.asyncFillOrders()
+      }
     }
   },
   methods: {
@@ -59,23 +72,36 @@ export default {
 
       return `${code} - ${name} - ${formatCurrencyBRL(price)}`
     },
+    getOrdersQuery (query) {
+      return this.$apollo.query({
+        query: GetOrdersForForm,
+        variables: {
+          where: whereOrdersClause(query, this.form.client.id),
+          orderBy: [{ column: 'CREATED_AT', order: 'DESC' }]
+        }
+      })
+    },
+    async asyncFillOrders () {
+      const query = null
+      this.orders.isLoading = true
+
+      const { data: { orders: { data } } } = await this.getOrdersQuery(query)
+
+      this.orders.isLoading = false
+      this.orders.items = data.filter(item => item.total_owing > 0)
+    },
     async asyncFindOrders (query) {
-      if (!query.length) {
-        this.orders.items = []
+      if (isEmpty(query)) {
+        await this.asyncFillOrders()
         return
       }
 
       this.orders.isLoading = true
 
-      const { data: { orders: { data } } } = await this.$apollo.query({
-        query: ordersIndex,
-        variables: {
-          where: whereOrdersClause(query, this.form.client.id)
-        }
-      })
+      const { data: { orders: { data } } } = await this.getOrdersQuery(query)
 
       this.orders.isLoading = false
-      this.orders.items = data
+      this.orders.items = data.filter(item => item.total_owing > 0)
     }
   }
 }
@@ -103,7 +129,7 @@ export default {
       v-model="form.order.id"
       name="order"
       class="mb-2"
-      placeholder="Procure por código"
+      placeholder="Procure pelo código"
       :error="form.errors.get('order.id')"
       :default-margin="false"
       :custom-label="customLabelOrders"

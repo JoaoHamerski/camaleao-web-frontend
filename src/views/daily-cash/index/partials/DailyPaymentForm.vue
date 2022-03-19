@@ -57,7 +57,7 @@ export default {
       return name
     },
     onRestValueClick () {
-      this.form.value = formatCurrencyBRL(this.form.order.total_owing)
+      this.form.value = formatCurrencyBRL(this.form.order.id.total_owing)
     },
     getFormattedData () {
       const data = cloneDeep(this.form.data())
