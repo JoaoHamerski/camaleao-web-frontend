@@ -1,7 +1,7 @@
 <script>
 import { isEmpty } from 'lodash'
 import { faPlus, faArrowAltCircleLeft } from '@fortawesome/free-solid-svg-icons'
-import { clientsShow } from '@/graphql/Client.gql'
+import { GetClientWithOrders } from '@/graphql/Client.gql'
 
 import ClientCard from '../partials/ClientCard'
 import ClientOrdersCard from './ClientOrdersCard'
@@ -26,7 +26,7 @@ export default {
   },
   apollo: {
     client: {
-      query: clientsShow,
+      query: GetClientWithOrders,
       variables () {
         return {
           id: this.$route.params.clientKey,

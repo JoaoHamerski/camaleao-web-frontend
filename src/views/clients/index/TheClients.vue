@@ -2,7 +2,7 @@
 import { faUserPlus } from '@fortawesome/free-solid-svg-icons'
 import { formatPhone } from '@/utils/formatters'
 
-import { clientsIndex } from '@/graphql/Client.gql'
+import { GetClients } from '@/graphql/Client.gql'
 
 import TheClientsCard from './TheClientsCard'
 import TheClientsHeader from './TheClientsHeader'
@@ -23,7 +23,7 @@ export default {
   },
   apollo: {
     clients: {
-      query: clientsIndex,
+      query: GetClients,
       variables () {
         return {
           ...this.query,

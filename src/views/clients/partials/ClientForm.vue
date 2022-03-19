@@ -1,19 +1,13 @@
 <script>
 import { every } from 'lodash-es'
-import {
-  client,
-  clientsIndex,
-  clientsShow,
-  clientCreate,
-  clientUpdate
-} from '@/graphql/Client.gql'
+import { CreateClient, UpdateClient } from '@/graphql/Client.gql'
 import { cities } from '@/graphql/City.gql'
 import { branches } from '@/graphql/Branch.gql'
 import { shippingCompanies } from '@/graphql/ShippingCompany.gql'
 
-import Form from '@/utils/Form'
 import { handleSuccess, handleError } from '@/utils/forms'
 import { maskPhone } from '@/utils/masks'
+import Form from '@/utils/Form'
 
 export default {
   apollo: {
@@ -129,7 +123,7 @@ export default {
     async create (input) {
       try {
         await this.$apollo.mutate({
-          mutation: clientCreate,
+          mutation: CreateClient,
           variables: { input }
         })
 
@@ -141,13 +135,8 @@ export default {
     async update (input) {
       try {
         await this.$apollo.mutate({
-          mutation: clientUpdate,
-          variables: { id: this.client.id, input },
-          refetchQueries: [
-            { query: client, variables: { id: this.client.id } },
-            { query: clientsIndex },
-            { query: clientsShow, variables: { id: this.client.id } }
-          ]
+          mutation: UpdateClient,
+          variables: { id: this.client.id, input }
         })
 
         handleSuccess(this, { message: 'Cliente atualizado!' })

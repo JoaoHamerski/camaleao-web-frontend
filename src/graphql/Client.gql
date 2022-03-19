@@ -1,11 +1,13 @@
-fragment ShippingCompany on Client {
+#import "./_PaginatorFragment.gql"
+
+fragment ShippingCompanyParts on Client {
   shipping_company {
     id
     name
   }
 }
 
-fragment Branch on Client {
+fragment BranchParts on Client {
   branch {
     id
     city {
@@ -15,7 +17,7 @@ fragment Branch on Client {
   }
 }
 
-fragment City on Client {
+fragment CityParts on Client {
   city {
     id
     name
@@ -27,98 +29,92 @@ fragment City on Client {
   }
 }
 
-fragment ClientCitiesParts on Client {
-  ...ShippingCompany
-  ...Branch
-  ...City
-}
-
-fragment ClientBaseInfo on Client {
+fragment ClientSimpleParts on Client {
   id
   name
   phone
   total_owing
 }
 
-query clientsIndex (
+fragment ClientParts on Client {
+  ...ClientSimpleParts
+  ...ShippingCompanyParts
+  ...BranchParts
+  ...CityParts
+}
+
+fragment ClientOrdersSimplePart on Order {
+  client {
+      id
+  }
+
+  id
+  code
+  price
+  total_paid
+  quantity
+  production_date
+  delivery_date
+  states
+}
+
+query GetClients (
   $page: Int
   $where: QueryClientsWhereWhereConditions
   $hasCity: QueryClientsHasCityWhereHasConditions
   $orderBy: [QueryClientsOrderByOrderByClause!]
 ) {
   clients (
-    first: 10, 
+    first: 10,
     page: $page
     orderBy: $orderBy
     where: $where
     hasCity: $hasCity
   ) {
     paginatorInfo {
-      currentPage
-      perPage
-      total
+      ...PaginatorSimpleParts
     }
 
     data {
-      ...ClientBaseInfo
-      ...City
-    } 
+      ...ClientSimpleParts
+      ...CityParts
+    }
   }
 }
 
-query clientsShow (
-  $id: ID! 
+query GetClientWithOrders (
+  $id: ID!
   $orderPage: Int
   $orderWhere: ClientOrdersWhereWhereConditions
 ) {
   client (id: $id) {
-    ...ClientBaseInfo
-    ...ClientCitiesParts
+    ...ClientParts
 
     orders (
-      first: 10 
+      first: 10
       page: $orderPage
       orderBy: [{column: CREATED_AT order: DESC}]
       where: $orderWhere
     ) {
       paginatorInfo {
-        currentPage
-        perPage
-        total
-      }	
-      
+        ...PaginatorSimpleParts
+      }
+
       data {
-        client {
-          id
-        }
-        id
-        code
-        price
-        total_paid
-        quantity
-        production_date
-        delivery_date
-        states
+        ...ClientOrdersSimplePart
       }
     }
   }
 }
 
-query client ($id: ID!) {
-  client (id: $id) {
-    ...ClientBaseInfo
-    ...ClientCitiesParts
+mutation CreateClient ($input: ClientInput!) {
+  clientCreate (input: $input) {
+    ...ClientParts
   }
 }
 
-mutation clientCreate ($input: ClientInput!) {
-  clientCreate (input: $input) { 
-    id 
-  }
-}
-
-mutation clientUpdate ($id: ID! $input: ClientInput!) {
+mutation UpdateClient ($id: ID! $input: ClientInput!) {
   clientUpdate (id: $id input: $input) {
-    id
+    ...ClientParts
   }
 }
