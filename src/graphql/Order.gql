@@ -1,3 +1,4 @@
+#import "./_PaginatorFragment.gql"
 
 fragment OrderParts on Order {
   id
@@ -58,6 +59,11 @@ fragment CityParts on Client {
   city {
     id
     name
+    state {
+      id
+      name
+      abbreviation
+    }
   }
 }
 
@@ -139,9 +145,7 @@ query GetOrdersSimplified (
     where: $where
   ) {
     paginatorInfo {
-      total
-      perPage
-      currentPage
+      ...PaginatorSimpleParts
     }
 
     data {
