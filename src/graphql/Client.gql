@@ -82,6 +82,12 @@ query GetClients (
   }
 }
 
+query GetClient ($id: ID!) {
+  client (id: $id) {
+    ...ClientSimpleParts
+  }
+}
+
 query GetClientWithOrders (
   $id: ID!
   $orderPage: Int
