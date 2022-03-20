@@ -23,6 +23,10 @@ export default {
     order: {
       type: Object,
       default: () => ({})
+    },
+    isOrderPreRegistered: {
+      type: Boolean,
+      default: false
     }
   },
   apollo: {
@@ -87,9 +91,9 @@ export default {
 
       return formatCurrencyBRL(finalValue)
     },
-    showPreRegisterInfo () {
+    showPreRegisterPriceInfo () {
       return !isEmpty(this.order)
-        && this.isPreRegisteredOrder
+        && this.isOrderPreRegistered
         && this.order.price !== null
     }
   },
@@ -126,11 +130,12 @@ export default {
       Tipos de roupas
     </h6>
 
-    <template v-if="showPreRegisterInfo">
+    <template v-if="showPreRegisterPriceInfo">
       <div
-        class="small text-warning fw-bold"
+        class="small text-warning mb-3"
       >
-        Pedido pré-registrado com o valor de {{ $helpers.toBRL(order.original_price) }}
+        Pedido pré-registrado com o valor de
+        <span class="fw-bold">{{ $helpers.toBRL(order.original_price) }}</span>
       </div>
     </template>
 

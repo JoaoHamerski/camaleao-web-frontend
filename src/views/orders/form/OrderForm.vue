@@ -5,6 +5,7 @@ import { formatDatetime } from '@/utils/formatters'
 import { map, pick } from 'lodash-es'
 import { CreateOrder, UpdateOrder } from '@/graphql/Order.gql'
 import { handleError } from '@/utils/forms'
+import orderStatesMixin from '../orderStatesMixin'
 
 import OrderFormClient from './OrderFormClient'
 import OrderFormBasicInfo from './OrderFormBasicInfo'
@@ -20,6 +21,7 @@ export default {
     OrderFormProduction,
     OrderFormFiles
   },
+  mixins: [orderStatesMixin],
   props: {
     isEdit: {
       type: Boolean,
@@ -204,17 +206,14 @@ export default {
     <OrderFormBasicInfo :form="form" />
 
     <OrderFormValues
-      :order="order"
-      :form="form"
-      :is-edit="isEdit"
+      v-bind="{order, form, isEdit, isOrderPreRegistered}"
       @clothing-types-loaded="onClothingTypesLoaded"
     />
 
     <OrderFormProduction :form="form" />
 
     <OrderFormFiles
-      :is-edit="isEdit"
-      :form="form"
+      v-bind="{form, isEdit}"
       @selected-files="onSelectFiles"
       @delete-file="onDeleteFile"
     />
