@@ -6,7 +6,7 @@ import {
   faHandHoldingUsd
 } from '@fortawesome/free-solid-svg-icons'
 import { formatDatetime } from '@/utils/formatters'
-import { paymentConfirm } from '@/graphql/Payment.gql'
+import { ConfirmPayment } from '@/graphql/Payment.gql'
 import roles from '@/constants/roles'
 
 import ModalOrderPayment from '../../partials/ModalOrderPayment'
@@ -56,7 +56,7 @@ export default {
 
       try {
         await this.$apollo.mutate({
-          mutation: paymentConfirm,
+          mutation: ConfirmPayment,
           variables: { id, confirmation }
         })
 

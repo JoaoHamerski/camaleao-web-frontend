@@ -1,10 +1,11 @@
 <script>
+import { isEmpty } from 'lodash-es'
 import {
   faBoxOpen,
   faArrowCircleLeft
 } from '@fortawesome/free-solid-svg-icons'
 import { orders, clients } from '@/constants/route-names'
-import { client } from '@/graphql/Client.gql'
+import { GetClient } from '@/graphql/Client.gql'
 
 import OrderForm from '../form/OrderForm'
 
@@ -13,13 +14,17 @@ export default {
     OrderForm
   },
   metaInfo () {
+    if (isEmpty(this.client)) {
+      return { title: 'Carregando... ' }
+    }
+
     return {
-      title: 'Novo pedido - ' + this.client?.name || ''
+      title: `Novo pedido - ${this.client.name}`
     }
   },
   apollo: {
     client: {
-      query: client,
+      query: GetClient,
       variables () {
         return {
           id: this.$route.params.clientKey

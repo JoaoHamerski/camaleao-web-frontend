@@ -1,6 +1,6 @@
 <script>
 import { vias } from '@/graphql/Via.gql'
-import { paymentCreate, paymentUpdate } from '@/graphql/Payment.gql'
+import { CreatePayment, UpdatePayment } from '@/graphql/Payment.gql'
 
 import Form from '@/utils/Form'
 import { maskCurrencyBRL, maskDate } from '@/utils/masks'
@@ -70,7 +70,7 @@ export default {
     async store () {
       try {
         await this.$apollo.mutate({
-          mutation: paymentCreate,
+          mutation: CreatePayment,
           variables: {
             input: {
               order_id: this.order.id,
@@ -87,7 +87,7 @@ export default {
     async update () {
       try {
         await this.$apollo.mutate({
-          mutation: paymentUpdate,
+          mutation: UpdatePayment,
           variables: {
             id: this.payment.id,
             input: {

@@ -1,6 +1,6 @@
 <script>
 import roles from '@/constants/roles'
-import { paymentConfirm } from '@/graphql/Payment.gql'
+import { ConfirmPayment } from '@/graphql/Payment.gql'
 
 import {
   faCheck,
@@ -56,7 +56,7 @@ export default {
 
       try {
         await this.$apollo.mutate({
-          mutation: paymentConfirm,
+          mutation: ConfirmPayment,
           variables: {
             id: this.payment.id,
             confirmation

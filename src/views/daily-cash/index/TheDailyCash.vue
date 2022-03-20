@@ -4,7 +4,7 @@ import {
 } from '@fortawesome/free-solid-svg-icons'
 import { formatDatetime } from '@/utils/formatters'
 import { DateTime } from 'luxon'
-import { payments, paymentsPendencies } from '@/graphql/Payment.gql'
+import { GetPayments, GetPaymentsPendencies } from '@/graphql/Payment.gql'
 
 import DailyPaymentModal from './partials/DailyPaymentModal'
 import TheDailyCashHeader from './TheDailyCashHeader'
@@ -23,7 +23,7 @@ export default {
   },
   apollo: {
     payments: {
-      query: payments,
+      query: GetPayments,
       variables () {
         return {
           created_at: this.date,
@@ -32,7 +32,7 @@ export default {
       }
     },
     paymentsPendencies: {
-      query: paymentsPendencies
+      query: GetPaymentsPendencies
     }
   },
   data () {

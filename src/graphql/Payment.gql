@@ -1,4 +1,32 @@
-query payments (
+fragment PaymentsParts on Payment {
+  id
+  value
+  date
+  note
+  confirmed_at
+  is_confirmed
+  created_at
+}
+
+fragment PaymentsViaParts on Via {
+  id
+  name
+}
+
+fragment PaymentsOrderParts on Order {
+  id
+  code
+  name
+  total_owing
+  total_paid
+  client {
+    id
+    name
+    total_owing
+  }
+}
+
+query GetPayments (
   $created_at: Date
   $pendencies: Boolean
 ) {
@@ -7,52 +35,58 @@ query payments (
     orderBy: [{column: CREATED_AT order: DESC}]
     pendencies: $pendencies
   ) {
-    id
-    value
-    date
-    note
+    ...PaymentsParts
+
     order {
-      id
-      code
-      name
-      client {
-        id
-        name
-      }
-      total_owing
+      ...PaymentsOrderParts
     }
+
     via {
-      id 
-      name
+      ...PaymentsViaParts
     }
-    confirmed_at
-    is_confirmed
-    created_at
   }
 }
 
-query paymentsPendencies {
+query GetPaymentsPendencies {
   paymentsPendencies {
     created_at_payment
     total
   }
 }
 
-mutation paymentCreate ($input: PaymentInput!) {
+mutation CreatePayment ($input: PaymentInput!) {
   paymentCreate (input: $input) {
-    id
+    ...PaymentsParts
+    order {
+      ...PaymentsOrderParts
+    }
+    via {
+      ...PaymentsViaParts
+    }
   }
 }
 
-mutation paymentUpdate ($id: ID! $input: PaymentInput!) {
+mutation UpdatePayment ($id: ID! $input: PaymentInput!) {
   paymentUpdate (id: $id input: $input) {
-    id
+    ...PaymentsParts
+    order {
+      ...PaymentsOrderParts
+    }
+    via {
+      ...PaymentsViaParts
+    }
   }
 }
 
-mutation paymentConfirm ($id: ID! $confirmation: Boolean!) {
+mutation ConfirmPayment ($id: ID! $confirmation: Boolean!) {
   paymentConfirm (id: $id confirmation: $confirmation) {
-    is_confirmed
+    ...PaymentsParts
+    order {
+      ...PaymentsOrderParts
+    }
+    via {
+      ...PaymentsViaParts
+    }
   }
 }
 
