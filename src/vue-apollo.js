@@ -1,75 +1,33 @@
 import Vue from 'vue'
 import VueApollo from 'vue-apollo'
-import possibleTypes from './fragmentTypes.json'
-import { createApolloClient, restartWebsockets } from 'vue-cli-plugin-apollo/graphql-client'
-import { InMemoryCache, IntrospectionFragmentMatcher } from 'apollo-cache-inmemory'
+import { ApolloClient } from '@apollo/client/core'
+import { InMemoryCache } from '@apollo/client/cache'
 
-// Install the vue plugin
 Vue.use(VueApollo)
 
-const fragmentMatcher = new IntrospectionFragmentMatcher({
-  introspectionQueryResultData: possibleTypes
-})
+const AUTH_TOKEN = 'auth-token'
 
-// Name of the localStorage item
-const AUTH_TOKEN = 'apollo-token'
+const cache = new InMemoryCache()
 
-// Http endpoint
-const httpEndpoint = process.env.VUE_APP_GRAPHQL_HTTP || 'http://localhost:4000/graphql'
-
-// Config
-const defaultOptions = {
-  // You can use `https` for secure connection (recommended in production)
-  httpEndpoint,
-  // You can use `wss` for secure connection (recommended in production)
-  // Use `null` to disable subscriptions
-  // wsEndpoint: process.env.VUE_APP_GRAPHQL_WS || 'ws://localhost:4000/graphql',
-  // LocalStorage token
-  tokenName: AUTH_TOKEN,
-  // Enable Automatic Query persisting with Apollo Engine
-  persisting: false,
-  // Use websockets for everything (no HTTP)
-  // You need to pass a `wsEndpoint` for this to work
-  websocketsOnly: false,
-  // Is being rendered on the server?
-  ssr: false,
-
-  // Override default apollo link
-  // note: don't override httpLink here, specify httpLink options in the
-  // httpLinkOptions property of defaultOptions.
-  // link: myLink
-
-  // Override default cache
-  cache: new InMemoryCache({ fragmentMatcher })
-
-  // Override the way the Authorization header is set
-  // getAuth: (tokenName) => ...
-
-  // Additional ApolloClient options
-  // apollo: { ... }
-
-  // Client local data (see apollo-link-state)
-  // clientState: { resolvers: { ... }, defaults: { ... } }
+const options = {
+  uri: process.env.VUE_APP_GRAPHQL_HTTP,
+  cache,
+  headers: {
+    Authorization: `Bearer ${localStorage.getItem(AUTH_TOKEN)}` || ''
+  }
 }
 
-export const apolloClientInstance = createApolloClient({
-  ...defaultOptions
+export const createApolloClient = () => ({
+  apolloClient: new ApolloClient(options)
 })
 
-// Call this in the Vue app file
-export function createProvider (options = {}) {
-  // Create apollo client
-  const { apolloClient, wsClient } = apolloClientInstance
-  apolloClient.wsClient = wsClient
+export const apolloClientInstance = createApolloClient()
 
-  // Create vue apollo provider
+export function createProvider (options = {}) {
+  const { apolloClient } = apolloClientInstance
+
   const apolloProvider = new VueApollo({
     defaultClient: apolloClient,
-    defaultOptions: {
-      $query: {
-        // fetchPolicy: 'cache-and-network'
-      }
-    },
     errorHandler (error) {
       // eslint-disable-next-line no-console
       console.log('%cError', 'background: red; color: white; padding: 2px 4px; border-radius: 3px; font-weight: bold;', error.message)
@@ -79,13 +37,12 @@ export function createProvider (options = {}) {
   return apolloProvider
 }
 
-// Manually call this when user log in
 export async function onLogin (apolloClient, token) {
   if (typeof localStorage !== 'undefined' && token) {
     localStorage.setItem(AUTH_TOKEN, token)
   }
 
-  if (apolloClient.wsClient) restartWebsockets(apolloClient.wsClient)
+  // if (apolloClient.wsClient) restartWebsockets(apolloClient.wsClient)
 
   try {
     await apolloClient.resetStore()
@@ -101,7 +58,7 @@ export async function onLogout (apolloClient) {
     localStorage.removeItem(AUTH_TOKEN)
   }
 
-  if (apolloClient.wsClient) restartWebsockets(apolloClient.wsClient)
+  // if (apolloClient.wsClient) restartWebsockets(apolloClient.wsClient)
 
   try {
     await apolloClient.resetStore()

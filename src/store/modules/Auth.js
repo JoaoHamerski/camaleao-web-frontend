@@ -55,7 +55,7 @@ export const actions = {
 
     router.push(ON_LOGIN_ROUTE)
   },
-  async logout ({ commit, dispatch }) {
+  async logout ({ getters, commit, dispatch }) {
     try {
       await commit('SET_USER', null)
 

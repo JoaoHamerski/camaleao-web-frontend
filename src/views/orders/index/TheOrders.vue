@@ -31,7 +31,8 @@ export default {
         variables () {
           return { ...this.params }
         },
-        fetchPolicy: this.fetchPolicy
+        fetchPolicy: 'network-only',
+        nextFetchPolicy: 'cache-first'
       }
     }
   },
@@ -39,7 +40,6 @@ export default {
     return {
       code: '',
       buttonSelected: 'priority',
-      fetchPolicy: 'network-only',
       params: {
         page: 1,
         ...QUERIES.OLDER
@@ -64,9 +64,6 @@ export default {
     hasSearchMade () {
       return this.buttonSelected === ''
     }
-  },
-  created () {
-    this.fetchPolicy = 'cache-first'
   },
   methods: {
     onFilterButtonsChanged (value) {
