@@ -25,10 +25,13 @@ export default {
     }
   },
   apollo: {
-    orders: {
-      query: GetOrdersSimplified,
-      variables () {
-        return { ...this.params }
+    orders () {
+      return {
+        query: GetOrdersSimplified,
+        variables () {
+          return { ...this.params }
+        },
+        fetchPolicy: this.fetchPolicy
       }
     }
   },
@@ -36,6 +39,7 @@ export default {
     return {
       code: '',
       buttonSelected: 'priority',
+      fetchPolicy: 'network-only',
       params: {
         page: 1,
         ...QUERIES.OLDER
@@ -60,6 +64,9 @@ export default {
     hasSearchMade () {
       return this.buttonSelected === ''
     }
+  },
+  created () {
+    this.fetchPolicy = 'cache-first'
   },
   methods: {
     onFilterButtonsChanged (value) {

@@ -1,4 +1,4 @@
-query weeklyProduction ($date: String!) {
+query GetWeeklyProductionOrders ($date: String!) {
   weeklyProduction (date: $date) {
     date
     orders {
@@ -24,7 +24,7 @@ query weeklyProduction ($date: String!) {
   }
 }
 
-mutation orderCreatePreRegistered ($input: OrderPreRegisteredInput!) {
+mutation CreatePreRegisteredOrder ($input: OrderPreRegisteredInput!) {
   orderCreatePreRegistered (input: $input) {
     id
   }

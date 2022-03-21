@@ -21,10 +21,6 @@ export default {
     order: {
       type: Object,
       default: null
-    },
-    selectedDate: {
-      type: String,
-      default: ''
     }
   }
 }

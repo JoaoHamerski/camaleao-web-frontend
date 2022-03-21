@@ -18,10 +18,6 @@ export default {
   },
   mixins: [filesMixin],
   props: {
-    selectedDate: {
-      type: String,
-      default: ''
-    },
     date: {
       type: Object,
       default: () => ({})
@@ -189,7 +185,6 @@ export default {
             :key="`order-${order.id}`"
             :order="order"
             :is-active="active"
-            :selected-date="selectedDate"
             :is-compact="isCompact"
             @cancel-create="onCancelCreate"
             @order-created="onOrderCreated"

@@ -4,7 +4,7 @@ import Form from '@/utils/Form'
 import { handleError } from '@/utils/forms'
 import { formatDatetime } from '@/utils/formatters'
 
-import { orderCreatePreRegistered } from '@/graphql/WeeklyProduction.gql'
+import { CreatePreRegisteredOrder } from '@/graphql/WeeklyProduction.gql'
 import { status } from '@/graphql/Status.gql'
 
 export default {
@@ -12,10 +12,6 @@ export default {
     order: {
       type: Object,
       default: () => ({})
-    },
-    selectedDate: {
-      type: String,
-      default: ''
     }
   },
   apollo: {
@@ -57,8 +53,11 @@ export default {
 
       try {
         await this.$apollo.mutate({
-          mutation: orderCreatePreRegistered,
-          variables: { input }
+          mutation: CreatePreRegisteredOrder,
+          variables: { input },
+          refetchQueries: [
+            'GetWeeklyProductionOrders'
+          ]
         })
 
         this.$toast.success('Pedido registrado!')

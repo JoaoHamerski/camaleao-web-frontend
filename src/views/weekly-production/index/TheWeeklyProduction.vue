@@ -1,9 +1,14 @@
 <script>
+import Vue from 'vue'
 import { uniqueId } from 'lodash-es'
-import { weeklyProduction } from '@/graphql/WeeklyProduction.gql'
+import { GetWeeklyProductionOrders } from '@/graphql/WeeklyProduction.gql'
 import { DateTime } from 'luxon'
 import TheWeeklyProductionHeader from './TheWeeklyProductionHeader'
 import TheWeeklyProductionBody from './TheWeeklyProductionBody'
+
+export const weeklyProductionParams = Vue.observable({
+  date: DateTime.now().toFormat('dd/MM/y')
+})
 
 export default {
   metaInfo: {
@@ -17,17 +22,15 @@ export default {
   },
   apollo: {
     weeklyProduction: {
-      query: weeklyProduction,
+      query: GetWeeklyProductionOrders,
       variables () {
-        return {
-          date: this.date
-        }
+        return { ...weeklyProductionParams }
       }
     }
   },
   data () {
     return {
-      date: DateTime.now().toFormat('dd/MM/y'),
+      weeklyProductionParams,
       weeklyProduction: []
     }
   },
@@ -41,7 +44,7 @@ export default {
       this.$apollo.queries.weeklyProduction.refetch()
     },
     onWeekSelected (date) {
-      this.date = date
+      this.weeklyProductionParams.date = date
     },
     onFileUploaded ({ file, date }) {
       const weeklyDate = this.weeklyProduction.find(
@@ -80,7 +83,7 @@ export default {
 
     <TheWeeklyProductionBody
       :dates="weeklyProduction"
-      :selected-date="date"
+      :selected-date="weeklyProductionParams.date"
       :is-loading="isLoading"
       @uploaded-file="onFileUploaded"
       @cancel-create="onCancelOrder"
