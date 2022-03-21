@@ -4,6 +4,7 @@ import Form from '@/utils/Form'
 import { formatDatetime } from '@/utils/formatters'
 import { map, pick } from 'lodash-es'
 import { CreateOrder, UpdateOrder } from '@/graphql/Order.gql'
+import { GetClientWithOrders } from '@/graphql/Client.gql'
 import { handleError } from '@/utils/forms'
 
 import OrderFormClient from './OrderFormClient'
@@ -89,7 +90,7 @@ export default {
         handleError(this, error)
       }
     },
-    async store () {
+    async create () {
       const data = this.getFormattedForm()
       const { clientKey } = this.$route.params
 
@@ -99,7 +100,15 @@ export default {
           variables: {
             client_id: clientKey,
             input: { ...data }
-          }
+          },
+          refetchQueries: [{
+            query: GetClientWithOrders,
+            variables: {
+              id: clientKey,
+              orderWhere: {},
+              orderPage: 1
+            }
+          }]
         })
 
         this.$emit('success', { orderId: id, clientId: clientKey })
@@ -141,7 +150,7 @@ export default {
       if (this.isEdit) {
         await this.update()
       } else {
-        await this.store()
+        await this.create()
       }
 
       this.isLoading = false

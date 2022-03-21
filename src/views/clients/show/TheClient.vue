@@ -30,17 +30,19 @@ export default {
       variables () {
         return {
           id: this.$route.params.clientKey,
-          orderPage: this.page,
-          orderWhere: this.orderWhere
+          orderWhere: this.ordersQuery.where,
+          orderPage: this.ordersQuery.page
         }
       }
     }
   },
   data () {
     return {
-      page: 1,
+      ordersQuery: {
+        where: {},
+        page: 1
+      },
       client: null,
-      orderWhere: {},
       icons: {
         faPlus,
         faArrowAltCircleLeft
@@ -63,12 +65,12 @@ export default {
         value: `%${code}%`
       }
 
-      this.page = 1
-      this.orderWhere = where
+      this.ordersQuery.page = 1
+      this.ordersQuery.where = where
     },
     onSearchClear () {
-      this.page = 1
-      this.orderWhere = {}
+      this.ordersQuery.page = 1
+      this.ordersQuery.where = {}
     }
   }
 }
@@ -105,7 +107,7 @@ export default {
       />
 
       <AppPaginator
-        v-model="page"
+        v-model="ordersQuery.page"
         class="mt-2"
         :pagination="orders.paginatorInfo"
       />
