@@ -4,11 +4,13 @@ import { formatCurrencyBRL } from '@/utils/formatters'
 import { maskCurrencyBRL } from '@/utils/masks'
 import Form from '@/utils/Form'
 import { handleSuccess, handleError } from '@/utils/forms'
+
 import { vias } from '@/graphql/Via.gql'
-import { dailyCashEntry } from '@/graphql/Payment.gql'
+import { GetPayments, CreateDailyPayment } from '@/graphql/Payment.gql'
 
 import DailyPaymentFormClient from './DailyPaymentFormClient'
 import DailyPaymentFormOrder from './DailyPaymentFormOrder'
+import { paymentsParams } from '../TheDailyCash.vue'
 
 export default {
   apollo: {
@@ -24,6 +26,7 @@ export default {
     return {
       maskCurrencyBRL: maskCurrencyBRL(),
       isLoading: false,
+      paymentsParams,
       form: new Form({
         client: {
           id: '',
@@ -45,9 +48,6 @@ export default {
   computed: {
     hasOrder () {
       return !isEmpty(this.form.order.id) && !this.form.order.isNew
-    },
-    apiUrl () {
-      return this.$store.getters.apiURL
     }
   },
   methods: {
@@ -76,13 +76,18 @@ export default {
       return data
     },
     async onSubmit () {
+      const input = this.getFormattedData()
+
       this.isLoading = true
-      const data = this.getFormattedData()
 
       try {
         await this.$apollo.mutate({
-          mutation: dailyCashEntry,
-          variables: { ...data }
+          mutation: CreateDailyPayment,
+          variables: { input },
+          refetchQueries: [{
+            query: GetPayments,
+            variables: { ...paymentsParams }
+          }]
         })
 
         handleSuccess(this, { message: 'Entrada registrada!', resetForm: true })

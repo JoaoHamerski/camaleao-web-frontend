@@ -5,10 +5,16 @@ import {
 import { formatDatetime } from '@/utils/formatters'
 import { DateTime } from 'luxon'
 import { GetPayments, GetPaymentsPendencies } from '@/graphql/Payment.gql'
+import Vue from 'vue'
 
 import DailyPaymentModal from './partials/DailyPaymentModal'
 import TheDailyCashHeader from './TheDailyCashHeader'
 import TheDailyCashBody from './TheDailyCashBody'
+
+export const paymentsParams = Vue.observable({
+  created_at: DateTime.now().toISODate(),
+  pendencies: false
+})
 
 export default {
   metaInfo () {
@@ -25,10 +31,7 @@ export default {
     payments: {
       query: GetPayments,
       variables () {
-        return {
-          created_at: this.date,
-          pendencies: this.pendencies
-        }
+        return { ...paymentsParams }
       }
     },
     paymentsPendencies: {
@@ -40,8 +43,7 @@ export default {
       payments: [],
       paymentsPendencies: [],
       modalPayment: false,
-      pendencies: false,
-      date: DateTime.now().toISODate(),
+      paymentsParams,
       icons: {
         faCashRegister
       }
@@ -55,8 +57,8 @@ export default {
   methods: {
     formatDatetime,
     onLoadPendenciesFromDate (date) {
-      this.pendencies = true
-      this.date = date
+      paymentsParams.pendencies = true
+      paymentsParams.created_at = date
     },
     onNewEntryClick () {
       this.modalPayment = true
@@ -65,8 +67,11 @@ export default {
       this.modalPayment = false
     },
     resetPayments () {
-      this.date = DateTime.now().toISODate()
-      this.pendencies = false
+      this.paymentsParams.pendencies = false
+      this.paymentsParams.created_at = DateTime.now().toISODate()
+
+      this.$apollo.queries.payments.refetch()
+      this.$apollo.queries.paymentsPendencies.refetch()
     }
   }
 }
@@ -77,7 +82,8 @@ export default {
     <TheDailyCashHeader
       class="mt-5 mb-2"
       :pendencies="paymentsPendencies"
-      :active-date="formatDatetime(date)"
+      :active-date="formatDatetime(paymentsParams.created_at)"
+      @reset-payments="resetPayments"
       @on-new-entry-click="onNewEntryClick"
       @load-pendencies-from-date="onLoadPendenciesFromDate"
     />
@@ -96,11 +102,14 @@ export default {
       <template #body>
         <AppLoading v-if="isLoading" />
 
-        <DailyPaymentModal v-model="modalPayment" />
+        <DailyPaymentModal
+          v-model="modalPayment"
+          @on-payment-success="onPaymentSuccess"
+        />
 
         <TheDailyCashBody
           :payments="payments"
-          :date="formatDatetime(date, 'dd/MM/y')"
+          :date="formatDatetime(paymentsParams.created_at, 'dd/MM/y')"
         />
       </template>
     </AppCard>

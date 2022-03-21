@@ -18,6 +18,11 @@ export default {
         faPlus
       }
     }
+  },
+  methods: {
+    onSuccess () {
+      this.$emit('on-payment-success')
+    }
   }
 }
 </script>
@@ -40,7 +45,7 @@ export default {
     </template>
 
     <template #body>
-      <DailyPaymentForm />
+      <DailyPaymentForm @success="onSuccess" />
     </template>
   </AppModal>
 </template>

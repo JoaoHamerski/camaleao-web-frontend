@@ -1,6 +1,6 @@
 <script>
 import roles from '@/constants/roles'
-import { ConfirmPayment } from '@/graphql/Payment.gql'
+import { ConfirmPayment, GetPaymentsPendencies } from '@/graphql/Payment.gql'
 
 import {
   faCheck,
@@ -60,7 +60,8 @@ export default {
           variables: {
             id: this.payment.id,
             confirmation
-          }
+          },
+          refetchQueries: [{ query: GetPaymentsPendencies }]
         })
 
         this.$toast.success(

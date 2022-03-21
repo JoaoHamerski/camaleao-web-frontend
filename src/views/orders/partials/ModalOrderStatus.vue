@@ -2,7 +2,7 @@
 import { faExchangeAlt } from '@fortawesome/free-solid-svg-icons'
 
 import { status } from '@/graphql/Status.gql'
-import { orderUpdate } from '@/graphql/Order.gql'
+import { UpdateOrder } from '@/graphql/Order.gql'
 
 import { handleError, handleSuccess } from '@/utils/forms'
 
@@ -46,7 +46,7 @@ export default {
 
       try {
         await this.$apollo.mutate({
-          mutation: orderUpdate,
+          mutation: UpdateOrder,
           variables: {
             id: this.order.id,
             input: {
@@ -55,9 +55,7 @@ export default {
           }
         })
 
-        handleSuccess(this, {
-          message: 'Status alterado!'
-        })
+        handleSuccess(this, { message: 'Status alterado!' })
       } catch (error) {
         handleError(this, error)
       }

@@ -19,6 +19,7 @@ fragment PaymentsOrderParts on Order {
   name
   total_owing
   total_paid
+  states
   client {
     id
     name
@@ -56,12 +57,15 @@ query GetPaymentsPendencies {
 
 mutation CreatePayment ($input: PaymentInput!) {
   paymentCreate (input: $input) {
-    ...PaymentsParts
+    id
     order {
       ...PaymentsOrderParts
-    }
-    via {
-      ...PaymentsViaParts
+      payments {
+        ...PaymentsParts
+        via {
+          ...PaymentsViaParts
+        }
+      }
     }
   }
 }
@@ -80,28 +84,33 @@ mutation UpdatePayment ($id: ID! $input: PaymentInput!) {
 
 mutation ConfirmPayment ($id: ID! $confirmation: Boolean!) {
   paymentConfirm (id: $id confirmation: $confirmation) {
-    ...PaymentsParts
+    id
     order {
       ...PaymentsOrderParts
-    }
-    via {
-      ...PaymentsViaParts
+      payments {
+        ...PaymentsParts
+        via {
+          ...PaymentsViaParts
+        }
+      }
     }
   }
 }
 
-mutation dailyCashEntry (
-  $client: DailyCashClientInput!
-  $order: DailyCashOrderInput!
-  $value: String!
-  $via_id: ID!
-) {
-  dailyCashEntry (
-    client: $client
-    order: $order
-    value: $value
-    via_id: $via_id
-  ) {
-    id
+mutation CreateDailyPayment ($input: DailyCashInput! ) {
+  dailyCashEntry (input: $input) {
+    ...PaymentsParts
+    order {
+      ...PaymentsOrderParts
+      payments {
+        ...PaymentsParts
+        via {
+          ...PaymentsViaParts
+        }
+      }
+    }
+    via {
+      ...PaymentsViaParts
+    }
   }
 }
