@@ -1,4 +1,5 @@
 <script>
+import Vue from 'vue'
 import { faUserPlus } from '@fortawesome/free-solid-svg-icons'
 import { formatPhone } from '@/utils/formatters'
 
@@ -6,6 +7,11 @@ import { GetClients } from '@/graphql/Client.gql'
 
 import TheClientsCard from './TheClientsCard'
 import TheClientsHeader from './TheClientsHeader'
+
+export const clientsParams = Vue.observable({
+  query: {},
+  orderBy: [{ column: 'CREATED_AT', order: 'DESC' }]
+})
 
 export const COLUMNS = {
   NAME: 'NAME',
@@ -25,20 +31,14 @@ export default {
     clients: {
       query: GetClients,
       variables () {
-        return {
-          ...this.query,
-          orderBy: [{ column: 'CREATED_AT', order: 'DESC' }]
-        }
+        return { ...clientsParams, page: this.page }
       }
     }
   },
   data () {
     return {
-      query: {
-        page: 1,
-        hasCity: null,
-        where: null
-      },
+      page: 1,
+      clientsParams,
       clients: {
         data: [],
         paginatorInfo: {}
@@ -56,12 +56,18 @@ export default {
   methods: {
     formatPhone,
     onSearch (query) {
-      this.query = { ...this.query, ...query, page: 1 }
+      this.page = 1
+      this.clientsParams.query = {
+        ...this.clientsParams.query,
+        ...query
+      }
     },
     onSearchClear () {
-      this.query.hasCity = null
-      this.query.where = null
-      this.query.page = 1
+      this.page = 1
+      this.clientsParams.query = {
+        hasCity: null,
+        where: null
+      }
     }
   }
 }
@@ -80,7 +86,7 @@ export default {
     />
 
     <AppPaginator
-      v-model="query.page"
+      v-model="page"
       class="mt-2"
       :is-loading="isLoading"
       :pagination="clients.paginatorInfo"
