@@ -6,7 +6,9 @@
  * Acessado em /testes
  */
 export default {
-
+  mounted () {
+    console.log(this.$store.getters['auth/authUser'])
+  }
 }
 </script>
 
