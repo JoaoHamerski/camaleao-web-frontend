@@ -1,0 +1,80 @@
+fragment ClientsForCityModalParts on Client {
+  id
+  name
+  phone
+}
+
+fragment ClientsForFormsParts on Client {
+  id
+  name
+  phone
+}
+
+query GetClientsForCityModal (
+  $page: Int
+  $where: QueryClientsWhereWhereConditions
+  $orderBy: [QueryClientsOrderByOrderByClause!]
+) {
+  clients (
+    first: 10
+    page: $page
+    where: $where
+    orderBy: $orderBy
+  ) {
+    paginatorInfo {
+      currentPage
+      perPage
+      total
+    }
+
+    data {
+      ...ClientsForCityModalParts
+    }
+  }
+}
+
+query GetClientsForForm (
+  $where: QueryClientsWhereWhereConditions
+  $orderBy: [QueryClientsOrderByOrderByClause!]
+) {
+  clients (
+    first: 10
+    where: $where
+    orderBy: $orderBy
+  ) {
+    paginatorInfo {
+      currentPage
+      perPage
+      total
+    }
+
+    data {
+      ...ClientsForFormsParts
+    }
+  }
+}
+
+query GetOrdersForForm (
+  $orderBy: [QueryOrdersOrderByOrderByClause!]
+  $where: QueryOrdersWhereWhereConditions
+) {
+  orders (
+    first: 10
+    orderBy: $orderBy
+    where: $where
+  ) {
+    paginatorInfo {
+      currentPage
+      perPage
+      total
+    }
+
+    data {
+      id
+      name
+      code
+      price
+      total_owing
+    }
+  }
+}

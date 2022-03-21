@@ -1,6 +1,31 @@
 <script>
-import axios from 'axios'
 import { formatPhone } from '@/utils/formatters'
+import { GetClientsForForm } from '@/graphql/Resources.gql'
+import { stripNonDigits, isNumeric } from '@/utils/helpers'
+
+const whereClientsClause = (query) => {
+  if (query.startsWith('(')) {
+    return {
+      column: 'PHONE',
+      operator: 'LIKE',
+      value: `${stripNonDigits(query)}%`
+    }
+  }
+
+  if (isNumeric(query)) {
+    return {
+      column: 'PHONE',
+      operator: 'LIKE',
+      value: `%${query}%`
+    }
+  }
+
+  return {
+    column: 'NAME',
+    operator: 'LIKE',
+    value: `%${query}%`
+  }
+}
 
 export default {
   props: {
@@ -24,16 +49,16 @@ export default {
   },
   methods: {
     removeCurrentOrder () {
-      this.form.order = ''
+      this.form.order.id = ''
     },
     toggleClientState () {
-      if (!this.form.isNewClient) {
-        this.form.client = ''
-        this.form.order = ''
+      if (!this.form.client.isNew) {
+        this.form.client.id = ''
+        this.form.order.id = ''
       }
 
-      this.form.isNewClient = !this.form.isNewClient
-      this.form.isNewOrder = this.form.isNewClient
+      this.form.client.isNew = !this.form.client.isNew
+      this.form.order.isNew = this.form.client.isNew
     },
     customLabelClients ({ name, phone }) {
       return `${name} ${phone ? ' - ' + formatPhone(phone) : ''}`
@@ -46,14 +71,16 @@ export default {
 
       this.clients.isLoading = true
 
-      const { data } = await axios.get(`${this.apiUrl}/api/clients`, {
-        params: {
-          search: query
+      const { data: { clients: { data } } } = await this.$apollo.query({
+        query: GetClientsForForm,
+        variables: {
+          where: whereClientsClause(query),
+          page: 1
         }
       })
 
       this.clients.isLoading = false
-      this.clients.items = data.data
+      this.clients.items = data
     }
   }
 }
@@ -61,7 +88,7 @@ export default {
 
 <template>
   <div
-    v-if="!form.isNewClient"
+    v-if="!form.client.isNew"
     class="mb-4"
   >
     <div class="d-flex justify-content-between align-items-center mb-2">
@@ -79,7 +106,7 @@ export default {
       </AppButton>
     </div>
     <AppSelect
-      v-model="form.client"
+      v-model="form.client.id"
       name="client"
       placeholder="Procure por nome ou telefone"
       :error="form.errors.get('client.id')"
@@ -125,9 +152,9 @@ export default {
     </div>
     <AppInput
       id="client"
-      v-model="form.client"
-      :error="form.errors.get('client')"
-      name="client"
+      v-model="form.client.name"
+      :error="form.errors.get('client.name')"
+      name="client.name"
       placeholder="Nome do cliente"
     />
   </div>

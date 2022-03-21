@@ -1,5 +1,7 @@
 <script>
+import { DateTime } from 'luxon'
 import { faFilter } from '@fortawesome/free-solid-svg-icons'
+import { maskDate } from '@/utils/masks'
 
 export default {
   props: {
@@ -19,9 +21,40 @@ export default {
   data () {
     return {
       hasDateInterval: false,
+      maskDate,
       icons: {
         faFilter
       }
+    }
+  },
+  methods: {
+    onTodayClick () {
+      this.hasDateInterval = false
+
+      this.form.start_date = DateTime.now().toFormat('dd/MM/yyyy')
+      this.form.final_date = ''
+    },
+    onCurrentWeekClick () {
+      this.hasDateInterval = true
+
+      const weekStartDate = DateTime.now().startOf('week').toFormat('dd/MM/yyyy')
+      const weekEndDate = DateTime.now().endOf('week').toFormat('dd/MM/yyyy')
+
+      this.form.start_date = weekStartDate
+      this.form.final_date = weekEndDate
+    },
+    onCurrentMonthClick () {
+      this.hasDateInterval = true
+
+      const monthStartDate = DateTime.now().startOf('month').toFormat('dd/MM/yyyy')
+      const monthEndDate = DateTime.now().endOf('month').toFormat('dd/MM/yyyy')
+
+      this.form.start_date = monthStartDate
+      this.form.final_date = monthEndDate
+    },
+    onClearFilterClick () {
+      this.hasDateInterval = false
+      this.$emit('clear-filter')
     }
   }
 }
@@ -62,6 +95,7 @@ export default {
               name="start_date"
               type="date"
               placeholder="dd/mm/aaaa"
+              :mask="maskDate"
               :error="form.errors.get('start_date')"
             />
           </div>
@@ -71,11 +105,12 @@ export default {
             class="col"
           >
             <AppInput
-              v-model="form.end_date"
-              name="end_date"
+              v-model="form.final_date"
+              name="final_date"
               type="date"
               placeholder="dd/mm/aaaa"
-              :error="form.errors.get('end_date')"
+              :mask="maskDate"
+              :error="form.errors.get('final_date')"
             />
           </div>
         </div>
@@ -88,11 +123,28 @@ export default {
           Por intervalo de datas
         </AppCheckbox>
 
+        <AppCheckbox
+          id="show_statistics"
+          v-model="form.showStatistics"
+          name="show_statistics"
+        >
+          Exibir estatísticas
+        </AppCheckbox>
+
+        <AppCheckbox
+          id="show_balance"
+          v-model="form.showBalance"
+          name="show_balance"
+        >
+          Exibir balanço final
+        </AppCheckbox>
+
         <div class="d-flex mb-4">
           <AppButton
             type="button"
             outlined
             btn-class="btn-sm"
+            @click.prevent="onTodayClick"
           >
             Hoje
           </AppButton>
@@ -102,6 +154,7 @@ export default {
             class="mx-2"
             outlined
             btn-class="btn-sm"
+            @click.prevent="onCurrentWeekClick"
           >
             Semana atual
           </AppButton>
@@ -110,6 +163,7 @@ export default {
             type="button"
             outlined
             btn-class="btn-sm"
+            @click.prevent="onCurrentMonthClick"
           >
             Mês atual
           </AppButton>
@@ -130,6 +184,7 @@ export default {
             type="button"
             color="success"
             outlined
+            @click.prevent="onClearFilterClick"
           >
             Limpar filtros
           </AppButton>

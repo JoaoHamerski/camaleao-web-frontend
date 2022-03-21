@@ -1,51 +1,69 @@
 <script>
-import Form from '@/utils/Form'
-import 'vue-multiselect/dist/vue-multiselect.min.css'
+import { every } from 'lodash-es'
+import { GetClients, CreateClient, UpdateClient } from '@/graphql/Client.gql'
+import { cities } from '@/graphql/City.gql'
+import { branches } from '@/graphql/Branch.gql'
+import { shippingCompanies } from '@/graphql/ShippingCompany.gql'
+
+import { clientsParams } from '../index/TheClients'
+
+import { handleSuccess, handleError } from '@/utils/forms'
 import { maskPhone } from '@/utils/masks'
+import Form from '@/utils/Form'
 
 export default {
-  chimera: {
-    _cities: {
-      url: '/api/cities'
-    },
-    _branches: {
-      url: '/api/branches'
-    },
-    _shippingCompanies: {
-      url: '/api/shipping-companies'
-    },
-    _newClient () {
-      return {
-        url: '/api/clients',
-        method: 'POST',
-        params: {
-          ...this.form.data()
-        },
-        on: {
-          error ({ error }) {
-            this.$toast.error('Algo está incorreto, verifique os dados, por favor.', {
-              duration: 4000
-            })
-
-            if (error.errors) {
-              this.form.onFail(error.errors)
-            }
-
-            this.isLoading = false
-          },
-          success () {
-            this.form.reset()
-            this.isLoading = false
-            this.$emit('submitted')
-          }
+  apollo: {
+    cities: {
+      query: cities,
+      variables: {
+        orderBy: [{ column: 'NAME', order: 'ASC' }]
+      },
+      result ({ loading }) {
+        if (!loading) {
+          this.loaded.cities = true
         }
       }
+    },
+    branches: {
+      query: branches,
+      result ({ data, loading }) {
+        if (!loading) {
+          this.branches = data.branches.filter((branch) => !!branch.city)
+          this.loaded.branches = true
+        }
+      }
+    },
+    shippingCompanies: {
+      query: shippingCompanies,
+      result ({ loading }) {
+        if (!loading) {
+          this.loaded.shippingCompanies = true
+        }
+      }
+    }
+  },
+  props: {
+    client: {
+      type: Object,
+      default: null
+    },
+    isEdit: {
+      type: Boolean,
+      default: false
     }
   },
   data () {
     return {
       maskPhone,
       isLoading: false,
+      cities: [],
+      branches: [],
+      shippingCompanies: [],
+      loaded: {
+        cities: false,
+        branches: false,
+        shippingCompanies: false
+      },
       form: new Form({
         name: '',
         phone: '',
@@ -56,20 +74,90 @@ export default {
     }
   },
   computed: {
-    cities () {
-      return this.$chimera?._cities?.data?.data || []
-    },
-    branches () {
-      return this.$chimera?._branches?.data?.data || []
-    },
-    shippingCompanies () {
-      return this.$chimera?._shippingCompanies?.data?.data || []
+    isQueryLoading () {
+      return !!this.$apollo.loading
+    }
+  },
+  watch: {
+    loaded: {
+      immediate: true,
+      deep: true,
+      handler (value) {
+        const isAllQueriesLoaded = every({ ...value }, item => item === true)
+
+        if (this.isEdit && isAllQueriesLoaded) {
+          this.populateForm()
+        }
+      }
     }
   },
   methods: {
-    onSubmit () {
+    populateForm () {
+      const { name, phone, city, branch, shipping_company } = this.client
+
+      this.form.name = name
+      this.form.phone = phone
+
+      if (city) {
+        this.form.city_id = this.cities.find(({ id }) => city.id === id)
+        this.cities.find(({ id }) => city.id === id)
+      }
+
+      if (branch) {
+        this.form.branch_id = this.branches.find(({ id }) => branch.id === id)
+      }
+
+      if (shipping_company) {
+        this.form.shipping_company_id = this.shippingCompanies.find(
+          ({ id }) => shipping_company.id === id
+        )
+      }
+    },
+    getFormattedData () {
+      const form = this.form.data()
+
+      form.city_id = form.city_id?.id || ''
+      form.branch_id = form.branch_id?.id || ''
+      form.shipping_company_id = form.shipping_company_id?.id || ''
+
+      return form
+    },
+    async create (input) {
+      try {
+        await this.$apollo.mutate({
+          mutation: CreateClient,
+          variables: { input },
+          refetchQueries: [{ query: GetClients, variables: { ...clientsParams, page: 1 } }]
+        })
+
+        handleSuccess(this, { message: 'Cliente cadastrado!', resetForm: true })
+      } catch (error) {
+        handleError(this, error)
+      }
+    },
+    async update (input) {
+      try {
+        await this.$apollo.mutate({
+          mutation: UpdateClient,
+          variables: { id: this.client.id, input }
+        })
+
+        handleSuccess(this, { message: 'Cliente atualizado!' })
+      } catch (error) {
+        handleError(this, error)
+      }
+    },
+    async onSubmit () {
+      const data = this.getFormattedData()
       this.isLoading = true
-      this.$chimera._newClient.fetch()
+
+      if (this.isEdit) {
+        await this.update(data)
+      } else {
+        await this.create(data)
+      }
+
+      this.isLoading = false
     },
     customLabelCity ({ name, state }) {
       if (state === null) {
@@ -79,6 +167,10 @@ export default {
       return `${name} - ${state.abbreviation}`
     },
     customLabelBranch ({ city }) {
+      if (!city) {
+        return 'N/A'
+      }
+
       const { state } = city
 
       if (state === null) {
@@ -86,6 +178,15 @@ export default {
       }
 
       return `${city.name} - ${state.abbreviation}`
+    },
+    onCitySelected (city) {
+      this.form.branch_id = this.branches.find(
+        branch => branch.id === city?.branch?.id || ''
+      )
+
+      this.form.shipping_company_id = this.shippingCompanies.find(
+        company => company.id === city.branch?.shipping_company?.id || ''
+      )
     }
   }
 }
@@ -96,6 +197,7 @@ export default {
     :on-submit="onSubmit"
     :form="form"
   >
+    <AppLoading v-show="isQueryLoading" />
     <AppInput
       id="name"
       v-model="form.name"
@@ -125,8 +227,12 @@ export default {
       :options="cities"
       :custom-label="customLabelCity"
       optional
+      @input="onCitySelected"
     >
       Cidade
+      <template #hint>
+        Ao selecionar a <b>Cidade</b>, a <b>Filial</b> e <b>Transportadora</b> serão preenchidos automaticamente caso haja algum dado relacionado.
+      </template>
     </AppSelect>
 
     <AppSelect
@@ -148,25 +254,32 @@ export default {
       :custom-label="({name}) => name"
       optional
     >
-      Frete
+      Frete - Transportadora
     </AppSelect>
 
-    <div class="d-flex justify-content-between">
-      <AppButton
-        :loading="isLoading"
-        type="submit"
-        color="success"
-        class="fw-bold"
-      >
-        Cadastrar
-      </AppButton>
-      <AppButton
-        type="button"
-        color="light"
-        data-bs-dismiss="modal"
-      >
-        Cancelar
-      </AppButton>
+    <div class="row">
+      <div class="col">
+        <AppButton
+          :loading="isLoading"
+          type="submit"
+          color="success"
+          class="fw-bold"
+          block
+        >
+          {{ isEdit ? 'Atualizar' : 'Cadastrar' }}
+        </AppButton>
+      </div>
+      <div class="col">
+        <AppButton
+          type="button"
+          color="light"
+          data-bs-dismiss="modal"
+          block
+          :disabled="isLoading"
+        >
+          Cancelar
+        </AppButton>
+      </div>
     </div>
   </AppForm>
 </template>

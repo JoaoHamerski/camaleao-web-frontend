@@ -1,0 +1,12 @@
+{
+    "shippingCompany.name": {
+        "text": "Transportadora"
+    },
+    "city.name": {
+        "text": "Cidade"
+    },
+    "cities": {
+        "text": "Cidades",
+        "type": "list"
+    }
+}

@@ -1,0 +1,197 @@
+#import "./_PaginatorFragment.gql"
+
+fragment OrderParts on Order {
+  id
+  code
+  name
+  price
+  original_price
+  states
+  discount
+  quantity
+  total_paid
+  total_owing
+  total_clothings_value
+  production_date
+  delivery_date
+  created_at
+  closed_at
+  art_paths
+  size_paths
+  payment_voucher_paths
+  reminder
+}
+
+fragment OrderSimplifiedParts on Order {
+  id
+  code
+  quantity
+  price
+  total_paid
+  production_date
+  delivery_date
+  states
+  total_owing
+  client {
+    id
+    name
+  }
+}
+
+fragment ShippingCompanyParts on Client {
+  shipping_company {
+    id
+    name
+  }
+}
+
+fragment BranchParts on Client {
+  branch {
+    id
+    city {
+      id
+      name
+    }
+  }
+}
+
+fragment CityParts on Client {
+  city {
+    id
+    name
+    state {
+      id
+      name
+      abbreviation
+    }
+  }
+}
+
+fragment ClientParts on Order {
+  client {
+    id
+    name
+    phone
+    total_owing
+    ...BranchParts
+    ...CityParts
+    ...ShippingCompanyParts
+  }
+}
+
+fragment StatusParts on Order {
+  status {
+    id
+    text
+    is_available
+  }
+}
+
+fragment ClothingTypesParts on Order {
+  clothing_types {
+    id
+    key
+    name
+    is_hidden
+    commission
+    quantity
+    value
+    total_value
+  }
+}
+
+fragment PaymentsPart on Order {
+  payments {
+    id
+    value
+    date
+    note
+    confirmed_at
+    is_confirmed
+    created_at
+    via {
+      id
+      name
+    }
+  }
+}
+
+fragment NotesParts on Order {
+  notes {
+    id
+    text
+    created_at
+  }
+}
+
+fragment OrderType on Order {
+  ...OrderParts
+  ...ClientParts
+  ...StatusParts
+  ...ClothingTypesParts
+  ...PaymentsPart
+  ...NotesParts
+}
+
+query GetOrdersSimplified (
+  $page: Int
+  $orderBy: [QueryOrdersOrderByOrderByClause!]
+  $where: QueryOrdersWhereWhereConditions
+) {
+  orders (
+    first: 10
+    page: $page
+    orderBy: $orderBy
+    where: $where
+  ) {
+    paginatorInfo {
+      ...PaginatorSimpleParts
+    }
+
+    data {
+      ...OrderSimplifiedParts
+    }
+  }
+}
+
+query GetOrder ($id: ID! $client_id: ID) {
+  order (id: $id client_id: $client_id) {
+    ...OrderType
+  }
+}
+query GetOrderReport ($id: ID!) {
+  orderReport (id: $id)
+}
+
+query GetOrdersReport ($input: OrdersReportInput!) {
+  ordersReport (input: $input)
+}
+
+query GetOrdersByProductionDate ($input: OrdersReportProductionDateInput!) {
+  ordersReportProductionDate (input: $input)
+}
+
+mutation UpdateOrder ($id: ID! $input: OrderInput!) {
+  orderUpdate (id: $id input: $input) {
+    ...OrderType
+  }
+}
+
+mutation ToggleOrder ($id: ID!) {
+  orderToggle (id: $id) {
+    ...OrderType
+  }
+}
+
+mutation DeleteOrder ($id: ID!) {
+  orderDelete (id: $id) {
+    ...OrderType
+  }
+}
+
+mutation CreateOrder ($client_id: ID! $input: OrderInput!) {
+  orderCreate (client_id: $client_id input: $input) {
+    ...OrderType
+  }
+}
+

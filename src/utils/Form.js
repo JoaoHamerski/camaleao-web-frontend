@@ -1,9 +1,10 @@
 import Errors from './Errors'
-import axios from 'axios'
+import { cloneDeep } from 'lodash-es'
 
 class Form {
   constructor (data) {
     this.originalData = data
+    this.originalStructure = cloneDeep(data)
     this.errors = new Errors()
     this.fields = []
 
@@ -13,8 +14,8 @@ class Form {
   }
 
   reset () {
-    for (const field in this.originalData) {
-      this[field] = ''
+    for (const field in this.originalStructure) {
+      this[field] = this.originalStructure[field]
     }
 
     this.errors.clear('*')
@@ -28,30 +29,6 @@ class Form {
     }
 
     return data
-  }
-
-  submit (method, url, headers = null) {
-    let axiosConfig = {
-      method, url, data: this.data()
-    }
-
-    if (headers) {
-      axiosConfig = { ...axiosConfig, headers }
-    }
-
-    return new Promise((resolve, reject) => {
-      axios.request(axiosConfig)
-        .then(response => {
-          this.onSuccess()
-
-          resolve(response.data)
-        })
-        .catch(error => {
-          this.onFail(error.response.data.errors)
-
-          reject(error.response)
-        })
-    })
   }
 
   onFail (error) {

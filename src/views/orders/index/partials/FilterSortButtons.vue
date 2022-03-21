@@ -2,14 +2,19 @@
 import { faExclamationCircle } from '@fortawesome/free-solid-svg-icons'
 
 export default {
+  props: {
+    value: {
+      type: String,
+      required: true
+    }
+  },
   data () {
     return {
-      selected: 'priority',
       radios: {
         priority: 'Prioritários',
         older: 'Mais antigos',
         newer: 'Mais recentes',
-        production_date: 'Data de entrega',
+        delivery_date: 'Data de entrega',
         pre_register: 'Pré-registro'
       },
       icons: {
@@ -23,7 +28,7 @@ export default {
         priority: '<strong>Ordem de cadastro mais antigo primeiro</strong>, apenas pedidos em aberto',
         older: '<strong>Ordem de cadastro mais antigos primeiros</strong>, incluindo pedidos fechados',
         newer: '<strong>Ordem de cadastro mais recente primeiros</strong>, incluindo pedidos fechados',
-        production_date: `
+        delivery_date: `
           <strong>Ordem de data de entrega mais antiga primeiro</strong>, apenas pedidos em aberto
           <br/>(pedidos sem data de entrega informada ficam por último).
         `,
@@ -33,7 +38,7 @@ export default {
   },
   methods: {
     onOptionChange () {
-      this.$emit('filter-changed', this.selected)
+      this.$emit('filter-changed', this.value)
     }
   }
 }
@@ -51,33 +56,37 @@ export default {
         <input
           :id="`${key}__sort`"
           :key="key + '__input'"
-          v-model="selected"
+          v-model="value"
           type="radio"
           class="btn-check"
           :name="`${key}__sort`"
           :value="key"
           autocomplete="off"
+          @input="$emit('input', $event.target.value)"
           @change="onOptionChange"
         >
         <label
           :key="key + 'Label'"
           class="btn btn-outline-primary"
-          :class="selected === key && 'fw-bold'"
+          :class="value === key && 'fw-bold'"
           :for="`${key}__sort`"
-        >{{ name }}</label>
+        >
+          {{ name }}
+        </label>
       </template>
     </div>
 
     <div
+      v-show="value !== ''"
       class="text-secondary small"
-      :class="selected === 'pre_register' && 'text-danger'"
+      :class="value === 'pre_register' && 'text-danger'"
     >
       <FontAwesomeIcon
         class="me-1"
         fixed-width
         :icon="icons.faExclamationCircle"
       />
-      <span v-html="messagesOfFilters[selected]" />
+      <span v-html="messagesOfFilters[value]" />
     </div>
   </div>
 </template>

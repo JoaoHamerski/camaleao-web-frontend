@@ -1,0 +1,126 @@
+#import "./_PaginatorFragment.gql"
+
+fragment ShippingCompanyParts on Client {
+  shipping_company {
+    id
+    name
+  }
+}
+
+fragment BranchParts on Client {
+  branch {
+    id
+    city {
+      id
+      name
+    }
+  }
+}
+
+fragment CityParts on Client {
+  city {
+    id
+    name
+    state {
+      id
+      name
+      abbreviation
+    }
+  }
+}
+
+fragment ClientSimpleParts on Client {
+  id
+  name
+  phone
+  total_owing
+}
+
+fragment ClientParts on Client {
+  ...ClientSimpleParts
+  ...ShippingCompanyParts
+  ...BranchParts
+  ...CityParts
+}
+
+fragment ClientOrdersSimplePart on Order {
+  client {
+      id
+  }
+
+  id
+  code
+  price
+  total_paid
+  quantity
+  production_date
+  delivery_date
+  states
+}
+
+query GetClients (
+  $page: Int
+  $where: QueryClientsWhereWhereConditions
+  $hasCity: QueryClientsHasCityWhereHasConditions
+  $orderBy: [QueryClientsOrderByOrderByClause!]
+) {
+  clients (
+    first: 10,
+    page: $page
+    orderBy: $orderBy
+    where: $where
+    hasCity: $hasCity
+  ) {
+    paginatorInfo {
+      ...PaginatorSimpleParts
+    }
+
+    data {
+      ...ClientSimpleParts
+      ...CityParts
+    }
+  }
+}
+
+query GetClient ($id: ID!) {
+  client (id: $id) {
+    ...ClientSimpleParts
+  }
+}
+
+query GetClientWithOrders (
+  $id: ID!
+  $orderPage: Int
+  $orderWhere: ClientOrdersWhereWhereConditions
+) {
+  client (id: $id) {
+    ...ClientParts
+
+    orders (
+      first: 10
+      page: $orderPage
+      orderBy: [{column: CREATED_AT order: DESC}]
+      where: $orderWhere
+    ) {
+      paginatorInfo {
+        ...PaginatorSimpleParts
+      }
+
+      data {
+        ...ClientOrdersSimplePart
+      }
+    }
+  }
+}
+
+mutation CreateClient ($input: ClientInput!) {
+  clientCreate (input: $input) {
+    ...ClientParts
+  }
+}
+
+mutation UpdateClient ($id: ID! $input: ClientInput!) {
+  clientUpdate (id: $id input: $input) {
+    ...ClientParts
+  }
+}

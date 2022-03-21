@@ -1,0 +1,116 @@
+fragment PaymentsParts on Payment {
+  id
+  value
+  date
+  note
+  confirmed_at
+  is_confirmed
+  created_at
+}
+
+fragment PaymentsViaParts on Via {
+  id
+  name
+}
+
+fragment PaymentsOrderParts on Order {
+  id
+  code
+  name
+  total_owing
+  total_paid
+  states
+  client {
+    id
+    name
+    total_owing
+  }
+}
+
+query GetPayments (
+  $created_at: Date
+  $pendencies: Boolean
+) {
+  payments (
+    created_at: $created_at
+    orderBy: [{column: CREATED_AT order: DESC}]
+    pendencies: $pendencies
+  ) {
+    ...PaymentsParts
+
+    order {
+      ...PaymentsOrderParts
+    }
+
+    via {
+      ...PaymentsViaParts
+    }
+  }
+}
+
+query GetPaymentsPendencies {
+  paymentsPendencies {
+    created_at_payment
+    total
+  }
+}
+
+mutation CreatePayment ($input: PaymentInput!) {
+  paymentCreate (input: $input) {
+    id
+    order {
+      ...PaymentsOrderParts
+      payments {
+        ...PaymentsParts
+        via {
+          ...PaymentsViaParts
+        }
+      }
+    }
+  }
+}
+
+mutation UpdatePayment ($id: ID! $input: PaymentInput!) {
+  paymentUpdate (id: $id input: $input) {
+    ...PaymentsParts
+    order {
+      ...PaymentsOrderParts
+    }
+    via {
+      ...PaymentsViaParts
+    }
+  }
+}
+
+mutation ConfirmPayment ($id: ID! $confirmation: Boolean!) {
+  paymentConfirm (id: $id confirmation: $confirmation) {
+    id
+    order {
+      ...PaymentsOrderParts
+      payments {
+        ...PaymentsParts
+        via {
+          ...PaymentsViaParts
+        }
+      }
+    }
+  }
+}
+
+mutation CreateDailyPayment ($input: DailyCashInput! ) {
+  dailyCashEntry (input: $input) {
+    ...PaymentsParts
+    order {
+      ...PaymentsOrderParts
+      payments {
+        ...PaymentsParts
+        via {
+          ...PaymentsViaParts
+        }
+      }
+    }
+    via {
+      ...PaymentsViaParts
+    }
+  }
+}

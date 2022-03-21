@@ -2,8 +2,8 @@ import Vue from 'vue'
 import VueRouter from 'vue-router'
 import auth from '@/middleware/auth'
 import middlewarePipeline from '@/router/middlewarePipeline'
-
-import TheTest from '@/views/TheTest'
+import store from '@/store'
+import roles from '@/constants/roles'
 
 import authRoutes from '@/views/auth/routes'
 import clientsRoutes from '@/views/clients/routes'
@@ -11,8 +11,23 @@ import ordersRoutes from '@/views/orders/routes'
 import dailyCashRoutes from '@/views/daily-cash/routes'
 import cashFlowRoutes from '@/views/cash-flow/routes'
 import expensesRoutes from '@/views/expenses/routes'
+import usersRoutes from '@/views/users/routes'
+import citiesRoutes from '@/views/cities/routes'
+import branchesRoutes from '@/views/branches/routes'
+import clothingTypesRoutes from '@/views/clothing-types/routes'
+import productionRoutes from '@/views/production/routes'
+import productionUsersRoutes from '@/views/production-users/routes'
+import myAccountRoutes from '@/views/my-account/routes'
+import weeklyProductionRoutes from '@/views/weekly-production/routes'
+import activitiesRoutes from '@/views/activities/routes'
 
 Vue.use(VueRouter)
+
+const isUserFromProduction = (user) => {
+  const productionRoles = [roles.ESTAMPA, roles.COSTURA]
+
+  return productionRoles.includes(+user.role.id)
+}
 
 const routes = [
   {
@@ -20,22 +35,40 @@ const routes = [
     meta: {
       middleware: [auth]
     },
-    beforeEnter: (to, from, next) => next('/clientes')
-  },
-  {
-    path: '/testes',
-    component: TheTest,
-    meta: {
-      middleware: [auth]
+    beforeEnter: async (to, from, next) => {
+      const authUser = store.getters['auth/authUser']
+
+      if (isUserFromProduction(authUser)) {
+        next('/producao')
+        return
+      }
+
+      next('/clientes')
     }
   },
+  ...activitiesRoutes,
   ...authRoutes,
-  ...clientsRoutes,
-  ...ordersRoutes,
-  ...dailyCashRoutes,
+  ...branchesRoutes,
   ...cashFlowRoutes,
-  ...expensesRoutes
+  ...citiesRoutes,
+  ...clientsRoutes,
+  ...clothingTypesRoutes,
+  ...dailyCashRoutes,
+  ...expensesRoutes,
+  ...myAccountRoutes,
+  ...ordersRoutes,
+  ...productionRoutes,
+  ...productionUsersRoutes,
+  ...usersRoutes,
+  ...weeklyProductionRoutes
 ]
+
+if (process.env.NODE_ENV === 'development') {
+  routes.push({
+    path: '/testes',
+    component: () => import('@/views/TheTest')
+  })
+}
 
 const router = new VueRouter({
   mode: 'history',

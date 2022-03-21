@@ -1,15 +1,11 @@
 <script>
 import { faPlus } from '@fortawesome/free-solid-svg-icons'
+import { orders } from '@/constants/route-names'
 
 export default {
-  props: {
-    code: {
-      type: String,
-      default: ''
-    }
-  },
   data () {
     return {
+      orders,
       search: '',
       icons: {
         faPlus
@@ -17,15 +13,12 @@ export default {
     }
   },
   methods: {
+    onSearch () {
+      this.$emit('search', this.search)
+    },
     clearSearch () {
       this.search = ''
       this.$emit('clear-search')
-    },
-    redirectToNewOrder () {
-      this.$router.push({
-        name: 'orders.create',
-        clientKey: this.$route.params.clientKey
-      })
     }
   }
 }
@@ -35,13 +28,15 @@ export default {
   <div>
     <div class="d-flex justify-content-between">
       <AppButton
+        btn-class="fw-bold"
         color="primary"
-        @click="redirectToNewOrder"
+        @click="$helpers.redirectTo(orders.create, {client: $route.params.clientKey})"
       >
         <FontAwesomeIcon
           class="mr-1"
           :icon="icons.faPlus"
-        /> Novo pedido
+        />
+        Novo pedido
       </AppButton>
 
       <div class="col-5">
@@ -50,13 +45,13 @@ export default {
           :default-margin="false"
           name="code"
           placeholder="Buscar por código..."
-          @keypress.enter="$emit('search', search)"
+          @keypress.enter="onSearch"
         >
           <template #append>
             <AppButton
               color="primary"
               outlined
-              @click="$emit('search', search)"
+              @click="onSearch"
             >
               Buscar
             </AppButton>
@@ -64,12 +59,11 @@ export default {
         </AppInput>
       </div>
     </div>
-    <a
-      href="#"
-      class="small text-decoration-none d-flex justify-content-end mb-1"
+    <div
+      class="link-primary clickable small text-decoration-none d-flex justify-content-end mb-1"
       @click.prevent="clearSearch"
     >
-      {{ code !== '' ? 'Limpar busca' : '' }}
-    </a>
+      {{ search !== '' ? 'Limpar busca' : '' }}
+    </div>
   </div>
 </template>

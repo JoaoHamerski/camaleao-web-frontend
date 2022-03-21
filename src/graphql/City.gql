@@ -1,0 +1,72 @@
+query cities (
+  $orderBy: [QueryCitiesOrderByOrderByClause!]
+  $where: QueryCitiesWhereWhereConditions
+) {
+  cities (orderBy: $orderBy where: $where) {
+    id
+    name
+    
+    state {
+      id
+      name
+      abbreviation
+    }
+
+    branch {
+      id
+      city {
+        id
+        name
+        state {
+          id
+          name
+          abbreviation
+        }
+      }
+
+      shipping_company {
+        id
+        name
+      }
+    }
+  }
+}
+
+query citiesIndex ($where: QueryCitiesWhereWhereConditions) {
+  cities (
+    where: $where
+    orderBy: [{column: NAME order: ASC}]
+  ) {
+    id
+    name
+    state {
+      id
+      name
+      abbreviation
+    }
+  }
+}
+
+mutation cityCreate ($input: CityInput!) {
+  cityCreate (input: $input) {
+    id
+  }
+}
+
+mutation cityUpdate ($id: ID! $input: CityInput!) {
+  cityUpdate (id: $id input: $input) {
+    id
+  }
+}
+
+mutation cityMassUpdateState ($ids: [ID!]! $state_id: ID!) {
+  cityMassUpdateState(ids: $ids state_id: $state_id) {
+    id
+  }
+}
+
+mutation cityDelete ($id: ID! $city_id: ID $replace: CityReplaceOptionsInput) {
+  cityDelete(id: $id city_id: $city_id replace: $replace) {
+    id
+  }
+}

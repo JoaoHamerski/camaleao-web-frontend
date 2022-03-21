@@ -6,13 +6,17 @@ import {
 
 export default {
   props: {
-    page: {
+    value: {
       type: [String, Number],
       required: true
     },
     pagination: {
       type: Object,
       default: () => ({})
+    },
+    isLoading: {
+      type: Boolean,
+      default: false
     }
   },
   data () {
@@ -25,30 +29,86 @@ export default {
   },
   computed: {
     hasPagination () {
-      return this.pagination.total > this.pagination.per_page
+      return this.pagination.total > this.pagination.perPage
+    },
+    totalPages () {
+      return Math.ceil(this.pagination.total / this.pagination.perPage)
+    },
+    isFirstPageActive () {
+      return this.pagination.currentPage === 1
+    },
+    isLastPageActive () {
+      return this.pagination.currentPage === this.totalPages
+    },
+    pageList () {
+      const totalPages = this.totalPages
+      const page = this.pagination.currentPage
+      const maxLength = 10
+
+      const range = (start, end) => {
+        return Array.from(Array(end - start + 1), (_, i) => i + start)
+      }
+
+      const sideWidth = maxLength < 9 ? 1 : 2
+      const leftWidth = (maxLength - sideWidth * 2 - 3) >> 1
+      const rightWidth = (maxLength - sideWidth * 2 - 2) >> 1
+
+      if (maxLength < 5) {
+        throw new Error('maxLength must be at least 5')
+      }
+
+      if (totalPages <= maxLength) {
+        // no breaks in list
+        return range(1, totalPages)
+      }
+
+      if (page <= maxLength - sideWidth - 1 - rightWidth) {
+        // no break on left of page
+        return range(1, maxLength - sideWidth - 1)
+          .concat(0, range(totalPages - sideWidth + 1, totalPages))
+      }
+
+      if (page >= totalPages - sideWidth - 1 - rightWidth) {
+        // no break on right of page
+        return range(1, sideWidth)
+          .concat(0, range(totalPages - sideWidth - 1 - rightWidth - leftWidth, totalPages))
+      }
+
+      // Breaks on both sides
+      return range(1, sideWidth)
+        .concat(0, range(page - leftWidth, page + rightWidth),
+          0, range(totalPages - sideWidth + 1, totalPages))
     }
   },
   methods: {
-    paginate (link, isNext) {
-      const page = parseInt(this.page)
+    incrementPage (page) {
+      const canIncrement = page > 1
 
-      if (isNext === undefined) {
-        this.$emit('update:page', parseInt(link.label))
+      if (canIncrement) {
+        this.$emit('input', page - 1)
+      }
+    },
+    decrementPage (page) {
+      const canDecrement = page < this.totalPages
+
+      if (canDecrement) {
+        this.$emit('input', page + 1)
+      }
+    },
+    paginate (index, isNextButton) {
+      const page = parseInt(this.value)
+
+      if (isNextButton === undefined) {
+        this.$emit('input', parseInt(index))
         return
       }
 
-      if (!isNext) {
-        this.$emit('update:page', page - 1)
+      if (!isNextButton) {
+        this.incrementPage(page)
         return
       }
 
-      this.$emit('update:page', page + 1)
-    },
-    isFirstPageItem (index) {
-      return index === 0
-    },
-    isLastPageItem (index) {
-      return index === (this.pagination.links.length - 1)
+      this.decrementPage(page)
     }
   }
 }
@@ -56,51 +116,53 @@ export default {
 
 <template>
   <nav
-    v-show="hasPagination"
+    v-if="hasPagination"
     aria-label="Paginação"
   >
     <ul class="pagination">
       <li
-        v-for="(link, index) in pagination.links"
+        class="page-item"
+        :class="(isFirstPageActive || isLoading) && 'disabled'"
+      >
+        <a
+          class="page-link clickable px-3"
+          @click="paginate(null, false)"
+        >
+          <FontAwesomeIcon
+            :icon="icons.faArrowLeft"
+          />
+        </a>
+      </li>
+
+      <li
+        v-for="(pageNumber, index) in pageList"
         :key="index"
         class="page-item"
         :class="{
-          'active': link.active,
-          'disabled': link.url === null
+          'active': pageNumber === pagination.currentPage,
+          'disabled': isLoading || pageNumber === 0
         }"
       >
-        <template v-if="isFirstPageItem(index)">
-          <a
-            class="page-link clickable"
-            @click="paginate(link, false)"
-          >
-            <FontAwesomeIcon
-              class="fa-fw px-1"
-              :icon="icons.faArrowLeft"
-            />
-          </a>
-        </template>
+        <a
+          class="page-link clickable"
+          @click="paginate(pageNumber)"
+        >
+          {{ pageNumber === 0 ? '...' : pageNumber }}
+        </a>
+      </li>
 
-        <template v-if="!isFirstPageItem(index) && !isLastPageItem(index)">
-          <a
-            class="page-link clickable"
-            @click="paginate(link)"
-          >
-            {{ link.label }}
-          </a>
-        </template>
-
-        <template v-if="isLastPageItem(index)">
-          <a
-            class="page-link clickable"
-            @click="paginate(link, true)"
-          >
-            <FontAwesomeIcon
-              class="fa-fw px-1"
-              :icon="icons.faArrowRight"
-            />
-          </a>
-        </template>
+      <li
+        class="page-item"
+        :class="(isLastPageActive || isLoading) && 'disabled'"
+      >
+        <a
+          class="page-link clickable px-3 "
+          @click="paginate(null, true)"
+        >
+          <FontAwesomeIcon
+            :icon="icons.faArrowRight"
+          />
+        </a>
       </li>
     </ul>
   </nav>

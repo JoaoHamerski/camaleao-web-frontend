@@ -1,15 +1,22 @@
 <script>
-import ClientCard from '../partials/ClientCard'
+import { isEmpty } from 'lodash'
 import { faPlus, faArrowAltCircleLeft } from '@fortawesome/free-solid-svg-icons'
-import 'tippy.js/themes/light-border.css'
+import { GetClientWithOrders } from '@/graphql/Client.gql'
 
+import ClientCard from '../partials/ClientCard'
 import ClientOrdersCard from './ClientOrdersCard'
 import ClientOrdersHeader from './ClientOrdersHeader'
 
 export default {
   metaInfo () {
+    if (isEmpty(this.client)) {
+      return {
+        title: 'Carregando...'
+      }
+    }
+
     return {
-      title: this.client?.name || ''
+      title: this.client.name
     }
   },
   components: {
@@ -17,18 +24,24 @@ export default {
     ClientOrdersCard,
     ClientOrdersHeader
   },
-  chimera: {
-    _orders () {
-      return {
-        url: `/api/clients/${this.$route.params.clientKey}/orders/`,
-        params: { page: this.page }
+  apollo: {
+    client: {
+      query: GetClientWithOrders,
+      variables () {
+        return {
+          id: this.$route.params.clientKey,
+          orderWhere: this.ordersQuery.where,
+          orderPage: this.ordersQuery.page
+        }
       }
     }
   },
   data () {
     return {
-      page: 1,
-      code: '',
+      ordersQuery: {
+        where: {},
+        page: 1
+      },
       client: null,
       icons: {
         faPlus,
@@ -38,32 +51,26 @@ export default {
   },
   computed: {
     isLoading () {
-      return this.$chimera._orders.loading
-    },
-    clientKey () {
-      return this.$route.params.clientKey
+      return !!this.$apollo.queries.client.loading
     },
     orders () {
-      return this.$chimera._orders?.data?.data || []
-    },
-    pagination () {
-      return this.$chimera._orders?.data?.meta || ({})
+      return this.client?.orders || {}
     }
   },
   methods: {
     handleSearch (code) {
-      this.code = code
+      const where = {
+        column: 'CODE',
+        operator: 'LIKE',
+        value: `%${code}%`
+      }
 
-      this.$chimera._orders.fetch(true, {
-        params: { code, page: 1 }
-      })
+      this.ordersQuery.page = 1
+      this.ordersQuery.where = where
     },
     onSearchClear () {
-      this.code = ''
-
-      this.$chimera._orders.fetch(true, {
-        params: { code: '', page: 1 }
-      })
+      this.ordersQuery.page = 1
+      this.ordersQuery.where = {}
     }
   }
 }
@@ -81,28 +88,28 @@ export default {
           Clientes
         </AppButton>
       </div>
+
       <ClientCard
-        :client-id="clientKey"
-        @client="client = $event"
+        :is-loading="isLoading"
+        :client="client"
       />
     </div>
 
     <div class="col-9">
       <ClientOrdersHeader
-        :code="code"
         @search="handleSearch"
         @clear-search="onSearchClear"
       />
 
       <ClientOrdersCard
         :is-loading="isLoading"
-        :orders="orders"
+        :orders="orders.data"
       />
 
       <AppPaginator
+        v-model="ordersQuery.page"
         class="mt-2"
-        :page.sync="page"
-        :pagination="pagination"
+        :pagination="orders.paginatorInfo"
       />
     </div>
   </div>

@@ -1,45 +1,11 @@
 <script>
+import { isEmpty } from 'lodash-es'
 import { faList, faEdit } from '@fortawesome/free-solid-svg-icons'
 import Form from '@/utils/Form'
-import { handleError } from '@/utils/forms'
-import { isEmpty } from 'lodash-es'
+import { handleSuccess, handleError } from '@/utils/forms'
+import { expenseTypesCreate, expenseTypesUpdate } from '@/graphql/ExpenseType.gql'
 
 export default {
-  chimera: {
-    _newExpenseType () {
-      return {
-        method: 'POST',
-        url: 'api/expense-types',
-        auto: false,
-        on: {
-          success () {
-            this.form.reset()
-            this.$toast.success('Tipo criado com sucesso!')
-            this.$emit('success', { action: 'register' })
-          },
-          error ({ error }) {
-            handleError(this, error)
-          }
-        }
-      }
-    },
-    _updateExpenseType () {
-      return {
-        method: 'PATCH',
-        url: `api/expense-types/${this.editingType.id}/edit`,
-        auto: false,
-        on: {
-          success () {
-            this.$toast.success('Tipo editado com sucesso!')
-            this.$emit('success', { action: 'update' })
-          },
-          error ({ error }) {
-            handleError(this, error, { formProp: 'editForm' })
-          }
-        }
-      }
-    }
-  },
   props: {
     value: {
       type: Boolean,
@@ -83,10 +49,17 @@ export default {
       this.isLoadingCreate = true
 
       try {
-        await this.$chimera._newExpenseType.fetch(true, {
-          params: data
+        await this.$apollo.mutate({
+          mutation: expenseTypesCreate,
+          variables: {
+            input: data
+          }
         })
-      } catch (error) {}
+
+        handleSuccess(this, { message: 'Tipo de despesa registrado!' })
+      } catch (error) {
+        handleError(this, error)
+      }
 
       this.isLoadingCreate = false
     },
@@ -96,10 +69,18 @@ export default {
       this.isLoadingEdit = true
 
       try {
-        await this.$chimera._updateExpenseType.fetch(true, {
-          params: data
+        await this.$apollo.mutate({
+          mutation: expenseTypesUpdate,
+          variables: {
+            id: this.editingType.id,
+            input: data
+          }
         })
-      } catch (error) {}
+
+        handleSuccess(this, { message: 'Tipo de despesa atualizado!' })
+      } catch (error) {
+        handleError(this, error)
+      }
 
       this.isLoadingEdit = false
     }

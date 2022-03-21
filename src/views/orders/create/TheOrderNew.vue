@@ -1,8 +1,12 @@
 <script>
+import { isEmpty } from 'lodash-es'
 import {
   faBoxOpen,
   faArrowCircleLeft
 } from '@fortawesome/free-solid-svg-icons'
+import { orders, clients } from '@/constants/route-names'
+import { GetClient } from '@/graphql/Client.gql'
+
 import OrderForm from '../form/OrderForm'
 
 export default {
@@ -10,39 +14,40 @@ export default {
     OrderForm
   },
   metaInfo () {
+    if (isEmpty(this.client)) {
+      return { title: 'Carregando... ' }
+    }
+
     return {
-      title: 'Novo pedido - ' + this.client?.name || ''
+      title: `Novo pedido - ${this.client.name}`
+    }
+  },
+  apollo: {
+    client: {
+      query: GetClient,
+      variables () {
+        return {
+          id: this.$route.params.clientKey
+        }
+      }
     }
   },
   data () {
     return {
+      client: {},
+      clients,
       icons: {
         faBoxOpen,
         faArrowCircleLeft
       }
     }
   },
-  chimera: {
-    _client () {
-      return {
-        url: `/api/clients/${this.$route.params.clientKey}`
-      }
-    }
-  },
-  computed: {
-    client () {
-      return this.$chimera._client?.data?.data || {}
-    }
-  },
   methods: {
-    onSuccess () {
-      this.$toast.success('Pedido criado com sucesso!')
-      this.redirectToClient()
-    },
-    redirectToClient () {
-      return this.$router.push({
-        name: 'clients.show',
-        client: this.$route.params.clientKey
+    onSuccess ({ clientId, orderId }) {
+      this.$toast.success('Pedido criado!')
+      this.$helpers.redirectTo(orders.show, {
+        client: clientId,
+        order: orderId
       })
     }
   }
@@ -55,7 +60,7 @@ export default {
       class="mb-2"
       outlined
       :icon="icons.faArrowCircleLeft"
-      @click="redirectToClient"
+      @click="$helpers.redirectTo(clients.show, {client})"
     >
       Cliente
     </AppButton>

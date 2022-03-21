@@ -13,7 +13,7 @@ export default new Vuex.Store({
   },
   getters: {
     apiURL () {
-      return process.env.VUE_APP_API_URL
+      return process.env.VUE_APP_GRAPHQL_HTTP
     }
   }
 })

@@ -84,27 +84,29 @@ export default {
   },
   data () {
     return {
+      inputType: this.type,
       tippyConfig: {
         placement: 'bottom',
         duration: '150',
         arrow: true
-      }
+      },
+      dateRelated: ['date', 'week', 'month', 'year']
     }
   },
   computed: {
     inputAutocomplete () {
       const autocomplete = this.autocomplete || false
 
-      return this.type === 'date'
+      return this.dateRelated.includes(this.inputType)
         ? 'off'
         : autocomplete
     },
-    inputType () {
-      if (this.type === 'date') {
+    typeComputed () {
+      if (this.dateRelated.includes(this.inputType)) {
         return 'text'
       }
 
-      return this.type
+      return this.inputType
     },
     inputClasses () {
       return classNames([
@@ -119,7 +121,7 @@ export default {
       return this.disabled || !isEmpty(this.disabledMessage)
     },
     isTypePassword () {
-      return this.inputType === 'password'
+      return this.typeComputed === 'password'
     },
     inputLabel () {
       return this.$slots.default || this.label
@@ -149,7 +151,7 @@ export default {
       this.$emit('input', todayDate)
     },
     focusInput () {
-      const input = this.$refs.input.$el
+      const input = this.$refs.input
       const length = input.value.length
 
       input.focus()
@@ -157,10 +159,10 @@ export default {
       // Fix cursor not be placed at end of input on focus
       setTimeout(() => { input.setSelectionRange(length, length) }, 0)
     },
-    togglePassord () {
-      this.isTypePassword
-        ? this.inputType = 'text'
-        : this.inputType = 'password'
+    togglePassword () {
+      this.inputType = this.isTypePassword
+        ? 'text'
+        : 'password'
 
       this.focusInput()
     }

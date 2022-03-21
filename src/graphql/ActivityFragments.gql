@@ -1,0 +1,19 @@
+fragment UserCauser on User {
+  id
+  name
+  role {
+    id
+    name
+  }
+}
+
+fragment OrderSubject on Order {
+  id
+  client {
+    id
+  }
+}
+
+fragment ClientSubject on Client {
+  id
+}

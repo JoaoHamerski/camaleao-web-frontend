@@ -1,7 +1,8 @@
-import Layout from './Layout'
+import Layout from '@/views/Layout'
 
 import role from '@/middleware/role'
 import roles from '@/constants/roles'
+import { cashFlow } from '@/constants/route-names'
 
 const TheCashFlow = () => import(
   /* webpackChunkName: "cash-flow" */
@@ -10,12 +11,12 @@ const TheCashFlow = () => import(
 
 const children = [
   {
-    name: 'cash-flow.index',
+    name: cashFlow.index,
     path: 'fluxo-de-caixa',
     component: TheCashFlow,
     meta: {
       middleware: [role],
-      roles: [roles.ATENDIMENTO, roles.GERENCIA]
+      roles: [roles.GERENCIA]
     }
   }
 ]

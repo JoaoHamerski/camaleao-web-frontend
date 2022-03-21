@@ -1,40 +1,35 @@
 <script>
+import { faExchangeAlt } from '@fortawesome/free-solid-svg-icons'
+
+import { status } from '@/graphql/Status.gql'
+import { UpdateOrder } from '@/graphql/Order.gql'
+
+import { handleError, handleSuccess } from '@/utils/forms'
+
 export default {
-  chimera: {
-    _status () {
-      return {
-        url: 'api/status'
-      }
-    },
-    _updateStatus () {
-      return {
-        method: 'PATCH',
-        url: `api/clients/${this.clientKey}/orders/${this.orderKey}/update-status`,
-        on: {
-          success () {
-            this.$toast.success('Status alterado com sucesso!')
-            this.$emit('success')
-          },
-          error (data) {
-            this.$toast.error('Algo deu errado!')
-          }
-        }
-      }
+  apollo: {
+    status: {
+      query: status
     }
   },
   props: {
+    order: {
+      type: Object,
+      default: () => ({})
+    },
     value: {
       type: Boolean,
       default: false
-    },
-    orderStatus: {
-      type: Object,
-      default: () => {}
     }
   },
   data () {
     return {
-      selected: this.orderStatus.id
+      icons: {
+        faExchangeAlt
+      },
+      isLoading: false,
+      status: [],
+      selected: this.order.status.id
     }
   },
   computed: {
@@ -43,18 +38,29 @@ export default {
     },
     orderKey () {
       return this.$route.params.orderKey
-    },
-    status () {
-      return this.$chimera._status?.data?.data || []
     }
   },
   methods: {
-    updateStatus () {
-      this.$chimera._updateStatus.fetch(true, {
-        params: {
-          status: this.selected
-        }
-      })
+    async updateStatus () {
+      this.isLoading = true
+
+      try {
+        await this.$apollo.mutate({
+          mutation: UpdateOrder,
+          variables: {
+            id: this.order.id,
+            input: {
+              status_id: this.selected
+            }
+          }
+        })
+
+        handleSuccess(this, { message: 'Status alterado!' })
+      } catch (error) {
+        handleError(this, error)
+      }
+
+      this.isLoading = false
     }
   }
 }
@@ -69,6 +75,10 @@ export default {
     v-on="$listeners"
   >
     <template #title>
+      <FontAwesomeIcon
+        :icon="icons.faExchangeAlt"
+        fixed-width
+      />
       Alterar status do pedido
     </template>
 
@@ -80,9 +90,9 @@ export default {
           </div>
           <h5
             class="fw-bold"
-            :class="orderStatus.avaliable ? 'text-success' : 'text-warning'"
+            :class="order.status.avaliable ? 'text-success' : 'text-warning'"
           >
-            {{ orderStatus.text }}
+            {{ order.status.text }}
           </h5>
         </div>
 
@@ -101,7 +111,7 @@ export default {
             class="form-check-input"
             type="radio"
             :name="`radio__${option.id}__name`"
-            :checked="selected === orderStatus.id"
+            :checked="selected === order.status.id"
           >
           <label
             class="form-check-label"
@@ -112,20 +122,28 @@ export default {
         </div>
       </div>
 
-      <div class="d-flex justify-content-between">
-        <AppButton
-          color="success"
-          class="fw-bold"
-          @click="updateStatus"
-        >
-          Salvar
-        </AppButton>
-        <AppButton
-          color="light"
-          data-bs-dismiss="modal"
-        >
-          Fechar
-        </AppButton>
+      <div class="row">
+        <div class="col">
+          <AppButton
+            :loading="isLoading"
+            color="success"
+            class="fw-bold"
+            block
+            @click.prevent="updateStatus"
+          >
+            Salvar
+          </AppButton>
+        </div>
+        <div class="col">
+          <AppButton
+            type="button"
+            block
+            color="light"
+            data-bs-dismiss="modal"
+          >
+            Fechar
+          </AppButton>
+        </div>
       </div>
     </template>
   </AppModal>

@@ -1,27 +1,51 @@
-import { has } from 'lodash-es'
+import { isEmpty } from 'lodash-es'
 
-export const handleError = (context, error, options) => {
+const getGraphqlErrors = (error) => {
+  return error.graphQLErrors[0].extensions.validation
+}
+
+const getErrors = (error) => {
+  if ('errors' in error) {
+    return error.errors
+  }
+
+  if ('graphQLErrors' in error) {
+    return getGraphqlErrors(error)
+  }
+
+  return null
+}
+
+export const handleError = (context, error, extraOptions = {}) => {
+  const defaultOptions = {
+    formProp: 'form'
+  }
+
+  const options = { ...defaultOptions, ...extraOptions }
+
+  const errors = getErrors(error)
+
+  if (!isEmpty(errors)) {
+    context[options.formProp].onFail(errors)
+  }
+
   context.$toast.error('Algo está incorreto, verifique os dados, por favor.', {
     duration: 4000
   })
-
-  if (has(error, 'errors')) {
-    if (has(options, 'formProp')) {
-      context[options.formProp].onFail(error.errors)
-    } else {
-      context.form.onFail(error.errors)
-    }
-  }
 }
 
-export const handleSuccess = (context, options) => {
-  if (has(options, 'resetForm')) {
+export const handleSuccess = (context, options = {}) => {
+  if ('resetForm' in options) {
     context.form.reset()
   }
 
-  if (has(options, 'message')) {
+  if ('message' in options) {
     context.$toast.success(options.message)
   }
 
-  context.$emit('success')
+  if ('payload' in options) {
+    context.$emit('success', options.payload)
+  } else {
+    context.$emit('success')
+  }
 }

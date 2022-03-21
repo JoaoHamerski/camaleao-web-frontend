@@ -1,15 +1,10 @@
 <script>
-import {
-  faBoxes,
-  faQuestionCircle
-} from '@fortawesome/free-solid-svg-icons'
-import { TippyComponent } from 'vue-tippy'
-import OrdersListLegend from '../../orders/partials/OrdersListLegend'
+import { faBoxes } from '@fortawesome/free-solid-svg-icons'
 
+import OrdersQuestionIconTippy from '@/views/orders/partials/OrdersQuestionIconTippy'
 export default {
   components: {
-    OrdersListLegend,
-    Tippy: TippyComponent
+    OrdersQuestionIconTippy
   },
   props: {
     isLoading: {
@@ -24,8 +19,7 @@ export default {
   data () {
     return {
       icons: {
-        faBoxes,
-        faQuestionCircle
+        faBoxes
       }
     }
   },
@@ -42,17 +36,6 @@ export default {
     }
   },
   methods: {
-    orderUrl (order) {
-      const resolvedRoute = this.$router.resolve({
-        name: 'orders.show',
-        params: {
-          clientKey: this.$route.params.clientKey,
-          orderKey: order.code
-        }
-      })
-
-      return resolvedRoute.href
-    },
     rowClass (order) {
       if (order.states.includes('PRE-REGISTERED')) {
         return 'table-warning'
@@ -68,14 +51,14 @@ export default {
 
       return ''
     },
-    redirectToOrder ({ code }) {
-      this.$router.push({
+    tableRowRoute (item) {
+      return {
         name: 'orders.show',
-        params: {
-          clientKey: this.$route.params.clientKey,
-          orderKey: code
-        }
-      })
+        params: this.$helpers.getRouteParams({
+          client: this.$route.params.clientKey,
+          order: item.id
+        })
+      }
     }
   }
 }
@@ -95,21 +78,7 @@ export default {
           />
           Pedidos
         </div>
-        <div>
-          <Tippy
-            to="icon-question"
-            placement="bottom"
-            arrow
-            theme="light-border"
-            :duration="150"
-          >
-            <OrdersListLegend />
-          </Tippy>
-          <FontAwesomeIcon
-            name="icon-question"
-            :icon="icons.faQuestionCircle"
-          />
-        </div>
+        <OrdersQuestionIconTippy />
       </h6>
     </template>
     <template #body>
@@ -117,8 +86,7 @@ export default {
         :headers="headers"
         :items="orders"
         :row-class="rowClass"
-        :row-url="orderUrl"
-        @click:item="redirectToOrder"
+        :route="tableRowRoute"
       />
     </template>
   </AppCard>

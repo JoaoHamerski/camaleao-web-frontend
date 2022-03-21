@@ -1,13 +1,14 @@
-import Layout from './Layout'
+import Layout from '@/views/Layout'
 
 import role from '@/middleware/role'
 import roles from '@/constants/roles'
+import { expenses } from '@/constants/route-names'
 
 import TheExpenses from './index/TheExpenses'
 
 const children = [
   {
-    name: 'expenses.index',
+    name: expenses.index,
     path: 'despesas',
     component: TheExpenses,
     meta: {

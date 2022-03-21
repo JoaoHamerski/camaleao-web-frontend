@@ -1,4 +1,5 @@
 <script>
+import { get } from 'lodash'
 import classNames from 'classnames'
 
 import TableCell from './TableCell'
@@ -22,7 +23,7 @@ const renderTableHead = (h, context) => {
             return (
               <th
                 key={index}
-                class={`text-${header.align}`}>
+                class={header.align && `text-${header.align}`}>
                 { tableHeadContent(h, context, header) }
               </th>
             )
@@ -48,14 +49,16 @@ const renderTableCell = (h, context, item) => {
   return context.headers.map((header, index) => {
     return (
       <TableCell
+        vOn:clicked={() => context.redirectTo(item)}
         isUsingSlot={context.hasSlot(`items.${header.value}`)}
         hasRowLinks={context.hasRowLinks}
-        url={context.rowUrl(item)}
+        url={() => context.routeUrl(item)}
         align={header.align}
         format={header.format}
+        nowrap={header.nowrap}
         formatting={header.formatting}
         key={index}
-        value={item[header.value]}
+        value={get(item, header.value)}
       >
         { tableCellContent(h, context, header, item) }
       </TableCell>
@@ -72,7 +75,6 @@ const renderTableBody = (h, context) => {
             <tr
               key={index}
               class={context.rowClass(item)}
-              vOn:mousedown={(e) => { context.rowClicked(e, item) }}
             >
               { renderTableCell(h, context, item) }
             </tr>
@@ -104,10 +106,6 @@ export default {
     TableCell
   },
   props: {
-    rowUrl: {
-      type: Function,
-      default: () => ''
-    },
     rowClass: {
       type: Function,
       default: () => {}
@@ -123,6 +121,10 @@ export default {
     items: {
       type: Array,
       default: () => []
+    },
+    route: {
+      type: Function,
+      default: () => {}
     }
   },
   computed: {
@@ -134,14 +136,21 @@ export default {
       ])
     },
     hasRowLinks () {
-      return !!this.$listeners['click:item']
+      return !!this.$props.route.length
     }
   },
   methods: {
-    rowClicked (event, item) {
-      if (event.which === 1) {
-        this.$emit('click:item', item)
-      }
+    routeUrl (item) {
+      const resolvedRoute = this.$router.resolve(
+        this.route(item)
+      )
+
+      return resolvedRoute.href
+    },
+    redirectTo (item) {
+      return this.$router.push(
+        this.route(item)
+      )
     },
     hasSlot (name) {
       return !!(this.$slots[name] || this.$scopedSlots[name])
@@ -156,3 +165,15 @@ export default {
   }
 }
 </script>
+
+<style lang="scss" scoped>
+::v-deep {
+  td.has-link {
+    padding: 0;
+
+    a {
+      padding: 0.5rem 0.5rem
+    }
+  }
+}
+</style>

@@ -1,0 +1,31 @@
+import Layout from '@/views/Layout'
+
+import role from '@/middleware/role'
+import roles from '@/constants/roles'
+import { production } from '@/constants/route-names'
+
+const TheProduction = () => import(
+  /* webpackChunkName: "production" */
+  './index/TheProduction'
+)
+
+const children = [
+  {
+    name: production.index,
+    path: '/producao',
+    component: TheProduction,
+    meta: {
+      middleware: [role],
+      roles: [roles.COSTURA, roles.ESTAMPA]
+    }
+  }
+]
+
+export default [
+  {
+    name: 'producao',
+    path: '/',
+    component: Layout,
+    children
+  }
+]

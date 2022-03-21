@@ -6,19 +6,22 @@ export default {
   components: {
     ClientForm
   },
+  props: {
+    value: {
+      type: Boolean,
+      default: false
+    }
+  },
   data () {
     return {
-      modal: false,
       icons: {
         faUserPlus
       }
     }
   },
   methods: {
-    submitted () {
-      this.$toast.success('Cadastrado com sucesso!')
-      this.modal = false
-      this.$emit('refresh')
+    onSuccess () {
+      this.$emit('success')
     }
   }
 }
@@ -28,8 +31,10 @@ export default {
   <div>
     <AppModal
       id="clientModalNew"
-      v-model="modal"
+      :value="value"
+      color="success"
       centered
+      v-on="$listeners"
     >
       <template #title>
         <FontAwesomeIcon
@@ -40,7 +45,8 @@ export default {
       </template>
       <template #body>
         <ClientForm
-          @submitted="submitted"
+          v-if="value"
+          @success="onSuccess"
         />
       </template>
     </AppModal>

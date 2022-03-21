@@ -1,0 +1,59 @@
+query expenses (
+  $first: Int = 10 
+  $page: Int
+  $descriptionLike: String
+) {
+  expenses (
+    first: $first 
+    page: $page
+    descriptionLike: $descriptionLike
+    orderBy: [{column: CREATED_AT order: DESC}]
+  ) {
+    paginatorInfo {
+      total
+      perPage
+      currentPage
+    }
+
+    data {
+      id
+      value
+      date
+      description
+      receipt_path
+
+      user {
+        name
+        role {
+          name
+        }
+      }
+
+      type {
+        id
+        name
+      }
+
+      via {
+        id
+        name
+      }
+    }
+  }
+}
+
+query expensesReport ($start_date: String! $final_date: String) {
+  expensesReport(start_date: $start_date final_date: $final_date)
+}
+
+mutation expenseCreate ($input: ExpenseInput!) {
+  expenseCreate (input: $input) {
+    id
+  }
+}
+
+mutation expenseUpdate ($id: ID! $input: ExpenseInput!) {
+  expenseUpdate(id: $id input: $input) {
+    id
+  }
+}

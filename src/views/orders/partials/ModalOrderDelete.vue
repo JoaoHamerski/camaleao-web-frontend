@@ -1,25 +1,8 @@
 <script>
 import { faTrashAlt } from '@fortawesome/free-solid-svg-icons'
+import { DeleteOrder } from '@/graphql/Order.gql'
 
 export default {
-  chimera: {
-    _deleteOrder () {
-      return {
-        method: 'DELETE',
-        url: `api/clients/${this.clientKey}/orders/${this.orderKey}`,
-        on: {
-          success () {
-            this.$toast.success('Pedido deletado com sucesso!')
-            this.$emit('success')
-          },
-          error () {
-            this.isLoading = false
-            this.$toast.error('Ops! Algo deu errado.')
-          }
-        }
-      }
-    }
-  },
   props: {
     value: {
       type: Boolean,
@@ -32,7 +15,6 @@ export default {
   },
   data () {
     return {
-      preConfirmed: false,
       orderCode: '',
       icons: {
         faTrashAlt
@@ -42,6 +24,10 @@ export default {
   },
   computed: {
     isPreConfirmed () {
+      if (!this.order.code) {
+        return true
+      }
+
       return this.orderCode === this.order.code
     },
     clientKey () {
@@ -52,6 +38,16 @@ export default {
     }
   },
   methods: {
+    async delete () {
+      await this.$apollo.mutate({
+        mutation: DeleteOrder,
+        variables: {
+          id: this.order.id
+        }
+      })
+
+      this.$emit('success')
+    },
     deleteOrder () {
       this.isLoading = true
 
@@ -62,7 +58,7 @@ export default {
         return
       }
 
-      this.$chimera._deleteOrder.fetch()
+      this.delete()
     }
   }
 }
@@ -94,32 +90,42 @@ export default {
           <div>Isso deleterá todos os pagamentos, anexos e anotações do pedido.</div>
         </div>
 
-        <div class="mt-3">
+        <div
+          v-if="order.code"
+          class="mt-3"
+        >
           <AppInput
             id="code"
             v-model="orderCode"
             name="code"
+            placeholder="Digite o código do pedido..."
           >
-            Confirme o código do pedido:
+            Confirme o código do pedido ({{ order.code }}):
           </AppInput>
         </div>
 
-        <div class="d-flex justify-content-between mt-5">
-          <AppButton
-            class="fw-bold"
-            color="success"
-            :disabled="!isPreConfirmed"
-            :loading="isLoading"
-            @click="deleteOrder"
-          >
-            CONFIRMAR
-          </AppButton>
-          <AppButton
-            data-bs-dismiss="modal"
-            color="light"
-          >
-            Cancelar
-          </AppButton>
+        <div class="row mt-5">
+          <div class="col">
+            <AppButton
+              class="fw-bold"
+              color="success"
+              :disabled="!isPreConfirmed"
+              :loading="isLoading"
+              block
+              @click="deleteOrder"
+            >
+              CONFIRMAR
+            </AppButton>
+          </div>
+          <div class="col">
+            <AppButton
+              data-bs-dismiss="modal"
+              color="light"
+              block
+            >
+              Cancelar
+            </AppButton>
+          </div>
         </div>
       </div>
     </template>

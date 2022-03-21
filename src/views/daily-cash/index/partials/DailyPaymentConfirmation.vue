@@ -1,26 +1,15 @@
 <script>
 import roles from '@/constants/roles'
+import { ConfirmPayment, GetPaymentsPendencies } from '@/graphql/Payment.gql'
 
-import { faCheck, faTimes, faMinus, faExclamation } from '@fortawesome/free-solid-svg-icons'
+import {
+  faCheck,
+  faTimes,
+  faMinus,
+  faExclamation
+} from '@fortawesome/free-solid-svg-icons'
 
 export default {
-  chimera: {
-    _assignPayment () {
-      return {
-        method: 'POST',
-        url: `/api/payments/${this.payment.id}/confirm`,
-        auto: false,
-        on: {
-          success () {
-            this.$emit('success')
-          },
-          error () {
-            this.$emit('payment-error', this.payment)
-          }
-        }
-      }
-    }
-  },
   props: {
     payment: {
       type: Object,
@@ -50,8 +39,8 @@ export default {
       return this.loadingConfirmBtn || this.loadingDeclineBtn
     },
     showConfirmationButtons () {
-      return this.authUser.role.id === roles.GERENCIA
-      && this.confirmation === null
+      return this.$helpers.canView(roles.GERENCIA)
+        && this.confirmation === null
     },
     authUser () {
       return this.$store.getters['auth/authUser']
@@ -59,17 +48,20 @@ export default {
   },
   methods: {
     canBeConfirmed (payment) {
-      return payment.value < payment.order.total_owing
+      return payment.value <= payment.order.total_owing
     },
     async assignPayment ({ confirmation }) {
       this.loadingConfirmBtn = confirmation
       this.loadingDeclineBtn = !confirmation
 
       try {
-        await this.$chimera._assignPayment.fetch(true, {
-          params: {
+        await this.$apollo.mutate({
+          mutation: ConfirmPayment,
+          variables: {
+            id: this.payment.id,
             confirmation
-          }
+          },
+          refetchQueries: [{ query: GetPaymentsPendencies }]
         })
 
         this.$toast.success(
@@ -77,7 +69,11 @@ export default {
             ? 'Pagamento confirmado!'
             : 'Pagamento rejeitado!'
         )
-      } catch (error) {}
+
+        this.$emit('success')
+      } catch (error) {
+        this.$emit('error', this.payment)
+      }
 
       this.loadingDeclineBtn = false
       this.loadingConfirmBtn = false
@@ -130,7 +126,7 @@ export default {
     class="fw-bold"
   >
     <div
-      v-if="confirmation === 1"
+      v-if="confirmation === true"
       class="text-success"
     >
       <FontAwesomeIcon :icon="icons.faCheck" />
@@ -142,7 +138,7 @@ export default {
       <FontAwesomeIcon :icon="icons.faMinus" />
     </div>
     <div
-      v-else-if="confirmation === 0"
+      v-else-if="confirmation === false"
       class="text-danger"
     >
       <FontAwesomeIcon :icon="icons.faTimes" />

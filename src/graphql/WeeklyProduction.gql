@@ -1,0 +1,31 @@
+query GetWeeklyProductionOrders ($date: String!) {
+  weeklyProduction (date: $date) {
+    date
+    orders {
+      id
+      code
+      price
+      total_owing
+      states
+      art_paths
+      created_at
+      reminder
+      status {
+        id
+        text
+        is_available
+      }
+
+      client {
+        id
+        name
+      }
+    }
+  }
+}
+
+mutation CreatePreRegisteredOrder ($input: OrderPreRegisteredInput!) {
+  orderCreatePreRegistered (input: $input) {
+    id
+  }
+}

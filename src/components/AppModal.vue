@@ -89,18 +89,8 @@ export default {
         )
       })
     }
-
-    this.$on('show', () => {
-      window.addEventListener('keydown', this.onKeypress)
-    })
-
-    this.$on('hidden', () => {
-      window.removeEventListener('keydown', this.onKeypress)
-    })
   },
   beforeDestroy () {
-    window.removeEventListener('keydown', this.onKeypress)
-
     EVENTS_EMITTED.forEach(event => {
       this.$refs.modal.removeEventListener(
         event,
@@ -133,8 +123,6 @@ export default {
     class="modal fade"
     :aria-labelledby="`${id}Label`"
     aria-hidden="true"
-    tabindex="-1"
-    data-bs-focus="false"
   >
     <div
       class="modal-dialog"

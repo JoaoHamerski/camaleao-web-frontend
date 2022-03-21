@@ -5,7 +5,9 @@ export default {
         const items = event.clipboardData.items
         const files = await this.getBase64Files(items)
 
-        this.transferedItems = files
+        if ('transferedItems' in this) {
+          this.transferedItems = files
+        }
 
         if ('afterPaste' in this) {
           this.afterPaste(files)

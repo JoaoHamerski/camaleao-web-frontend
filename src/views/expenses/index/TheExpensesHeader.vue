@@ -2,11 +2,11 @@
 import roles from '@/constants/roles'
 import { faPlus, faList } from '@fortawesome/free-solid-svg-icons'
 
-import ModalExpensesRegister from './modals/ModalExpensesRegister'
+import ModalExpensesNew from './modals/ModalExpensesNew'
 
 export default {
   components: {
-    ModalExpensesRegister,
+    ModalExpensesNew,
     ModalExpensesTypes: () => import('./modals/ModalExpensesTypes')
   },
   props: {
@@ -35,11 +35,6 @@ export default {
       modalExpensesTypes: false
     }
   },
-  computed: {
-    authUser () {
-      return this.$store.getters['auth/authUser']
-    }
-  },
   methods: {
     onSearchClick () {
       this.$emit('search', this.search)
@@ -56,16 +51,6 @@ export default {
     },
     onExpenseRegisterSuccess () {
       this.modalExpensesRegister = false
-      this.$toast.success('Despesa registrada com sucesso!')
-      this.$emit('refresh-expenses')
-    },
-    onExpenseTypeRegisterSuccess ({ action }) {
-      if (action === 'update') {
-        this.$emit('refresh-all')
-        return
-      }
-
-      this.$emit('refresh-expense-types')
     }
   }
 }
@@ -73,7 +58,7 @@ export default {
 
 <template>
   <div>
-    <ModalExpensesRegister
+    <ModalExpensesNew
       v-model="modalExpensesRegister"
       :expense-types="expenseTypes"
       :vias="vias"
@@ -81,15 +66,15 @@ export default {
     />
 
     <ModalExpensesTypes
-      v-if="authUser.role.id === roles.GERENCIA"
+      v-if="$helpers.canView(roles.GERENCIA)"
       v-model="modalExpensesTypes"
       :expense-types="expenseTypes"
-      @success="onExpenseTypeRegisterSuccess"
     />
 
     <div class="d-flex justify-content-between mb-2">
       <AppButton
         :icon="icons.faPlus"
+        color="success"
         btn-class="fw-bold"
         @click="onRegisterExpenseClick"
       >
@@ -97,7 +82,7 @@ export default {
       </AppButton>
 
       <AppButton
-        v-if="authUser.role.id === roles.GERENCIA"
+        v-if="$helpers.canView(roles.GERENCIA)"
         outlined
         :icon="icons.faList"
         @click="onExpensesTypesClick"

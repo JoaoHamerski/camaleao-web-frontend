@@ -1,14 +1,16 @@
 import store from '@/store'
 
-export default async function guest ({ from, next }) {
-  const homeRoute = { path: '/' }
+const HOME_ROUTE = {
+  path: '/'
+}
 
+export default async function guest ({ from, next }) {
   if (!store.getters['auth/authUser']) {
     await store.dispatch('auth/getAuthUser')
   }
 
   if (store.getters['auth/authUser']) {
-    next(homeRoute)
+    next(HOME_ROUTE)
     return
   }
 

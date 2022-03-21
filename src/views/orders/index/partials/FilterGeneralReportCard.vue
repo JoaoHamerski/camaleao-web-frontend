@@ -1,91 +1,80 @@
 <script>
 import { faClipboardList } from '@fortawesome/free-solid-svg-icons'
 import { maskDate } from '@/utils/masks'
-import { isEmpty, isNil, pickBy } from 'lodash-es'
-
-import ModalReport from '../../partials/ModalReport'
-
-const GENERAL_REPORT_PATH_URL = '/api/orders/reports/general'
+import { cities } from '@/graphql/City.gql'
+import { status } from '@/graphql/Status.gql'
+import { GetOrdersReport } from '@/graphql/Order.gql'
+import Form from '@/utils/Form'
 
 export default {
-  components: {
-    ModalReport
-  },
-  chimera: {
-    _status () {
-      return {
-        method: 'GET',
-        url: 'api/status'
-      }
+  apollo: {
+    cities: {
+      query: cities
     },
-    _cities () {
-      return {
-        method: 'GET',
-        url: 'api/cities'
-      }
+    status: {
+      query: status
     }
   },
   data () {
     return {
       maskDate,
-      modal: false,
-      src: '',
-      filter: {
-        city: '',
-        status: '',
-        closing_date: '',
+      cities: [],
+      status: [],
+      isLoading: false,
+      form: new Form({
+        city_id: '',
+        status_id: '',
+        closed_at: '',
         delivery_date: '',
-        order: 'is_open',
-        sort: 'older',
-        client: true
-      },
+        state: 'OPEN',
+        order: 'OLDER',
+        display_filter_info: false
+      }),
       icons: {
         faClipboardList
       }
     }
   },
   computed: {
-    apiUrl () {
-      return this.$store.getters.apiURL
-    },
-    status () {
-      return this.$chimera._status?.data?.data || []
-    },
-    cities () {
-      return this.$chimera._cities?.data?.data || []
+    stateOptions () {
+      return [
+        { id: 'OPEN', label: 'Em aberto', value: 'OPEN' },
+        { id: 'ALL', label: 'Todos', value: 'ALL' }
+      ]
     },
     orderOptions () {
       return [
-        { id: 'is_open', label: 'Em aberto', value: 'is_open' },
-        { id: 'all', label: 'Todos', value: 'all' }
-      ]
-    },
-    sortOptions () {
-      return [
-        { id: 'older', label: 'Mais antigo', value: 'older' },
-        { id: 'newer', label: 'Mais recente', value: 'newer' },
-        { id: 'delivery_date', label: 'Data de enterga', value: 'delivery_date' }
+        { id: 'OLDER', label: 'Mais antigo', value: 'OLDER' },
+        { id: 'NEWER', label: 'Mais recente', value: 'NEWER' },
+        { id: 'DELIVERY_DATE', label: 'Data de enterga', value: 'DELIVERY_DATE' }
       ]
     }
   },
   methods: {
-    isEmpty,
-    generateURL () {
-      const url = new URL(this.apiUrl + GENERAL_REPORT_PATH_URL)
-      const filters = { ...this.filter }
-      const validFilters = pickBy(filters, item => !isNil(item) && item !== '')
+    getFormattedData () {
+      const data = this.form.data()
 
-      filters.city = filters.city.id
+      data.city_id = data.city_id?.id ?? ''
+      data.status_id = data.status_id?.id ?? ''
 
-      url.search = new URLSearchParams(validFilters)
-
-      return url.toString()
+      return data
     },
-    onGenerateReportClick () {
-      const url = this.generateURL()
+    async generateReport () {
+      const input = this.getFormattedData()
 
-      this.src = url
-      this.modal = true
+      this.isLoading = true
+
+      const { data } = await this.$apollo.query({
+        query: GetOrdersReport,
+        variables: {
+          input
+        },
+        fetchPolicy: 'network-only'
+      })
+
+      this.isLoading = false
+
+      this.$emit('report-generated', data.ordersReport)
     },
     onModalHidden () {
       this.src = ''
@@ -119,104 +108,108 @@ export default {
         /> Relatório geral
       </h6>
     </template>
-    <template #body>
-      <ModalReport
-        id="generalReportModal"
-        v-model="modal"
-        :src="src"
-        @hidden="onModalHidden"
-      >
-        <template #title>
-          Relatório geral de pedidos
-        </template>
-      </ModalReport>
 
+    <template #body>
       <h6 class="fw-bold">
         Filtros
       </h6>
       <div class="small text-secondary">
-        Filtre por <b>um</b> ou <b>vários campos</b> combinados
+        Filtre por <b>um</b> ou <b>vários campos</b> combinados.
+      </div>
+      <div class="small text-secondary">
+        Pedidos pré-registrados não são incluidos no relatório.
       </div>
 
-      <div class="row">
-        <div class="col-3">
-          <AppSelect
-            id="city"
-            v-model="filter.city"
-            name="city"
-            placeholder="Selecione uma cidade"
-            :options="cities"
-            :custom-label="customLabelCity"
-          >
-            Cidade
-          </AppSelect>
-        </div>
-        <div class="col-3">
-          <AppSimpleSelect
-            id="status"
-            v-model="filter.status"
-            name="city"
-            :options="status"
-            value-prop="id"
-            :label-prop="customLabelStatus"
-          >
-            Status
-          </AppSimpleSelect>
-        </div>
-        <div class="col-3">
-          <AppInput
-            id="closing_date"
-            v-model="filter.closing_date"
-            :mask="maskDate"
-            name="closing_date"
-            placeholder="dd/mm/aaaa"
-            type="date"
-          >
-            Data de fechamento
-          </AppInput>
-        </div>
-        <div class="col-3">
-          <AppInput
-            id="delivery_date"
-            v-model="filter.delivery_date"
-            :mask="maskDate"
-            name="delivery_date"
-            placeholder="dd/mm/aaaa"
-            type="date"
-          >
-            Data de entrega
-          </AppInput>
-        </div>
-      </div>
-
-      <div class="d-flex mb-3">
-        <div class="fw-bold me-2">
-          Pedidos:
-        </div>
-        <AppRadio
-          v-model="filter.order"
-          :options="orderOptions"
-        />
-      </div>
-
-      <div class="d-flex">
-        <div class="fw-bold me-2">
-          Ordem:
-        </div>
-
-        <AppRadio
-          v-model="filter.sort"
-          :options="sortOptions"
-        />
-      </div>
-
-      <AppButton
-        outlined
-        class="mt-4"
-        @click.prevent="onGenerateReportClick"
+      <AppForm
+        :form="form"
+        :on-submit="generateReport"
       >
-        Gerar relatório
-      </AppButton>
+        <div class="row">
+          <div class="col-3">
+            <AppSelect
+              id="city_id"
+              v-model="form.city_id"
+              name="city_id"
+              placeholder="Selecione uma cidade"
+              :options="cities"
+              :custom-label="customLabelCity"
+            >
+              Cidade
+            </AppSelect>
+          </div>
+          <div class="col-3">
+            <AppSimpleSelect
+              id="status_id"
+              v-model="form.status_id"
+              name="status_id"
+              :options="status"
+              value-prop="id"
+              :label-prop="customLabelStatus"
+            >
+              Status
+            </AppSimpleSelect>
+          </div>
+          <div class="col-3">
+            <AppInput
+              id="closed_at"
+              v-model="form.closed_at"
+              :mask="maskDate"
+              name="closed_at"
+              placeholder="dd/mm/aaaa"
+              type="date"
+            >
+              Data de fechamento
+            </AppInput>
+          </div>
+          <div class="col-3">
+            <AppInput
+              id="delivery_date"
+              v-model="form.delivery_date"
+              :mask="maskDate"
+              name="delivery_date"
+              placeholder="dd/mm/aaaa"
+              type="date"
+            >
+              Data de entrega
+            </AppInput>
+          </div>
+        </div>
+
+        <AppRadio
+          v-model="form.state"
+          name="state"
+          :options="stateOptions"
+        >
+          Pedidos:
+        </AppRadio>
+
+        <AppRadio
+          v-model="form.order"
+          name="order"
+          :options="orderOptions"
+        >
+          Ordem:
+          <template #hint>
+            Ordem dos pedidos que deve aparecer primeiro
+          </template>
+        </AppRadio>
+
+        <AppCheckboxSwitch
+          id="displayFilterInfo"
+          v-model="form.display_filter_info"
+        >
+          Exibir informações do filtro no relatório
+        </AppCheckboxSwitch>
+
+        <AppButton
+          outlined
+          class="mt-4"
+          :loading="isLoading"
+          @click.prevent="generateReport"
+        >
+          Gerar relatório
+        </AppButton>
+      </AppForm>
     </template>
   </AppCard>
 </template>

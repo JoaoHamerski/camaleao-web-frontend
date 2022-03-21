@@ -25,3 +25,38 @@
     padding: 0 10px;
   }
 }
+
+.form-check-input-lg {
+  width: 1.25em;
+  height: 1.25em
+}
+
+
+@each $name, $color in $theme-colors {
+  .bg-link-#{$name} {
+    background-color: $color;
+    transition: background-color .15s;
+
+    &:hover {
+      background-color: darken($color, 5%);
+    }
+
+    &:active {
+      background-color: darken($color, 8%);
+    }
+  }
+}
+
+.border-x-0 {
+  border-right: 0 !important;
+  border-left: 0 !important;
+}
+
+.border-y-0 {
+  border-top: 0 !important;
+  border-bottom: 0 !important;
+}
+
+.radius-0 {
+  border-radius: 0 !important;
+}

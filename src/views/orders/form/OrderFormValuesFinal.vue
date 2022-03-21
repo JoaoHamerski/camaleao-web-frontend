@@ -1,6 +1,7 @@
 <script>
 import accounting from 'accounting-js'
 import { maskCurrencyBRL } from '@/utils/masks'
+import { vias } from '@/graphql/Via.gql'
 
 export default {
   props: {
@@ -17,22 +18,18 @@ export default {
       default: false
     }
   },
+  apollo: {
+    vias: {
+      query: vias
+    }
+  },
   data () {
     return {
+      vias: [],
       maskCurrencyBRL: maskCurrencyBRL({ numeralPositiveOnly: true })
     }
   },
-  chimera: {
-    _vias () {
-      return {
-        url: '/api/vias'
-      }
-    }
-  },
   computed: {
-    vias () {
-      return this.$chimera._vias?.data?.data || []
-    },
     hasDownPayment () {
       return accounting.unformat(this.form.down_payment, ',') > 0
     }

@@ -1,0 +1,34 @@
+fragment UserParts on User {
+  id
+  name
+  email
+  created_at
+  role {
+    id
+    name
+  }
+}
+
+query authUser {
+  authUser {
+    ...UserParts
+  }
+}
+
+mutation login ($email: String! $password: String!) {
+  login (email: $email password: $password) {
+    token
+  }
+}
+
+mutation authUpdate ($input: AuthInput!) {
+  authUpdate (input: $input) {
+    ...UserParts
+  }
+}
+
+mutation authDelete ($password: String!) {
+  authDelete (password: $password) {
+    id
+  }
+}

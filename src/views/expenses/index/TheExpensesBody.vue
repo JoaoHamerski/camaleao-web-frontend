@@ -9,6 +9,7 @@ import {
   faTrashAlt,
   faExclamationCircle
 } from '@fortawesome/free-solid-svg-icons'
+
 import Vue from 'vue'
 import VueViewer from 'v-viewer'
 import ModalExpensesDelete from './modals/ModalExpensesDelete'
@@ -36,13 +37,13 @@ export default {
       type: Object,
       default: () => ({})
     },
-    expenseTypes: {
-      type: Array,
-      default: () => ([])
-    },
     page: {
       type: Number,
       required: true
+    },
+    expenseTypes: {
+      type: Array,
+      default: () => ([])
     },
     isLoading: {
       type: Boolean,
@@ -81,7 +82,7 @@ export default {
         { text: 'Descrição', value: 'description' },
         { text: 'Tipo', value: 'type' },
         { text: 'Via', value: 'via' },
-        { text: 'Valor', value: 'value', format: 'currencyBRL' },
+        { text: 'Valor', value: 'value', format: 'currencyBRL', nowrap: true },
         { text: 'Data', value: 'date', format: 'datetime' },
         { text: 'Comprovante', value: 'receipt', align: 'center' },
         { text: 'Ações', value: 'actions', align: 'center' }
@@ -131,7 +132,6 @@ export default {
     },
     onSuccessEdit () {
       this.modalExpensesEdit.modal = false
-      this.$toast.success('Despesa editada com sucesso!')
       this.$emit('refresh-expenses')
     },
     onSuccessDelete () {
@@ -172,10 +172,12 @@ export default {
         :icon="icons.faExclamationCircle"
         fixed-width
       />
-      <span v-if="authUser.role.id === roles.GERENCIA">
+      <span v-if="+authUser.role.id === roles.GERENCIA">
         Exibindo despesas registradas por todos usuários.
       </span>
-      <span v-else>Exibindo apenas despesas registradas por você.</span>
+      <span v-else>
+        Exibindo apenas despesas registradas por você.
+      </span>
     </div>
 
     <AppCard
@@ -240,9 +242,10 @@ export default {
     </AppCard>
 
     <AppPaginator
+      :is-loading="isLoading"
+      :value="page"
       :pagination="pagination"
-      :page="page"
-      @update:page="$emit('update:page', $event)"
+      @input="$emit('update:page', $event)"
     />
   </div>
 </template>

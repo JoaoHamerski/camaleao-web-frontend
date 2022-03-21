@@ -1,4 +1,8 @@
 <script>
+import { expenses } from '@/graphql/Expense.gql'
+import { expenseTypes } from '@/graphql/ExpenseType.gql'
+import { vias } from '@/graphql/Via.gql'
+
 import TheExpensesReportCard from './TheExpensesReportCard'
 import TheExpensesBody from './TheExpensesBody'
 import TheExpensesHeader from './TheExpensesHeader'
@@ -14,42 +18,19 @@ export default {
     TheExpensesBody,
     TheExpensesHeader
   },
-  chimera: {
-    _vias () {
-      return {
-        method: 'GET',
-        url: 'api/vias',
-        on: {
-          success ({ data }) {
-            this.vias = data.data
-          }
-        }
-      }
+  apollo: {
+    vias: {
+      query: vias
     },
-    _expenses () {
-      return {
-        method: 'GET',
-        url: 'api/expenses',
-        params: {
-          page: this.page,
-          search: this.search
-        },
-        on: {
-          success ({ data }) {
-            this.expenses = data.data
-            this.pagination = data.meta
-          }
-        }
-      }
+    expenseTypes: {
+      query: expenseTypes
     },
-    _expenseTypes () {
-      return {
-        method: 'GET',
-        url: 'api/expense-types/',
-        on: {
-          success ({ data }) {
-            this.expenseTypes = data.data
-          }
+    expenses: {
+      query: expenses,
+      variables () {
+        return {
+          descriptionLike: `%${this.search}%`,
+          page: this.page
         }
       }
     }
@@ -59,29 +40,32 @@ export default {
       page: 1,
       search: '',
       vias: [],
-      expenses: [],
-      expenseTypes: [],
-      pagination: {}
+      modalReport: {
+        value: false,
+        src: ''
+      },
+      expenses: {
+        data: [],
+        paginatorInfo: {}
+      },
+      expenseTypes: []
     }
   },
   computed: {
     isLoading () {
-      return this.$chimera._expenses.loading
+      return !!this.$apollo.queries.expenses.loading
     }
   },
   methods: {
+    onReportGenerated (src) {
+      this.modalReport.src = src
+      this.modalReport.value = true
+    },
+    onCloseModalReport () {
+      this.modalReport.src = ''
+    },
     onSearch (search) {
       this.search = search
-    },
-    refreshExpenses () {
-      this.$chimera._expenses.reload()
-    },
-    refreshExpenseTypes () {
-      this.$chimera._expenseTypes.reload()
-    },
-    refreshAll () {
-      this.refreshExpenseTypes()
-      this.refreshExpenses()
     }
   }
 }
@@ -89,25 +73,32 @@ export default {
 
 <template>
   <div class="mt-5">
-    <TheExpensesReportCard class="mb-2" />
+    <AppFileModal
+      id="expensesReport"
+      v-model="modalReport.value"
+      :src="modalReport.src"
+      title="Relatório das despesas"
+      @hidden="onCloseModalReport"
+    />
+
+    <TheExpensesReportCard
+      class="mb-2"
+      @report-generated="onReportGenerated"
+    />
 
     <TheExpensesHeader
       :vias="vias"
       :expense-types="expenseTypes"
       @search="onSearch"
-      @refresh-all="refreshAll"
-      @refresh-expenses="refreshExpenses"
-      @refresh-expense-types="refreshExpenseTypes"
     />
 
     <TheExpensesBody
       :vias="vias"
       :expense-types="expenseTypes"
-      :expenses="expenses"
-      :pagination="pagination"
+      :expenses="expenses.data"
+      :pagination="expenses.paginatorInfo"
       :page.sync="page"
       :is-loading="isLoading"
-      @refresh-expenses="refreshExpenses"
     />
   </div>
 </template>

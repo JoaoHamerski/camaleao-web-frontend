@@ -1,10 +1,27 @@
 <script>
-import axios from 'axios'
 import { isEmpty } from 'lodash-es'
+import { faQuestionCircle } from '@fortawesome/free-solid-svg-icons'
+
 import { formatCurrencyBRL } from '@/utils/formatters'
 import { maskCurrencyBRL } from '@/utils/masks'
+import { GetOrdersForForm } from '@/graphql/Resources.gql'
 
-import { faQuestionCircle } from '@fortawesome/free-solid-svg-icons'
+const whereOrdersClause = (query, client) => {
+  const clientId = client?.id || client
+
+  const AND = [
+    { column: 'CLIENT_ID', operator: 'EQ', value: clientId },
+    { column: 'PRICE', operator: 'IS_NOT_NULL' }
+  ]
+
+  if (!isEmpty(query)) {
+    AND.push(
+      { column: 'CODE', operator: 'LIKE', value: `%${query}%` }
+    )
+  }
+
+  return { AND }
+}
 
 export default {
   props: {
@@ -27,21 +44,26 @@ export default {
     }
   },
   computed: {
-    apiUrl () {
-      return this.$store.getters.apiURL
-    },
     clientExists () {
-      return typeof this.form.client === 'object' && !isEmpty(this.form.client)
+      return typeof this.form.client.id === 'object'
+        && !isEmpty(this.form.client.id)
+    }
+  },
+  watch: {
+    'form.client.id': {
+      async handler () {
+        await this.asyncFillOrders()
+      }
     }
   },
   methods: {
     formatCurrencyBRL,
     toggleOrderState () {
-      if (!this.form.isNewOrder) {
-        this.form.order = ''
+      if (!this.form.order.isNew) {
+        this.form.order.id = ''
       }
 
-      this.form.isNewOrder = !this.form.isNewOrder
+      this.form.order.isNew = !this.form.order.isNew
     },
     customLabelOrders ({ code, name, price }) {
       if (!name) {
@@ -50,30 +72,43 @@ export default {
 
       return `${code} - ${name} - ${formatCurrencyBRL(price)}`
     },
+    getOrdersQuery (query) {
+      return this.$apollo.query({
+        query: GetOrdersForForm,
+        variables: {
+          where: whereOrdersClause(query, this.form.client.id),
+          orderBy: [{ column: 'CREATED_AT', order: 'DESC' }]
+        }
+      })
+    },
+    async asyncFillOrders () {
+      const query = null
+      this.orders.isLoading = true
+
+      const { data: { orders: { data } } } = await this.getOrdersQuery(query)
+
+      this.orders.isLoading = false
+      this.orders.items = data.filter(item => item.total_owing > 0)
+    },
     async asyncFindOrders (query) {
-      if (!query.length) {
-        this.orders.items = []
+      if (isEmpty(query)) {
+        await this.asyncFillOrders()
         return
       }
 
       this.orders.isLoading = true
 
-      const { data } = await axios.get(`${this.apiUrl}/api/clients/${this.form.client.id}/orders`, {
-        params: {
-          code: query,
-          order: 'is_open'
-        }
-      })
+      const { data: { orders: { data } } } = await this.getOrdersQuery(query)
 
       this.orders.isLoading = false
-      this.orders.items = data.data
+      this.orders.items = data.filter(item => item.total_owing > 0)
     }
   }
 }
 </script>
 
 <template>
-  <div v-if="!form.isNewOrder">
+  <div v-if="!form.order.isNew">
     <div class="d-flex justify-content-between align-items-center mb-2">
       <label
         for="order"
@@ -91,10 +126,10 @@ export default {
     </div>
 
     <AppSelect
-      v-model="form.order"
+      v-model="form.order.id"
       name="order"
       class="mb-2"
-      placeholder="Procure por código"
+      placeholder="Procure pelo código"
       :error="form.errors.get('order.id')"
       :default-margin="false"
       :custom-label="customLabelOrders"
@@ -119,10 +154,10 @@ export default {
       </template>
     </AppSelect>
     <div
-      v-if="form.order"
+      v-if="form.order.id"
       class="small text-secondary"
     >
-      <b>Faltar pagar: </b> {{ formatCurrencyBRL(form.order.total_owing) }}
+      <b>Faltar pagar: </b> {{ formatCurrencyBRL(form.order.id.total_owing) }}
     </div>
   </div>
   <div v-else>
@@ -143,16 +178,16 @@ export default {
     </div>
     <AppInput
       id="order"
-      v-model="form.order"
-      :error="form.errors.get('order')"
-      name="order"
+      v-model="form.order.code"
+      :error="form.errors.get('order.code')"
+      name="order.code"
       placeholder="Digite o cód. do pedido..."
     />
     <AppInput
       id="price"
-      v-model="form.price"
-      :error="form.errors.get('price')"
-      name="price"
+      v-model="form.order.price"
+      :error="form.errors.get('order.price')"
+      name="order.price"
       value="R$"
       :mask="maskCurrencyBRL"
     >
@@ -175,7 +210,7 @@ export default {
     <template v-if="hasReminder">
       <AppInput
         id="reminder"
-        v-model="form.reminder"
+        v-model="form.order.reminder"
         name="reminder"
         placeholder="Algo que lembre o pedido..."
         optional

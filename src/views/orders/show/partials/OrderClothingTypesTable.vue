@@ -15,7 +15,7 @@ export default {
         { text: 'TIPO', value: 'name' },
         { text: 'QUANTIDADE', value: 'quantity' },
         { text: 'VALOR UNIT.', value: 'value', format: 'currencyBRL' },
-        { text: 'TOTAL', value: 'total', format: 'currencyBRL' }
+        { text: 'TOTAL', value: 'total_value', format: 'currencyBRL' }
       ]
     }
   }
@@ -53,7 +53,7 @@ export default {
             DESCONTO
           </td>
           <td>
-            - {{ $helpers.toBRL(order.discount) }}
+            {{ $helpers.toBRL(-order.discount) }}
           </td>
         </tr>
       </template>

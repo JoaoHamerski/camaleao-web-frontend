@@ -1,12 +1,20 @@
 <script>
-import { faEdit } from '@fortawesome/free-solid-svg-icons'
+import {
+  faEdit,
+  faCheck,
+  faTimes,
+  faHandHoldingUsd
+} from '@fortawesome/free-solid-svg-icons'
 import { formatDatetime } from '@/utils/formatters'
+import { ConfirmPayment } from '@/graphql/Payment.gql'
+import roles from '@/constants/roles'
+
 import ModalOrderPayment from '../../partials/ModalOrderPayment'
 
 const PAYMENT_STATE = {
   null: 'PENDENTE',
-  0: 'RECUSADO',
-  1: 'APROVADO'
+  false: 'RECUSADO',
+  true: 'APROVADO'
 }
 
 export default {
@@ -21,10 +29,15 @@ export default {
   },
   data () {
     return {
+      roles,
       icons: {
-        faEdit
+        faEdit,
+        faCheck,
+        faTimes,
+        faHandHoldingUsd
       },
-      selectedPayment: {}
+      selectedPayment: {},
+      loadingId: ''
     }
   },
   methods: {
@@ -32,8 +45,31 @@ export default {
     getPaymentState (payment) {
       return PAYMENT_STATE[payment.is_confirmed]
     },
-    selectPayment (payment) {
-      this.$emit('open-modal', { payment, isEdit: true })
+    onEditPaymentClick (payment) {
+      this.$emit('open-modal', {
+        modal: 'payment',
+        payload: { payment, isEdit: true }
+      })
+    },
+    async onConfirmPayment ({ id }, confirmation) {
+      this.loadingId = id
+
+      try {
+        await this.$apollo.mutate({
+          mutation: ConfirmPayment,
+          variables: { id, confirmation }
+        })
+
+        this.$toast.success(
+          confirmation
+            ? 'Pagamento confirmado!'
+            : 'Pagamento recusado!'
+        )
+      } catch (error) {
+        this.$toast.error('Ops! Algo deu errado, tente novamente!')
+      }
+
+      this.loadingId = ''
     }
   }
 }
@@ -42,6 +78,7 @@ export default {
 <template>
   <div>
     <h5 class="fw-bold text-secondary">
+      <FontAwesomeIcon :icon="icons.faHandHoldingUsd" />
       Pagamentos
     </h5>
     <div v-if="payments.length">
@@ -51,13 +88,14 @@ export default {
         :payment="selectedPayment"
         @refresh="$emit('refresh')"
       />
+
       <ul class="list-group list-group-flush">
         <li
           v-for="payment in payments"
           :key="payment.id"
           class="list-group-item text-subtitle"
           :class="{
-            'list-group-item-danger': payment.is_confirmed === 0,
+            'list-group-item-danger': payment.is_confirmed === false,
             'list-group-item-warning': payment.is_confirmed === null,
           }"
         >
@@ -68,7 +106,7 @@ export default {
                 em
                 <b>{{ formatDatetime(payment.date) }}</b>
                 via
-                <b>{{ payment.payment_via.name }}</b>
+                <b>{{ payment.via.name }}</b>
                 <span
                   v-if="!payment.is_confirmed"
                   class="fw-bold"
@@ -84,12 +122,35 @@ export default {
               </div>
             </div>
             <div v-if="payment.is_confirmed === null">
+              <template v-if="$helpers.canView(roles.GERENCIA)">
+                <AppButton
+                  outlined
+                  btn-class="btn-sm"
+                  color="success"
+                  :icon="icons.faCheck"
+                  tooltip="Confirmar"
+                  :loading="payment.id === loadingId"
+                  @click.prevent="onConfirmPayment(payment, true)"
+                />
+
+                <AppButton
+                  outlined
+                  btn-class="btn-sm"
+                  color="danger"
+                  :icon="icons.faTimes"
+                  class="mx-2"
+                  tooltip="Recusar"
+                  :disabled="payment.id === loadingId"
+                  @click.prevent="onConfirmPayment(payment, false)"
+                />
+              </template>
+
               <AppButton
                 outlined
                 btn-class="btn-sm"
-                tooltip="Editar pagamento"
+                tooltip="Editar"
                 :icon="icons.faEdit"
-                @click="selectPayment(payment)"
+                @click.prevent="onEditPaymentClick(payment)"
               />
             </div>
           </div>

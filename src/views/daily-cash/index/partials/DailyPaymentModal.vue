@@ -21,7 +21,7 @@ export default {
   },
   methods: {
     onSuccess () {
-      this.$emit('success')
+      this.$emit('on-payment-success')
     }
   }
 }
@@ -30,8 +30,8 @@ export default {
 <template>
   <AppModal
     id="dailyPaymentModal"
+    color="success"
     :value="value"
-    modal-dialog-class="moda"
     v-on="$listeners"
   >
     <template #title>

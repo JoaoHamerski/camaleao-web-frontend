@@ -1,0 +1,18 @@
+query expenseTypes {
+  expenseTypes {
+    id
+    name
+  }
+}
+
+mutation expenseTypesCreate ($input: ExpenseTypesInput!) {
+  expenseTypesCreate (input: $input) {
+    id
+  }
+}
+
+mutation expenseTypesUpdate ($id: ID! $input: ExpenseTypesInput!) {
+  expenseTypesUpdate (id: $id input: $input) {
+    id
+  }
+}

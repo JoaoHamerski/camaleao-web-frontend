@@ -1,59 +1,53 @@
 <script>
 import { faClipboardList } from '@fortawesome/free-solid-svg-icons'
 import { maskDate } from '@/utils/masks'
-import { isNil, pickBy } from 'lodash-es'
-
-import ModalReport from '../../partials/ModalReport'
-
-const PRODUCTION_DATE_REPORT_PATH_URL = '/api/orders/reports/production-date'
+import { GetOrdersByProductionDate } from '@/graphql/Order.gql'
+import Form from '@/utils/Form'
+import { handleError } from '@/utils/forms'
 
 export default {
-  components: {
-    ModalReport
-  },
   data () {
     return {
       maskDate,
-      src: '',
-      modal: false,
-      filter: {
-        production_date: '',
-        order: 'is_open'
-      },
+      isLoading: false,
+      form: new Form({
+        date: '',
+        state: 'OPEN'
+      }),
       icons: {
         faClipboardList
       }
     }
   },
   computed: {
-    apiUrl () {
-      return this.$store.getters.apiURL
-    },
     orderOptions () {
       return [
-        { id: 'is_open_2', label: 'Em aberto', value: 'is_open' },
-        { id: 'all_2', label: 'Todos', value: 'all' }
+        { id: 'is_open_p', label: 'Em aberto', value: 'OPEN' },
+        { id: 'all_p', label: 'Todos', value: 'ALL' }
       ]
     }
   },
   methods: {
-    generateURL () {
-      const url = new URL(this.apiUrl + PRODUCTION_DATE_REPORT_PATH_URL)
-      const filters = { ...this.filter }
-      const validFilters = pickBy(filters, item => !isNil(item) && item !== '')
+    async generateReport () {
+      const input = this.form.data()
 
-      url.search = new URLSearchParams(validFilters)
+      this.isLoading = true
 
-      return url.toString()
-    },
-    onGenerateReportClick () {
-      const url = this.generateURL()
+      try {
+        const { data } = await this.$apollo.query({
+          query: GetOrdersByProductionDate,
+          variables: {
+            input
+          },
+          fetchPolicy: 'network-only'
+        })
 
-      this.src = url
-      this.modal = true
-    },
-    onModalHidden () {
-      this.src = ''
+        this.$emit('report-generated', data.ordersReportProductionDate)
+      } catch (error) {
+        handleError(this, error)
+      }
+
+      this.isLoading = false
     }
   }
 }
@@ -75,44 +69,41 @@ export default {
       </h6>
     </template>
     <template #body>
-      <ModalReport
-        id="productionDateReportModal"
-        v-model="modal"
-        :src="src"
-        @hidden="onModalHidden"
-      />
-
       <h6 class="fw-bold">
         Filtros
       </h6>
 
-      <AppInput
-        id="production_date"
-        v-model="filter.production_date"
-        name="production_date"
-        placeholder="dd/mm/aaaa"
-        :mask="maskDate"
-        type="date"
+      <AppForm
+        :form="form"
+        :on-submit="generateReport"
       >
-        Data de produção
-      </AppInput>
-
-      <div class="d-flex mb-3">
-        <div class="fw-bold me-2">
-          Pedidos:
-        </div>
+        <AppInput
+          id="date"
+          v-model="form.date"
+          name="date"
+          placeholder="dd/mm/aaaa"
+          :mask="maskDate"
+          type="date"
+          :error="form.errors.get('date')"
+        >
+          Data de produção
+        </AppInput>
         <AppRadio
-          v-model="filter.order"
+          v-model="form.state"
+          name="state_p"
           :options="orderOptions"
-        />
-      </div>
-
-      <AppButton
-        outlined
-        @click.prevent="onGenerateReportClick"
-      >
-        Gerar relatório
-      </AppButton>
+          :error="form.errors.get('state')"
+        >
+          Pedidos:
+        </AppRadio>
+        <AppButton
+          outlined
+          :loading="isLoading"
+          @click.prevent="generateReport"
+        >
+          Gerar relatório
+        </AppButton>
+      </AppForm>
     </template>
   </AppCard>
 </template>

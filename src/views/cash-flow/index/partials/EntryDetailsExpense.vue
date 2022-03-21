@@ -21,7 +21,10 @@ export default {
     }
   },
   methods: {
-    formatDatetime
+    formatDatetime,
+    getUserName (expense) {
+      return expense.user?.name || expense.employee_name
+    }
   }
 }
 </script>
@@ -51,10 +54,10 @@ export default {
           <b>Via: </b> {{ expense.via.name }}
         </li>
         <li class="list-group-item">
-          <b>Cadastrada por: </b> {{ expense.user.name }}
+          <b>Cadastrada por: </b> {{ getUserName(expense) }}
         </li>
         <li class="list-group-item">
-          <b>Registado em: </b> {{ formatDatetime(expense.created_at, "dd/mm/yyyy HH'h 'mm'm'") }}
+          <b>Registado em: </b> {{ formatDatetime(expense.created_at, "dd/MM/yyyy HH'h 'mm'm'") }}
         </li>
         <li class="list-group-item">
           <b

@@ -1,6 +1,7 @@
 <script>
 import { faDollarSign } from '@fortawesome/free-solid-svg-icons'
 import { formatCurrencyBRL, formatDatetime } from '@/utils/formatters'
+
 import OrderPaymentForm from './OrderPaymentForm'
 
 export default {
@@ -12,15 +13,15 @@ export default {
       type: Boolean,
       default: false
     },
-    totalOwing: {
-      type: [String, Number],
-      default: ''
-    },
     isEdit: {
       type: Boolean,
       default: false
     },
     payment: {
+      type: Object,
+      default: () => {}
+    },
+    order: {
       type: Object,
       default: () => {}
     }
@@ -52,8 +53,9 @@ export default {
     <template #title>
       <FontAwesomeIcon
         :icon="icons.faDollarSign"
-        class="me-2"
-      />{{ isEdit ? 'Alterar pagamento' : 'Novo pagamento' }}
+        fixed-width
+      />
+      {{ isEdit ? 'Alterar pagamento' : 'Novo pagamento' }}
     </template>
 
     <template #body>
@@ -66,10 +68,11 @@ export default {
         em
         <b>{{ formatDatetime(payment.date) }}</b>
       </div>
+
       <OrderPaymentForm
+        :order="order"
         :is-edit="isEdit"
         :payment="payment"
-        :total-owing="totalOwing"
         @success="onSuccess"
       />
     </template>

@@ -58,7 +58,7 @@ export const formatDatetime = (str, format = 'dd/MM/y') => {
   }
 
   return DateTime
-    .fromISO(str)
+    .fromSQL(str)
     .setLocale('pt-br')
     .toFormat(format)
 }
