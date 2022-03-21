@@ -5,7 +5,6 @@ import { formatDatetime } from '@/utils/formatters'
 import { map, pick } from 'lodash-es'
 import { CreateOrder, UpdateOrder } from '@/graphql/Order.gql'
 import { handleError } from '@/utils/forms'
-import orderStatesMixin from '../orderStatesMixin'
 
 import OrderFormClient from './OrderFormClient'
 import OrderFormBasicInfo from './OrderFormBasicInfo'
@@ -21,7 +20,6 @@ export default {
     OrderFormProduction,
     OrderFormFiles
   },
-  mixins: [orderStatesMixin],
   props: {
     isEdit: {
       type: Boolean,
@@ -30,6 +28,10 @@ export default {
     order: {
       type: Object,
       default: () => {}
+    },
+    isOrderPreRegistered: {
+      type: Boolean,
+      default: false
     }
   },
   data () {
@@ -49,14 +51,6 @@ export default {
         size_paths: [],
         payment_voucher_paths: []
       })
-    }
-  },
-  computed: {
-    clientKey () {
-      return this.$route.params.clientKey
-    },
-    orderKey () {
-      return this.$route.params.orderKey
     }
   },
   mounted () {
@@ -97,17 +91,18 @@ export default {
     },
     async store () {
       const data = this.getFormattedForm()
+      const { clientKey } = this.$route.params
 
       try {
         const { data: { orderCreate: { id } } } = await this.$apollo.mutate({
           mutation: CreateOrder,
           variables: {
-            client_id: this.clientKey,
+            client_id: clientKey,
             input: { ...data }
           }
         })
 
-        this.$emit('success', { orderId: id, clientId: this.clientKey })
+        this.$emit('success', { orderId: id, clientId: clientKey })
       } catch (error) {
         handleError(this, error)
       }

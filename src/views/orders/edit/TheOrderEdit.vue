@@ -145,8 +145,7 @@ export default {
 
         <OrderForm
           ref="orderForm"
-          :is-edit="true"
-          :order="order"
+          v-bind="{isEdit: true, order, isOrderPreRegistered}"
           @success="onSuccess"
           @clothing-types-loaded="onClothingTypesLoaded"
         />
