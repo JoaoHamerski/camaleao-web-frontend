@@ -192,6 +192,13 @@ export const replaceStrArray = (search, replace, subject) => {
   return result.join('')
 }
 
+export const clearCacheFrom = (payload) => {
+  const { apolloClient } = apolloClientInstance
+
+  apolloClient.cache.evict({ ...payload })
+  apolloClient.cache.gc()
+}
+
 export default {
   fallback,
   toBRL,
@@ -204,5 +211,6 @@ export default {
   getRouteParams,
   redirectTo,
   getUrl,
-  replaceStrArray
+  replaceStrArray,
+  clearCacheFrom
 }
