@@ -60,7 +60,8 @@ export default {
           variables: { id, confirmation }
         })
 
-        this.$helpers.clearCacheFrom({ fieldName: 'paymentsPendencies' })
+        this.$helpers.clearCacheFrom({ fieldName: 'cashFlowEntries' })
+
         this.$toast.success(
           confirmation
             ? 'Pagamento confirmado!'

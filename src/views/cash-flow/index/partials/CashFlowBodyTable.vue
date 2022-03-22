@@ -111,15 +111,6 @@ export default {
           <CashFlowLegendType />
         </Tippy>
       </template>
-      <template #[`items.details`]="{ item }">
-        <AppButton
-          outlined
-          btn-class="btn-sm "
-          :icon="icons.faFileAlt"
-          tooltip="Ver detalhes"
-          @click="onDetailsShowClick(item)"
-        />
-      </template>
       <template #[`items.type`]="{ item }">
         <FontAwesomeIcon
           v-if="item.is_expense"
@@ -150,6 +141,15 @@ export default {
       </template>
       <template #[`items.value`]="{ item }">
         {{ formatCurrencyBRL(item.is_expense ? -item.value : item.value) }}
+      </template>
+      <template #[`items.details`]="{ item }">
+        <AppButton
+          outlined
+          btn-class="btn-sm"
+          :icon="icons.faFileAlt"
+          tooltip="Ver detalhes"
+          @click="onDetailsShowClick(item)"
+        />
       </template>
     </AppTable>
   </div>

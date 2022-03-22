@@ -79,7 +79,11 @@ export default {
           }
         })
 
-        this.$helpers.clearCacheFrom({ fieldName: 'payments' })
+        this.$helpers.clearCacheFrom([
+          { fieldName: 'payments' },
+          { fieldName: 'cashFlowEntries' }
+        ])
+
         handleSuccess(this, { message: 'Pagamento registrado!', resetForm: true })
       } catch (error) {
         handleError(this, error)
