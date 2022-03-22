@@ -120,6 +120,8 @@ export default {
           }
         })
 
+        this.$helpers.clearCacheFrom({ fieldName: 'cashFlowEntries' })
+
         handleSuccess(this, { message: 'Despesa atualizada!' })
       } catch (error) {
         console.log({ ...error })
@@ -132,9 +134,13 @@ export default {
       try {
         await this.$apollo.mutate({
           mutation: CreateExpense,
-          variables: { input },
-          refetchQueries: ['GetExpenses']
+          variables: { input }
         })
+
+        this.$helpers.clearCacheFrom([
+          { fieldName: 'expenses' },
+          { fieldName: 'cashFlowEntries' }
+        ])
 
         handleSuccess(this, { message: 'Despesa cadastrada!', resetForm: true })
       } catch (error) {

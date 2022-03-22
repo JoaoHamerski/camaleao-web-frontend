@@ -1,6 +1,6 @@
 <script>
 import { GetExpenses } from '@/graphql/Expense.gql'
-import { expenseTypes } from '@/graphql/ExpenseType.gql'
+import { GetExpenseTypes } from '@/graphql/ExpenseType.gql'
 import { vias } from '@/graphql/Via.gql'
 
 import TheExpensesReportCard from './TheExpensesReportCard'
@@ -23,7 +23,7 @@ export default {
       query: vias
     },
     expenseTypes: {
-      query: expenseTypes
+      query: GetExpenseTypes
     },
     expenses: {
       query: GetExpenses,

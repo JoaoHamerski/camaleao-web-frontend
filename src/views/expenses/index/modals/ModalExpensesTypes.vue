@@ -3,7 +3,7 @@ import { isEmpty } from 'lodash-es'
 import { faList, faEdit } from '@fortawesome/free-solid-svg-icons'
 import Form from '@/utils/Form'
 import { handleSuccess, handleError } from '@/utils/forms'
-import { expenseTypesCreate, expenseTypesUpdate } from '@/graphql/ExpenseType.gql'
+import { CreateExpenseType, UpdateExpenseType } from '@/graphql/ExpenseType.gql'
 
 export default {
   props: {
@@ -40,8 +40,6 @@ export default {
 
       this.editForm.reset()
       this.editForm.name = type.name
-
-      type.isEdit = true
     },
     async onCreate () {
       const data = { ...this.form.data() }
@@ -50,13 +48,17 @@ export default {
 
       try {
         await this.$apollo.mutate({
-          mutation: expenseTypesCreate,
+          mutation: CreateExpenseType,
           variables: {
             input: data
-          }
+          },
+          refetchQueries: ['GetExpenseTypes']
         })
 
-        handleSuccess(this, { message: 'Tipo de despesa registrado!' })
+        handleSuccess(this, {
+          message: 'Tipo de despesa registrado!',
+          resetForm: true
+        })
       } catch (error) {
         handleError(this, error)
       }
@@ -70,19 +72,24 @@ export default {
 
       try {
         await this.$apollo.mutate({
-          mutation: expenseTypesUpdate,
+          mutation: UpdateExpenseType,
           variables: {
             id: this.editingType.id,
             input: data
           }
         })
 
-        handleSuccess(this, { message: 'Tipo de despesa atualizado!' })
+        handleSuccess(this, {
+          message: 'Tipo de despesa atualizado!',
+          formProp: 'editForm',
+          resetForm: true
+        })
       } catch (error) {
         handleError(this, error)
       }
 
       this.isLoadingEdit = false
+      this.editingType = {}
     }
   }
 }
@@ -103,23 +110,28 @@ export default {
       Gerenciar tipos de despesas
     </template>
     <template #body>
-      <AppInput
-        v-model="form.name"
-        name="name"
-        placeholder="Nome do tipo de despesa..."
-        :error="form.errors.get('name')"
-        @focus="form.errors.clear('name')"
+      <AppForm
+        :form="form"
+        :on-submit="onCreate"
       >
-        <template #append>
-          <AppButton
-            outlined
-            :loading="isLoadingCreate"
-            @click="onCreate"
-          >
-            Adicionar
-          </AppButton>
-        </template>
-      </AppInput>
+        <AppInput
+          v-model="form.name"
+          name="name"
+          placeholder="Nome do tipo de despesa..."
+          :error="form.errors.get('name')"
+        >
+          <template #append>
+            <AppButton
+              type="submit"
+              outlined
+              :loading="isLoadingCreate"
+              @click.prevent="onCreate"
+            >
+              Adicionar
+            </AppButton>
+          </template>
+        </AppInput>
+      </AppForm>
 
       <ul class="list-group">
         <li
@@ -128,25 +140,31 @@ export default {
           class="list-group-item d-flex justify-content-between align-items-center"
         >
           <template v-if="editingType === type">
-            <AppInput
-              v-model="editForm.name"
-              class="col"
-              name="name"
-              placeholder="Nome do tipo de despesa..."
-              :error="editForm.errors.get('name')"
-              :default-margin="false"
-              @focus="editForm.errors.clear('name')"
+            <AppForm
+              :form="editForm"
+              :on-submit="onUpdate"
+              class="w-100"
             >
-              <template #append>
-                <AppButton
-                  outlined
-                  :loading="isLoadingEdit"
-                  @click.prevent="onUpdate()"
-                >
-                  Atualizar
-                </AppButton>
-              </template>
-            </AppInput>
+              <AppInput
+                v-model="editForm.name"
+                class="col"
+                name="name"
+                placeholder="Nome do tipo de despesa..."
+                :error="editForm.errors.get('name')"
+                :default-margin="false"
+              >
+                <template #append>
+                  <AppButton
+                    type="submit"
+                    outlined
+                    :loading="isLoadingEdit"
+                    @click.prevent="onUpdate"
+                  >
+                    Atualizar
+                  </AppButton>
+                </template>
+              </AppInput>
+            </AppForm>
           </template>
           <template v-else>
             <div>{{ type.name }}</div>

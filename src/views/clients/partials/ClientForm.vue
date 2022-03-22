@@ -1,11 +1,9 @@
 <script>
 import { every } from 'lodash-es'
-import { GetClients, CreateClient, UpdateClient } from '@/graphql/Client.gql'
+import { CreateClient, UpdateClient } from '@/graphql/Client.gql'
 import { cities } from '@/graphql/City.gql'
 import { branches } from '@/graphql/Branch.gql'
 import { shippingCompanies } from '@/graphql/ShippingCompany.gql'
-
-import { clientsParams } from '../index/TheClients'
 
 import { handleSuccess, handleError } from '@/utils/forms'
 import { maskPhone } from '@/utils/masks'
@@ -126,9 +124,10 @@ export default {
       try {
         await this.$apollo.mutate({
           mutation: CreateClient,
-          variables: { input },
-          refetchQueries: [{ query: GetClients, variables: { ...clientsParams, page: 1 } }]
+          variables: { input }
         })
+
+        this.$helpers.clearCacheFrom({ fieldName: 'clients' })
 
         handleSuccess(this, { message: 'Cliente cadastrado!', resetForm: true })
       } catch (error) {

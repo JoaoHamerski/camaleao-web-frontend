@@ -4,7 +4,6 @@ import Form from '@/utils/Form'
 import { formatDatetime } from '@/utils/formatters'
 import { map, pick } from 'lodash-es'
 import { CreateOrder, UpdateOrder } from '@/graphql/Order.gql'
-import { GetClientWithOrders } from '@/graphql/Client.gql'
 import { handleError } from '@/utils/forms'
 
 import OrderFormClient from './OrderFormClient'
@@ -100,19 +99,17 @@ export default {
           variables: {
             client_id: clientKey,
             input: { ...data }
-          },
-          refetchQueries: [{
-            query: GetClientWithOrders,
-            variables: {
-              id: clientKey,
-              orderWhere: {},
-              orderPage: 1
-            }
-          }]
+          }
         })
+
+        this.$helpers.clearCacheFrom([
+          { id: clientKey, __typename: 'Client' },
+          { fieldName: 'orders' }
+        ])
 
         this.$emit('success', { orderId: id, clientId: clientKey })
       } catch (error) {
+        console.log(error)
         handleError(this, error)
       }
     },
