@@ -3,9 +3,7 @@ import {
   onLogin,
   onLogout
 } from '@/vue-apollo'
-
 import { authUser, login } from '@/graphql/Auth.gql'
-
 import router from '@/router'
 
 export const namespaced = true

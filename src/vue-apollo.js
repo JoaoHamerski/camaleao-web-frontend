@@ -1,24 +1,37 @@
 import Vue from 'vue'
 import VueApollo from 'vue-apollo'
-import { ApolloClient } from '@apollo/client/core'
+import { ApolloClient, createHttpLink } from '@apollo/client/core'
 import { InMemoryCache } from '@apollo/client/cache'
+import { setContext } from '@apollo/client/link/context'
 
 Vue.use(VueApollo)
 
-const AUTH_TOKEN = 'auth-token'
+const AUTH_TOKEN_NAME = 'auth-token'
+
+const httpLink = createHttpLink({
+  uri: process.env.VUE_APP_GRAPHQL_HTTP
+})
+
+const authLink = setContext((_, { headers }) => {
+  const token = localStorage.getItem(AUTH_TOKEN_NAME)
+
+  return {
+    headers: {
+      ...headers,
+      authorization: token ? `Bearer ${token}` : ''
+    }
+  }
+})
 
 const cache = new InMemoryCache()
 
-const options = {
-  uri: process.env.VUE_APP_GRAPHQL_HTTP,
-  cache,
-  headers: {
-    Authorization: `Bearer ${localStorage.getItem(AUTH_TOKEN)}` || ''
-  }
+const defaultOptions = {
+  link: authLink.concat(httpLink),
+  cache
 }
 
 export const createApolloClient = () => ({
-  apolloClient: new ApolloClient(options)
+  apolloClient: new ApolloClient({ ...defaultOptions })
 })
 
 export const apolloClientInstance = createApolloClient()
@@ -39,7 +52,7 @@ export function createProvider (options = {}) {
 
 export async function onLogin (apolloClient, token) {
   if (typeof localStorage !== 'undefined' && token) {
-    localStorage.setItem(AUTH_TOKEN, token)
+    localStorage.setItem(AUTH_TOKEN_NAME, token)
   }
 
   // if (apolloClient.wsClient) restartWebsockets(apolloClient.wsClient)
@@ -55,7 +68,7 @@ export async function onLogin (apolloClient, token) {
 // Manually call this when user log out
 export async function onLogout (apolloClient) {
   if (typeof localStorage !== 'undefined') {
-    localStorage.removeItem(AUTH_TOKEN)
+    localStorage.removeItem(AUTH_TOKEN_NAME)
   }
 
   // if (apolloClient.wsClient) restartWebsockets(apolloClient.wsClient)
