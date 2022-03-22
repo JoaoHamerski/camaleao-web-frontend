@@ -43,7 +43,9 @@ export default {
           }
         })
 
-        handleSuccess(this, { message: 'Usuário deletado!' })
+        this.$helpers.clearCacheFrom({ fieldName: 'users' })
+
+        handleSuccess(this, { message: 'Usuário deletado!', resetForm: true })
       } catch (error) {
         handleError(this, error)
       }
