@@ -195,7 +195,14 @@ export const replaceStrArray = (search, replace, subject) => {
 export const clearCacheFrom = (payload) => {
   const { apolloClient } = apolloClientInstance
 
-  apolloClient.cache.evict({ ...payload })
+  if (Array.isArray(payload)) {
+    for (const props of payload) {
+      apolloClient.cache.evict({ ...props })
+    }
+  } else {
+    apolloClient.cache.evict({ ...payload })
+  }
+
   apolloClient.cache.gc()
 }
 
