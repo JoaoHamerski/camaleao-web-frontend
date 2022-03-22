@@ -1,5 +1,5 @@
 <script>
-import { cityUpdate, cityCreate } from '@/graphql/City.gql'
+import { UpdateCity, CreateCity } from '@/graphql/City.gql'
 import { handleError, handleSuccess } from '@/utils/forms'
 
 import Form from '@/utils/Form'
@@ -50,7 +50,7 @@ export default {
     async update (data) {
       try {
         await this.$apollo.mutate({
-          mutation: cityUpdate,
+          mutation: UpdateCity,
           variables: {
             id: this.city.id,
             input: data
@@ -65,10 +65,11 @@ export default {
     async create (data) {
       try {
         await this.$apollo.mutate({
-          mutation: cityCreate,
+          mutation: CreateCity,
           variables: {
             input: data
-          }
+          },
+          refetchQueries: ['GetSimpleCities']
         })
 
         handleSuccess(this, { message: 'Cidade cadastrada!', resetForm: true })

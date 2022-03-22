@@ -66,16 +66,6 @@ export default {
     },
     onModalHide () {
       this.skipQuery = true
-    },
-    getClientUrl (client) {
-      const resolvedRoute = this.$router.resolve({
-        name: 'clients.show',
-        params: {
-          clientKey: client.id
-        }
-      })
-
-      return resolvedRoute.href
     }
   }
 }

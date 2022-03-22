@@ -1,6 +1,6 @@
 <script>
 import { faPlus } from '@fortawesome/free-solid-svg-icons'
-import { citiesIndex } from '@/graphql/City.gql'
+import { GetSimpleCities } from '@/graphql/City.gql'
 import { states } from '@/graphql/State.gql'
 
 import TheCitiesCard from './TheCitiesCard'
@@ -18,7 +18,7 @@ export default {
   },
   apollo: {
     cities: {
-      query: citiesIndex,
+      query: GetSimpleCities,
       result ({ data, loading }) {
         if (!loading) {
           this.cities = data.cities.map(

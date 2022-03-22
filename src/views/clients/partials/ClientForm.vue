@@ -1,7 +1,8 @@
 <script>
 import { every } from 'lodash-es'
 import { CreateClient, UpdateClient } from '@/graphql/Client.gql'
-import { cities } from '@/graphql/City.gql'
+import { GetCities } from '@/graphql/City.gql'
+import { GetClientsForCityModal } from '@/graphql/Resources.gql'
 import { branches } from '@/graphql/Branch.gql'
 import { shippingCompanies } from '@/graphql/ShippingCompany.gql'
 
@@ -12,7 +13,7 @@ import Form from '@/utils/Form'
 export default {
   apollo: {
     cities: {
-      query: cities,
+      query: GetCities,
       variables: {
         orderBy: [{ column: 'NAME', order: 'ASC' }]
       },
@@ -124,7 +125,13 @@ export default {
       try {
         await this.$apollo.mutate({
           mutation: CreateClient,
-          variables: { input }
+          variables: { input },
+          refetchQueries: [{
+            query: GetClientsForCityModal,
+            variables: {
+              where: { column: 'CITY_ID', operator: 'EQ', value: input.city_id }
+            }
+          }]
         })
 
         this.$helpers.clearCacheFrom({ fieldName: 'clients' })

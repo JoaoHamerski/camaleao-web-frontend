@@ -7,12 +7,12 @@ import {
 
 import Form from '@/utils/Form'
 import { handleError, handleSuccess } from '@/utils/forms'
-import { citiesIndex, cityDelete } from '@/graphql/City.gql'
+import { GetSimpleCities, DeleteCity } from '@/graphql/City.gql'
 
 export default {
   apollo: {
     cities: {
-      query: citiesIndex
+      query: GetSimpleCities
     }
   },
   props: {
@@ -66,13 +66,15 @@ export default {
 
       try {
         await this.$apollo.mutate({
-          mutation: cityDelete,
+          mutation: DeleteCity,
           variables: {
             id: this.city.id,
             city_id: data.city,
             replace: data.replace
           }
         })
+
+        this.$helpers.clearCacheFrom({ id: this.city.id, __typename: 'City' })
 
         handleSuccess(this, { message: 'Cidade deletada!' })
       } catch (error) {

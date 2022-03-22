@@ -1,72 +1,80 @@
-query cities (
+
+fragment CityParts on City {
+  id
+  name
+}
+
+fragment CityStateParts on City {
+  state {
+    id
+    name
+    abbreviation
+  }
+}
+
+fragment CityBranchShippingCompanyParts on Branch {
+  shipping_company {
+    id
+    name
+  }
+}
+
+fragment CityBranchParts on City {
+  branch {
+    id
+    city {
+      ...CityParts
+      ...CityStateParts
+    }
+
+    ...CityBranchShippingCompanyParts
+  }
+}
+
+query GetCities (
   $orderBy: [QueryCitiesOrderByOrderByClause!]
   $where: QueryCitiesWhereWhereConditions
 ) {
   cities (orderBy: $orderBy where: $where) {
-    id
-    name
-    
-    state {
-      id
-      name
-      abbreviation
-    }
-
-    branch {
-      id
-      city {
-        id
-        name
-        state {
-          id
-          name
-          abbreviation
-        }
-      }
-
-      shipping_company {
-        id
-        name
-      }
-    }
+    ...CityParts
+    ...CityStateParts
+    ...CityBranchParts
   }
 }
 
-query citiesIndex ($where: QueryCitiesWhereWhereConditions) {
+query GetSimpleCities ($where: QueryCitiesWhereWhereConditions) {
   cities (
     where: $where
     orderBy: [{column: NAME order: ASC}]
   ) {
-    id
-    name
-    state {
-      id
-      name
-      abbreviation
-    }
+    ...CityParts
+    ...CityStateParts
   }
 }
 
-mutation cityCreate ($input: CityInput!) {
+mutation CreateCity ($input: CityInput!) {
   cityCreate (input: $input) {
     id
   }
 }
 
-mutation cityUpdate ($id: ID! $input: CityInput!) {
+mutation UpdateCity ($id: ID! $input: CityInput!) {
   cityUpdate (id: $id input: $input) {
-    id
+    ...CityParts
+    ...CityStateParts
   }
 }
 
-mutation cityMassUpdateState ($ids: [ID!]! $state_id: ID!) {
+mutation MassUpdateCityState ($ids: [ID!]! $state_id: ID!) {
   cityMassUpdateState(ids: $ids state_id: $state_id) {
-    id
+    ...CityParts
+    ...CityStateParts
   }
 }
 
-mutation cityDelete ($id: ID! $city_id: ID $replace: CityReplaceOptionsInput) {
+mutation DeleteCity ($id: ID! $city_id: ID $replace: CityReplaceOptionsInput) {
   cityDelete(id: $id city_id: $city_id replace: $replace) {
-    id
+    ...CityParts
+    ...CityStateParts
   }
 }

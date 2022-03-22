@@ -1,7 +1,7 @@
 <script>
 import { faClipboardList } from '@fortawesome/free-solid-svg-icons'
 import { maskDate } from '@/utils/masks'
-import { cities } from '@/graphql/City.gql'
+import { GetCities } from '@/graphql/City.gql'
 import { status } from '@/graphql/Status.gql'
 import { GetOrdersReport } from '@/graphql/Order.gql'
 import Form from '@/utils/Form'
@@ -9,7 +9,7 @@ import Form from '@/utils/Form'
 export default {
   apollo: {
     cities: {
-      query: cities
+      query: GetCities
     },
     status: {
       query: status
