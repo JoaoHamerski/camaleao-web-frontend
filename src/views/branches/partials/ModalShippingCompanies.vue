@@ -1,6 +1,6 @@
 <script>
 import { faTruck, faPlus } from '@fortawesome/free-solid-svg-icons'
-import { shippingCompanyCreate } from '@/graphql/ShippingCompany.gql'
+import { CreateShippingCompany } from '@/graphql/ShippingCompany.gql'
 import { handleError } from '@/utils/forms'
 import Form from '@/utils/Form'
 
@@ -74,7 +74,7 @@ export default {
 
       try {
         await this.$apollo.mutate({
-          mutation: shippingCompanyCreate,
+          mutation: CreateShippingCompany,
           variables: {
             name: data.name
           }

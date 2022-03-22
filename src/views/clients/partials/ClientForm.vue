@@ -4,7 +4,7 @@ import { CreateClient, UpdateClient } from '@/graphql/Client.gql'
 import { GetCities } from '@/graphql/City.gql'
 import { GetClientsForCityModal } from '@/graphql/Resources.gql'
 import { branches } from '@/graphql/Branch.gql'
-import { shippingCompanies } from '@/graphql/ShippingCompany.gql'
+import { GetShippingCompanies } from '@/graphql/ShippingCompany.gql'
 
 import { handleSuccess, handleError } from '@/utils/forms'
 import { maskPhone } from '@/utils/masks'
@@ -33,7 +33,7 @@ export default {
       }
     },
     shippingCompanies: {
-      query: shippingCompanies,
+      query: GetShippingCompanies,
       result ({ loading }) {
         if (!loading) {
           this.loaded.shippingCompanies = true

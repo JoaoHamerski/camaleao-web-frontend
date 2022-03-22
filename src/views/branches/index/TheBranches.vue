@@ -1,7 +1,7 @@
 <script>
 import { faPlus, faTruck } from '@fortawesome/free-solid-svg-icons'
 import { branches } from '@/graphql/Branch.gql'
-import { shippingCompanies } from '@/graphql/ShippingCompany.gql'
+import { GetShippingCompanies } from '@/graphql/ShippingCompany.gql'
 import { GetCities } from '@/graphql/City.gql'
 
 import TheBranchesCard from './TheBranchesCard'
@@ -27,7 +27,7 @@ export default {
       query: GetCities
     },
     shippingCompanies: {
-      query: shippingCompanies
+      query: GetShippingCompanies
     }
   },
   data () {
