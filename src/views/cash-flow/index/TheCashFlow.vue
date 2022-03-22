@@ -1,7 +1,7 @@
 <script>
 import Form from '@/utils/Form'
 import { handleError } from '@/utils/forms'
-import { cashFlowEntries, cashFlowStatistics } from '@/graphql/CashFlow.gql'
+import { GetCashFlowEntries, GetCashFlowStatistics } from '@/graphql/CashFlow.gql'
 
 import TheCashFlowFilter from './TheCashFlowFilter'
 import TheCashFlowBody from './TheCashFlowBody.vue'
@@ -18,7 +18,7 @@ export default {
   },
   apollo: {
     cashFlowEntries: {
-      query: cashFlowEntries,
+      query: GetCashFlowEntries,
       variables () {
         return {
           page: this.page,
@@ -85,7 +85,7 @@ export default {
     async submitStatistics ({ start_date, final_date }) {
       try {
         const { data } = await this.$apollo.query({
-          query: cashFlowStatistics,
+          query: GetCashFlowStatistics,
           variables: {
             input: {
               start_date, final_date

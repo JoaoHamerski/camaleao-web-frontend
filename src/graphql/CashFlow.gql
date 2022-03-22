@@ -1,12 +1,61 @@
+#import "./_PaginatorFragment.gql"
 
-query cashFlowEntries (
-  $first: Int = 10 
-  $page: Int 
+fragment CashFlowEntryParts on CashFlowEntry {
+  id
+  description
+  date
+  value
+  is_expense
+  receipt_path
+  note
+  confirmed_at
+  created_at
+  employee_name
+}
+
+fragment CashFlowEntryViaParts on CashFlowEntry {
+  via {
+    id
+    name
+  }
+}
+
+fragment CashFlowEntryTypeParts on CashFlowEntry {
+  type {
+    id
+    name
+  }
+}
+
+fragment CashFlowEntryOrderParts on CashFlowEntry {
+  order {
+    id
+    code
+    name
+    quantity
+    art_paths
+    client {
+      id
+      name
+    }
+  }
+}
+
+fragment CashFlowEntryUserParts on CashFlowEntry {
+  user {
+    id
+    name
+  }
+}
+
+query GetCashFlowEntries (
+  $first: Int = 10
+  $page: Int
   $where: QueryCashFlowEntriesWhereWhereConditions
 ) {
   cashFlowEntries (
-    first: $first 
-    page: $page 
+    first: $first
+    page: $page
     where: $where
     orderBy: [
       {column: CREATED_AT order: DESC}
@@ -14,52 +63,20 @@ query cashFlowEntries (
     ]
   ) {
     paginatorInfo {
-      currentPage
-      perPage
-      total
+      ...PaginatorSimpleParts
     }
 
-    data {    
-      id
-      description
-      date
-      value
-      is_expense
-      receipt_path
-      note
-      confirmed_at
-      created_at
-      employee_name
-
-      via {
-        name
-      }
-      
-      type {
-        name
-      }
-      
-      order {
-        id
-        code
-        name
-        quantity
-        art_paths
-        client {
-          id
-          name
-        }
-      }
-      
-      user {
-        id
-        name
-      }
+    data {
+      ...CashFlowEntryParts
+      ...CashFlowEntryViaParts
+      ...CashFlowEntryTypeParts
+      ...CashFlowEntryOrderParts
+      ...CashFlowEntryUserParts
     }
   }
 }
 
-query cashFlowStatistics ($input: CashFlowFilterDatesInput!) {
+query GetCashFlowStatistics ($input: CashFlowFilterDatesInput!) {
   cashFlowStatistics(input: $input) {
     created_orders
     created_shirts
