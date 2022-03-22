@@ -192,15 +192,38 @@ export const replaceStrArray = (search, replace, subject) => {
   return result.join('')
 }
 
+const clearCacheByFieldName = (payload) => {
+  const { apolloClient } = apolloClientInstance
+  const { fieldName } = payload
+
+  apolloClient.cache.evict({ fieldName })
+}
+
+const clearCacheById = (payload) => {
+  const { apolloClient } = apolloClientInstance
+  const { id, __typename } = payload
+  const normalizedId = apolloClient.cache.identify({ id, __typename })
+
+  apolloClient.cache.evict({ id: normalizedId })
+}
+
+const delegateClearCacheFrom = (props) => {
+  if ('id' in props && '__typename' in props) {
+    clearCacheById(props)
+  } else if ('fieldName' in props) {
+    clearCacheByFieldName(props)
+  }
+}
+
 export const clearCacheFrom = (payload) => {
   const { apolloClient } = apolloClientInstance
 
   if (Array.isArray(payload)) {
     for (const props of payload) {
-      apolloClient.cache.evict({ ...props })
+      delegateClearCacheFrom(props)
     }
   } else {
-    apolloClient.cache.evict({ ...payload })
+    delegateClearCacheFrom(payload)
   }
 
   apolloClient.cache.gc()
