@@ -3,7 +3,7 @@ import { faClipboardList } from '@fortawesome/free-solid-svg-icons'
 import { maskDate } from '@/utils/masks'
 import { handleError } from '@/utils/forms'
 import Form from '@/utils/Form'
-import { expensesReport } from '@/graphql/Expense.gql'
+import { GetExpensesReportUrl } from '@/graphql/Expense.gql'
 
 export default {
   data () {
@@ -32,7 +32,7 @@ export default {
 
       try {
         const { data } = await this.$apollo.query({
-          query: expensesReport,
+          query: GetExpensesReportUrl,
           variables: {
             start_date: input.start_date,
             final_date: input.final_date

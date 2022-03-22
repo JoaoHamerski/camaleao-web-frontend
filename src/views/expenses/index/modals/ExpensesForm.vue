@@ -6,7 +6,7 @@ import { formatBytes } from '@/utils/formatters'
 import fileMixin from '@/mixins/filesMixin'
 import pasteFilesMixin from '@/mixins/pasteFilesMixin'
 import Form from '@/utils/Form'
-import { expenseCreate, expenseUpdate } from '@/graphql/Expense.gql'
+import { CreateExpense, UpdateExpense } from '@/graphql/Expense.gql'
 
 import ViewerItemsCardFile from '@/components/AppViewer/ViewerItemsCardFile'
 
@@ -15,36 +15,6 @@ export default {
     ViewerItemsCardFile
   },
   mixins: [fileMixin, pasteFilesMixin],
-  chimera: {
-    _newExpense () {
-      return {
-        method: 'POST',
-        url: 'api/expenses',
-        on: {
-          success () {
-            this.$emit('success')
-          },
-          error ({ error }) {
-            handleError(this, error)
-          }
-        }
-      }
-    },
-    _updateExpense () {
-      return {
-        method: 'PATCH',
-        url: `api/expenses/${this.expense.id}`,
-        on: {
-          success () {
-            this.$emit('success')
-          },
-          error ({ error }) {
-            handleError(this, error)
-          }
-        }
-      }
-    }
-  },
   props: {
     expense: {
       type: Object,
@@ -126,7 +96,7 @@ export default {
       if (this.isEdit) {
         await this.update()
       } else {
-        await this.store()
+        await this.create()
       }
 
       this.isLoading = false
@@ -139,14 +109,14 @@ export default {
       return data
     },
     async update () {
-      const data = this.getFormattedData(this.form.data())
+      const input = this.getFormattedData(this.form.data())
 
       try {
         await this.$apollo.mutate({
-          mutation: expenseUpdate,
+          mutation: UpdateExpense,
           variables: {
             id: this.expense.id,
-            input: data
+            input
           }
         })
 
@@ -156,17 +126,14 @@ export default {
         handleError(this, error)
       }
     },
-    async store () {
-      const data = this.getFormattedData(this.form.data())
+    async create () {
+      const input = this.getFormattedData(this.form.data())
 
       try {
         await this.$apollo.mutate({
-          mutation: expenseCreate,
-          variables: {
-            input: {
-              ...data
-            }
-          }
+          mutation: CreateExpense,
+          variables: { input },
+          refetchQueries: ['GetExpenses']
         })
 
         handleSuccess(this, { message: 'Despesa cadastrada!', resetForm: true })

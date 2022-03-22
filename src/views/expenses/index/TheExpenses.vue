@@ -1,5 +1,5 @@
 <script>
-import { expenses } from '@/graphql/Expense.gql'
+import { GetExpenses } from '@/graphql/Expense.gql'
 import { expenseTypes } from '@/graphql/ExpenseType.gql'
 import { vias } from '@/graphql/Via.gql'
 
@@ -26,7 +26,7 @@ export default {
       query: expenseTypes
     },
     expenses: {
-      query: expenses,
+      query: GetExpenses,
       variables () {
         return {
           descriptionLike: `%${this.search}%`,
