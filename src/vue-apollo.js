@@ -3,6 +3,7 @@ import VueApollo from 'vue-apollo'
 import { ApolloClient, createHttpLink } from '@apollo/client/core'
 import { InMemoryCache } from '@apollo/client/cache'
 import { setContext } from '@apollo/client/link/context'
+import possibleTypes from './fragmentTypes.json'
 
 Vue.use(VueApollo)
 
@@ -23,7 +24,7 @@ const authLink = setContext((_, { headers }) => {
   }
 })
 
-const cache = new InMemoryCache()
+const cache = new InMemoryCache({ possibleTypes })
 
 const defaultOptions = {
   link: authLink.concat(httpLink),
