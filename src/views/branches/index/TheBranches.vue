@@ -1,6 +1,6 @@
 <script>
 import { faPlus, faTruck } from '@fortawesome/free-solid-svg-icons'
-import { branches } from '@/graphql/Branch.gql'
+import { GetBranches } from '@/graphql/Branch.gql'
 import { GetShippingCompanies } from '@/graphql/ShippingCompany.gql'
 import { GetCities } from '@/graphql/City.gql'
 
@@ -21,7 +21,7 @@ export default {
   },
   apollo: {
     branches: {
-      query: branches
+      query: GetBranches
     },
     cities: {
       query: GetCities

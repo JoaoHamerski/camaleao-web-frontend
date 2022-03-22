@@ -1,6 +1,6 @@
 <script>
 import { faTrashAlt } from '@fortawesome/free-solid-svg-icons'
-import { branchDelete } from '@/graphql/Branch.gql'
+import { DeleteBranch } from '@/graphql/Branch.gql'
 
 export default {
   props: {
@@ -27,11 +27,13 @@ export default {
 
       try {
         await this.$apollo.mutate({
-          mutation: branchDelete,
+          mutation: DeleteBranch,
           variables: {
             id: this.branch.id
           }
         })
+
+        this.$helpers.clearCacheFrom({ id: this.branch.id, __typename: 'Branch' })
 
         this.$toast.success('Filial deletada!')
         this.$emit('success')

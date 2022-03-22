@@ -3,7 +3,7 @@ import { every } from 'lodash-es'
 import { CreateClient, UpdateClient } from '@/graphql/Client.gql'
 import { GetCities } from '@/graphql/City.gql'
 import { GetClientsForCityModal } from '@/graphql/Resources.gql'
-import { branches } from '@/graphql/Branch.gql'
+import { GetBranches } from '@/graphql/Branch.gql'
 import { GetShippingCompanies } from '@/graphql/ShippingCompany.gql'
 
 import { handleSuccess, handleError } from '@/utils/forms'
@@ -24,7 +24,7 @@ export default {
       }
     },
     branches: {
-      query: branches,
+      query: GetBranches,
       result ({ data, loading }) {
         if (!loading) {
           this.branches = data.branches.filter((branch) => !!branch.city)

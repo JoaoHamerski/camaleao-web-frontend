@@ -1,6 +1,7 @@
 <script>
 import { faQuestionCircle } from '@fortawesome/free-solid-svg-icons'
-import { branchCreate, branchUpdate } from '@/graphql/Branch.gql'
+import { GetBranches, CreateBranch, UpdateBranch } from '@/graphql/Branch.gql'
+import { GetCities } from '@/graphql/City.gql'
 import { handleError, handleSuccess } from '@/utils/forms'
 import { filter, map } from 'lodash-es'
 
@@ -98,9 +99,12 @@ export default {
     async create (input) {
       try {
         await this.$apollo.mutate({
-          mutation: branchCreate,
-          variables: { input }
+          mutation: CreateBranch,
+          variables: { input },
+          refetchQueries: [GetBranches, GetCities]
         })
+
+        this.$helpers.clearCacheFrom({ fieldName: 'cities' })
 
         handleSuccess(this, { message: 'Filial registrada!', resetForm: true })
       } catch (error) {
@@ -111,13 +115,15 @@ export default {
     async update (input) {
       try {
         await this.$apollo.mutate({
-          mutation: branchUpdate,
+          mutation: UpdateBranch,
           variables: {
             id: this.branch.id,
             input
-          }
+          },
+          refetchQueries: [GetCities]
         })
 
+        this.$helpers.clearCacheFrom({ fieldName: 'branches' })
         handleSuccess(this, { message: 'Filial atualizada!', resetForm: true })
       } catch (error) {
         handleError(this, error)

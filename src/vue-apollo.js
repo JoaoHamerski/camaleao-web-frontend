@@ -25,7 +25,18 @@ const authLink = setContext((_, { headers }) => {
 })
 
 const cache = new InMemoryCache({
-  possibleTypes
+  possibleTypes,
+  typePolicies: {
+    Branch: {
+      fields: {
+        cities: {
+          merge (existing, incoming, { mergeObjects }) {
+            return incoming
+          }
+        }
+      }
+    }
+  }
 })
 
 const defaultOptions = {
