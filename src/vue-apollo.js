@@ -24,7 +24,9 @@ const authLink = setContext((_, { headers }) => {
   }
 })
 
-const cache = new InMemoryCache({ possibleTypes })
+const cache = new InMemoryCache({
+  possibleTypes
+})
 
 const defaultOptions = {
   link: authLink.concat(httpLink),

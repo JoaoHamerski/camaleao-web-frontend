@@ -60,12 +60,14 @@ export default {
           variables: { id, confirmation }
         })
 
+        this.$helpers.clearCacheFrom({ fieldName: 'paymentsPendencies' })
         this.$toast.success(
           confirmation
             ? 'Pagamento confirmado!'
             : 'Pagamento recusado!'
         )
       } catch (error) {
+        console.log(error)
         this.$toast.error('Ops! Algo deu errado, tente novamente!')
       }
 

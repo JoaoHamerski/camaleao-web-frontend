@@ -64,10 +64,10 @@ export default {
     }
   },
   methods: {
-    payRest () {
+    onPayRestClick () {
       this.form.value = this.$helpers.toBRL(this.order.total_owing)
     },
-    async store () {
+    async create () {
       try {
         await this.$apollo.mutate({
           mutation: CreatePayment,
@@ -79,6 +79,7 @@ export default {
           }
         })
 
+        this.$helpers.clearCacheFrom({ fieldName: 'payments' })
         handleSuccess(this, { message: 'Pagamento registrado!', resetForm: true })
       } catch (error) {
         handleError(this, error)
@@ -97,6 +98,7 @@ export default {
           }
         })
 
+        this.clearDailyCashCache(this.payment.id)
         handleSuccess(this, { message: 'Pagamento atualizado!' })
       } catch (error) {
         handleError(this, error)
@@ -108,7 +110,7 @@ export default {
       if (this.isEdit) {
         await this.update()
       } else {
-        await this.store()
+        await this.create()
       }
 
       this.isLoading = false
@@ -136,7 +138,7 @@ export default {
           <AppButton
             outlined
             :tooltip="$helpers.toBRL(order.total_owing)"
-            @click.prevent="payRest"
+            @click.prevent="onPayRestClick"
           >
             Restante
           </AppButton>

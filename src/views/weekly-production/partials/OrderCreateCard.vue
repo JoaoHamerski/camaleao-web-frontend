@@ -46,15 +46,6 @@ export default {
         art_paths: [this.order.image.base64]
       }
     },
-    /**
-     * Clear "orders" query cache
-     */
-    clearOrdersCache () {
-      const apolloClient = this.$apollo.getClient()
-
-      apolloClient.cache.evict({ fieldName: 'orders' })
-      apolloClient.cache.gc()
-    },
     async onSubmit () {
       const input = this.getFormattedForm()
 
@@ -69,7 +60,7 @@ export default {
           ]
         })
 
-        this.clearOrdersCache()
+        this.$helpers.clearCacheFrom({ fieldName: 'orders' })
         this.$toast.success('Pedido registrado!')
       } catch (error) {
         handleError(this, error)
