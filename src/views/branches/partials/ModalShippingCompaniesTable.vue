@@ -14,10 +14,6 @@ export default {
     items: {
       type: Array,
       default: () => []
-    },
-    setCompaniesDefaultEditState: {
-      type: Function,
-      required: true
     }
   },
   data () {

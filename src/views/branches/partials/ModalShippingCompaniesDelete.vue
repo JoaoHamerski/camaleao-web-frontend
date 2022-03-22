@@ -1,6 +1,6 @@
 <script>
 import { faTrashAlt } from '@fortawesome/free-solid-svg-icons'
-import { ShippingCompanyDelete } from '@/graphql/ShippingCompany.gql'
+import { DeleteShippingCompany } from '@/graphql/ShippingCompany.gql'
 import { handleSuccess } from '@/utils/forms'
 
 export default {
@@ -24,11 +24,13 @@ export default {
 
       try {
         await this.$apollo.mutate({
-          mutation: ShippingCompanyDelete,
+          mutation: DeleteShippingCompany,
           variables: {
             id: this.company.id
           }
         })
+
+        this.$helpers.clearCacheFrom({ id: this.company.id, __typename: 'ShippingCompany' })
 
         handleSuccess(this, { message: 'Transportadora deletada!' })
       } catch (error) {

@@ -41,11 +41,6 @@ export default {
     }
   },
   methods: {
-    setCompaniesDefaultEditState () {
-      for (const company of this.shippingCompanies) {
-        company.isEdit = false
-      }
-    },
     onNewCompanyClick () {
       this.newCompany = true
       this.$nextTick(() => {
@@ -63,7 +58,6 @@ export default {
     },
     onAction ({ action, item }) {
       if (action === 'delete') {
-        this.setCompaniesDefaultEditState()
         this.companyToDelete = item
       }
     },
@@ -77,7 +71,8 @@ export default {
           mutation: CreateShippingCompany,
           variables: {
             name: data.name
-          }
+          },
+          refetchQueries: ['GetShippingCompanies']
         })
 
         this.$toast.success('Transportadora registrada!')
@@ -141,7 +136,6 @@ export default {
 
           <ModalShippingCompaniesTable
             :items="shippingCompanies"
-            :set-companies-default-edit-state="setCompaniesDefaultEditState"
             @action="onAction"
           />
 
