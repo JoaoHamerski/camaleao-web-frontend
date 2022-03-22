@@ -1,6 +1,6 @@
 <script>
 import Vue from 'vue'
-import { uniqueId } from 'lodash-es'
+import { uniqueId, cloneDeep } from 'lodash-es'
 import { GetWeeklyProductionOrders } from '@/graphql/WeeklyProduction.gql'
 import { DateTime } from 'luxon'
 import TheWeeklyProductionHeader from './TheWeeklyProductionHeader'
@@ -25,6 +25,11 @@ export default {
       query: GetWeeklyProductionOrders,
       variables () {
         return { ...weeklyProductionParams }
+      },
+      result ({ data: { weeklyProduction }, loading }) {
+        if (!loading) {
+          this.weeklyProduction = cloneDeep(weeklyProduction)
+        }
       }
     }
   },

@@ -25,14 +25,10 @@ export default {
     }
   },
   apollo: {
-    orders () {
-      return {
-        query: GetOrdersSimplified,
-        variables () {
-          return { ...this.params }
-        },
-        fetchPolicy: 'network-only',
-        nextFetchPolicy: 'cache-first'
+    orders: {
+      query: GetOrdersSimplified,
+      variables () {
+        return { ...this.params }
       }
     }
   },
