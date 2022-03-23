@@ -1,6 +1,6 @@
 <script>
 import { faPlus, faTshirt } from '@fortawesome/free-solid-svg-icons'
-import { clothingTypes } from '@/graphql/ClothingType.gql'
+import { GetClothingTypes } from '@/graphql/ClothingType.gql'
 
 import TheClothingTypesCard from './TheClothingTypesCard'
 import ModalNewClothingType from '../partials/ModalNewClothingType'
@@ -15,7 +15,7 @@ export default {
   },
   apollo: {
     clothingTypes: {
-      query: clothingTypes
+      query: GetClothingTypes
     }
   },
   components: {

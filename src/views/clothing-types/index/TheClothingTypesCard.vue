@@ -7,7 +7,7 @@ import {
   faEdit,
   faExclamationCircle
 } from '@fortawesome/free-solid-svg-icons'
-import { clothingTypeUpdate } from '@/graphql/ClothingType.gql'
+import { GetClothingTypes, UpdateClothingType } from '@/graphql/ClothingType.gql'
 
 export default {
   props: {
@@ -39,13 +39,15 @@ export default {
 
       try {
         await this.$apollo.mutate({
-          mutation: clothingTypeUpdate,
+          mutation: UpdateClothingType,
           variables: {
             id: clothingType.id,
             input: {
               is_hidden: !clothingType.is_hidden
             }
-          }
+          },
+          refetchQueries: [{ query: GetClothingTypes, variables: { is_hidden: false } }],
+          awaitRefetchQueries: true
         })
 
         if (clothingType.is_hidden) {

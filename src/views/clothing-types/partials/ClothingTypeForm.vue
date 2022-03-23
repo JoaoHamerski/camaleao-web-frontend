@@ -3,8 +3,9 @@ import Form from '@/utils/Form'
 import { maskCurrencyBRL } from '@/utils/masks'
 import { faExclamationCircle } from '@fortawesome/free-solid-svg-icons'
 import {
-  clothingTypeCreate,
-  clothingTypeUpdate
+  GetClothingTypes,
+  CreateClothingType,
+  UpdateClothingType
 } from '@/graphql/ClothingType.gql'
 import { handleSuccess, handleError } from '@/utils/forms'
 
@@ -59,10 +60,11 @@ export default {
     async create (input) {
       try {
         await this.$apollo.mutate({
-          mutation: clothingTypeCreate,
+          mutation: CreateClothingType,
           variables: { input }
         })
 
+        this.$helpers.clearCacheFrom({ fieldName: 'clothingTypes' })
         handleSuccess(this, { message: 'Tipo de roupa cadastrada!', resetForm: true })
       } catch (error) {
         handleError(this, error)
@@ -71,11 +73,12 @@ export default {
     async update (input) {
       try {
         await this.$apollo.mutate({
-          mutation: clothingTypeUpdate,
+          mutation: UpdateClothingType,
           variables: {
             id: this.clothingType.id,
             input
-          }
+          },
+          refetchQueries: [{ query: GetClothingTypes, variables: { is_hidden: true } }]
         })
 
         handleSuccess(this, { message: 'Tipo de roupa atualizado!', resetForm: true })
