@@ -20,6 +20,7 @@ fragment CommissionUserParts on CommissionUser {
 }
 
 fragment CommissionOrderParts on Order {
+  id
   code
   quantity
   art_paths
@@ -68,7 +69,9 @@ query GetUsersCommissions (
 
       commission {
         ...CommissionParts
-        ...CommissionOrderParts
+        order {
+          ...CommissionOrderParts
+        }
       }
       ...CommissionUserParts
     }
