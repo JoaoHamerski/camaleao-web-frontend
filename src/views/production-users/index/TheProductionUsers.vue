@@ -29,7 +29,8 @@ export default {
           where: this.where,
           orderBy: this.orderBy
         }
-      }
+      },
+      fetchPolicy: 'network-only'
     }
   },
   data () {
