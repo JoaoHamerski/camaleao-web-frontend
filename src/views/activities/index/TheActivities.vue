@@ -44,6 +44,7 @@ export default {
           where: this.where
         }
       },
+      fetchPolicy: 'cache-and-network',
       deep: true
     }
   },
