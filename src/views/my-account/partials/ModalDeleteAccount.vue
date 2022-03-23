@@ -1,6 +1,6 @@
 <script>
 import { faTrashAlt } from '@fortawesome/free-solid-svg-icons'
-import { authDelete } from '@/graphql/Auth.gql'
+import { DeleteAuthUser } from '@/graphql/Auth.gql'
 import Form from '@/utils/Form'
 import { handleSuccess, handleError } from '@/utils/forms'
 
@@ -30,7 +30,7 @@ export default {
 
       try {
         await this.$apollo.mutate({
-          mutation: authDelete,
+          mutation: DeleteAuthUser,
           variables: {
             password
           }
