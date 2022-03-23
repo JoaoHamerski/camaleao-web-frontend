@@ -5,16 +5,10 @@ import {
 import { formatDatetime } from '@/utils/formatters'
 import { DateTime } from 'luxon'
 import { GetPayments, GetPaymentsPendencies } from '@/graphql/Payment.gql'
-import Vue from 'vue'
 
 import DailyPaymentModal from './partials/DailyPaymentModal'
 import TheDailyCashHeader from './TheDailyCashHeader'
 import TheDailyCashBody from './TheDailyCashBody'
-
-export const paymentsParams = Vue.observable({
-  created_at: DateTime.now().toISODate(),
-  pendencies: false
-})
 
 export default {
   metaInfo () {
@@ -31,7 +25,7 @@ export default {
     payments: {
       query: GetPayments,
       variables () {
-        return { ...paymentsParams }
+        return { ...this.paymentsParams }
       }
     },
     paymentsPendencies: {
@@ -43,7 +37,10 @@ export default {
       payments: [],
       paymentsPendencies: [],
       modalPayment: false,
-      paymentsParams,
+      paymentsParams: {
+        created_at: DateTime.now().toISODate(),
+        pendencies: false
+      },
       icons: {
         faCashRegister
       }
@@ -57,8 +54,8 @@ export default {
   methods: {
     formatDatetime,
     onLoadPendenciesFromDate (date) {
-      paymentsParams.pendencies = true
-      paymentsParams.created_at = date
+      this.paymentsParams.pendencies = true
+      this.paymentsParams.created_at = date
     },
     onNewEntryClick () {
       this.modalPayment = true
