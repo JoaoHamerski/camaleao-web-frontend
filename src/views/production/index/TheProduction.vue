@@ -1,5 +1,5 @@
 <script>
-import { commissionsUser } from '@/graphql/Production.gql'
+import { GetAuthUserCommissions } from '@/graphql/Production.gql'
 
 import TheProductionCard from './TheProductionCard'
 import TheProductionCardCommission from './TheProductionCardCommission'
@@ -12,12 +12,13 @@ export default {
   },
   apollo: {
     commissionsUser: {
-      query: commissionsUser,
+      query: GetAuthUserCommissions,
       variables () {
         return {
           page: this.page
         }
-      }
+      },
+      fetchPolicy: 'network-only'
     }
   },
   components: {

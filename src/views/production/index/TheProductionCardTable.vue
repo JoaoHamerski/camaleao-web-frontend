@@ -7,7 +7,7 @@ import {
 } from '@fortawesome/free-solid-svg-icons'
 import { formatDatetime } from '@/utils/formatters'
 import { TippyComponent } from 'vue-tippy'
-import { commissionConfirmProduction } from '@/graphql/Production.gql'
+import { ConfirmCommissionProduction } from '@/graphql/Production.gql'
 
 import CommissionDetails from '../partials/CommissionDetails'
 
@@ -66,7 +66,7 @@ export default {
 
       try {
         await this.$apollo.mutate({
-          mutation: commissionConfirmProduction,
+          mutation: ConfirmCommissionProduction,
           variables: {
             id
           }

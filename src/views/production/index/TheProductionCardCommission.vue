@@ -1,7 +1,7 @@
 <script>
 import { isEmpty } from 'lodash'
 import { faCalendarAlt } from '@fortawesome/free-solid-svg-icons'
-import { commissionRoleByMonth } from '@/graphql/Production.gql'
+import { GetMonthCommissionByRole } from '@/graphql/Production.gql'
 import Form from '@/utils/Form'
 import { handleError } from '@/utils/forms'
 import { maskMonth } from '@/utils/masks'
@@ -33,7 +33,7 @@ export default {
 
       try {
         const { data } = await this.$apollo.query({
-          query: commissionRoleByMonth,
+          query: GetMonthCommissionByRole,
           variables: {
             ...input
           }

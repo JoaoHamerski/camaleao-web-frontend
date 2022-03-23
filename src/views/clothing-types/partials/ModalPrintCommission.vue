@@ -1,7 +1,7 @@
 <script>
 import { faTshirt } from '@fortawesome/free-solid-svg-icons'
 import { handleSuccess, handleError } from '@/utils/forms'
-import { commissionValueUpsert } from '@/graphql/Production.gql'
+import { UpsertCommissionValue } from '@/graphql/Production.gql'
 import Form from '@/utils/Form'
 
 const CONFIG_NAME = 'orders'
@@ -38,7 +38,7 @@ export default {
 
       try {
         await this.$apollo.mutate({
-          mutation: commissionValueUpsert,
+          mutation: UpsertCommissionValue,
           variables: {
             value: data.value
           }

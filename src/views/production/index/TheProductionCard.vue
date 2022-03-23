@@ -58,7 +58,7 @@ export default {
         </div>
         <div class="mb-3">
           <h6 class="text-center fw-bold mt-3 mb-0">
-            Alguns pedidos tiveram a sua quantidade alterada, por favor, verfique-os novamente.
+            Alguns pedidos tiveram a sua quantidade alterada, por favor, verifique-os novamente.
           </h6>
           <div class="text-secondary text-center text-subtitle">
             (pedidos em amarelo)

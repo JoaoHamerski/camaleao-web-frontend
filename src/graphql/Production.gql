@@ -1,51 +1,62 @@
-query commissionsUser ($page: Int) {
+#import "./_PaginatorFragment.gql"
+
+fragment CommissionParts on Commission {
+  id
+  print_commission
+  seam_commission
+  seam_total_commission
+  print_total_commission
+}
+
+fragment CommissionUserParts on CommissionUser {
+  id
+  commission_value
+  confirmed_at
+  was_quantity_changed
+  role {
+    id
+    name
+  }
+}
+
+fragment CommissionOrderParts on Order {
+  code
+  quantity
+  art_paths
+  size_paths
+  created_at
+  updated_at
+  client {
+    id
+  }
+}
+
+query GetAuthUserCommissions ($page: Int) {
   commissionsUser (page: $page first: 10) {
     paginatorInfo {
-      total
-      perPage
-      currentPage
+      ...PaginatorSimpleParts
     }
 
     data {
-      id
-      print_commission
-      seam_commission
-      seam_total_commission
-      print_total_commission
-      
+      ...CommissionParts
       pivot {
-        id
-        commission_value
-        confirmed_at
-        was_quantity_changed
-        role {
-          id
-          name
-        }
+        ...CommissionUserParts
       }
-
       order {
-        code
-        quantity
-        art_paths
-        size_paths
-        created_at
-        updated_at
+        ...CommissionOrderParts
       }
     }
   }
 }
 
-query commissionsUsers (
-  $page: Int 
+query GetUsersCommissions (
+  $page: Int
   $where: QueryCommissionsUsersWhereWhereConditions
   $orderBy: [QueryCommissionsUsersOrderByOrderByClause!]
 ) {
   commissionsUsers (first: 10 page: $page where: $where orderBy: $orderBy) {
     paginatorInfo {
-      total
-      perPage
-      currentPage
+      ...PaginatorSimpleParts
     }
 
     data {
@@ -54,37 +65,17 @@ query commissionsUsers (
         id
         name
       }
-      
+
       commission {
-        seam_commission
-        print_commission
-        seam_total_commission
-        print_total_commission
-        order {
-          id
-          code
-          quantity
-          created_at
-
-          client {
-            id
-          }
-        }
+        ...CommissionParts
+        ...CommissionOrderParts
       }
-
-      role {
-        id
-        name
-      }
-      
-      commission_value
-      was_quantity_changed
-			confirmed_at
+      ...CommissionUserParts
     }
   }
 }
 
-query commissionRoleByMonth ($role_id: ID $month: String!) {
+query GetMonthCommissionByRole ($role_id: ID $month: String!) {
   commissionRoleByMonth (role_id: $role_id month: $month) {
     month
     year
@@ -93,15 +84,21 @@ query commissionRoleByMonth ($role_id: ID $month: String!) {
       id
       name
     }
-  } 
+  }
 }
 
-mutation commissionValueUpsert($value: String!) {
+mutation UpsertCommissionValue($value: String!) {
   commissionValueUpsert(value: $value)
 }
 
-mutation commissionConfirmProduction ($id: ID!) {
+mutation ConfirmCommissionProduction ($id: ID!) {
   commissionConfirmProduction (id: $id) {
-    id
+      ...CommissionParts
+      pivot {
+        ...CommissionUserParts
+      }
+      order {
+        ...CommissionOrderParts
+      }
   }
 }
