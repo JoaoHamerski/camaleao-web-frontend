@@ -38,7 +38,7 @@ export default {
       buttonSelected: 'priority',
       params: {
         page: 1,
-        ...QUERIES.OLDER
+        ...QUERIES.PRIORITY
       },
       modalReport: {
         value: false,

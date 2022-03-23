@@ -84,6 +84,7 @@ export default {
           }
         })
 
+        this.$helpers.clearCacheFrom({ fieldName: 'weeklyProduction' })
         this.$emit('success', { orderId: id, clientId: client.id })
       } catch (error) {
         handleError(this, error)

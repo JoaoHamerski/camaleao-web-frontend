@@ -23,7 +23,7 @@ export default {
   },
   methods: {
     tableRowRoute (order) {
-      if (order.states.includes('PRE-REGISTERED')) {
+      if (!order.client) {
         return {
           name: orders.showPreRegistered,
           params: this.$helpers.getRouteParams({ order })
