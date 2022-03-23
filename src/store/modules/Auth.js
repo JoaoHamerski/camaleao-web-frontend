@@ -3,7 +3,7 @@ import {
   onLogin,
   onLogout
 } from '@/vue-apollo'
-import { authUser, login } from '@/graphql/Auth.gql'
+import { GetAuthUser, Login } from '@/graphql/Auth.gql'
 import router from '@/router'
 
 export const namespaced = true
@@ -43,7 +43,7 @@ export const actions = {
     const { credentials } = payload
 
     const data = await apolloClient.mutate({
-      mutation: login,
+      mutation: Login,
       variables: credentials
     })
 
@@ -70,7 +70,7 @@ export const actions = {
   async getAuthUser ({ commit }) {
     try {
       const data = await apolloClient.query({
-        query: authUser
+        query: GetAuthUser
       })
 
       commit('SET_USER', data.data.authUser)
