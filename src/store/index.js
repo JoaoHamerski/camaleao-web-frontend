@@ -2,6 +2,7 @@ import Vue from 'vue'
 import Vuex from 'vuex'
 import * as auth from './modules/Auth'
 import * as sidebar from './modules/Sidebar'
+import plugins from './plugins'
 
 Vue.use(Vuex)
 
@@ -11,9 +12,13 @@ export default new Vuex.Store({
     auth,
     sidebar
   },
-  getters: {
-    apiURL () {
-      return process.env.VUE_APP_GRAPHQL_HTTP
+  plugins: [plugins],
+  state: {
+    isMobile: false
+  },
+  mutations: {
+    SET_IS_MOBILE (state, isMobile) {
+      state.isMobile = isMobile
     }
   }
 })
