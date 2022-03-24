@@ -24,9 +24,6 @@ export default {
       return resolvedRoute.href
     }
   },
-  mounted () {
-    console.log(this.to)
-  },
   methods: {
     redirect (event, navigate) {
       if (this.disabledRedirect) {
