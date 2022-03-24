@@ -1,5 +1,6 @@
 import ROLES from '@/constants/roles'
 import { canView } from '@/utils/helpers'
+import store from '@/store'
 import {
   faBoxes,
   faUsers,
@@ -13,7 +14,8 @@ import {
   faBuilding,
   faTshirt,
   faUser,
-  faListAlt
+  faListAlt,
+  faSignOutAlt
 } from '@fortawesome/free-solid-svg-icons'
 
 export default [
@@ -113,5 +115,10 @@ export default [
     icon: faListAlt,
     route: { name: 'activities.index' },
     condition: () => canView(ROLES.GERENCIA)
+  },
+  {
+    title: 'Sair',
+    icon: faSignOutAlt,
+    click: () => store.dispatch('auth/logout')
   }
 ]
