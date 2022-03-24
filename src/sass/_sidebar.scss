@@ -15,8 +15,10 @@ $transition-duration: .15s;
   transition: margin-left $transition-duration;
 }
 
-#sidebar.active + #content {
-  margin-left: $sidebar-width;
+@include media-breakpoint-up(sm) {
+  #sidebar.active + #content {
+    margin-left: $sidebar-width;
+  }
 }
 
 #sidebar:not(.active) {
@@ -29,7 +31,7 @@ $transition-duration: .15s;
   height: 100vh;
   display: block;
   background-color: $sidebar-bg-color;
-  z-index: 10;
+  z-index: 1000;
   max-width: $sidebar-width;
   min-width: $sidebar-width;
   position: fixed;
@@ -45,10 +47,22 @@ $transition-duration: .15s;
     &:hover {
       background-color: darken($sidebar-bg-color, 3%);
     }
-    
+
     &.active {
       font-weight: bold;
       background-color: darken($sidebar-bg-color, 5%);
+    }
+  }
+}
+
+@include media-breakpoint-down(sm) {
+  #sidebar {
+    position: absolute;
+    max-width: 100%;
+    min-width: 100%;
+
+    &:not(.active) {
+      margin-left: -100%;
     }
   }
 }

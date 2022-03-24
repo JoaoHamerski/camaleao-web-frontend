@@ -1,5 +1,5 @@
 <script>
-import { faPlus } from '@fortawesome/free-solid-svg-icons'
+import { faPlus, faSearch, faArrowAltCircleLeft } from '@fortawesome/free-solid-svg-icons'
 import { orders } from '@/constants/route-names'
 
 export default {
@@ -8,7 +8,9 @@ export default {
       orders,
       search: '',
       icons: {
-        faPlus
+        faPlus,
+        faSearch,
+        faArrowAltCircleLeft
       }
     }
   },
@@ -26,37 +28,50 @@ export default {
 
 <template>
   <div>
-    <div class="d-flex justify-content-between">
-      <AppButton
-        btn-class="fw-bold"
-        color="primary"
-        @click="$helpers.redirectTo(orders.create, {client: $route.params.clientKey})"
-      >
-        <FontAwesomeIcon
-          class="mr-1"
-          :icon="icons.faPlus"
-        />
-        Novo pedido
-      </AppButton>
-
-      <div class="col-5">
-        <AppInput
-          v-model="search"
-          :default-margin="false"
-          name="code"
-          placeholder="Buscar por código..."
-          @keypress.enter="onSearch"
+    <div class="d-flex row flex-column flex-sm-row justify-content-between">
+      <div class="col-sm-3 mb-1">
+        <AppButton
+          outlined
+          @click="$router.push({name: 'clients.index'})"
         >
-          <template #append>
-            <AppButton
-              color="primary"
-              outlined
-              @click="onSearch"
-            >
-              Buscar
-            </AppButton>
-          </template>
-        </AppInput>
+          <FontAwesomeIcon :icon="icons.faArrowAltCircleLeft" />
+          Clientes
+        </AppButton>
+      </div>
+
+      <div class="col d-flex flex-column flex-sm-row justify-content-between">
+        <div class="col col-sm-2">
+          <AppButton
+            class="mb-2 mb-sm-0"
+            btn-class="fw-bold w-100"
+            color="primary"
+            @click="$helpers.redirectTo(orders.create, {client: $route.params.clientKey})"
+          >
+            <FontAwesomeIcon
+              class="mr-1"
+              :icon="icons.faPlus"
+            />
+            Novo pedido
+          </AppButton>
+        </div>
+        <div class="col col-sm-4">
+          <AppInput
+            v-model="search"
+            :default-margin="false"
+            name="code"
+            placeholder="Buscar por código..."
+            @keypress.enter="onSearch"
+          >
+            <template #append>
+              <AppButton
+                color="primary"
+                outlined
+                :icon="icons.faSearch"
+                @click="onSearch"
+              />
+            </template>
+          </AppInput>
+        </div>
       </div>
     </div>
     <div

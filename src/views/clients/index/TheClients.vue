@@ -1,5 +1,4 @@
 <script>
-import Vue from 'vue'
 import { faUserPlus } from '@fortawesome/free-solid-svg-icons'
 import { formatPhone } from '@/utils/formatters'
 
@@ -8,10 +7,10 @@ import { GetClients } from '@/graphql/Client.gql'
 import TheClientsCard from './TheClientsCard'
 import TheClientsHeader from './TheClientsHeader'
 
-export const clientsParams = Vue.observable({
+export const clientsParams = {
   query: {},
   orderBy: [{ column: 'CREATED_AT', order: 'DESC' }]
-})
+}
 
 export const COLUMNS = {
   NAME: 'NAME',
@@ -74,7 +73,7 @@ export default {
 </script>
 
 <template>
-  <div class="col-10 mx-auto mt-5">
+  <div class="col col-sm-10 mx-auto my-5">
     <TheClientsHeader
       @search="onSearch"
       @search-clear="onSearchClear"

@@ -1,5 +1,5 @@
 <script>
-import { faUserPlus } from '@fortawesome/free-solid-svg-icons'
+import { faUserPlus, faSearch } from '@fortawesome/free-solid-svg-icons'
 import ClientModalNew from '../partials/ClientModalNew'
 
 import { COLUMNS } from './TheClients'
@@ -16,7 +16,8 @@ export default {
         search: ''
       },
       icons: {
-        faUserPlus
+        faUserPlus,
+        faSearch
       }
     }
   },
@@ -90,10 +91,10 @@ export default {
       @success="onNewClientSuccess"
     />
 
-    <div class="d-flex justify-content-between">
+    <div class="d-flex flex-column flex-sm-row justify-content-between">
       <AppButton
         color="success"
-        class="fw-bold"
+        class="fw-bold mb-3 mb-sm-0"
         @click.prevent="onNewClientClick"
       >
         <FontAwesomeIcon
@@ -103,7 +104,7 @@ export default {
         Novo cliente
       </AppButton>
 
-      <div class="col-5">
+      <div class="col-12 col-sm-5">
         <AppInput
           v-model="form.search"
           name="search"
@@ -111,7 +112,7 @@ export default {
           placeholder="Digite a busca..."
           @keypress.enter="handleSearch"
         >
-          <template #prepend>
+          <template #append>
             <AppSimpleSelect
               v-model="form.option"
               remove-default-margin
@@ -121,14 +122,11 @@ export default {
               label-prop="name"
               :options="selectOptions"
             />
-          </template>
-          <template #append>
             <AppButton
+              :icon="icons.faSearch"
               outlined
               @click="handleSearch"
-            >
-              Buscar
-            </AppButton>
+            />
           </template>
         </AppInput>
       </div>

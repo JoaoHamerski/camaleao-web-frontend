@@ -15,7 +15,13 @@
     }
   }
 
-  .logo g {
+  .logo img g {
     fill: $camaleao;
+  }
+}
+
+@include media-breakpoint-down (sm) {
+  .logo {
+    margin: auto;
   }
 }

@@ -2,7 +2,7 @@ import Vue from 'vue'
 import Vuex from 'vuex'
 import * as auth from './modules/Auth'
 import * as sidebar from './modules/Sidebar'
-import plugins from './plugins'
+import plugins, { checkIfMatchMedia } from './plugins'
 
 Vue.use(Vuex)
 
@@ -14,7 +14,7 @@ export default new Vuex.Store({
   },
   plugins: [plugins],
   state: {
-    isMobile: false
+    isMobile: checkIfMatchMedia()
   },
   mutations: {
     SET_IS_MOBILE (state, isMobile) {

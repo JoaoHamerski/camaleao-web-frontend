@@ -40,6 +40,10 @@ export default {
   },
   methods: {
     onItemClick (event, navigate) {
+      if (this.$isMobile) {
+        this.$store.commit('sidebar/SET_SIDEBAR_STATE', false)
+      }
+
       if (this.action) {
         this.action()
         return

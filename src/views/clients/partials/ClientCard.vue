@@ -17,7 +17,7 @@ export default {
   props: {
     client: {
       type: Object,
-      default: () => ({})
+      default: null
     },
     showOptions: {
       type: Boolean,
@@ -65,6 +65,7 @@ export default {
 <template>
   <AppCard
     color="success"
+    :collapsible="$isMobile"
   >
     <template #header>
       <h6 class="mb-0 fw-bold">
@@ -72,7 +73,9 @@ export default {
           class="fa-fw"
           :icon="icons.faUser"
         />
-        Cliente
+        <template v-if="client">
+          {{ $isMobile ? client.name : 'Cliente' }}
+        </template>
       </h6>
     </template>
 

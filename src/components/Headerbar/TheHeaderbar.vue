@@ -48,9 +48,9 @@ export default {
           :is-active="isSidebarActive"
           @click="toggleSidebarState"
         />
-        <div class="col-4 ms-3">
+        <div class="logo col-4 ms-sm-2 mx-auto">
           <img
-            class="img-fluid logo"
+            class="img-fluid"
             src="@/assets/images/logo.svg"
             @load="SVGInject($event.target)"
           >

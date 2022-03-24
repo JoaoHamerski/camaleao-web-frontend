@@ -1,6 +1,6 @@
 <script>
 import { isEmpty } from 'lodash'
-import { faPlus, faArrowAltCircleLeft } from '@fortawesome/free-solid-svg-icons'
+import { faPlus } from '@fortawesome/free-solid-svg-icons'
 import { GetClientWithOrders } from '@/graphql/Client.gql'
 
 import ClientCard from '../partials/ClientCard'
@@ -44,8 +44,7 @@ export default {
       },
       client: null,
       icons: {
-        faPlus,
-        faArrowAltCircleLeft
+        faPlus
       }
     }
   },
@@ -77,34 +76,29 @@ export default {
 </script>
 
 <template>
-  <div class="mt-5 row mx-auto">
-    <div class="col-3">
-      <div class="mb-1">
-        <AppButton
-          outlined
-          @click="$router.push({name: 'clients.index'})"
-        >
-          <FontAwesomeIcon :icon="icons.faArrowAltCircleLeft" />
-          Clientes
-        </AppButton>
-      </div>
-
-      <ClientCard
-        :is-loading="isLoading"
-        :client="client"
-      />
-    </div>
-
-    <div class="col-9">
+  <div class="my-5 mx-auto">
+    <div>
       <ClientOrdersHeader
+        class="mb-3 mb-sm-0"
         @search="handleSearch"
         @clear-search="onSearchClear"
       />
+    </div>
 
-      <ClientOrdersCard
-        :is-loading="isLoading"
-        :orders="orders.data"
-      />
+    <div class="d-flex row flex-column flex-sm-row">
+      <div class="col col-sm-3 mb-2 mb-sm-0">
+        <ClientCard
+          :is-loading="isLoading"
+          :client="client"
+        />
+      </div>
+
+      <div class="col col-sm-9">
+        <ClientOrdersCard
+          :is-loading="isLoading"
+          :orders="orders.data"
+        />
+      </div>
 
       <AppPaginator
         v-model="ordersQuery.page"
