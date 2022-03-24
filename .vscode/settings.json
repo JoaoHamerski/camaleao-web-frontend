@@ -13,6 +13,7 @@
         "PRODUCAO",
         "Tshirt",
         "Upsert",
-        "USUARIOS"
+        "USUARIOS",
+        "Vuex"
     ]
 }

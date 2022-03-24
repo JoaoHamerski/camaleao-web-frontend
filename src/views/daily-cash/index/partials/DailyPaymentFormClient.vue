@@ -42,11 +42,6 @@ export default {
       }
     }
   },
-  computed: {
-    apiUrl () {
-      return this.$store.getters.apiURL
-    }
-  },
   methods: {
     removeCurrentOrder () {
       this.form.order.id = ''

@@ -1,5 +1,6 @@
 <script>
 import { faArrowAltCircleLeft } from '@fortawesome/free-solid-svg-icons'
+
 export default {
   data () {
     return {
@@ -18,7 +19,9 @@ export default {
 
 <template>
   <div
+    v-tippy
     class="clickable"
+    content="Voltar"
     @click="goBack"
   >
     <FontAwesomeIcon
