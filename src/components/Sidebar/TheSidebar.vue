@@ -22,6 +22,7 @@ function renderSidebarNormalItem (h, context, item) {
       key={id}
       icon={item.icon}
       to={item.route}
+      action={item.click}
     >
       { item.title }
     </SidebarItem>
@@ -104,7 +105,7 @@ export default {
     itemConditionPass (item) {
       return this.itemHasCondition(item)
         ? item.condition()
-        : false
+        : true
     }
   },
   render (h) {

@@ -9,25 +9,44 @@ export default {
       type: [String, Object],
       default: null
     },
-    disabledRedirect: {
-      type: Boolean,
-      default: false
+    action: {
+      type: Function,
+      default: null
     }
   },
   computed: {
-    isCollapsibleItem () {
+    isItemCollapsibleChild () {
       return this.$parent.$options.name === 'SidebarItemCollapsible'
     },
+    hasRedirectRoute () {
+      return !!this.to
+    },
+    redirectTo () {
+      if (!this.hasRedirectRoute) {
+        return ''
+      }
+
+      return this.to
+    },
     url () {
+      if (!this.hasRedirectRoute) {
+        return null
+      }
+
       const resolvedRoute = this.$router.resolve(this.to)
 
       return resolvedRoute.href
     }
   },
   methods: {
-    redirect (event, navigate) {
-      if (this.disabledRedirect) {
+    onItemClick (event, navigate) {
+      if (this.action) {
+        this.action()
         return
+      }
+
+      if (!this.hasRedirectRoute) {
+        event.preventDefault()
       }
 
       navigate(event)
@@ -40,20 +59,21 @@ export default {
   <router-link
     v-slot="{ navigate, isActive }"
     custom
-    :to="to"
+    :to="redirectTo"
   >
     <li
       class="list-group-item list-sidebar-item px-4 clickable position-relative"
-      :class="{'active': isActive }"
-      @click="e => redirect(e, navigate)"
+      :class="{'active': isActive && hasRedirectRoute }"
+      @click="e => onItemClick(e, navigate)"
     >
       <a
+        v-if="url"
         :href="url"
         class="stretched-link"
       />
 
       <span
-        v-show="isCollapsibleItem"
+        v-show="isItemCollapsibleChild"
         class="px-2"
       />
 
