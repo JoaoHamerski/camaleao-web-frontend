@@ -1,32 +1,96 @@
 <script>
-import { kebabCase } from 'lodash-es'
-import sidebarItems from './sidebar-items'
-import { mapGetters, mapActions } from 'vuex'
+import classNames from 'classnames'
 
-import { faSignOutAlt } from '@fortawesome/free-solid-svg-icons'
+import sidebarItems from './sidebar-items'
+import { kebabCase, map } from 'lodash-es'
+import { mapGetters, mapActions } from 'vuex'
 
 import SidebarItem from './SidebarItem'
 import SidebarHeader from './SidebarHeader'
 import SidebarItemCollapsible from './SidebarItemCollapsible'
 
+function renderSidebarNormalItem (h, context, item) {
+  const id = kebabCase(item.title)
+
+  if (!context.itemConditionPass(item)) {
+    return
+  }
+
+  return (
+    <SidebarItem
+      id={id}
+      key={id}
+      icon={item.icon}
+      to={item.route}
+    >
+      { item.title }
+    </SidebarItem>
+  )
+}
+
+function renderSidebarCollapsibleItem (h, context, item) {
+  const id = kebabCase(item.title)
+  const scopedSlots = {
+    title: () => item.title,
+    items: () => map(
+      item.items,
+      (item) => renderSidebarNormalItem(h, context, item)
+    )
+  }
+
+  if (!context.itemConditionPass(item)) {
+    return
+  }
+
+  return (
+    <SidebarItemCollapsible
+      id={id}
+      key={id}
+      icon={item.icon}
+      to={item.route}
+      {...{ scopedSlots }}
+    />
+  )
+}
+
+function renderSidebarItem (h, context, item) {
+  if ('items' in item) {
+    return renderSidebarCollapsibleItem(h, context, item)
+  }
+
+  return renderSidebarNormalItem(h, context, item)
+}
+
+function renderList (h, context) {
+  return (
+    <ul class="list-group list-group-flush">
+      { map(sidebarItems, (item) => renderSidebarItem(h, context, item)) }
+    </ul>
+  )
+}
+
+function renderSidebar (h, context) {
+  return (
+    <nav
+      id="sidebar"
+      class={classNames(['sidebar-scrollbar', {
+        active: context.isSidebarActive
+      }])}
+    >
+      { <SidebarHeader auth-user={context.authUser}/> }
+
+      <hr class="bg-light" />
+
+      { renderList(h, context) }
+    </nav>
+  )
+}
+
 export default {
-  components: {
-    SidebarHeader,
-    SidebarItem,
-    SidebarItemCollapsible
-  },
   props: {
     authUser: {
       type: Object,
       default: null
-    }
-  },
-  data () {
-    return {
-      sidebarItems,
-      icons: {
-        faSignOutAlt
-      }
     }
   },
   computed: {
@@ -34,68 +98,17 @@ export default {
   },
   methods: {
     ...mapActions('auth', ['logout']),
-    kebabCase
+    itemHasCondition (item) {
+      return 'condition' in item
+    },
+    itemConditionPass (item) {
+      return this.itemHasCondition(item)
+        ? item.condition()
+        : false
+    }
+  },
+  render (h) {
+    return renderSidebar(h, this)
   }
 }
 </script>
-
-<template>
-  <nav
-    v-if="authUser"
-    id="sidebar"
-    class="sidebar-scrollbar"
-    :class="isSidebarActive && 'active'"
-  >
-    <SidebarHeader :auth-user="authUser" />
-
-    <hr class="bg-light">
-
-    <ul class="list-group list-group-flush">
-      <template v-for="item in sidebarItems">
-        <template v-if="item.items">
-          <SidebarItemCollapsible
-            v-if="item.condition && item.condition()"
-            :id="kebabCase(item.title)"
-            :key="kebabCase(item.title)"
-            :icon="item.icon"
-          >
-            <template #title>
-              {{ item.title }}
-            </template>
-            <template #items>
-              <template v-for="subItem in item.items">
-                <SidebarItem
-                  v-if="subItem.condition && subItem.condition()"
-                  :key="kebabCase(subItem.title)"
-                  :icon="subItem.icon"
-                  :to="subItem.route"
-                >
-                  {{ subItem.title }}
-                </SidebarItem>
-              </template>
-            </template>
-          </SidebarItemCollapsible>
-        </template>
-        <template v-else>
-          <SidebarItem
-            v-if="item.condition === undefined || item.condition()"
-            :key="kebabCase(item.title)"
-            :icon="item.icon"
-            :to="item.route"
-          >
-            {{ item.title }}
-          </SidebarItem>
-        </template>
-      </template>
-
-      <SidebarItem
-        to="/sair"
-        :icon="icons.faSignOutAlt"
-        disabled-redirect
-        @click.native="logout"
-      >
-        Sair
-      </SidebarItem>
-    </ul>
-  </nav>
-</template>
