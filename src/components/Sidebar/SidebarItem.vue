@@ -7,7 +7,7 @@ export default {
     },
     to: {
       type: [String, Object],
-      default: ''
+      default: null
     },
     disabledRedirect: {
       type: Boolean,
@@ -17,7 +17,15 @@ export default {
   computed: {
     isCollapsibleItem () {
       return this.$parent.$options.name === 'SidebarItemCollapsible'
+    },
+    url () {
+      const resolvedRoute = this.$router.resolve(this.to)
+
+      return resolvedRoute.href
     }
+  },
+  mounted () {
+    console.log(this.to)
   },
   methods: {
     redirect (event, navigate) {
@@ -38,14 +46,20 @@ export default {
     :to="to"
   >
     <li
-      class="list-group-item list-sidebar-item px-4 clickable"
+      class="list-group-item list-sidebar-item px-4 clickable position-relative"
       :class="{'active': isActive }"
       @click="e => redirect(e, navigate)"
     >
+      <a
+        :href="url"
+        class="stretched-link"
+      />
+
       <span
         v-show="isCollapsibleItem"
         class="px-2"
       />
+
       <FontAwesomeIcon
         v-if="icon"
         :icon="icon"

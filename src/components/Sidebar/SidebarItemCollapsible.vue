@@ -52,7 +52,7 @@ export default {
           class="text-primary me-1"
           fixed-width
         />
-        <slot name="collapsible-title" />
+        <slot name="title" />
       </span>
       <span class="chevron-icon"><FontAwesomeIcon :icon="icons.faChevronLeft" /></span>
     </li>
@@ -62,7 +62,7 @@ export default {
       class="collapse"
       :class="{'show': isActive }"
     >
-      <slot name="collapsible-items" />
+      <slot name="items" />
     </div>
   </span>
 </template>
