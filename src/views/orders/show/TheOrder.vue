@@ -1,5 +1,4 @@
 <script>
-import { faArrowAltCircleLeft } from '@fortawesome/free-solid-svg-icons'
 
 import { isEmpty } from 'lodash-es'
 import { GetOrder, GetOrderReport } from '@/graphql/Order.gql'
@@ -8,9 +7,7 @@ import { clients } from '@/constants/route-names'
 
 import ClientCard from '@/views/clients/partials/ClientCard'
 import TheOrderHeader from './TheOrderHeader'
-import TheOrderCardBody from './TheOrderCardBody'
-import TheOrderCardHeader from './TheOrderCardHeader'
-import TheOrderCardPlaceholder from './TheOrderCardPlaceholder'
+import TheOrderCard from './TheOrderCard'
 import ModalOrderPayment from '../partials/ModalOrderPayment'
 import ModalOrderStatus from '../partials/ModalOrderStatus'
 import ModalOrderDelete from '../partials/ModalOrderDelete'
@@ -37,10 +34,8 @@ export default {
   },
   components: {
     ClientCard,
+    TheOrderCard,
     TheOrderHeader,
-    TheOrderCardBody,
-    TheOrderCardHeader,
-    TheOrderCardPlaceholder,
     ModalOrderPayment,
     ModalOrderStatus,
     ModalOrderDelete
@@ -62,7 +57,6 @@ export default {
   data () {
     return {
       order: {},
-      clients,
       modalOrderPayment: {
         payment: null,
         value: false,
@@ -78,26 +72,12 @@ export default {
         value: false,
         src: '',
         loading: false
-      },
-      icons: {
-        faArrowAltCircleLeft
       }
     }
   },
   computed: {
     isLoading () {
       return !!this.$apollo.queries.order.loading
-    },
-    cardColor () {
-      if (this.order.states.includes('CLOSED')) {
-        return 'secondary'
-      }
-
-      if (this.order.states.includes('PRE-REGISTERED')) {
-        return 'warning'
-      }
-
-      return 'primary'
     }
   },
   methods: {
@@ -151,7 +131,7 @@ export default {
         )
       })
     },
-    onOpenModalRequest ({ modal, payload }) {
+    onOpenModal ({ modal, payload }) {
       if (modal === 'payment') {
         this.openModalOrderPayment(payload)
       }
@@ -174,87 +154,72 @@ export default {
 
 <template>
   <div
-    class="row mt-5 mx-auto"
+    class="my-5 mx-auto"
   >
-    <div class="col-3">
-      <AppButton
-        class="mb-1"
-        outlined
-        :disabled-message="!order.client && 'O pedido não possui cliente'"
-        @click="$helpers.redirectTo(clients.show, {client: order.client})"
-      >
-        <FontAwesomeIcon :icon="icons.faArrowAltCircleLeft" />
-        Cliente
-      </AppButton>
+    <ModalOrderPayment
+      v-if="!isLoading"
+      v-model="modalOrderPayment.value"
+      v-bind="{...modalOrderPayment, order}"
+      @success="onPaymentCreated"
+    />
 
-      <ClientCard
-        :is-loading="isLoading"
-        :client="order.client"
+    <ModalOrderStatus
+      v-if="!isLoading"
+      v-model="modalOrderStatus.value"
+      :order="order"
+      @success="onStatusUpdated"
+    />
+
+    <ModalOrderDelete
+      v-if="!isLoading"
+      v-model="modalOrderDelete.value"
+      :order="order"
+      @success="onOrderDeleted"
+    />
+
+    <AppFileModal
+      v-if="!isLoading"
+      id="orderReport"
+      v-model="modalOrderReport.value"
+      :src="modalOrderReport.src"
+      title="Relatório do pedido"
+      @hidden="onCloseModalReport"
+    />
+
+    <div>
+      <TheOrderHeader
+        class="mb-2"
+        v-bind="{
+          order,
+          isLoading,
+          isOrderClosed,
+          isOrderPaid,
+          isOrderPreRegistered,
+          isReportLoading: modalOrderReport.loading
+        }"
+        @open-modal="onOpenModal"
       />
     </div>
 
-    <div class="col-9">
-      <ModalOrderPayment
-        v-if="!isLoading"
-        v-model="modalOrderPayment.value"
-        v-bind="{...modalOrderPayment, order}"
-        @success="onPaymentCreated"
-      />
+    <div class="d-flex row flex-column flex-sm-row">
+      <div class="col col-sm-3 mb-2 mb-sm-0">
+        <ClientCard
+          :is-loading="isLoading"
+          :client="order.client"
+        />
+      </div>
 
-      <ModalOrderStatus
-        v-if="!isLoading"
-        v-model="modalOrderStatus.value"
-        :order="order"
-        @success="onStatusUpdated"
-      />
-
-      <ModalOrderDelete
-        v-if="!isLoading"
-        v-model="modalOrderDelete.value"
-        :order="order"
-        @success="onOrderDeleted"
-      />
-
-      <AppFileModal
-        v-if="!isLoading"
-        id="orderReport"
-        v-model="modalOrderReport.value"
-        :src="modalOrderReport.src"
-        title="Relatório do pedido"
-        @hidden="onCloseModalReport"
-      />
-
-      <TheOrderHeader
-        :order="order"
-        :is-loading="isLoading"
-        :is-report-loading="modalOrderReport.loading"
-        :is-order-closed="isOrderClosed"
-        :is-order-paid="isOrderPaid"
-        :is-order-pre-registered="isOrderPreRegistered"
-        @open-modal="onOpenModalRequest"
-      />
-
-      <AppCard
-        v-if="!isLoading"
-        :color="cardColor"
-      >
-        <template #header>
-          <TheOrderCardHeader
-            :order="order"
-            :is-order-closed="isOrderClosed"
-          />
-        </template>
-
-        <template #body>
-          <TheOrderCardBody
-            :order="order"
-            :is-order-pre-registered="isOrderPreRegistered"
-            @open-modal="onOpenModalRequest"
-          />
-        </template>
-      </AppCard>
-
-      <TheOrderCardPlaceholder v-else />
+      <div class="col col-sm-9">
+        <TheOrderCard
+          v-bind="{
+            isLoading,
+            isOrderClosed,
+            isOrderPreRegistered,
+            order
+          }"
+          @on-open-modal="onOpenModal"
+        />
+      </div>
     </div>
   </div>
 </template>

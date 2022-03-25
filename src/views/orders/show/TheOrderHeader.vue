@@ -3,18 +3,18 @@ import {
   faCog,
   faFileInvoice,
   faDollarSign,
-  faEdit,
-  faTrashAlt,
-  faTimesCircle,
-  faExchangeAlt,
-  faBoxOpen
+  faArrowAltCircleLeft
 } from '@fortawesome/free-solid-svg-icons'
 
 import { isEmpty } from 'lodash-es'
-import { ToggleOrder } from '@/graphql/Order.gql'
-import { orders } from '@/constants/route-names'
+import { clients } from '@/constants/route-names'
+
+import TheOrderHeaderCogOptions from './TheOrderHeaderCogOptions'
 
 export default {
+  components: {
+    TheOrderHeaderCogOptions
+  },
   props: {
     order: {
       type: Object,
@@ -43,15 +43,12 @@ export default {
   },
   data () {
     return {
+      clients,
       icons: {
         faCog,
         faFileInvoice,
         faDollarSign,
-        faEdit,
-        faTrashAlt,
-        faTimesCircle,
-        faExchangeAlt,
-        faBoxOpen
+        faArrowAltCircleLeft
       }
     }
   },
@@ -81,43 +78,6 @@ export default {
   },
   methods: {
     isEmpty,
-    redirectToOrderEdit () {
-      const { clientKey, orderKey } = this.$route.params
-
-      if (!this.order.client) {
-        this.$helpers.redirectTo(
-          orders.editPreRegistered,
-          { order: this.order }
-        )
-
-        return
-      }
-
-      this.$helpers.redirectTo(orders.edit, {
-        client: clientKey,
-        order: orderKey
-      })
-    },
-    async toggleOrder () {
-      const isOrderOpen = this.order.closed_at === null
-
-      try {
-        await this.$apollo.mutate({
-          mutation: ToggleOrder,
-          variables: {
-            id: this.order.id
-          }
-        })
-
-        this.$toast.success(
-          isOrderOpen
-            ? 'Pedido fechado'
-            : 'Pedido reaberto'
-        )
-      } catch (error) {
-        this.$toast.error('Ops! Algo deu errado.')
-      }
-    },
     onAddPaymentClick () {
       this.$emit('open-modal', {
         modal: 'payment',
@@ -126,94 +86,72 @@ export default {
         }
       })
     },
-    onDeleteOrderClick () {
-      this.$emit('open-modal', {
-        modal: 'delete-order'
-      })
-    },
-    onChangeStatusClick () {
-      this.$emit('open-modal', {
-        modal: 'change-status'
-      })
-    },
     onGenerateReportClick () {
       this.$emit('open-modal', {
         modal: 'report'
       })
+    },
+    onOpenModal (event) {
+      this.$emit('open-modal', event)
     }
   }
 }
 </script>
 
 <template>
-  <div class="mb-1 d-flex justify-content-between">
-    <div>
+  <div class="d-flex row flex-column flex-sm-row justify-content-between">
+    <div class="col-sm-3 mb-2 mb-sm-0">
       <AppButton
-        color="success"
         outlined
-        :icon="icons.faDollarSign"
-        :disabled-message="paymentBtnDisabledMessage"
-        @click="onAddPaymentClick"
+        :disabled-message="!order.client && 'O pedido não possui cliente'"
+        @click="$helpers.redirectTo(clients.show, {client: order.client})"
       >
-        Adicionar pagamento
+        <FontAwesomeIcon :icon="icons.faArrowAltCircleLeft" />
+        Cliente
       </AppButton>
     </div>
-    <div>
-      <AppButton
-        class="me-1"
-        :icon="icons.faFileInvoice"
-        :disabled="isReportDisabled"
-        :loading="isReportLoading"
-        @click.prevent="onGenerateReportClick"
-      >
-        Gerar relatório
-      </AppButton>
 
-      <AppButton
-        id="dropdownOptions"
-        data-bs-toggle="dropdown"
-        :icon="icons.faCog"
-        :disabled="!order"
-      />
+    <div class="col d-flex flex-column flex-sm-row justify-content-between">
+      <div class="col col-sm-4 d-flex mb-2 mb-sm-0">
+        <AppButton
+          class="flex-grow-1 flex-sm-grow-0"
+          color="success"
+          outlined
+          :icon="icons.faDollarSign"
+          :disabled-message="paymentBtnDisabledMessage"
+          @click="onAddPaymentClick"
+        >
+          Adicionar pagamento
+        </AppButton>
+      </div>
 
-      <ul
-        v-if="!isLoading"
-        class="dropdown-menu"
-        aria-labelledby="dropdownOptions"
-      >
-        <AppDropdownItem
-          :disabled-message="isOrderClosed && 'Não é possível editar pedidos fechados.'"
-          :icon="icons.faEdit"
-          :text="isOrderPreRegistered ? 'Concluir cadastro' : 'Editar'"
-          icon-color="primary"
-          @click.prevent="redirectToOrderEdit"
+      <div class="col col-sm-4 d-flex justify-content-end">
+        <AppButton
+          class="me-1 flex-grow-1 flex-sm-grow-0"
+          :icon="icons.faFileInvoice"
+          :disabled="isReportDisabled"
+          :loading="isReportLoading"
+          @click.prevent="onGenerateReportClick"
+        >
+          Gerar relatório
+        </AppButton>
+        <AppButton
+          id="dropdownOptions"
+          data-bs-toggle="dropdown"
+          :icon="icons.faCog"
+          :disabled="!order"
         />
-
-        <AppDropdownItem
-          :icon="icons.faTrashAlt"
-          text="Excluir"
-          icon-color="danger"
-          @click="onDeleteOrderClick"
+        <TheOrderHeaderCogOptions
+          v-bind="{
+            order,
+            isLoading,
+            isOrderClosed,
+            isOrderPreRegistered,
+            isOrderPaid
+          }"
+          @open-modal="onOpenModal"
         />
-
-        <div class="dropdown-divider" />
-
-        <AppDropdownItem
-          :disabled-message="isOrderClosed && 'Não é possível alterar status de pedidos fechados.'"
-          :icon="icons.faExchangeAlt"
-          text="Alterar status"
-          icon-color="primary"
-          @click="onChangeStatusClick"
-        />
-
-        <AppDropdownItem
-          :disabled-message="!isOrderPaid && 'Não é possível fechar pedidos com pendência financeira.'"
-          :icon="!isOrderClosed ? icons.faTimesCircle : icons.faBoxOpen"
-          :text="!isOrderClosed ? 'Fechar pedido' : 'Reabrir pedido'"
-          icon-color="primary"
-          @click.prevent="toggleOrder"
-        />
-      </ul>
+      </div>
     </div>
   </div>
 </template>

@@ -48,6 +48,7 @@ export default {
     id="paymentModal"
     color="success"
     :value="value"
+    centered
     v-on="$listeners"
   >
     <template #title>
