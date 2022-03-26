@@ -3,7 +3,8 @@ import {
   faCheck,
   faTimes
 } from '@fortawesome/free-solid-svg-icons'
-import { noteCreate, noteUpdate } from '@/graphql/Note.gql'
+import { CreateNote, UpdateNote } from '@/graphql/Note.gql'
+import { GetOrder } from '@/graphql/Order.gql'
 import { handleSuccess, handleError } from '@/utils/forms'
 import Form from '@/utils/Form'
 
@@ -59,11 +60,13 @@ export default {
 
       try {
         await this.$apollo.mutate({
-          mutation: noteCreate,
+          mutation: CreateNote,
           variables: {
             order_id: this.orderId,
             text
-          }
+          },
+          refetchQueries: [GetOrder],
+          awaitRefetchQueries: true
         })
 
         handleSuccess(this, { message: 'Anotação registrada!' })
@@ -81,7 +84,7 @@ export default {
 
       try {
         await this.$apollo.mutate({
-          mutation: noteUpdate,
+          mutation: UpdateNote,
           variables: { id, text }
         })
         handleSuccess(this, { message: 'Anotação atualizada!' })
@@ -103,7 +106,7 @@ export default {
   >
     <div class="d-flex flex-column flex-sm-row">
       <div class="flex-grow-1">
-        <AppInput
+        <AppTextarea
           ref="input"
           v-model="form.text"
           name="text"
@@ -112,17 +115,16 @@ export default {
           :error="form.errors.get('text')"
         />
       </div>
-      <div class="ms-sm-2 ms-auto mt-2 mt-sm-0">
+      <div class="ms-sm-2 ms-auto mt-2 mt-sm-0 d-flex flex-row flex-sm-column justify-content-between">
         <AppButton
-          class="me-2"
-          btn-class="px-4 px-sm-3"
+          btn-class="btn-sm px-4 px-sm-2 flex-grow-1 me-2 me-sm-0"
           :loading="isLoading"
           :icon="icons.faCheck"
           color="success"
           @click.prevent="onSubmit"
         />
         <AppButton
-          btn-class="px-4 px-sm-3"
+          btn-class="btn-sm px-4 px-sm-2 flex-grow-1"
           :disabled="isLoading"
           type="button"
           :icon="icons.faTimes"

@@ -57,8 +57,12 @@ export default {
       Cancelar
     </AppButton>
   </div>
-  <div v-else>
+  <div
+    v-else
+    class="d-flex flex-column"
+  >
     <AppButton
+      class="mb-1"
       tooltip="Editar"
       btn-class="btn-sm"
       outlined
@@ -66,7 +70,6 @@ export default {
       @click.prevent="onEditClick(note)"
     />
     <AppButton
-      class="ms-2"
       color="danger"
       tooltip="Deletar"
       btn-class="btn-sm"

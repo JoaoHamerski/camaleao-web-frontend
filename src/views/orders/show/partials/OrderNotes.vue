@@ -1,7 +1,7 @@
 <script>
 import { faStickyNote } from '@fortawesome/free-solid-svg-icons'
 
-import { noteDelete } from '@/graphql/Note.gql'
+import { DeleteNote } from '@/graphql/Note.gql'
 import { formatDatetime } from '@/utils/formatters'
 import Form from '@/utils/Form'
 import OrderNotesForm from './OrderNotesForm'
@@ -50,11 +50,12 @@ export default {
 
       try {
         await this.$apollo.mutate({
-          mutation: noteDelete,
+          mutation: DeleteNote,
           variables: { id }
         })
 
-        this.$toast.success('Nota deletada!')
+        this.$helpers.clearCacheFrom({ id, __typename: 'Note' })
+        this.$toast.success('Anotação deletada!')
       } catch (error) {
         this.$toast.error('Ops! Algo deu errado, tente novamente!')
       }
@@ -147,8 +148,7 @@ export default {
           </div>
 
           <OrderNotesActionButtons
-            :note="note"
-            :delete-note="deleteNote"
+            v-bind="{note, deleteNote}"
             @edit="onEditNote"
             @delete="onDeleteNote"
             @cancel-delete="onCancelDelete"
