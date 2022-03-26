@@ -55,8 +55,8 @@ export default {
       <h5 class="fw-bold text-secondary">
         Detalhes do Pedido
       </h5>
-      <div class="d-flex justify-content-between">
-        <div>
+      <div class="row">
+        <div class="col-12 col-sm mb-3 mb-sm-0">
           <div class="fw-bold small text-secondary">
             Nome
           </div>
@@ -64,7 +64,7 @@ export default {
             {{ $helpers.fallback(order.name) }}
           </b>
         </div>
-        <div>
+        <div class="col text-right text-sm-center">
           <div class="fw-bold small text-secondary">
             Código
           </div>
@@ -72,7 +72,7 @@ export default {
             {{ $helpers.fallback(order.code) }}
           </b>
         </div>
-        <div>
+        <div class="col text-start text-sm-end">
           <div class="fw-bold small text-secondary">
             Registrado em
           </div>
@@ -128,7 +128,7 @@ export default {
 
     <div
       v-if="order.price !== null"
-      class="my-3 d-flex justify-content-around"
+      class="my-3 d-flex flex-column flex-sm-row justify-content-around"
     >
       <div>
         <div>
@@ -151,11 +151,12 @@ export default {
           </div>
         </template>
       </div>
-      <div>
+      <div class="my-2 my-sm-0">
         <div>
           <b class="small text-secondary">Total pago</b>
         </div>
         <h5
+          class="mb-0"
           :class="{
             'text-success': order.total_paid >= 0,
           }"

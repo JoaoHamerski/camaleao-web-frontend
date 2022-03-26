@@ -49,21 +49,31 @@ export default {
         <tr
           class="fw-bold"
         >
-          <td colspan="3">
+          <td
+            colspan="3"
+            nowrap
+          >
             DESCONTO
           </td>
-          <td>
+          <td nowrap>
             {{ $helpers.toBRL(-order.discount) }}
           </td>
         </tr>
       </template>
 
       <tr class="fw-bold table-primary">
-        <td>VALOR FINAL</td>
-        <td colspan="2">
+        <td nowrap>
+          VALOR FINAL
+        </td>
+        <td
+          colspan="2"
+          nowrap
+        >
           {{ order.quantity }}
         </td>
-        <td>{{ $helpers.toBRL(order.price) }}</td>
+        <td nowrap>
+          {{ $helpers.toBRL(order.price) }}
+        </td>
       </tr>
     </template>
   </AppTable>

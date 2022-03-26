@@ -101,7 +101,7 @@ export default {
     :on-submit="onSubmit"
     class="w-100"
   >
-    <div class="d-flex">
+    <div class="d-flex flex-column flex-sm-row">
       <div class="flex-grow-1">
         <AppInput
           ref="input"
@@ -112,20 +112,18 @@ export default {
           :error="form.errors.get('text')"
         />
       </div>
-      <div class="ms-2">
+      <div class="ms-sm-2 ms-auto mt-2 mt-sm-0">
         <AppButton
-          :loading="isLoading"
-          btn-class="btn-sm"
-          tooltip="Concluir"
           class="me-2"
+          btn-class="px-4 px-sm-3"
+          :loading="isLoading"
           :icon="icons.faCheck"
           color="success"
           @click.prevent="onSubmit"
         />
         <AppButton
+          btn-class="px-4 px-sm-3"
           :disabled="isLoading"
-          btn-class="btn-sm"
-          tooltip="Cancelar"
           type="button"
           :icon="icons.faTimes"
           color="light"
