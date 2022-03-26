@@ -1,25 +1,30 @@
-query notesOrder ($order_id: ID!) {
-  notesOrder(order_id: $order_id) {
-    id
-    text
-    created_at
-  }
+fragment NoteParts on Note {
+  id
+  text
+  created_at
 }
 
-mutation noteCreate ($order_id: ID! $text: String!) {
+mutation CreateNote ($order_id: ID! $text: String!) {
   noteCreate (order_id: $order_id text: $text) {
-    id
+    ...NoteParts
+    order {
+      id
+
+      client {
+        id
+      }
+    }
   }
 }
 
-mutation noteUpdate ($id: ID! $text: String!) {
+mutation UpdateNote ($id: ID! $text: String!) {
   noteUpdate (id: $id text: $text) {
-    id
+    ...NoteParts
   }
 }
 
-mutation noteDelete ($id: ID!) {
+mutation DeleteNote ($id: ID!) {
   noteDelete (id: $id) {
-    id
+    ...NoteParts
   }
 }
