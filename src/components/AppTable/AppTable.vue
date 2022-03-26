@@ -1,5 +1,5 @@
 <script>
-import { get } from 'lodash'
+import { get, map } from 'lodash'
 import classNames from 'classnames'
 
 import TableCell from './TableCell'
@@ -19,9 +19,10 @@ const renderTableHead = (h, context) => {
     <thead>
       <tr>
         {
-          context.headers.map((header, index) => {
+          map(context.headers, (header, index) => {
             return (
               <th
+                nowrap
                 key={index}
                 class={header.align && `text-${header.align}`}>
                 { tableHeadContent(h, context, header) }
@@ -46,17 +47,14 @@ const tableCellContent = (h, context, header, item) => {
 }
 
 const renderTableCell = (h, context, item) => {
-  return context.headers.map((header, index) => {
+  return map(context.headers, (header, index) => {
     return (
       <TableCell
         vOn:clicked={() => context.redirectTo(item)}
         isUsingSlot={context.hasSlot(`items.${header.value}`)}
         hasRowLinks={context.hasRowLinks}
         url={() => context.routeUrl(item)}
-        align={header.align}
-        format={header.format}
-        nowrap={header.nowrap}
-        formatting={header.formatting}
+        header={header}
         key={index}
         value={get(item, header.value)}
       >
@@ -66,24 +64,27 @@ const renderTableCell = (h, context, item) => {
   })
 }
 
+const renderTableRow = (h, context, item, index) => {
+  return (
+    <tr
+      key={`tr_${index}`}
+      class={context.rowClass(item)}
+    >
+      { renderTableCell(h, context, item) }
+    </tr>
+  )
+}
+
 const renderTableBody = (h, context) => {
   return (
     <tbody class="position-relative">
       {
-        context.items.map((item, index) => {
-          return (
-            <tr
-              key={index}
-              class={context.rowClass(item)}
-            >
-              { renderTableCell(h, context, item) }
-            </tr>
-          )
+        map(context.items, (item, index) => {
+          return renderTableRow(h, context, item, index)
         })
       }
-      {
-        context.$slots.bodyAppend
-      }
+
+      { context.$slots.bodyAppend }
     </tbody>
   )
 }

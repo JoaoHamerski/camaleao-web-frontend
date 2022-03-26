@@ -3,18 +3,8 @@ import classNames from 'classnames'
 import { upperFirst, isNil } from 'lodash-es'
 import format from '@/utils/formatters'
 
-/**
- * Additional formatters can be add in formatters file
- * @see { @link /src/utils/formatters.js}
- */
-const VALID_FORMATTERS = [
-  'currencyBRL',
-  'phone',
-  'datetime'
-]
-
 function renderValue (h, context) {
-  const functionName = 'format' + upperFirst(context.format)
+  const functionName = 'format' + upperFirst(context.header.format)
 
   if (context.isUsingSlot) {
     return context.$slots.default
@@ -24,8 +14,8 @@ function renderValue (h, context) {
     return 'N/A'
   }
 
-  if (!isNil(context.format)) {
-    return format[functionName](context.value, context.formatting)
+  if (!isNil(context.header.format)) {
+    return format[functionName](context.value, context.header.formatting)
   }
 
   return context.value
@@ -54,9 +44,9 @@ function renderNormalCell (h, context) {
 function renderCell (h, context, element) {
   return (
     <td
-      nowrap={context.nowrap}
+      nowrap
       class={classNames([
-        `text-${context.align}`,
+        `text-${context.header.align}`,
         { 'has-link': context.hasRowLinks }
       ])}
     >
@@ -76,25 +66,15 @@ export default {
       type: Function,
       default: () => {}
     },
-    format: {
-      type: String,
-      default: null,
-      validator: (value) => VALID_FORMATTERS.includes(value)
+    header: {
+      type: Object,
+      default: null
     },
-    formatting: undefined,
     hasDecoration: {
       type: Boolean,
       default: false
     },
     hasRowLinks: {
-      type: Boolean,
-      default: false
-    },
-    align: {
-      type: String,
-      default: 'left'
-    },
-    nowrap: {
       type: Boolean,
       default: false
     }
