@@ -1,6 +1,9 @@
 import Cookies from 'js-cookie'
+import { checkIsMobile } from '@/store/plugins'
+import store from '@/store'
 
-const DEFAULT_SIDEBAR_STATE = true
+const IS_MOBILE = checkIsMobile()
+const DEFAULT_SIDEBAR_STATE = !IS_MOBILE
 
 const hasSidebarCookie = () => {
   return Cookies.get('is_sidebar_active') !== undefined
@@ -10,7 +13,7 @@ const hasSidebarState = (state) => {
   return state.isSidebarActive !== undefined
 }
 
-const getSidebarCookie = () => {
+const isSidebarCookieActive = () => {
   return Cookies.get('is_sidebar_active') === 'true'
 }
 
@@ -23,7 +26,7 @@ export const state = {
 export const getters = {
   isSidebarActive (state) {
     if (!hasSidebarState(state)) {
-      return getSidebarCookie()
+      return isSidebarCookieActive()
     }
 
     return state.isSidebarActive
@@ -40,7 +43,13 @@ export const actions = {
 
 export const mutations = {
   SET_SIDEBAR_STATE (state, sidebarState) {
-    Cookies.set('is_sidebar_active', sidebarState ? 'true' : 'false')
+    if (!store.state.isMobile) {
+      Cookies.set('is_sidebar_active', sidebarState ? 'true' : 'false')
+    }
+
+    if (store.state.isMobile && isSidebarCookieActive()) {
+      Cookies.set('is_sidebar_active', 'false')
+    }
 
     state.isSidebarActive = sidebarState
   }
