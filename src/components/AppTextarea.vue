@@ -29,12 +29,18 @@ export default {
       type: Boolean,
       default: true
     }
+  },
+  methods: {
+    focusInput () {
+      this.$refs.input.focus()
+    }
   }
 }
 </script>
 <template>
   <div :class="defaultMargin && 'mb-3'">
     <label
+      v-if="$slots.default"
       :for="id"
       class="form-label"
     >
@@ -46,8 +52,10 @@ export default {
         class="small text-secondary"
       >(opcional)</span>
     </label>
+
     <textarea
       :id="id"
+      ref="input"
       :value="value"
       class="form-control"
       :class="error && 'is-invalid'"
