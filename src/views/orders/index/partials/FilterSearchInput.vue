@@ -1,9 +1,18 @@
 <script>
+import { faSearch } from '@fortawesome/free-solid-svg-icons'
+
 export default {
   props: {
     value: {
       type: String,
       default: ''
+    }
+  },
+  data () {
+    return {
+      icons: {
+        faSearch
+      }
     }
   },
   methods: {
@@ -18,7 +27,7 @@ export default {
 </script>
 
 <template>
-  <div class="col-6">
+  <div class="col-12 col-sm-6">
     <AppInput
       id="code"
       :value="value"
@@ -30,10 +39,9 @@ export default {
       <template #append>
         <AppButton
           outlined
+          :icon="icons.faSearch"
           @click="onSearchClick"
-        >
-          Buscar
-        </AppButton>
+        />
       </template>
     </AppInput>
     <a

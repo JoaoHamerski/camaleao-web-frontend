@@ -6,10 +6,9 @@
  * Acessado em /testes
  */
 export default {
-  data () {
-    return {
-      value: false,
-      collapsible: true
+  methods: {
+    click () {
+      this.$toast.success('ola mundo')
     }
   }
 }
@@ -17,17 +16,8 @@ export default {
 
 <template>
   <div class="p-5">
-    <AppContainer
-      v-model="value"
-      :collapsible="collapsible"
-      disabled-tooltip="Está desativado"
-    >
-      <template #title>
-        Título do container
-      </template>
-      <template #body>
-        Illum amet laborum, minima dolor tenetur incidunt ea! Debitis dolore corporis repudiandae eveniet velit, ut recusandae, quibusdam assumenda consequuntur doloribus ratione voluptatibus magni aspernatur facere iste aperiam illum reiciendis! Quasi!
-      </template>
-    </AppContainer>
+    <AppButton @click="click">
+      Click me
+    </AppButton>
   </div>
 </template>

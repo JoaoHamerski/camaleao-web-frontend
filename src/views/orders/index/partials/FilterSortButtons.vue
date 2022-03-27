@@ -46,7 +46,7 @@ export default {
 
 <template>
   <!-- eslint-disable vue/no-v-html -->
-  <div>
+  <div class="table-responsive">
     <div
       class="btn-group mb-1"
       role="group"
@@ -67,7 +67,7 @@ export default {
         >
         <label
           :key="key + 'Label'"
-          class="btn btn-outline-primary"
+          class="btn btn-outline-primary text-nowrap"
           :class="value === key && 'fw-bold'"
           :for="`${key}__sort`"
         >
@@ -78,7 +78,7 @@ export default {
 
     <div
       v-show="value !== ''"
-      class="text-secondary small"
+      class="text-secondary small mb-2 mb-sm-0"
       :class="value === 'pre_register' && 'text-danger'"
     >
       <FontAwesomeIcon

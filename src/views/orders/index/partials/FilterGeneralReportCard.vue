@@ -125,7 +125,7 @@ export default {
         :on-submit="generateReport"
       >
         <div class="row">
-          <div class="col-3">
+          <div class="col-12 col-sm-3">
             <AppSelect
               id="city_id"
               v-model="form.city_id"
@@ -137,7 +137,7 @@ export default {
               Cidade
             </AppSelect>
           </div>
-          <div class="col-3">
+          <div class="col-12 col-sm-3">
             <AppSimpleSelect
               id="status_id"
               v-model="form.status_id"
@@ -149,7 +149,7 @@ export default {
               Status
             </AppSimpleSelect>
           </div>
-          <div class="col-3">
+          <div class="col-12 col-sm-3">
             <AppInput
               id="closed_at"
               v-model="form.closed_at"
@@ -161,7 +161,7 @@ export default {
               Data de fechamento
             </AppInput>
           </div>
-          <div class="col-3">
+          <div class="col-12 col-sm-3">
             <AppInput
               id="delivery_date"
               v-model="form.delivery_date"
@@ -187,6 +187,7 @@ export default {
           v-model="form.order"
           name="order"
           :options="orderOptions"
+          :align="$isMobile ? 'vertical' : 'horizontal'"
         >
           Ordem:
           <template #hint>
