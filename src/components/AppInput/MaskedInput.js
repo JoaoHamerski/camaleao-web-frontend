@@ -1,5 +1,22 @@
+function getAttrs (context) {
+  const attrs = []
+  const objAttrs = {}
+  attrs.push(context.$attrs)
+
+  if (context.numeric) {
+    attrs.push({ inputmode: 'numeric' })
+  }
+
+  attrs.reduce((initial, obj) => {
+    Object.assign(objAttrs, obj)
+  }, {})
+
+  return objAttrs
+}
+
 function MaskedInputElement (h, context, events) {
   const onInput = e => { context.$emit('input', e.target.value) }
+  const attrs = getAttrs(context)
 
   return (
     <input
@@ -14,7 +31,7 @@ function MaskedInputElement (h, context, events) {
       ref="input"
       on={{ ...context.$listeners, ...events, input: null }}
       vOn:input={onInput}
-      {...{ attrs: context.$attrs }}
+      {...{ attrs }}
     />
   )
 }

@@ -80,6 +80,10 @@ export default {
     defaultMargin: {
       type: Boolean,
       default: true
+    },
+    numeric: {
+      type: Boolean,
+      default: false
     }
   },
   data () {
