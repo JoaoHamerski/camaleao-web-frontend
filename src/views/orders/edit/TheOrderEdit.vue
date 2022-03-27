@@ -1,5 +1,5 @@
 <script>
-import { isEmpty } from 'lodash-es'
+import { isEmpty, cloneDeep } from 'lodash-es'
 import {
   faBoxOpen,
   faArrowCircleLeft
@@ -46,14 +46,12 @@ export default {
           client_id: clientKey
         }
       },
-      result ({ data, loading }) {
+      result ({ data: { order }, loading }) {
         if (!loading) {
-          this.$nextTick(() => {
-            this.$refs.orderForm.$emit(
-              'order-loaded',
-              { order: data.order }
-            )
-          })
+          this.$refs.orderForm.$emit(
+            'order-loaded',
+            { order: cloneDeep(order) }
+          )
         }
       }
     }
