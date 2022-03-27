@@ -4,6 +4,10 @@ import { isEmpty, isNil } from 'lodash-es'
 export default {
   props: {
     id: undefined,
+    value: {
+      type: [Number, String],
+      default: ''
+    },
     error: {
       type: [Boolean, String],
       default: false
@@ -96,11 +100,10 @@ export default {
 
     <select
       :id="id"
+      :value="value"
       :name="name"
       class="form-select"
       :class="[error && 'is-invalid', selectClass]"
-      v-bind="$attrs"
-      v-on="$listeners"
       @change="$emit('input', $event.target.value)"
     >
       <option
