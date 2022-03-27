@@ -76,7 +76,7 @@ export default {
     <div
       v-for="file in files"
       :key="getKey(file)"
-      :class="`col-${col} mb-2`"
+      :class="`col-6 col-sm-${col} mb-2`"
     >
       <div v-if="file">
         <ViewerItemsCardFile
