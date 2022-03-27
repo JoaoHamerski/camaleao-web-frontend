@@ -42,10 +42,11 @@ function renderTitle (h, context) {
 
       <span
         name={uniqueId}
-        class={classNames({
+        class={classNames([{
           'bg-muted no-select': context.disabled,
-          [`clickable bg-link-${context.color}`]: !context.disabled
-        })}
+          [`bg-${context.color}`]: !context.collapsible,
+          [`bg-link-${context.color} clickable`]: context.collapsible
+        }])}
         vOn:click={context.onTitleClick}
       >
         { context.$slots.title }
@@ -63,7 +64,10 @@ function renderBody (h, context) {
         collapse: context.collapsible
       })}
     >
-      <div class="body">
+      <div class={classNames(['py-3', {
+        'px-3': context.bodyPadding
+      }])}
+      >
         { context.$slots.body }
       </div>
     </div>
@@ -106,12 +110,16 @@ export default {
     disabledTooltip: {
       type: String,
       default: null
+    },
+    bodyPadding: {
+      type: Boolean,
+      default: true
     }
   },
   data () {
     return {
       collapse: null,
-      state: false
+      state: this.value !== null ? this.value : false
     }
   },
   computed: {
@@ -201,7 +209,7 @@ export default {
 @import "@/sass/variables/_bootstrap";
 
 $transition-time: .15s ease;
-$container-radius: .25rem;
+$container-border-radius: .25rem;
 
 .collapsing {
   transition: height $transition-time;
@@ -214,15 +222,23 @@ $container-radius: .25rem;
     }
   }
 
-  .container-title {
-    & > span {
-      transition: background-color $transition-time;
-      padding-right: .15rem;
+  &.active {
+    .icon {
+      transform: rotate(-90deg);
+    }
+
+    .container-title > span {
+      box-shadow: 0 0 5px transparent !important;
     }
   }
 
-  &.active .icon {
-    transform: rotate(-90deg);
+  .container-title {
+    & > span {
+      transition: background-color $transition-time, box-shadow $transition-time;
+      padding-right: .15rem;
+      box-shadow: 0 0 5px transparent,
+        0 3px 4px rgba($secondary, .5);
+    }
   }
 
   .icon {
@@ -231,26 +247,23 @@ $container-radius: .25rem;
 }
 
 .container-title > span {
-  box-shadow: 0 0 5px transparent;
+  box-shadow: 0 0 5px transparent,
+              0 0 5px rgba($secondary, .5);
+  margin-left: 20px;
   margin-bottom: 0;
   display: inline-block;
-  z-index: 11;
+  z-index: 10;
   color: $white;
   padding: .25rem .75rem;
   font-weight: bold;
-  border-top-right-radius: $container-radius;
-  border-top-left-radius: $container-radius;
+  border-top-right-radius: $container-border-radius;
+  border-top-left-radius: $container-border-radius;
 }
 
 .container-body {
-  z-index: 10;
+  z-index: 15;
   background-color: $white;
   box-shadow: 0 1px 5px rgba($secondary, .3);
-  border-radius: $container-radius;
-  border-top-left-radius: 0;
-
-  .body {
-    padding: .5rem;
-  }
+  border-radius: $container-border-radius;
 }
 </style>
