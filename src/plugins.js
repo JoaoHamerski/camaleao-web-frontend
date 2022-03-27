@@ -1,11 +1,11 @@
 import Vue from 'vue'
 import VueMeta from 'vue-meta'
-import VueToast from 'vue-toast-notification'
+import Toast from 'vue-toastification'
 import VueTippy from 'vue-tippy'
 import helpers from '@/utils/helpers'
 import store from '@/store'
 import 'cleave.js/dist/addons/cleave-phone.br'
-
+import '@/sass/_toast.scss'
 const custom = {
   install (Vue) {
     Vue.prototype.$helpers = helpers
@@ -21,9 +21,7 @@ Vue.use(VueTippy, {
   appendTo: () => document.querySelector('#app')
 })
 
-Vue.use(VueToast, {
-  position: 'top-right'
-})
+Vue.use(Toast)
 
 Vue.use(VueMeta)
 
