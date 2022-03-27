@@ -23,7 +23,7 @@
 
 .table {
   font-size: .9rem;
-  
+
   &.table-click tbody tr:hover {
     cursor: pointer;
   }
@@ -40,10 +40,19 @@
 .input-group {
   .form-select-wrapper {
     z-index: 1;
-    
+
     .form-select {
       border-top-right-radius: 0;
       border-bottom-right-radius: 0;
     }
   }
+}
+
+.btn-group .btn,
+.input-group .btn {
+    box-shadow: none;
+}
+
+.btn {
+  box-shadow: $card-box-shadow;
 }

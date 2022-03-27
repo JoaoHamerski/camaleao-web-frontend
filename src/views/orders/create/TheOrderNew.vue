@@ -55,7 +55,7 @@ export default {
 </script>
 
 <template>
-  <div class="mt-5 col-10 mx-auto">
+  <div class="my-5 col col-sm-10 mx-auto">
     <AppButton
       class="mb-2"
       outlined

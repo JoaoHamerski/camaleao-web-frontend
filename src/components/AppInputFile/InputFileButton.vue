@@ -52,7 +52,7 @@ export default {
 
     <small
       v-if="centered"
-      class="text-secondary d-block"
+      class="text-secondary d-none d-sm-block"
     >
       OU ARRASTE E SOLTE
     </small>

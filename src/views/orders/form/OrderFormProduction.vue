@@ -17,39 +17,40 @@ export default {
 </script>
 
 <template>
-  <div class="mt-3">
-    <h5 class="text-secondary fw-bold">
+  <AppContainer class="mt-3">
+    <template #title>
       Produção e entrega
-    </h5>
+    </template>
 
-    <div class="row">
-      <div class="col">
-        <AppInput
-          id="production_date"
-          v-model="form.production_date"
-          type="date"
-          name="production_date"
-          placeholder="dd/mm/aaaa"
-          :mask="maskDate"
-          :error="form.errors.get('production_date')"
-        >
-          Data de produção
-        </AppInput>
+    <template #body>
+      <div class="row">
+        <div class="col-12 col-sm">
+          <AppInput
+            id="production_date"
+            v-model="form.production_date"
+            type="date"
+            name="production_date"
+            placeholder="dd/mm/aaaa"
+            :mask="maskDate"
+            :error="form.errors.get('production_date')"
+          >
+            Data de produção
+          </AppInput>
+        </div>
+        <div class="col-12 col-sm">
+          <AppInput
+            id="delivery_date"
+            v-model="form.delivery_date"
+            name="delivery_date"
+            type="date"
+            placeholder="dd/mm/aaaa"
+            :mask="maskDate"
+            :error="form.errors.get('delivery_date')"
+          >
+            Data de entrega
+          </AppInput>
+        </div>
       </div>
-
-      <div class="col">
-        <AppInput
-          id="delivery_date"
-          v-model="form.delivery_date"
-          name="delivery_date"
-          type="date"
-          placeholder="dd/mm/aaaa"
-          :mask="maskDate"
-          :error="form.errors.get('delivery_date')"
-        >
-          Data de entrega
-        </AppInput>
-      </div>
-    </div>
-  </div>
+    </template>
+  </AppContainer>
 </template>

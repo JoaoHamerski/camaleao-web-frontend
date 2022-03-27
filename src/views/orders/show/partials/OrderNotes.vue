@@ -94,74 +94,75 @@ export default {
 </script>
 
 <template>
-  <div>
-    <div class="d-flex align-items-baseline">
-      <h5 class="fw-bold text-secondary">
-        <FontAwesomeIcon :icon="icons.faStickyNote" />
-        Anotações
-      </h5>
-      <div
-        class="link-primary clickable small ms-2"
+  <AppContainer>
+    <template #title>
+      <FontAwesomeIcon :icon="icons.faStickyNote" />
+      Anotações
+      <span
+        class="link-white clickable small ms-2"
         @click.prevent="onNewNoteClick"
       >
         (+ NOVA NOTA)
-      </div>
-    </div>
+      </span>
+    </template>
 
-    <ul
-      v-if="notes.length || newNote.value"
-      class="list-group list-group-flush"
-    >
-      <li
-        v-if="newNote.value"
-        class="list-group-item d-flex align-items-center"
+    <template #body>
+      <ul
+        v-if="notes.length || newNote.value"
+        class="list-group list-group-flush"
       >
-        <OrderNotesForm
-          :order-id="orderId"
-          @cancel="dismissNewNote"
-          @success="dismissNewNote"
-        />
-      </li>
-
-      <li
-        v-for="note in notes"
-        :key="note.id"
-        class="list-group-item text-subtitle d-flex justify-content-between align-items-center"
-      >
-        <template v-if="editNote.note.id === note.id">
+        <li
+          v-if="newNote.value"
+          class="list-group-item d-flex align-items-center"
+        >
           <OrderNotesForm
-            :is-edit="true"
             :order-id="orderId"
-            :note="editNote.note"
-            @cancel="dismissEditNote"
-            @success="dismissEditNote"
+            @cancel="dismissNewNote"
+            @success="dismissNewNote"
           />
-        </template>
-        <template v-else>
-          <div>
-            <div>
-              {{ note.text }}
+        </li>
+        <li
+          v-for="note in notes"
+          :key="note.id"
+          class="list-group-item text-subtitle"
+        >
+          <template v-if="editNote.note.id === note.id">
+            <OrderNotesForm
+              :is-edit="true"
+              :order-id="orderId"
+              :note="editNote.note"
+              @cancel="dismissEditNote"
+              @success="dismissEditNote"
+            />
+          </template>
+          <div
+            v-else
+            class="d-flex flex-column "
+          >
+            <div class="d-flex justify-content-between mb-2">
+              <div>
+                {{ note.text }}
+              </div>
+              <div class="text-secondary small">
+                {{ formatDatetime(note.created_at, "dd/MM/y 'ás' HH:mm") }}
+              </div>
             </div>
-            <small class="text-secondary">
-              {{ formatDatetime(note.created_at, "dd/MM/y 'ás' HH:mm") }}
-            </small>
+            <OrderNotesActionButtons
+              v-bind="{note, deleteNote}"
+              @edit="onEditNote"
+              @delete="onDeleteNote"
+              @cancel-delete="onCancelDelete"
+              @confirm-delete="onConfirmDelete"
+            />
           </div>
-
-          <OrderNotesActionButtons
-            v-bind="{note, deleteNote}"
-            @edit="onEditNote"
-            @delete="onDeleteNote"
-            @cancel-delete="onCancelDelete"
-            @confirm-delete="onConfirmDelete"
-          />
-        </template>
-      </li>
-    </ul>
-    <div
-      v-else
-      class="text-secondary text-center py-3"
-    >
-      Nenhuma anotação registrada
-    </div>
-  </div>
+        </li>
+      </ul>
+      <div
+        v-else
+        class="text-secondary text-center py-3"
+      >
+        Nenhuma anotação registrada
+      </div>
+    </template>
+  </AppContainer>
 </template>

@@ -36,6 +36,7 @@ export default {
   <AppModal
     id="clientModalEdit"
     :value="value"
+    centered
     v-on="$listeners"
   >
     <template #title>

@@ -7,7 +7,7 @@ $default-color: $secondary;
   &.today-btn {
     flex: 1 0 0%;
   }
-  
+
   width: 100%;
   display: block;
 
@@ -18,11 +18,11 @@ $default-color: $secondary;
 
   .mx-datepicker-popup {
     border-radius: $input-border-radius;
-  
+
     .today {
       font-weight: bold;
     }
-  
+
     .cell {
       border-radius: $input-border-radius;
       font-size: .9rem;
@@ -30,4 +30,6 @@ $default-color: $secondary;
   }
 }
 
-
+input.is-invalid + .mx-icon-calendar {
+  display: none;
+}

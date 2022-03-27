@@ -119,122 +119,127 @@ export default {
 </script>
 
 <template>
-  <div
-    class="mt-3 clothing-types-group"
-    :class="form.errors.get('price') && 'is-invalid'"
-  >
-    <h5 class="fw-bold text-secondary">
+  <AppContainer :color="form.errors.get('price') ? 'danger': 'primary'">
+    <template #title>
       Valores
-    </h5>
-    <h6 class="text-secondary">
-      Tipos de roupas
-    </h6>
-
-    <template v-if="showPreRegisterPriceInfo">
-      <div
-        class="small text-warning mb-3"
-      >
-        Pedido pré-registrado com o valor de
-        <span class="fw-bold">{{ $helpers.toBRL(order.original_price) }}</span>
-      </div>
     </template>
 
-    <div>
-      <div class="row mb-3 text-secondary">
-        <div class="col" />
-        <div
-          class="col text-center fw-bold"
-          :class="form.errors.get('price') && 'text-danger'"
-        >
-          QUANTIDADE
-        </div>
-        <div
-          class="col text-center fw-bold"
-          :class="form.errors.get('price') && 'text-danger'"
-        >
-          VALOR UNIT.
-        </div>
-        <div class="col text-center fw-bold">
-          TOTAL
-        </div>
-      </div>
-
+    <template #body>
       <div
-        v-for="(type, index) in clothingTypes"
-        :key="type.key"
-        class="row"
+        class="mt-3 clothing-types-group"
+        :class="form.errors.get('price') && 'is-invalid'"
       >
-        <div
-          class="col text-subtitle fw-bold"
-          :class="isValidType(index) && 'text-success'"
-        >
-          {{ type.name }}
-        </div>
+        <template v-if="showPreRegisterPriceInfo">
+          <div
+            class="small text-warning mb-3"
+          >
+            Pedido pré-registrado com o valor de
+            <span class="fw-bold">{{ $helpers.toBRL(order.original_price) }}</span>
+          </div>
+        </template>
+        <div>
+          <div class="row d-none d-sm-flex mb-3 text-secondary">
+            <div class="col" />
+            <div
+              class="col text-center fw-bold"
+              :class="form.errors.get('price') && 'text-danger'"
+            >
+              QUANTIDADE
+            </div>
+            <div
+              class="col text-center fw-bold"
+              :class="form.errors.get('price') && 'text-danger'"
+            >
+              VALOR UNIT.
+            </div>
+            <div class="col text-center fw-bold">
+              TOTAL
+            </div>
+          </div>
+          <div
+            v-for="(type, index) in clothingTypes"
+            :key="type.key"
+            class="d-flex row flex-column flex-sm-row"
+          >
+            <div
+              class="col text-center text-sm-start mb-2 mb-sm-0 text-subtitle fw-bold"
+              :class="isValidType(index) && 'text-success'"
+            >
+              {{ type.name }}
+            </div>
+            <div class="col">
+              <AppInput
+                v-model="form.clothing_types[index].quantity"
+                :name="'quantity_' + type.key"
+                :mask="maskInteger"
+                numeric
+                :hint="$isMobile ? 'Quantidade': ''"
+                @focus="form.errors.clear('price')"
+              />
+            </div>
+            <div class="col">
+              <AppInput
+                v-model="form.clothing_types[index].value"
+                :mask="maskCurrencyBRL"
+                :name="'value_' + type.key"
+                :hint="$isMobile ? 'Valor unitário': ''"
+                numeric
+                @focus="form.errors.clear('price')"
+              />
+            </div>
+            <div class="col">
+              <AppInput
+                :value="evaluateTotalType(index)"
+                :name="'total_' + type.key"
+                :hint="$isMobile ? 'Total': ''"
+                disabled
+              />
+            </div>
+          </div>
 
-        <div class="col">
-          <AppInput
-            v-model="form.clothing_types[index].quantity"
-            :name="'quantity_' + type.key"
-            :mask="maskInteger"
-            @focus="form.errors.clear('price')"
-          />
-        </div>
+          <hr class="d-block d-sm-none">
 
-        <div class="col">
-          <AppInput
-            v-model="form.clothing_types[index].value"
-            :mask="maskCurrencyBRL"
-            :name="'value_' + type.key"
-            @focus="form.errors.clear('price')"
-          />
+          <div class="row">
+            <div class="col fw-bold text-subtitle d-none d-sm-block">
+              TOTAL
+            </div>
+            <div class="col">
+              <AppInput
+                input-class="fw-bold"
+                :value="totalQuantity"
+                name="total_quantity"
+                :hint="$isMobile ? 'Quantidade total': ''"
+                disabled
+              />
+            </div>
+            <div class="col d-none d-sm-block">
+              <hr>
+            </div>
+            <div class="col">
+              <AppInput
+                input-class="fw-bold"
+                :value="totalValue"
+                name="total_value"
+                :hint="$isMobile ? 'Valor total': ''"
+                disabled
+              />
+            </div>
+          </div>
         </div>
-
-        <div class="col">
-          <AppInput
-            :value="evaluateTotalType(index)"
-            :name="'total_' + type.key"
-            disabled
-          />
+        <div class="small text-danger mb-1">
+          {{ form.errors.get('price') }}
         </div>
+        <small class="text-secondary">
+          O valor só é estimado quando a <b>QUANTIDADE</b> e <b>VALOR UNIT.</b> de um tipo é preenchido.
+        </small>
+        <OrderFormValuesFinal
+          :form="form"
+          :final-value="finalValue"
+          :is-edit="isEdit"
+        />
       </div>
-      <div class="row">
-        <div class="col fw-bold text-subtitle">
-          TOTAL
-        </div>
-        <div class="col">
-          <AppInput
-            input-class="fw-bold"
-            :value="totalQuantity"
-            name="total_quantity"
-            disabled
-          />
-        </div>
-        <div class="col">
-          <hr>
-        </div>
-        <div class="col">
-          <AppInput
-            input-class="fw-bold"
-            :value="totalValue"
-            name="total_value"
-            disabled
-          />
-        </div>
-      </div>
-    </div>
-    <div class="small text-danger mb-1">
-      {{ form.errors.get('price') }}
-    </div>
-    <small class="text-secondary">
-      O valor só é estimado quando a <b>QUANTIDADE</b> e <b>VALOR UNIT.</b> de um linha é preenchido.
-    </small>
-
-    <OrderFormValuesFinal
-      :form="form"
-      :final-value="finalValue"
-      :is-edit="isEdit"
-    />
-  </div>
+    </template>
+  </AppContainer>
 </template>
 
 <style lang="scss" scoped>

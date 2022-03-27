@@ -40,7 +40,7 @@ export default {
 <template>
   <div class="mt-3">
     <div class="row">
-      <div class="col">
+      <div class="col-12 col-sm">
         <AppInput
           :value="finalValue"
           disabled
@@ -51,7 +51,7 @@ export default {
         </AppInput>
       </div>
       <div
-        class="col"
+        class="col-12 col-sm"
       >
         <AppInput
           id="discount"
@@ -60,6 +60,7 @@ export default {
           name="discount"
           :error="form.errors.get('discount')"
           optional
+          numeric
         >
           Desconto
         </AppInput>
@@ -70,7 +71,7 @@ export default {
       v-if="!isEdit"
       class="row"
     >
-      <div class="col">
+      <div class="col-12 col-sm">
         <AppInput
           id="down_payment"
           v-model="form.down_payment"
@@ -82,7 +83,7 @@ export default {
           Entrada
         </AppInput>
       </div>
-      <div class="col">
+      <div class="col-12 col-sm">
         <AppSimpleSelect
           v-model="form.payment_via_id"
           name="payment_via_id"

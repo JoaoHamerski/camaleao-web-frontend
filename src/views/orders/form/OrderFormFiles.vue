@@ -96,113 +96,112 @@ export default {
 </script>
 
 <template>
-  <div class="mt-3">
-    <OrderFormFilesModal
-      v-model="modal"
-      :max-file-size="maxFileSize"
-      :items="transferedItems"
-      @cancel="onCancel"
-      @transfer-to-field="onTransferToField"
-      @delete-file="onModalDeleteFile"
-    />
-
-    <h5 class="text-secondary fw-bold">
+  <AppContainer>
+    <template #title>
       Anexos
-    </h5>
-    <div class="fw-bold small text-secondary mb-3">
-      Tamanho máximo para cada arquivo: {{ formatBytes(maxFileSize) }}
-    </div>
+    </template>
 
-    <div>
+    <template #body>
+      <OrderFormFilesModal
+        v-model="modal"
+        :max-file-size="maxFileSize"
+        :items="transferedItems"
+        @cancel="onCancel"
+        @transfer-to-field="onTransferToField"
+        @delete-file="onModalDeleteFile"
+      />
+
+      <div class="fw-bold small text-secondary mb-3">
+        Tamanho máximo para cada arquivo: {{ formatBytes(maxFileSize) }}
+      </div>
+      <div>
+        <AppInputFile
+          id="art_paths"
+          centered
+          multiple
+          optional
+          accept="image/*"
+          @input="onFileSelected($event, 'art_paths')"
+        >
+          Imagens da arte
+        </AppInputFile>
+        <AppViewerItems
+          show-delete-button
+          :files="form.art_paths"
+          :max-file-size="maxFileSize"
+          @delete-file="onFileDelete($event, 'art_paths')"
+        >
+          <template
+            v-if="!isEdit"
+            #file-info="{ file }"
+          >
+            <div class="small text-secondary text-center">
+              ({{ truncate(file.name, { length: 15 }) }} - <b>{{ formatBytes(file.size) }}</b>)
+            </div>
+          </template>
+        </AppViewerItems>
+      </div>
+      <div>
+        <AppInputFile
+          id="size_paths"
+          centered
+          multiple
+          optional
+          accept="image/*"
+          @input="onFileSelected($event, 'size_paths')"
+        >
+          Imagens do tamanho
+        </AppInputFile>
+        <AppViewerItems
+          show-delete-button
+          :files="form.size_paths"
+          :max-file-size="maxFileSize"
+          @delete-file="onFileDelete($event, 'size_paths')"
+        >
+          <template
+            v-if="!isEdit"
+            #file-info="{ file }"
+          >
+            <div class="small text-secondary text-center">
+              ({{ truncate(file.name, { length: 15 }) }} - <b>{{ formatBytes(file.size) }}</b>)
+            </div>
+          </template>
+        </AppViewerItems>
+      </div>
       <AppInputFile
-        id="art_paths"
+        id="payment_voucher_paths"
         centered
         multiple
         optional
-        accept="image/*"
-        @input="onFileSelected($event, 'art_paths')"
+        accept="image/*,application/pdf"
+        @input="onFileSelected(
+          $event,
+          'payment_voucher_paths',
+          VALID_TYPES.payment_voucher_paths
+        )"
       >
-        Imagens da arte
+        Comprovantes de pagamento
       </AppInputFile>
       <AppViewerItems
         show-delete-button
-        :files="form.art_paths"
+        list-type="card"
+        :files="form.payment_voucher_paths"
         :max-file-size="maxFileSize"
-        @delete-file="onFileDelete($event, 'art_paths')"
+        @delete-file="onFileDelete($event, 'payment_voucher_paths')"
       >
         <template
           v-if="!isEdit"
           #file-info="{ file }"
         >
           <div class="small text-secondary text-center">
-            ({{ truncate(file.name, { length: 15 }) }} - <b>{{ formatBytes(file.size) }}</b>)
+            (<span
+              v-tippy="{placement: 'bottom'}"
+              :content="file.name"
+            >{{ truncate(file.name, { length: 15 }) }}
+            </span> - <b>{{ formatBytes(file.size) }}</b>)
           </div>
         </template>
       </AppViewerItems>
-    </div>
-
-    <div>
-      <AppInputFile
-        id="size_paths"
-        centered
-        multiple
-        optional
-        accept="image/*"
-        @input="onFileSelected($event, 'size_paths')"
-      >
-        Imagens do tamanho
-      </AppInputFile>
-      <AppViewerItems
-        show-delete-button
-        :files="form.size_paths"
-        :max-file-size="maxFileSize"
-        @delete-file="onFileDelete($event, 'size_paths')"
-      >
-        <template
-          v-if="!isEdit"
-          #file-info="{ file }"
-        >
-          <div class="small text-secondary text-center">
-            ({{ truncate(file.name, { length: 15 }) }} - <b>{{ formatBytes(file.size) }}</b>)
-          </div>
-        </template>
-      </AppViewerItems>
-    </div>
-
-    <AppInputFile
-      id="payment_voucher_paths"
-      centered
-      multiple
-      optional
-      accept="image/*,application/pdf"
-      @input="onFileSelected(
-        $event,
-        'payment_voucher_paths',
-        VALID_TYPES.payment_voucher_paths
-      )"
-    >
-      Comprovantes de pagamento
-    </AppInputFile>
-
-    <AppViewerItems
-      show-delete-button
-      list-type="card"
-      :files="form.payment_voucher_paths"
-      :max-file-size="maxFileSize"
-      @delete-file="onFileDelete($event, 'payment_voucher_paths')"
-    >
-      <template
-        v-if="!isEdit"
-        #file-info="{ file }"
-      >
-        <div class="small text-secondary text-center">
-          (<span
-            v-tippy="{placement: 'bottom'}"
-            :content="file.name"
-          >{{ truncate(file.name, { length: 15 }) }}
-          </span> - <b>{{ formatBytes(file.size) }}</b>)
-        </div>
-      </template>
-    </AppViewerItems>
-  </div>
+    </template>
+  </AppContainer>
 </template>

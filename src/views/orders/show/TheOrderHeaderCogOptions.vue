@@ -103,6 +103,7 @@ export default {
     v-if="!isLoading"
     class="dropdown-menu"
     aria-labelledby="dropdownOptions"
+    @click.stop
   >
     <AppDropdownItem
       :disabled-message="isOrderClosed && 'Não é possível editar pedidos fechados.'"

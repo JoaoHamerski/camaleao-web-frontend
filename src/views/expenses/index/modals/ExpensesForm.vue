@@ -124,7 +124,6 @@ export default {
 
         handleSuccess(this, { message: 'Despesa atualizada!' })
       } catch (error) {
-        console.log({ ...error })
         handleError(this, error)
       }
     },

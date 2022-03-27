@@ -48,10 +48,12 @@ export default {
       },
       result ({ data: { order }, loading }) {
         if (!loading) {
-          this.$refs.orderForm.$emit(
-            'order-loaded',
-            { order: cloneDeep(order) }
-          )
+          this.$nextTick(() => {
+            this.$refs.orderForm.$emit(
+              'order-loaded',
+              { order: cloneDeep(order) }
+            )
+          })
         }
       }
     }
@@ -107,7 +109,7 @@ export default {
 </script>
 
 <template>
-  <div class="mt-5 col-10 mx-auto">
+  <div class="my-5 col col-sm-10 mx-auto">
     <AppButton
       class="mb-2"
       outlined
@@ -148,7 +150,7 @@ export default {
           @clothing-types-loaded="onClothingTypesLoaded"
         />
 
-        <AppLoading v-if="!loaded" />
+        <AppLoading v-show="!loaded" />
       </template>
     </AppCard>
   </div>

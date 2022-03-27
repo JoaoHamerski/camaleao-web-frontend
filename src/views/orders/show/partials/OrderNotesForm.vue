@@ -104,8 +104,8 @@ export default {
     :on-submit="onSubmit"
     class="w-100"
   >
-    <div class="d-flex flex-column flex-sm-row">
-      <div class="flex-grow-1">
+    <div class="d-flex flex-column">
+      <div class="mb-2">
         <AppTextarea
           ref="input"
           v-model="form.text"
@@ -115,16 +115,16 @@ export default {
           :error="form.errors.get('text')"
         />
       </div>
-      <div class="ms-sm-2 ms-auto mt-2 mt-sm-0 d-flex flex-row flex-sm-column justify-content-between">
+      <div>
         <AppButton
-          btn-class="btn-sm px-4 px-sm-2 flex-grow-1 me-2 me-sm-0"
+          btn-class="btn-sm me-2 px-4"
           :loading="isLoading"
           :icon="icons.faCheck"
           color="success"
           @click.prevent="onSubmit"
         />
         <AppButton
-          btn-class="btn-sm px-4 px-sm-2 flex-grow-1"
+          btn-class="btn-sm px-4"
           :disabled="isLoading"
           type="button"
           :icon="icons.faTimes"

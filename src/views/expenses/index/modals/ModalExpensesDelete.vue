@@ -14,9 +14,6 @@ export default {
         on: {
           success () {
             this.$emit('success')
-          },
-          error  ({ error }) {
-            console.log(error)
           }
         }
       }

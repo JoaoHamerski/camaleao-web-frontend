@@ -10,32 +10,34 @@ export default {
 </script>
 
 <template>
-  <div>
-    <h5 class="text-secondary fw-bold">
-      Informações básica
-    </h5>
-    <div class="row">
-      <div class="col">
-        <AppInput
-          id="name"
-          v-model="form.name"
-          name="name"
-          placeholder="Nome que descreva o pedido..."
-          label="Nome"
-          :error="form.errors.get('name')"
-          optional
-        />
+  <AppContainer>
+    <template #title>
+      Informações básicas
+    </template>
+    <template #body>
+      <div class="row">
+        <div class="col-12 col-sm">
+          <AppInput
+            id="name"
+            v-model="form.name"
+            name="name"
+            placeholder="Nome que descreva o pedido..."
+            label="Nome"
+            :error="form.errors.get('name')"
+            optional
+          />
+        </div>
+        <div class="col-12 col-sm">
+          <AppInput
+            id="code"
+            v-model="form.code"
+            name="code"
+            placeholder="Código do pedido..."
+            :error="form.errors.get('code')"
+            label="Código"
+          />
+        </div>
       </div>
-      <div class="col">
-        <AppInput
-          id="code"
-          v-model="form.code"
-          name="code"
-          placeholder="Código do pedido..."
-          :error="form.errors.get('code')"
-          label="Código"
-        />
-      </div>
-    </div>
-  </div>
+    </template>
+  </AppContainer>
 </template>

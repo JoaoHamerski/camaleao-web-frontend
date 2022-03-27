@@ -40,63 +40,63 @@ export default {
 </script>
 
 <template>
-  <AppCollapsible
-    v-if="filesCount"
+  <AppContainer
     id="files"
     header-class="text-secondary"
+    collapsible
+    :value="true"
   >
-    <template #header>
-      <h5 class="fw-bold">
-        Anexos <span v-if="filesCount">({{ filesCount }})</span>
-      </h5>
+    <template #title>
+      <FontAwesomeIcon
+        :icon="icons.faFileImage"
+        fixed-width
+      />
+      <span class="me-2">Anexos</span>
+      <small
+        v-if="filesCount"
+        class="badge rounded-pill bg-light text-dark "
+      >{{ filesCount }}</small>
     </template>
 
     <template #body>
-      <div
-        v-for="(label, key) in FILES_MAP"
-        :key="key"
-      >
+      <div v-if="filesCount">
         <div
-          v-if="order[key]"
-          class="mb-3"
+          v-for="(label, key) in FILES_MAP"
+          :key="key"
         >
-          <div class="text-secondary mb-1">
-            &bull; {{ label }}
-          </div>
-          <div v-if="order[key].length">
-            <AppViewerItems
-              :alt="label"
-              :files="order[key]"
-            />
-          </div>
           <div
-            v-else
-            class="text-center text-secondary py-4"
+            v-if="order[key]"
+            class="mb-3"
           >
-            Nenhum anexo registrado
+            <div class="text-subtitle fw-bold text-secondary mb-1">
+              {{ label }}
+            </div>
+            <div v-if="order[key].length">
+              <AppViewerItems
+                :alt="label"
+                :files="order[key]"
+              />
+            </div>
+            <div
+              v-else
+              class="text-center text-secondary py-4"
+            >
+              Nenhum anexo registrado
+            </div>
           </div>
-        </div>
-
-        <div v-else>
-          <div class="text-secondary mb-1">
-            &bull; {{ label }}
-          </div>
-          <div class="small text-center text-secondary py-5">
-            Nenhum anexo registrado
+          <div v-else>
+            <div class="texse me dissesset-secondary mb-1">
+              &bull; {{ label }}
+            </div>
+            <div class="small text-center text-secondary py-5">
+              Nenhum anexo registrado
+            </div>
           </div>
         </div>
       </div>
+      <div class="py-3 text-secondary text-center">
+        Nenhum anexo registrado
+      </div>
     </template>
-  </AppCollapsible>
-  <div
-    v-else
-  >
-    <h5 class="fw-bold text-secondary">
-      <FontAwesomeIcon :icon="icons.faFileImage" />
-      Anexos
-    </h5>
-    <div class="text-secondary text-center py-3">
-      Nenhum anexo registrado
-    </div>
-  </div>
+  </AppContainer>
 </template>

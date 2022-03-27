@@ -38,7 +38,10 @@ export default {
 </script>
 
 <template>
-  <div v-if="deleteNote.note.id === note.id">
+  <div
+    v-if="deleteNote.note.id === note.id"
+    class="d-flex"
+  >
     <AppButton
       btn-class="btn-sm fw-bold"
       color="success"
@@ -59,12 +62,12 @@ export default {
   </div>
   <div
     v-else
-    class="d-flex flex-column"
+    class="d-flex"
   >
     <AppButton
-      class="mb-1"
+      class="me-3"
       tooltip="Editar"
-      btn-class="btn-sm"
+      btn-class="btn-sm px-4"
       outlined
       :icon="icons.faEdit"
       @click.prevent="onEditClick(note)"
@@ -72,7 +75,7 @@ export default {
     <AppButton
       color="danger"
       tooltip="Deletar"
-      btn-class="btn-sm"
+      btn-class="btn-sm px-4"
       outlined
       :icon="icons.faTrashAlt"
       @click.prevent="onDeleteClick(note)"

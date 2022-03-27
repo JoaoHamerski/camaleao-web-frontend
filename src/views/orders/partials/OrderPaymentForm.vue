@@ -135,6 +135,7 @@ export default {
         name="value"
         :error="form.errors.get('value')"
         :mask="maskCurrencyBRL"
+        numeric
       >
         Valor
 

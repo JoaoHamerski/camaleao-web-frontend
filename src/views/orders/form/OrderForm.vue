@@ -110,7 +110,6 @@ export default {
 
         this.$emit('success', { orderId: id, clientId: clientKey })
       } catch (error) {
-        console.log(error)
         handleError(this, error)
       }
     },
@@ -154,20 +153,17 @@ export default {
       this.isLoading = false
     },
     onClothingTypesLoaded (clothingTypes) {
-      if (this.form.clothing_types.length) {
-        this.$emit('clothing-types-loaded')
-        return
-      }
-
       for (const type of clothingTypes) {
         this.form.clothing_types.push({
           key: type.key,
-          value: 'R$ ',
+          value: '',
           quantity: ''
         })
       }
 
-      this.$emit('clothing-types-loaded')
+      this.$nextTick(() => {
+        this.$emit('clothing-types-loaded')
+      })
     },
     populateClothingTypes (clothingTypes) {
       this.form.clothing_types.forEach((type, index) => {
@@ -205,14 +201,21 @@ export default {
       :form="form"
     />
 
-    <OrderFormBasicInfo :form="form" />
+    <OrderFormBasicInfo
+      :form="form"
+      class="mb-3"
+    />
 
     <OrderFormValues
       v-bind="{order, form, isEdit, isOrderPreRegistered}"
+      class="mb-3"
       @clothing-types-loaded="onClothingTypesLoaded"
     />
 
-    <OrderFormProduction :form="form" />
+    <OrderFormProduction
+      :form="form"
+      class="mb-3"
+    />
 
     <OrderFormFiles
       v-bind="{form, isEdit}"
@@ -226,6 +229,7 @@ export default {
         :loading="isLoading"
         color="success"
         class="fw-bold"
+        :block="$isMobile"
       >
         {{ isEdit ? 'Atualizar' : 'Cadastrar' }}
       </AppButton>
