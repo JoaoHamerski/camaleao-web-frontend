@@ -5,10 +5,10 @@ module.exports = {
   },
   extends: [
     'plugin:vue/recommended',
-    '@vue/standard'
+    // '@vue/standard'
   ],
   parserOptions: {
-    parser: 'babel-eslint',
+    parser: '@babel/eslint-parser',
     ecmaFeatures: {
       jsx: true
     }
