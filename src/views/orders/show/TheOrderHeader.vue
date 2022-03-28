@@ -1,6 +1,6 @@
 <script>
 import {
-  faCog,
+  faEllipsisH,
   faFileInvoice,
   faDollarSign,
   faArrowAltCircleLeft
@@ -45,7 +45,7 @@ export default {
     return {
       clients,
       icons: {
-        faCog,
+        faEllipsisH,
         faFileInvoice,
         faDollarSign,
         faArrowAltCircleLeft
@@ -138,7 +138,7 @@ export default {
         <AppButton
           id="dropdownOptions"
           data-bs-toggle="dropdown"
-          :icon="icons.faCog"
+          :icon="icons.faEllipsisH"
           :disabled="!order"
         />
         <TheOrderHeaderCogOptions

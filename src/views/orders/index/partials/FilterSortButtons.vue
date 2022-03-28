@@ -46,7 +46,7 @@ export default {
 
 <template>
   <!-- eslint-disable vue/no-v-html -->
-  <div class="table-responsive">
+  <div class="table-responsive-sm">
     <div
       class="btn-group mb-1"
       role="group"
@@ -56,17 +56,17 @@ export default {
         <input
           :id="`${key}__sort`"
           :key="key + '__input'"
-          v-model="value"
+          :value="key"
+          :checked="value === key"
           type="radio"
           class="btn-check"
-          :name="`${key}__sort`"
-          :value="key"
+          name="sort_buttons"
           autocomplete="off"
           @input="$emit('input', $event.target.value)"
           @change="onOptionChange"
         >
         <label
-          :key="key + 'Label'"
+          :key="key + '__label'"
           class="btn btn-outline-primary text-nowrap"
           :class="value === key && 'fw-bold'"
           :for="`${key}__sort`"
@@ -79,7 +79,7 @@ export default {
     <div
       v-show="value !== ''"
       class="text-secondary small mb-2 mb-sm-0"
-      :class="value === 'pre_register' && 'text-danger'"
+      :class="(value === 'pre_register') && 'text-danger'"
     >
       <FontAwesomeIcon
         class="me-1"

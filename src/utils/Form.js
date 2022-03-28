@@ -1,5 +1,5 @@
 import Errors from './Errors'
-import { cloneDeep } from 'lodash-es'
+import { cloneDeep, set, get } from 'lodash-es'
 
 class Form {
   constructor (data) {
@@ -19,6 +19,12 @@ class Form {
     }
 
     this.errors.clear('*')
+  }
+
+  set(values) {
+    for (const prop in values) {
+      set(this, prop, get(values, prop))
+    }
   }
 
   data () {

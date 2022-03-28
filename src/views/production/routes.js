@@ -1,4 +1,4 @@
-import Layout from '@/views/Layout'
+import Layout from '@/views/MainLayout.vue'
 
 import role from '@/middleware/role'
 import roles from '@/constants/roles'

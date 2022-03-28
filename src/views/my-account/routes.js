@@ -1,4 +1,4 @@
-import Layout from '@/views/Layout'
+import Layout from '@/views/MainLayout.vue'
 
 import auth from '@/middleware/auth'
 import { myAccount } from '@/constants/route-names'

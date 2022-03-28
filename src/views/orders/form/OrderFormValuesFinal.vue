@@ -55,12 +55,15 @@ export default {
       >
         <AppInput
           id="discount"
-          v-model="form.discount"
+          :value="form.discount"
           :mask="maskCurrencyBRL"
           name="discount"
           :error="form.errors.get('discount')"
           optional
           numeric
+          @input="form.set({
+            discount: $event
+          })"
         >
           Desconto
         </AppInput>
@@ -74,23 +77,29 @@ export default {
       <div class="col-12 col-sm">
         <AppInput
           id="down_payment"
-          v-model="form.down_payment"
+          :value="form.down_payment"
           name="down_payment"
           :mask="maskCurrencyBRL"
           :error="form.errors.get('down_payment')"
           optional
+          @input="form.set({
+            down_payment: $event
+          })"
         >
           Entrada
         </AppInput>
       </div>
       <div class="col-12 col-sm">
         <AppSimpleSelect
-          v-model="form.payment_via_id"
+          :value="form.payment_via_id"
           name="payment_via_id"
           :options="vias"
           label-prop="name"
           :error="form.errors.get('payment_via_id')"
           :disabled="!hasDownPayment"
+          @input="form.set({
+            payment_via_id: $event
+          })"
         >
           Via da entrada
         </AppSimpleSelect>

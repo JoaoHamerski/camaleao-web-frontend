@@ -129,7 +129,7 @@ export default {
   <div class="mt-5">
     <TheCashFlowFilter
       :is-loading="isLoading"
-      :form="filterForm"
+      :form.sync="filterForm"
       :on-submit="onSubmit"
       @clear-filter="onFilterClear"
     />
