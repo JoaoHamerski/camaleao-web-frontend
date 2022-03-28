@@ -19,22 +19,24 @@ export default {
         <div class="col-12 col-sm">
           <AppInput
             id="name"
-            v-model="form.name"
+            :value="form.name"
             name="name"
             placeholder="Nome que descreva o pedido..."
             label="Nome"
             :error="form.errors.get('name')"
             optional
+            @input="form.set({name: $event})"
           />
         </div>
         <div class="col-12 col-sm">
           <AppInput
             id="code"
-            v-model="form.code"
+            :value="form.code"
             name="code"
             placeholder="Código do pedido..."
             :error="form.errors.get('code')"
             label="Código"
+            @input="form.set({code: $event})"
           />
         </div>
       </div>

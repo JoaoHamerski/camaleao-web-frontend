@@ -27,12 +27,13 @@ export default {
         <div class="col-12 col-sm">
           <AppInput
             id="production_date"
-            v-model="form.production_date"
+            :value="form.production_date"
             type="date"
             name="production_date"
             placeholder="dd/mm/aaaa"
             :mask="maskDate"
             :error="form.errors.get('production_date')"
+            @input="form.set({production_date: $event})"
           >
             Data de produção
           </AppInput>
@@ -40,12 +41,13 @@ export default {
         <div class="col-12 col-sm">
           <AppInput
             id="delivery_date"
-            v-model="form.delivery_date"
+            :value="form.delivery_date"
             name="delivery_date"
             type="date"
             placeholder="dd/mm/aaaa"
             :mask="maskDate"
             :error="form.errors.get('delivery_date')"
+            @input="form.set({delivery_date: $event})"
           >
             Data de entrega
           </AppInput>

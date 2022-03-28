@@ -114,7 +114,7 @@ export default {
           <template v-if="!hasNoResultSlot">
             Nenhum resultado encontrado.
           </template>
-          <template>
+          <template v-else>
             <slot name="noResult" />
           </template>
         </template>

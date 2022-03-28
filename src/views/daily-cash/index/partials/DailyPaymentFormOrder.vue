@@ -60,10 +60,10 @@ export default {
     formatCurrencyBRL,
     toggleOrderState () {
       if (!this.form.order.isNew) {
-        this.form.order.id = ''
+        this.form.set({'order.id': ''})
       }
 
-      this.form.order.isNew = !this.form.order.isNew
+      this.form.set({'order.isNew': !this.form.order.isNew})
     },
     customLabelOrders ({ code, name, price }) {
       if (!name) {
@@ -126,7 +126,7 @@ export default {
     </div>
 
     <AppSelect
-      v-model="form.order.id"
+      :value="form.order.id"
       name="order"
       class="mb-2"
       placeholder="Procure pelo código"
@@ -139,6 +139,7 @@ export default {
       :loading="orders.isLoading"
       :disabled="!clientExists"
       :tooltip="!clientExists && 'Informe o cliente primeiro.'"
+      @input="form.set({'order.id': $event})"
       @open="form.errors.clear('order.id')"
       @search-change="asyncFindOrders"
     >
@@ -178,18 +179,19 @@ export default {
     </div>
     <AppInput
       id="order"
-      v-model="form.order.code"
+      :value="form.order.code"
       :error="form.errors.get('order.code')"
       name="order.code"
       placeholder="Digite o cód. do pedido..."
+      @input="form.set({'order.code': $event})"
     />
     <AppInput
       id="price"
-      v-model="form.order.price"
+      :value="form.order.price"
       :error="form.errors.get('order.price')"
       name="order.price"
-      value="R$"
       :mask="maskCurrencyBRL"
+      @input="form.set({'order.price': $event})"
     >
       Valor
     </AppInput>
@@ -210,10 +212,11 @@ export default {
     <template v-if="hasReminder">
       <AppInput
         id="reminder"
-        v-model="form.order.reminder"
+        :value="form.order.reminder"
         name="reminder"
         placeholder="Algo que lembre o pedido..."
         optional
+        @input="form.set({'order.reminder': $event})"
       >
         Lembrete
       </AppInput>

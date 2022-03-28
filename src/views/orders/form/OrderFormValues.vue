@@ -169,21 +169,27 @@ export default {
             </div>
             <div class="col">
               <AppInput
-                v-model="form.clothing_types[index].quantity"
+                :value="form.clothing_types[index].quantity"
                 :name="'quantity_' + type.key"
                 :mask="maskInteger"
                 numeric
                 :hint="$isMobile ? 'Quantidade': ''"
+                @input="form.set({
+                  [`form.clothing_types[${index}].quantity`]: $event
+                })"
                 @focus="form.errors.clear('price')"
               />
             </div>
             <div class="col">
               <AppInput
-                v-model="form.clothing_types[index].value"
+                :value="form.clothing_types[index].value"
                 :mask="maskCurrencyBRL"
                 :name="'value_' + type.key"
                 :hint="$isMobile ? 'Valor unitário': ''"
                 numeric
+                @input="form.set({
+                  [`form.clothing_types[${index}].value`]: $event
+                })"
                 @focus="form.errors.clear('price')"
               />
             </div>

@@ -44,16 +44,19 @@ export default {
   },
   methods: {
     removeCurrentOrder () {
-      this.form.order.id = ''
+      this.form.set({'order.id': ''})
     },
     toggleClientState () {
       if (!this.form.client.isNew) {
-        this.form.client.id = ''
-        this.form.order.id = ''
+        this.form.set({
+          'client.id': '',
+          'order.id': ''
+        })
       }
 
-      this.form.client.isNew = !this.form.client.isNew
-      this.form.order.isNew = this.form.client.isNew
+
+      this.form.set({'client.isNew': !this.form.client.isNew})
+      this.form.set({'order.isNew': this.form.client.isNew})
     },
     customLabelClients ({ name, phone }) {
       return `${name} ${phone ? ' - ' + formatPhone(phone) : ''}`
@@ -101,7 +104,7 @@ export default {
       </AppButton>
     </div>
     <AppSelect
-      v-model="form.client.id"
+      :value="form.client.id"
       name="client"
       placeholder="Procure por nome ou telefone"
       :error="form.errors.get('client.id')"
@@ -110,6 +113,7 @@ export default {
       :internal-search="false"
       :options="clients.items"
       :loading="clients.isLoading"
+      @input="form.set({'client.id': $event})"
       @open="form.errors.clear('client.id')"
       @search-change="asyncFindClients"
       @remove="removeCurrentOrder"
@@ -147,10 +151,11 @@ export default {
     </div>
     <AppInput
       id="client"
-      v-model="form.client.name"
+      :value="form.client.name"
       :error="form.errors.get('client.name')"
       name="client.name"
       placeholder="Nome do cliente"
+      @input="form.set({'client.name': $event})"
     />
   </div>
 </template>

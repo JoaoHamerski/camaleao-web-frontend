@@ -71,7 +71,7 @@ export default {
 
     <AppSelect
       id="client_id"
-      v-model="form.client_id"
+      :value="form.client_id"
       name="client_id"
       track-by="id"
       :options="clients"
@@ -79,6 +79,7 @@ export default {
       :loading="isLoadingClients"
       placeholder="Busque um cliente..."
       :error="form.errors.get('client_id')"
+      @input="form.set({client_id: $event})"
       @search-change="onClientSearch"
     >
       <template #noOptions>

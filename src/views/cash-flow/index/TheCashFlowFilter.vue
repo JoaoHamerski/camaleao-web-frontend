@@ -31,8 +31,10 @@ export default {
     onTodayClick () {
       this.hasDateInterval = false
 
-      this.form.start_date = DateTime.now().toFormat('dd/MM/yyyy')
-      this.form.final_date = ''
+      this.form.set({
+        start_date: DateTime.now().toFormat('dd/MM/yyyy'),
+        final_date: ''
+      })
     },
     onCurrentWeekClick () {
       this.hasDateInterval = true
@@ -40,8 +42,10 @@ export default {
       const weekStartDate = DateTime.now().startOf('week').toFormat('dd/MM/yyyy')
       const weekEndDate = DateTime.now().endOf('week').toFormat('dd/MM/yyyy')
 
-      this.form.start_date = weekStartDate
-      this.form.final_date = weekEndDate
+      this.form.set({
+        start_date: weekStartDate,
+        final_date: weekEndDate
+      })
     },
     onCurrentMonthClick () {
       this.hasDateInterval = true
@@ -49,8 +53,10 @@ export default {
       const monthStartDate = DateTime.now().startOf('month').toFormat('dd/MM/yyyy')
       const monthEndDate = DateTime.now().endOf('month').toFormat('dd/MM/yyyy')
 
-      this.form.start_date = monthStartDate
-      this.form.final_date = monthEndDate
+      this.form.set({
+        start_date: monthStartDate,
+        final_date: monthEndDate
+      })
     },
     onClearFilterClick () {
       this.hasDateInterval = false
@@ -91,12 +97,13 @@ export default {
         <div class="row">
           <div class="col">
             <AppInput
-              v-model="form.start_date"
+              :value="form.start_date"
               name="start_date"
               type="date"
               placeholder="dd/mm/aaaa"
               :mask="maskDate"
               :error="form.errors.get('start_date')"
+              @input="form.set({start_date: $event})"
             />
           </div>
 
@@ -105,12 +112,13 @@ export default {
             class="col"
           >
             <AppInput
-              v-model="form.final_date"
+              :value="form.final_date"
               name="final_date"
               type="date"
               placeholder="dd/mm/aaaa"
               :mask="maskDate"
               :error="form.errors.get('final_date')"
+              @input="form.set({final_date: $event})"
             />
           </div>
         </div>
@@ -125,16 +133,18 @@ export default {
 
         <AppCheckbox
           id="show_statistics"
-          v-model="form.showStatistics"
+          :value="form.showStatistics"
           name="show_statistics"
+          @input="form.set({showStatistics: $event})"
         >
           Exibir estatísticas
         </AppCheckbox>
 
         <AppCheckbox
           id="show_balance"
-          v-model="form.showBalance"
+          :value="form.showBalance"
           name="show_balance"
+          @input="form.set({showBalance: $event})"
         >
           Exibir balanço final
         </AppCheckbox>

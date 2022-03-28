@@ -105,24 +105,22 @@ export default {
       >(opcional)</span>
     </label>
 
-    <template>
-      <div
-        :class="!disableInputArea && 'file-input-area'"
-        @drop.stop.prevent="onFileDrop"
-      >
-        <InputFileButton
-          v-if="dragState === DRAG_STATES.DRAG_LEAVE"
-          key="inputFileButton"
-          v-bind="{id, centered, error}"
-          @dragenter.prevent.stop="dragState = DRAG_STATES.DRAG_ENTER"
-        />
-        <InputFileDragLabel
-          v-else-if="dragState === DRAG_STATES.DRAG_ENTER"
-          key="inputFileDragLabel"
-          @dragleave.prevent.stop="dragState = DRAG_STATES.DRAG_LEAVE"
-        />
-      </div>
-    </template>
+    <div
+      :class="!disableInputArea && 'file-input-area'"
+      @drop.stop.prevent="onFileDrop"
+    >
+      <InputFileButton
+        v-if="dragState === DRAG_STATES.DRAG_LEAVE"
+        key="inputFileButton"
+        v-bind="{id, centered, error}"
+        @dragenter.prevent.stop="dragState = DRAG_STATES.DRAG_ENTER"
+      />
+      <InputFileDragLabel
+        v-else-if="dragState === DRAG_STATES.DRAG_ENTER"
+        key="inputFileDragLabel"
+        @dragleave.prevent.stop="dragState = DRAG_STATES.DRAG_LEAVE"
+      />
+    </div>
 
     <div
       v-if="error"
