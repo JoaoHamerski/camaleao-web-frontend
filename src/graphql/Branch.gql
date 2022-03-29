@@ -1,4 +1,4 @@
-fragment CityParts on City {
+fragment BranchCityParts on City {
   id
   name
   state {
@@ -8,7 +8,7 @@ fragment CityParts on City {
   }
 }
 
-fragment ShippingCompanyParts on Branch {
+fragment BranchShippingCompanyParts on Branch {
   shipping_company {
     id
     name
@@ -18,12 +18,12 @@ fragment ShippingCompanyParts on Branch {
 query GetBranches {
   branches(orderBy: [{ column: CREATED_AT order: DESC }]) {
     id
-    ...ShippingCompanyParts
+    ...BranchShippingCompanyParts
     cities {
-      ...CityParts
+      ...BranchCityParts
     }
     city {
-      ...CityParts
+      ...BranchCityParts
     }
   }
 }
@@ -37,12 +37,12 @@ mutation CreateBranch ($input: BranchInput!) {
 mutation UpdateBranch ($id: ID! $input: BranchInput!) {
   branchUpdate (id: $id input: $input) {
     id
-    ...ShippingCompanyParts
+    ...BranchShippingCompanyParts
     cities {
-      ...CityParts
+      ...BranchCityParts
     }
     city {
-      ...CityParts
+      ...BranchCityParts
     }
   }
 }

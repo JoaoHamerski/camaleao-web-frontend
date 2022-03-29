@@ -38,14 +38,14 @@ fragment OrderSimplifiedParts on Order {
   }
 }
 
-fragment ShippingCompanyParts on Client {
+fragment OrderClientShippingCompanyParts on Client {
   shipping_company {
     id
     name
   }
 }
 
-fragment BranchParts on Client {
+fragment OrderClientBranchParts on Client {
   branch {
     id
     city {
@@ -55,7 +55,7 @@ fragment BranchParts on Client {
   }
 }
 
-fragment CityParts on Client {
+fragment OrderClientCityParts on Client {
   city {
     id
     name
@@ -67,15 +67,15 @@ fragment CityParts on Client {
   }
 }
 
-fragment ClientParts on Order {
+fragment OrderClientParts on Order {
   client {
     id
     name
     phone
     total_owing
-    ...BranchParts
-    ...CityParts
-    ...ShippingCompanyParts
+    ...OrderClientBranchParts
+    ...OrderClientCityParts
+    ...OrderClientShippingCompanyParts
   }
 }
 
@@ -126,7 +126,7 @@ fragment NotesParts on Order {
 
 fragment OrderType on Order {
   ...OrderParts
-  ...ClientParts
+  ...OrderClientParts
   ...StatusParts
   ...ClothingTypesParts
   ...PaymentsPart
