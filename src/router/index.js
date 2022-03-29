@@ -97,6 +97,7 @@ const router = new VueRouter({
 router.beforeEach((to, from, next) => {
   const { middleware, roles } = to.meta
   const context = { from, next, roles }
+
   store.commit('SET_ERROR', null)
 
   if (!middleware) {
