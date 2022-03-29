@@ -1,2 +1,15 @@
-@import 'variables';
-@import "~bootstrap/scss/bootstrap";
+/// Keep on top
+@import "variables/all";
+@import "libs";
+
+/// Custom styles
+@import "general";
+@import "helpers";
+@import "sidebar";
+@import "headerbar";
+@import "multiselect";
+@import "bootstrap";
+@import "scrollbar";
+@import "tippy";
+@import "toast";
+@import "card-date-column";

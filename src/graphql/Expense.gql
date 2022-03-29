@@ -1,0 +1,77 @@
+#import "./_PaginatorFragment.gql"
+
+fragment ExpenseParts on Expense {
+  id
+  value
+  date
+  description
+  receipt_path
+}
+
+fragment ExpenseUserSimpleParts on Expense {
+  user {
+    name
+    role {
+      name
+    }
+  }
+}
+
+fragment ExpenseTypeSimpleParts on Expense {
+  type {
+    id
+    name
+  }
+}
+
+fragment ExpenseViaSimpleParts on Expense {
+  via {
+    id
+    name
+  }
+}
+
+query GetExpenses (
+  $page: Int
+  $descriptionLike: String
+) {
+  expenses (
+    first: 10
+    page: $page
+    descriptionLike: $descriptionLike
+    orderBy: [{column: CREATED_AT order: DESC}]
+  ) {
+    paginatorInfo {
+      ...PaginatorSimpleParts
+    }
+
+    data {
+      ...ExpenseParts
+      ...ExpenseUserSimpleParts
+      ...ExpenseTypeSimpleParts
+      ...ExpenseViaSimpleParts
+    }
+  }
+}
+
+query GetExpensesReportUrl ($start_date: String! $final_date: String) {
+  expensesReport(start_date: $start_date final_date: $final_date)
+}
+
+mutation CreateExpense ($input: ExpenseInput!) {
+  expenseCreate (input: $input) {
+    ...ExpenseParts
+    ...ExpenseUserSimpleParts
+    ...ExpenseTypeSimpleParts
+    ...ExpenseViaSimpleParts
+  }
+}
+
+mutation UpdateExpense ($id: ID! $input: ExpenseInput!) {
+  expenseUpdate(id: $id input: $input) {
+    ...ExpenseParts
+    ...ExpenseUserSimpleParts
+    ...ExpenseTypeSimpleParts
+    ...ExpenseViaSimpleParts
+  }
+}

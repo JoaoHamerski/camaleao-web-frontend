@@ -1,0 +1,21 @@
+{
+    "workbench.colorCustomizations": {
+        "activityBar.background": "#42b8833a",
+    },
+    "cSpell.language": "en,pt-BR",
+    "cSpell.ignoreRegExpList": [
+        "\\'(.*?)\\'",
+        "\\\"(.*?)\\\""
+    ],
+    "cSpell.words": [
+        "camaleao",
+        "DIARIO",
+        "headerbar",
+        "Multiselect",
+        "PRODUCAO",
+        "Tshirt",
+        "Upsert",
+        "USUARIOS",
+        "Vuex"
+    ]
+}

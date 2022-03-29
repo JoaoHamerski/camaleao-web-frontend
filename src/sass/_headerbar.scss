@@ -1,0 +1,27 @@
+#headerbar {
+  top: 0;
+  height: $headerbar-height;
+  position: fixed;
+  width: 100%;
+  z-index: 100;
+  background-color: $gray-800;
+  box-shadow: 0px 0px 5px rgba(0, 0, 0, .3);
+
+  .hamburger-inner {
+    &,
+    &::before,
+    &::after {
+      background-color: $gray-200;
+    }
+  }
+
+  .logo img g {
+    fill: $camaleao;
+  }
+}
+
+@include media-breakpoint-down (sm) {
+  .logo {
+    margin: auto;
+  }
+}

@@ -1,7 +1,13 @@
+import classNames from 'classnames'
+
 function normalCardBody (h, context) {
   return (
-    <div class="card-body">
-      { context.$slots.body}
+    <div
+      class={classNames(['card-body', {
+        'px-0': !context.hasBodyPadding
+      }])}
+    >
+      { context.$slots.body }
     </div>
   )
 }
@@ -12,7 +18,7 @@ function collapsibleCardBody (h, context) {
       id={context.collapseId}
       class={context.collapsibleCardBodyClass}
     >
-      { normalCardBody(h, context)}
+      { normalCardBody(h, context) }
     </div>
   )
 }

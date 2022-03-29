@@ -1,0 +1,20 @@
+{
+    "name": {
+        "text": "Nome",
+        "link": true,
+        "method": "getClientUrl"
+    },
+    "phone": {
+        "text": "Telefone",
+        "format": "phone"
+    },
+    "branchCity.name": {
+        "text": "Filial"
+    },
+    "city.name": {
+        "text": "Cidade"
+    },
+    "shippingCompany.name": {
+        "text": "Transportadora"
+    }
+}

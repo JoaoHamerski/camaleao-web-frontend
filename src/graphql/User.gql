@@ -1,0 +1,34 @@
+fragment User on User {
+  id
+  name
+  email
+  created_at
+  role {
+    id
+    name
+  }
+}
+
+query users {
+  users {
+    ...User
+  }
+}
+
+mutation userCreate($input: UserInput!) {
+  userCreate(input: $input) {
+    ...User
+  }
+}
+
+mutation userChangeRole ($id: ID! $new_role_id: Int) {
+  userChangeRole(id: $id new_role_id: $new_role_id){
+    ...User
+  }
+}
+
+mutation userDelete($id: ID! $auth_password: String!) {
+  userDelete(id: $id auth_password: $auth_password) {
+    ...User
+  }
+}

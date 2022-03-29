@@ -1,21 +1,37 @@
-import classNames from 'classnames'
-import MaskedInput from 'vue-text-mask'
+function getAttrs (context) {
+  const attrs = []
+  const objAttrs = {}
+  attrs.push(context.$attrs)
 
-function MaskedInputElement (h, context) {
+  if (context.numeric) {
+    attrs.push({ inputmode: 'numeric' })
+  }
+
+  attrs.reduce((initial, obj) => {
+    Object.assign(objAttrs, obj)
+  }, {})
+
+  return objAttrs
+}
+
+function MaskedInputElement (h, context, events) {
+  const onInput = e => { context.$emit('input', e.target.value) }
+  const attrs = getAttrs(context)
+
   return (
-    <MaskedInput
-      ref="input"
-      class={classNames(['form-control', {
-        'is-invalid': context.hasError
-      }])}
-      id={context.id}
-      type={context.inputType}
-      mask={context.mask}
+    <input
+      class={context.inputClasses}
       value={context.value}
+      name={context.name}
+      type={context.typeComputed}
       disabled={context.isDisabled}
-      onInput={e => { context.$emit('input', e) }}
       aria-describedby={context.hintId}
-      {...{ attrs: context.$attrs }}
+      autocomplete={context.inputAutocomplete}
+      vCleave={context.mask}
+      ref="input"
+      on={{ ...context.$listeners, ...events, input: null }}
+      vOn:input={onInput}
+      {...{ attrs }}
     />
   )
 }

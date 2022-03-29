@@ -1,0 +1,5 @@
+fragment PaginatorSimpleParts on PaginatorInfo {
+    total
+    perPage
+    currentPage
+}

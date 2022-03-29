@@ -1,0 +1,3 @@
+query configGet($name: String!  $key: String) {
+  configGet(name: $name key: $key)
+}

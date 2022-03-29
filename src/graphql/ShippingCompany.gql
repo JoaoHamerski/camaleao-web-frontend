@@ -1,0 +1,28 @@
+fragment ShippingCompanyParts on ShippingCompany {
+  id
+  name
+}
+
+query GetShippingCompanies {
+  shippingCompanies {
+    ...ShippingCompanyParts
+  }
+}
+
+mutation CreateShippingCompany ($name: String!) {
+  shippingCompanyCreate (name: $name) {
+    ...ShippingCompanyParts
+  }
+}
+
+mutation UpdateShippingCompany ($id: ID! $name: String) {
+  shippingCompanyUpdate (id: $id name: $name) {
+    ...ShippingCompanyParts
+  }
+}
+
+mutation DeleteShippingCompany ($id: ID!) {
+  shippingCompanyDelete (id: $id) {
+    ...ShippingCompanyParts
+  }
+}

@@ -1,0 +1,30 @@
+fragment NoteParts on Note {
+  id
+  text
+  created_at
+}
+
+mutation CreateNote ($order_id: ID! $text: String!) {
+  noteCreate (order_id: $order_id text: $text) {
+    ...NoteParts
+    order {
+      id
+
+      client {
+        id
+      }
+    }
+  }
+}
+
+mutation UpdateNote ($id: ID! $text: String!) {
+  noteUpdate (id: $id text: $text) {
+    ...NoteParts
+  }
+}
+
+mutation DeleteNote ($id: ID!) {
+  noteDelete (id: $id) {
+    ...NoteParts
+  }
+}

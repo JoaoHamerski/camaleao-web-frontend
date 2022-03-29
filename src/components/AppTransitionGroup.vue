@@ -37,9 +37,6 @@ export default {
 
 <template>
   <transition-group
-    v-bind="$attrs"
-    :mode="mode"
-    :name="name"
     :enter-active-class="enterActiveClass"
     :leave-active-class="leaveActiveClass"
   >

@@ -1,0 +1,120 @@
+<script>
+import roles from '@/constants/roles'
+import { faPlus, faList } from '@fortawesome/free-solid-svg-icons'
+
+import ModalExpensesNew from './modals/ModalExpensesNew'
+
+export default {
+  components: {
+    ModalExpensesNew,
+    ModalExpensesTypes: () => import('./modals/ModalExpensesTypes')
+  },
+  props: {
+    expenses: {
+      type: Array,
+      default: () => ([])
+    },
+    vias: {
+      type: Array,
+      default: () => ([])
+    },
+    expenseTypes: {
+      type: Array,
+      default: () => ([])
+    }
+  },
+  data () {
+    return {
+      roles,
+      icons: {
+        faPlus,
+        faList
+      },
+      search: '',
+      modalExpensesRegister: false,
+      modalExpensesTypes: false
+    }
+  },
+  methods: {
+    onSearchClick () {
+      this.$emit('search', this.search)
+    },
+    onSearchClear () {
+      this.search = ''
+      this.$emit('search', '')
+    },
+    onRegisterExpenseClick () {
+      this.modalExpensesRegister = true
+    },
+    onExpensesTypesClick () {
+      this.modalExpensesTypes = true
+    },
+    onExpenseRegisterSuccess () {
+      this.modalExpensesRegister = false
+    }
+  }
+}
+</script>
+
+<template>
+  <div>
+    <ModalExpensesNew
+      v-model="modalExpensesRegister"
+      :expense-types="expenseTypes"
+      :vias="vias"
+      @success="onExpenseRegisterSuccess"
+    />
+
+    <ModalExpensesTypes
+      v-if="$helpers.canView(roles.GERENCIA)"
+      v-model="modalExpensesTypes"
+      :expense-types="expenseTypes"
+    />
+
+    <div class="d-flex justify-content-between mb-2">
+      <AppButton
+        :icon="icons.faPlus"
+        color="success"
+        btn-class="fw-bold"
+        @click="onRegisterExpenseClick"
+      >
+        Cadastrar despesa
+      </AppButton>
+
+      <AppButton
+        v-if="$helpers.canView(roles.GERENCIA)"
+        outlined
+        :icon="icons.faList"
+        @click="onExpensesTypesClick"
+      >
+        Tipos de despesas
+      </AppButton>
+    </div>
+
+    <div class="col-4 ms-auto">
+      <AppInput
+        v-model="search"
+        name="search"
+        placeholder="Buscar por descrição"
+        :default-margin="false"
+        @keypress.enter="onSearchClick"
+      >
+        <template #append>
+          <AppButton
+            outlined
+            @click="onSearchClick"
+          >
+            Buscar
+          </AppButton>
+        </template>
+      </AppInput>
+      <div class="text-end small py-1">
+        <span
+          v-if="search"
+          class="clickable link-primary"
+          @click="onSearchClear"
+        >Limpar busca</span>&nbsp;
+      </div>
+    </div>
+  </div>
+</template>

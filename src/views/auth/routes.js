@@ -1,17 +1,13 @@
-import Layout from './Layout'
-import TheLogin from './TheLogin'
+import guest from '@/middleware/guest'
+import { auth } from '@/constants/route-names'
 
-const children = [
-  {
-    path: '/entrar',
-    component: TheLogin
-  }
-]
+import TheLogin from './TheLogin'
 
 export default [
   {
-    path: '',
-    component: Layout,
-    children
+    name: auth.login,
+    path: '/entrar',
+    component: TheLogin,
+    meta: { middleware: [guest] }
   }
 ]

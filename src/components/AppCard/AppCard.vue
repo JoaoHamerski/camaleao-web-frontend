@@ -2,11 +2,15 @@
 import { camelCase } from 'lodash-es'
 import classNames from 'classnames'
 
+import AppLoading from '@/components/AppLoading'
 import renderCardHeader from './CardHeader'
 import renderCardBody from './CardBody'
 import renderCardFooter from './CardFooter'
 
 export default {
+  components: {
+    AppLoading
+  },
   props: {
     id: {
       type: [String, Number],
@@ -15,6 +19,10 @@ export default {
     color: {
       type: String,
       default: 'primary'
+    },
+    isLoading: {
+      type: Boolean,
+      default: false
     },
     hasBodyPadding: {
       type: Boolean,
@@ -54,7 +62,6 @@ export default {
     },
     collapsibleCardIconClass () {
       return classNames([
-        'fas fa-caret-down text-white',
         'card-collapsible-icon',
         {
           'card-icon-expanded': !this.isCollapsed
@@ -89,8 +96,22 @@ export default {
         { renderCardHeader(h, this) }
         { renderCardBody(h, this)}
         { renderCardFooter(h, this) }
+        { this.isLoading && (<AppLoading />) }
       </div>
     )
   }
 }
 </script>
+
+<style lang="scss" scoped>
+
+::v-deep {
+  .card-collapsible-icon {
+    transition: .25s;
+
+    &.card-icon-expanded {
+      transform: rotate(- 90deg)
+    }
+  }
+}
+</style>

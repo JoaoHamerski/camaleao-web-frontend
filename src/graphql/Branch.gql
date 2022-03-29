@@ -1,0 +1,54 @@
+fragment CityParts on City {
+  id
+  name
+  state {
+    id
+    name
+    abbreviation
+  }
+}
+
+fragment ShippingCompanyParts on Branch {
+  shipping_company {
+    id
+    name
+  }
+}
+
+query GetBranches {
+  branches(orderBy: [{ column: CREATED_AT order: DESC }]) {
+    id
+    ...ShippingCompanyParts
+    cities {
+      ...CityParts
+    }
+    city {
+      ...CityParts
+    }
+  }
+}
+
+mutation CreateBranch ($input: BranchInput!) {
+  branchCreate (input: $input) {
+    id
+  }
+}
+
+mutation UpdateBranch ($id: ID! $input: BranchInput!) {
+  branchUpdate (id: $id input: $input) {
+    id
+    ...ShippingCompanyParts
+    cities {
+      ...CityParts
+    }
+    city {
+      ...CityParts
+    }
+  }
+}
+
+mutation DeleteBranch ($id: ID!) {
+  branchDelete (id: $id) {
+    id
+  }
+}

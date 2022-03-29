@@ -1,0 +1,25 @@
+fragment ClothingTypeParts on ClothingType {
+  id
+  key
+  name
+  is_hidden
+  commission
+}
+
+query GetClothingTypes ($is_hidden: Boolean) {
+  clothingTypes (is_hidden: $is_hidden) {
+    ...ClothingTypeParts
+  }
+}
+
+mutation CreateClothingType ($input: ClothingTypeInput!) {
+  clothingTypeCreate (input: $input) {
+    id
+  }
+}
+
+mutation UpdateClothingType ($id: ID! $input: ClothingTypeInput!) {
+  clothingTypeUpdate (id: $id input: $input) {
+    ...ClothingTypeParts
+  }
+}

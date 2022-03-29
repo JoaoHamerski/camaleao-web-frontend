@@ -1,13 +1,35 @@
-import AuthService from '@/services/AuthService'
+import {
+  apolloClientInstance,
+  onLogin,
+  onLogout
+} from '@/vue-apollo'
+import { GetAuthUser, Login } from '@/graphql/Auth.gql'
 import router from '@/router'
-import { getError } from '@/utils/helpers'
 
 export const namespaced = true
 
+const { apolloClient } = apolloClientInstance
+
+const ON_LOGIN_ROUTE = {
+  path: '/'
+}
+
+const ON_LOGOUT_ROUTE = {
+  path: '/entrar'
+}
+
 export const state = {
   user: null,
-  loading: false,
   error: null
+}
+
+export const getters = {
+  authUser: (state) => {
+    return state.user
+  },
+  loggedIn: (state) => {
+    return !!state.user
+  }
 }
 
 export const mutations = {
@@ -15,62 +37,48 @@ export const mutations = {
     state.user = user
   }
 }
-export const actions = {
-  logout ({ commit, dispatch }) {
-    return AuthService.logout()
-      .then(() => {
-        commit('SET_USER', null)
-        dispatch('setGuest', { value: 'isGuest' })
 
-        if (router.currentRoute.name !== 'login') {
-          router.push({ path: 'login' })
-        }
-      })
-      .catch(error => {
-        commit('SET_ERROR', getError(error))
-      })
+export const actions = {
+  async login ({ commit, dispatch }, payload) {
+    const { credentials } = payload
+
+    const data = await apolloClient.mutate({
+      mutation: Login,
+      variables: credentials
+    })
+
+    const token = data.data.login.token
+
+    await onLogin(apolloClient, token)
+
+    router.push(ON_LOGIN_ROUTE)
+  },
+  async logout ({ getters, commit, dispatch }) {
+    try {
+      await commit('SET_USER', null)
+
+      await onLogout(apolloClient)
+
+      if (router.currentRoute.name !== 'login') {
+        router.push(ON_LOGOUT_ROUTE)
+      }
+    } catch (error) {
+      // eslint-disable-next-line no-console
+      console.error(error.response)
+    }
   },
   async getAuthUser ({ commit }) {
-    // commit('SET_LOADING', true)
-
     try {
-      const response = await AuthService.getAuthUser()
-      commit('SET_USER', response.data.data)
-      // commit('SET_LOADING', false)
-      return response.data.data
+      const data = await apolloClient.query({
+        query: GetAuthUser
+      })
+
+      commit('SET_USER', data.data.authUser)
+
+      return data.data.authUser
     } catch (error) {
-      commit('SET_LOADING', true)
-      commit('SET_USER', null)
-      // commit('SET_ERROR', getError(error))
-    }
-  },
-  setGuest (context, { value }) {
-    window.localStorage.setItem('guest', value)
-  }
-}
-
-export const getters = {
-  authUser: (state) => {
-    return state.user
-  },
-  loading: (state) => {
-    return state.loading
-  },
-  loggedIn: (state) => {
-    return !!state.user
-  },
-  guest: () => {
-    const storageItem = window.localStorage.getItem('guest')
-    if (!storageItem) {
-      return false
-    }
-
-    if (storageItem === 'isGuest') {
-      return true
-    }
-
-    if (storageItem === 'isNotGuest') {
-      return false
+      // eslint-disable-next-line no-console
+      console.error(error)
     }
   }
 }

@@ -1,0 +1,48 @@
+.loading {
+  position: absolute;
+  z-index: 50;
+  overflow: visible;
+  margin: auto;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  background-color: rgba(255, 255, 255, .4);
+
+  [class*="spinner"] {
+  	position: absolute;
+  	top: 0;
+  	left: 0;
+  	bottom: 0;
+  	right: 0;
+  	margin: auto;
+  }
+}
+
+/// vue-toast-notifications lib styling
+.v-toast {
+  z-index: 1090 !important;
+
+  .v-toast__text {
+    font-size: .9rem;
+  }
+}
+
+@each $color, $value in $toast-colors {
+  .v-toast__item--#{$color} {
+    background-color: $value !important;
+  }
+}
+
+input[disabled="disabled"],
+select[disabled="disabled"] {
+  cursor: not-allowed;
+}
+
+.minus:before {
+  content: '- '
+}
+
+.animate__even-faster {
+  animation-duration: .25s;
+}

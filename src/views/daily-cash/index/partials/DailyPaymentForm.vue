@@ -1,0 +1,186 @@
+<script>
+import { isEmpty, isObject, omit, cloneDeep } from 'lodash-es'
+import { formatCurrencyBRL } from '@/utils/formatters'
+import { maskCurrencyBRL } from '@/utils/masks'
+import Form from '@/utils/Form'
+import { handleSuccess, handleError } from '@/utils/forms'
+
+import { vias } from '@/graphql/Via.gql'
+import { GetPayments, CreateDailyPayment } from '@/graphql/Payment.gql'
+import DailyPaymentFormClient from './DailyPaymentFormClient'
+import DailyPaymentFormOrder from './DailyPaymentFormOrder'
+
+export default {
+  apollo: {
+    vias: {
+      query: vias
+    }
+  },
+  components: {
+    DailyPaymentFormClient,
+    DailyPaymentFormOrder
+  },
+  data () {
+    return {
+      maskCurrencyBRL: maskCurrencyBRL(),
+      isLoading: false,
+      form: new Form({
+        client: {
+          id: '',
+          name: '',
+          isNew: false
+        },
+        order: {
+          id: '',
+          code: '',
+          price: '',
+          reminder: '',
+          isNew: false
+        },
+        value: '',
+        via_id: ''
+      })
+    }
+  },
+  computed: {
+    hasOrder () {
+      return !isEmpty(this.form.order.id) && !this.form.order.isNew
+    }
+  },
+  methods: {
+    isEmpty,
+    formatCurrencyBRL,
+    customLabelVias ({ name }) {
+      return name
+    },
+    onRestValueClick () {
+      this.form.value = formatCurrencyBRL(this.form.order.id.total_owing)
+    },
+    getFormattedData () {
+      const data = cloneDeep(this.form.data())
+
+      if (isObject(data.client.id)) {
+        data.client.id = data.client.id.id
+      }
+
+      if (isObject(data.order.id)) {
+        data.order.id = data.order.id.id
+      }
+
+      data.client = omit(data.client, 'isNew')
+      data.order = omit(data.order, 'isNew')
+
+      return data
+    },
+    async onSubmit () {
+      const input = this.getFormattedData()
+
+      this.isLoading = true
+
+      try {
+        await this.$apollo.mutate({
+          mutation: CreateDailyPayment,
+          variables: { input },
+          refetchQueries: [GetPayments]
+        })
+
+        this.$helpers.clearCacheFrom([
+          { fieldName: 'orders' },
+          { fieldName: 'clients' }
+        ])
+
+        handleSuccess(this, { message: 'Entrada registrada!', resetForm: true })
+      } catch (error) {
+        handleError(this, error)
+      }
+
+      this.isLoading = false
+    }
+  }
+}
+</script>
+
+<template>
+  <AppForm
+    :form="form"
+    :on-submit="onSubmit"
+  >
+    <DailyPaymentFormClient
+      :form="form"
+    />
+
+    <DailyPaymentFormOrder
+      :form="form"
+    />
+
+    <h6 class="horizontal-line text-center mt-5 mb-4">
+      <span class="fw-bold">PAGAMENTO</span>
+    </h6>
+
+    <div class="row justify-content-between mb-2">
+      <div class="col-7">
+        <AppInput
+          id="value"
+          v-model="form.value"
+          name="value"
+          value="R$ "
+          :error="form.errors.get('value')"
+          :mask="maskCurrencyBRL"
+        >
+          Valor
+          <template
+            #append
+          >
+            <AppButton
+              v-if="hasOrder"
+              :tooltip="formatCurrencyBRL(form.order.id.total_owing)"
+              outlined
+              @click.prevent="onRestValueClick"
+            >
+              Restante
+            </AppButton>
+          </template>
+        </AppInput>
+      </div>
+      <div class="col-5">
+        <AppSimpleSelect
+          id="via_id"
+          v-model="form.via_id"
+          :error="form.errors.get('via_id')"
+          name="via_id"
+          placeholder="Selecione uma via"
+          value-prop="id"
+          label-prop="name"
+          :options="vias"
+        >
+          Via
+        </AppSimpleSelect>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col">
+        <AppButton
+          color="success"
+          class="fw-bold"
+          :loading="isLoading"
+          block
+          @click.prevent="onSubmit"
+        >
+          Registrar
+        </AppButton>
+      </div>
+
+      <div class="col">
+        <AppButton
+          color="light"
+          data-bs-dismiss="modal"
+          type="button"
+          block
+        >
+          Cancelar
+        </AppButton>
+      </div>
+    </div>
+  </AppForm>
+</template>

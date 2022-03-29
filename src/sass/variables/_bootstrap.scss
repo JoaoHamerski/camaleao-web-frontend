@@ -1,0 +1,45 @@
+/// Bootstrap replacement variables
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap');
+
+$font-family-base: 'Inter', system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", "Liberation Sans", sans-serif, "Apple Color Emoji",  "Segoe UI Emoji",  "Segoe UI Symbol",  "Noto Color Emoji", sans-serif;
+
+/// General config
+$min-contrast-ratio:   3;
+$enable-shadows: true;
+
+$enable-negative-margins: true;
+
+/// General
+$small-font-size: .8rem;
+$modal-fade-transform: scale(.6);
+$modal-transition: transform .1s ease-out;
+$body-bg: $light;
+
+/// Typography
+$line-height-base: 1.6;
+
+$custom-file-text: (
+  en: "Browse",
+  pt-BR: "Procurar"
+);
+
+/// Borders
+$border-radius:               calc(.25rem / 1.5);
+$border-radius-sm:            calc(.2rem / 1.5);
+$border-radius-lg:            calc(.3rem / 1.5);
+
+/// Cards
+$card-cap-padding-y:  .85rem;
+
+/// Buttons
+$btn-font-size: .9rem;
+
+$input-font-size: .9rem;
+
+$input-bg: $white;
+
+/// Mantenha o "px" de "0px" senão é
+/// gerada uma propriedade inválida pela api do bootstrap.
+$card-border-width: 0px;
+$card-box-shadow: 0 0 7px rgba($secondary, .35);
+$dropdown-border-width: 0px;

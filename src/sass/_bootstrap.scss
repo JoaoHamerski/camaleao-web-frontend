@@ -1,0 +1,58 @@
+/// Bootstrap styling replacement and additions
+.list-group.list-group-sm {
+  li {
+    padding: .3rem .5rem;
+    font-size: .8rem;
+  }
+}
+
+.form-label {
+  font-size: .85rem;
+}
+
+.input-group > .form-select {
+  width: fit-content;
+  flex-grow: 0;
+}
+
+.pagination {
+  .page-link {
+    font-size: .9rem;
+  }
+}
+
+.table {
+  font-size: .9rem;
+
+  &.table-click tbody tr:hover {
+    cursor: pointer;
+  }
+
+  tbody tr:last-child td  {
+    border-bottom: none;
+  }
+}
+
+.table > :not(:last-child) > :last-child > * {
+  border-bottom: 2px solid $gray-300;
+}
+
+.input-group {
+  .form-select-wrapper {
+    z-index: 1;
+
+    .form-select {
+      border-top-right-radius: 0;
+      border-bottom-right-radius: 0;
+    }
+  }
+}
+
+.btn-group .btn,
+.input-group .btn {
+    box-shadow: none;
+}
+
+.btn {
+  box-shadow: $card-box-shadow;
+}

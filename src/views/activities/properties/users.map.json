@@ -1,0 +1,11 @@
+{
+    "name": {
+        "text": "Nome"
+    },
+    "email": {
+        "text": "E-mail"
+    },
+    "role.name": {
+        "text": "Privilégio"
+    }
+}

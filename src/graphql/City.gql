@@ -1,0 +1,80 @@
+
+fragment CityParts on City {
+  id
+  name
+}
+
+fragment CityStateParts on City {
+  state {
+    id
+    name
+    abbreviation
+  }
+}
+
+fragment CityBranchShippingCompanyParts on Branch {
+  shipping_company {
+    id
+    name
+  }
+}
+
+fragment CityBranchParts on City {
+  branch {
+    id
+    city {
+      ...CityParts
+      ...CityStateParts
+    }
+
+    ...CityBranchShippingCompanyParts
+  }
+}
+
+query GetCities (
+  $orderBy: [QueryCitiesOrderByOrderByClause!]
+  $where: QueryCitiesWhereWhereConditions
+) {
+  cities (orderBy: $orderBy where: $where) {
+    ...CityParts
+    ...CityStateParts
+    ...CityBranchParts
+  }
+}
+
+query GetSimpleCities ($where: QueryCitiesWhereWhereConditions) {
+  cities (
+    where: $where
+    orderBy: [{column: NAME order: ASC}]
+  ) {
+    ...CityParts
+    ...CityStateParts
+  }
+}
+
+mutation CreateCity ($input: CityInput!) {
+  cityCreate (input: $input) {
+    id
+  }
+}
+
+mutation UpdateCity ($id: ID! $input: CityInput!) {
+  cityUpdate (id: $id input: $input) {
+    ...CityParts
+    ...CityStateParts
+  }
+}
+
+mutation MassUpdateCityState ($ids: [ID!]! $state_id: ID!) {
+  cityMassUpdateState(ids: $ids state_id: $state_id) {
+    ...CityParts
+    ...CityStateParts
+  }
+}
+
+mutation DeleteCity ($id: ID! $city_id: ID $replace: CityReplaceOptionsInput) {
+  cityDelete(id: $id city_id: $city_id replace: $replace) {
+    ...CityParts
+    ...CityStateParts
+  }
+}
