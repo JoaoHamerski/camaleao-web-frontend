@@ -47,11 +47,11 @@ export default {
   methods: {
     formatDatetime,
     onCommissionInfoClick(event, item) {
-      if (!this.$isMobile || +item.role.id === roles.ESTAMPA) {
+      if (!this.$isMobile || (+item.role.id === roles.ESTAMPA)) {
         return
       }
 
-      if (this.$isMobile && +item.role.id === roles.COSTURA) {
+      if (this.$isMobile && (+item.role.id === roles.COSTURA)) {
         event.stopPropagation()
       }
 

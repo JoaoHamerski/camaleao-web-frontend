@@ -99,6 +99,7 @@ export default {
           </AppInput>
           <div class="d-flex">
             <AppButton
+              :block="$isMobile"
               color="success"
               btn-class="fw-bold"
               :loading="isLoading"
@@ -106,6 +107,7 @@ export default {
               Calcular
             </AppButton>
             <AppButton
+              :block="$isMobile"
               type="button"
               color="light"
               class="ms-2"

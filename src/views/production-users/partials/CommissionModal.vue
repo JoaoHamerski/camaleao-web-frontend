@@ -33,14 +33,12 @@ export default {
       Comissão
     </template>
     <template #body>
-      <div class="">
-        <CommissionDetails
-          v-if="!isEmpty(commission)"
-          class="img-thumbnail"
-          :commission="commission.commission"
-          :role="commission.role"
-        />
-      </div>
+      <CommissionDetails
+        v-if="!isEmpty(commission)"
+        class="img-thumbnail"
+        :commission="commission.commission"
+        :role="commission.role"
+      />
     </template>
     <template #footer>
       <AppButton
