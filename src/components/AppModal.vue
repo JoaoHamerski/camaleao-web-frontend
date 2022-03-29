@@ -27,6 +27,10 @@ export default {
       type: String,
       default: ''
     },
+    modalBodyClass: {
+      type: String,
+      default: ''
+    },
     footerClass: {
       type: String,
       default: ''
@@ -151,7 +155,7 @@ export default {
             />
           </div>
         </div>
-        <div class="modal-body">
+        <div :class="['modal-body', modalBodyClass]">
           <slot name="body" />
         </div>
         <div
