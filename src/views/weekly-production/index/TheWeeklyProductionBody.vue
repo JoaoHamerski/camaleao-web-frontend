@@ -1,12 +1,77 @@
 <script>
-import CardDateColumn from '../partials/CardDateColumn'
 import pasteFilesMixin from '@/mixins/pasteFilesMixin'
 import filesMixin from '@/mixins/filesMixin'
 import Cookies from 'js-cookie'
+import classNames from 'classnames'
+import CardDateColumn from '../partials/CardDateColumn'
+import { Carousel, Slide } from 'vue-carousel'
+import { DateTime } from 'luxon'
+
+function renderCardDatePlaceholder(h, date) {
+  return (
+    <div
+      class="col"
+      key={`${date.date}__placeholder`}
+    />
+  )
+}
+
+function renderCardDateColumn (h, context, date) {
+  const listeners = {
+    'is-compact:update': context.onCompactModeChange,
+    'change-state': context.onStateChanged,
+    'uploaded-file': context.onFileUploaded,
+    'cancel-create': context.onCancelCreate
+  }
+
+  return (
+    <CardDateColumn
+      class="mb-2"
+      key={`${date.date}__date`}
+      date={date}
+      selected-date={context.selectedDate}
+      active={context.activeDate === date.date || context.$isMobile}
+      is-compact={context.isCompact}
+      {...{on: listeners}}
+    />
+  )
+}
+
+function renderCardDateColumns (h, context) {
+  const shouldRenderPlaceholder = (date) => context.activeDate === date.date
+
+  return context.dates.map((date) => {
+    return [
+      renderCardDateColumn(h, context, date),
+      shouldRenderPlaceholder(date) && renderCardDatePlaceholder(h, date)
+    ]
+  })
+}
+
+function renderCardDateColumnsMobile (h, context) {
+  return (
+    <Carousel
+      ref="carousel"
+      per-page={1}
+      pagination-enabled={false}
+      min-swipe-distance={40}
+    >
+      {
+        context.dates.map((date) => {
+          return (
+            <Slide key={`${date.date}__slide`}>
+              { renderCardDateColumn(h, context, date) }
+            </Slide>
+          )
+        })
+      }
+    </Carousel>
+  )
+}
 
 export default {
   components: {
-    CardDateColumn
+    CardDateColumn,
   },
   mixins: [filesMixin, pasteFilesMixin],
   props: {
@@ -33,6 +98,15 @@ export default {
       isCompact: false
     }
   },
+  watch: {
+    dates (dates) {
+      if (dates.length) {
+        this.$nextTick(() => {
+          this.goToTodayDate()
+        })
+      }
+    }
+  },
   mounted () {
     window.addEventListener('keydown', this.disableActiveCard)
     window.addEventListener('paste', this.onPasteEvent)
@@ -43,6 +117,17 @@ export default {
     window.removeEventListener('paste', this.onPasteEvent)
   },
   methods: {
+    goToTodayDate () {
+      const today = DateTime.now().toFormat('yyyy-MM-dd')
+      const index = this.dates.findIndex(date => date.date === today)
+
+      if (index === -1) {
+        this.$refs.carousel.goToPage(0)
+        return
+      }
+
+      this.$refs.carousel.goToPage(index)
+    },
     afterPaste (files) {
       const validFiles = this.getOnlyValidFiles(files, ['image'])
 
@@ -91,35 +176,22 @@ export default {
       Cookies.set('production-card-compact-mode', value)
       this.isCompact = value
     }
+  },
+  render (h) {
+    return (
+      <div class={classNames(['position-relative row gx-1', {
+        'py-5': !this.dates.length
+      }])}
+      >
+        { this.isLoading && <AppLoading /> }
+
+        {
+          this.$isMobile
+            ? renderCardDateColumnsMobile(h, this)
+            : renderCardDateColumns(h, this)
+        }
+      </div>
+    )
   }
 }
 </script>
-
-<template>
-  <div
-    class="position-relative row gx-1"
-    :class="!dates.length && 'py-5'"
-  >
-    <AppLoading v-show="isLoading" />
-
-    <template v-for="date in dates">
-      <CardDateColumn
-        :key="date.date"
-        :date="date"
-        :selected-date="selectedDate"
-        :active="activeDate === date.date"
-        :is-compact="isCompact"
-        @is-compact:update="onCompactModeChange"
-        @change-state="onStateChanged"
-        @uploaded-file="onFileUploaded"
-        @cancel-create="onCancelCreate"
-      />
-
-      <div
-        v-show="activeDate === date.date"
-        :key="`${date.date}-placeholder`"
-        class="col"
-      />
-    </template>
-  </div>
-</template>

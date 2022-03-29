@@ -55,14 +55,25 @@ export default {
 
 <style lang="scss" scoped>
 @import "@/sass/variables/_colors";
+@import "~bootstrap/scss/functions";
+@import "~bootstrap/scss/variables";
+@import "~bootstrap/scss/mixins";
 
 ::v-deep {
   &.card-production-wrapper {
     transition: width .15s, font-size .15s;
-    &.active {
-      width: 25%;
+    @include media-breakpoint-up (sm) {
+      &.active {
+        width: 25%;
+      }
+    }
+
+    @include media-breakpoint-down (sm) {
+      width: 100%;
     }
   }
+
+
 
   &.card-production-wrapper.card-compact {
     &.active {

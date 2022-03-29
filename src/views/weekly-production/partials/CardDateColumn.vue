@@ -51,8 +51,11 @@ export default {
       return this.date.date === DateTime.now().toISODate()
     },
     cardHeaderClasses () {
+      const hasBgClickable = !this.$isMobile
+      const classMiddleFix = hasBgClickable ? '-link-' : '-'
       return [
-        this.isDateToday ? 'bg-link-success' : 'bg-link-primary'
+        this.isDateToday ? `bg${classMiddleFix}success` : `bg${classMiddleFix}primary`,
+        !this.$isMobile && 'clickable'
       ]
     }
   },
@@ -75,7 +78,11 @@ export default {
         this.$toast.error('Ops! Algo deu errado, tente novamente.')
       }
     },
-    onCardHeaderClick () {
+    onCardHeaderClick (event) {
+      if (this.$isMobile) {
+        event.preventDefault()
+      }
+
       this.$emit('change-state', {
         date: this.date.date,
         active: !this.active
@@ -118,7 +125,7 @@ export default {
       class="card"
     >
       <div
-        class="card-header text-white text-center clickable"
+        class="card-header text-white text-center"
         :class="cardHeaderClasses"
         @click.prevent="onCardHeaderClick"
       >
@@ -158,7 +165,7 @@ export default {
           v-if="active"
           class="d-flex justify-content-between mb-2"
         >
-          <div class="d-inline-block">
+          <div class="d-block mx-auto mx-sm-0 d-sm-inline-block">
             <AppInputFile
               id="orderImage"
               :default-margin="false"
@@ -168,7 +175,7 @@ export default {
               @input="onImageUploaded"
             />
           </div>
-          <div>
+          <div class="d-none d-sm-block">
             <AppCheckboxSwitch
               id="compact_mode"
               :value="isCompact"
@@ -202,69 +209,3 @@ export default {
   </div>
 </template>
 
-<style lang="scss" scoped>
-@import "@/sass/variables/_colors";
-
-.drag-enter-overlap {
-  z-index: 20;
-  color: $success;
-  position: absolute;
-  background-color: white;
-  right: 0;
-  left: 0;
-  top: 0;
-  bottom: 0;
-  text-align: center;
-  opacity: .8;
-
-  .overlap-text {
-    font-weight: bold;
-  }
-}
-
-.card-column {
-  width: 20%;
-  transition: width .15s, box-shadow .25s;
-  z-index: 1;
-
-  &.active {
-    z-index: 10;
-    position: absolute;
-    transform: translate(50%, 0);
-    right: 50%;
-    width: 100%;
-    box-shadow: 0 3px 5px rgba(0, 0, 0, .1);
-  }
-
-  .card-body {
-    overflow-y: auto;
-    max-height: 69vh;
-  }
-
-  .card-body::-webkit-scrollbar-track,
-  .card-body::-webkit-scrollbar {
-    background-color: white;
-  }
-
-  .card-body::-webkit-scrollbar-track {
-    background-color: lighten($primary, 40%);
-    width: 10px;
-  }
-
-  .card-body::-webkit-scrollbar {
-    width: 6px;
-  }
-
-  .card-body::-webkit-scrollbar-thumb
-  {
-    border-radius: 3rem;
-    border: 1px solid lighten($primary, 40%);
-    background-color: $primary;
-
-    &:hover {
-      background-color: lighten($primary, 5%);
-    }
-  }
-}
-
-</style>

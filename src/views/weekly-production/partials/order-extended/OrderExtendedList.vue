@@ -54,7 +54,7 @@ export default {
   <ul class="list-group list-group-flush text-subtitle">
     <OrderListItem
       v-if="order.client"
-      v-tippy="{placement: 'right'}"
+      v-tippy="{placement: $isMobile ? 'bottom' : 'right'}"
       :icon="icons.faUser"
       class="fw-bold border-x-0"
       content="Cliente"
@@ -79,7 +79,7 @@ export default {
     </OrderListItem>
     <OrderListItem
       v-if="order.price"
-      v-tippy="{placement: 'right'}"
+      v-tippy="{placement: $isMobile ? 'bottom' : 'right'}"
       :icon="icons.faDollarSign"
       class="fw-bold border-x-0"
       content="Valor do pedido"
@@ -89,7 +89,7 @@ export default {
 
     <OrderListItem
       v-if="order.price !== null"
-      v-tippy="{placement: 'right'}"
+      v-tippy="{placement: $isMobile ? 'bottom' : 'right'}"
       class="fw-bold border-x-0"
       :class="isOrderPaid ? 'text-success' : 'text-danger'"
       :icon="icons.faHandHoldingUsd"
@@ -104,7 +104,7 @@ export default {
 
     <OrderListItem
       v-if="order.status"
-      v-tippy="{placement: 'right'}"
+      v-tippy="{placement: $isMobile ? 'bottom' : 'right'}"
       content="Status do pedido"
       class="border-x-0"
       :icon="order.status.is_available ? icons.faCheckCircle : icons.faDotCircle"
@@ -114,7 +114,7 @@ export default {
     </OrderListItem>
 
     <OrderListItem
-      v-tippy="{placement: 'right'}"
+      v-tippy="{placement: $isMobile ? 'bottom' : 'right'}"
       content="Data de cadastro"
       class="border-x-0"
       :icon="icons.faCalendarAlt"

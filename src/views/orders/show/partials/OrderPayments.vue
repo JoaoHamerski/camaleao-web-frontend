@@ -101,8 +101,8 @@ export default {
               'list-group-item-warning': payment.is_confirmed === null,
             }"
           >
-            <div class="d-flex justify-content-between align-items-center">
-              <div>
+            <div class="d-flex flex-column flex-sm-row justify-content-between align-items-sm-center">
+              <div class="mb-3 mb-sm-0">
                 <div>
                   <b>{{ $helpers.toBRL(payment.value) }}</b>
                   em
@@ -123,10 +123,15 @@ export default {
                   <strong>NOTA:</strong> {{ payment.note }}
                 </div>
               </div>
-              <div v-if="payment.is_confirmed === null">
+              <div
+                v-if="payment.is_confirmed === null"
+                class="d-flex"
+              >
                 <template v-if="$helpers.canView(roles.GERENCIA)">
                   <AppButton
+                    class="flex-grow-1"
                     outlined
+                    :block="$isMobile"
                     btn-class="btn-sm"
                     color="success"
                     :icon="icons.faCheck"
@@ -139,7 +144,8 @@ export default {
                     btn-class="btn-sm"
                     color="danger"
                     :icon="icons.faTimes"
-                    class="mx-2"
+                    class="mx-2 flex-grow-1"
+                    :block="$isMobile"
                     tooltip="Recusar"
                     :disabled="payment.id === loadingId"
                     @click.prevent="onConfirmPayment(payment, false)"
@@ -147,6 +153,8 @@ export default {
                 </template>
                 <AppButton
                   outlined
+                  class="flex-grow-1"
+                  :block="$isMobile"
                   btn-class="btn-sm"
                   tooltip="Editar"
                   :icon="icons.faEdit"

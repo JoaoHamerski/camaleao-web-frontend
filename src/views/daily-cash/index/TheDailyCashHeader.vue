@@ -65,22 +65,21 @@ export default {
       @load-pendencies-from-date="onLoadPendenciesFromDate"
     />
 
-    <div class="d-flex justify-content-between align-items-center">
-      <div>
-        <AppButton
-          color="success"
-          btn-class="btn-lg"
-          class="fw-bold"
-          :icon="icons.faPlus"
-          @click="$emit('on-new-entry-click')"
-        >
-          Nova entrada
-        </AppButton>
-      </div>
-      <div>
+    <div class="d-flex flex-column flex-sm-row justify-content-between align-items-sm-center">
+      <AppButton
+        class="fw-bold mb-2 mb-sm-0"
+        :block="$isMobile"
+        color="success"
+        btn-class="btn-lg"
+        :icon="icons.faPlus"
+        @click="$emit('on-new-entry-click')"
+      >
+        Nova entrada
+      </AppButton>
+      <div class="d-flex">
         <AppButton
           color="warning"
-          class="fw-bold"
+          class="flex-grow-1 fw-bold"
           @click="onPendenciesClick"
         >
           Pendências <span class="badge rounded-pill bg-light text-dark">{{ totalPendencies }}</span>
