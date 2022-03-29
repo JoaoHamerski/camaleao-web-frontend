@@ -50,16 +50,34 @@ export const createApolloClient = () => ({
 
 export const apolloClientInstance = createApolloClient()
 
+const handleErrors = async (category) => {
+  const { default:store } = await import('@/store')
+
+  if (category === 'authorization') {
+    store.commit('SET_ERROR', 403)
+  }
+}
+
 export function createProvider (options = {}) {
   const { apolloClient } = apolloClientInstance
 
   const apolloProvider = new VueApollo({
     defaultClient: apolloClient,
-    errorHandler (error) {
+    errorHandler: async (error) => {
+      const {gqlError: {extensions: {category} }}  = error
+
+      await handleErrors(category)
+
       // eslint-disable-next-line no-console
-      console.log('%cError', 'background: red; color: white; padding: 2px 4px; border-radius: 3px; font-weight: bold;', error.message)
+      console.log(
+        '%cError',
+        'background: red; color: white; padding: 2px 4px; border-radius: 3px; font-weight: bold;',
+        error.message
+      )
     }
   })
+
+
 
   return apolloProvider
 }
