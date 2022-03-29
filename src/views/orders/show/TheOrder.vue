@@ -159,7 +159,7 @@ export default {
 
 <template>
   <div
-    class="my-5 mx-auto"
+    class="py-5 mx-auto"
   >
     <ModalOrderPayment
       v-if="!isLoading"

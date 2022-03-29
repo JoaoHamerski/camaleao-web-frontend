@@ -81,7 +81,7 @@ export default {
 </script>
 
 <template>
-  <div class="my-5 mx-auto">
+  <div class="py-5 mx-auto">
     <div>
       <ClientOrdersHeader
         class="mb-3 mb-sm-0"

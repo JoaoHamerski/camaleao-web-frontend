@@ -72,7 +72,7 @@ export default {
 </script>
 
 <template>
-  <div class="mt-5">
+  <div class="py-5">
     <AppFileModal
       id="expensesReport"
       v-model="modalReport.value"

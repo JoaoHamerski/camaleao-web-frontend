@@ -60,7 +60,7 @@ export default {
 </script>
 
 <template>
-  <div class="my-5">
+  <div class="py-5">
     <div class="col col-sm-6 mx-auto">
       <AppCard>
         <template #header>

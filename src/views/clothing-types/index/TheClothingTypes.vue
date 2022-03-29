@@ -72,7 +72,7 @@ export default {
 </script>
 
 <template>
-  <div class="my-5">
+  <div class="py-5">
     <div class="d-flex flex-column flex-sm-row justify-content-between mb-2">
       <div class="col mb-2 mb-sm-0">
         <AppButton

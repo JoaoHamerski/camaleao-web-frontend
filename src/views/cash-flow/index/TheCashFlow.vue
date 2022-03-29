@@ -133,7 +133,7 @@ export default {
 </script>
 
 <template>
-  <div class="mt-5">
+  <div class="py-5">
     <TheCashFlowFilter
       :is-loading="isLoading"
       :form.sync="filterForm"

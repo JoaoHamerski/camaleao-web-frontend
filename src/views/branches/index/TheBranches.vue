@@ -66,7 +66,7 @@ export default {
 </script>
 
 <template>
-  <div class="my-5">
+  <div class="py-5">
     <div class="d-flex justify-content-between mb-2">
       <AppButton
         btn-class="fw-bold"

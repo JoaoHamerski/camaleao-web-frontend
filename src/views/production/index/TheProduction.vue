@@ -43,8 +43,8 @@ export default {
 </script>
 
 <template>
-  <div>
-    <TheProductionCardCommission class="mt-5 mb-2" />
+  <div class="py-5">
+    <TheProductionCardCommission class="mb-2" />
     <TheProductionCard
       :commissions-user="commissionsUser.data"
       :is-loading="isLoading"

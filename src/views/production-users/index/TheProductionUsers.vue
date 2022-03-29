@@ -81,7 +81,7 @@ export default {
 </script>
 
 <template>
-  <div class="mt-5">
+  <div class="py-5">
     <TheProductionUsersCommission class="mb-2" />
 
     <TheProductionUsersCard
