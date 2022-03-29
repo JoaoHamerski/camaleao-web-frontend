@@ -1,10 +1,20 @@
 function getAttrs (context) {
   const attrs = []
   const objAttrs = {}
+  const dateTypesToHideKeyboard = [
+    'month',
+    'week',
+    'year'
+  ]
+
   attrs.push(context.$attrs)
 
   if (context.numeric) {
     attrs.push({ inputmode: 'numeric' })
+  }
+
+  if (dateTypesToHideKeyboard.includes(context.type)) {
+    attrs.push({inputmode: 'none'})
   }
 
   attrs.reduce((initial, obj) => {
