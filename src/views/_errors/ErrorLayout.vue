@@ -30,10 +30,10 @@ export default {
     <div class="message-wrapper d-flex justify-content-center align-items-center">
       <div class="page-text ">
         <h3 class="text-center fw-bold text-camaleao">
-          404
+          <slot name="code" />
         </h3>
         <span>
-          PÁGINA NÃO ENCONTRADA
+          <slot name="message" />
         </span>
         <div class="text-center mt-3">
           <FontAwesomeIcon
@@ -47,6 +47,7 @@ export default {
     </div>
   </div>
 </template>
+
 
 <style lang="scss" scoped>
 @import "@/sass/variables/all";

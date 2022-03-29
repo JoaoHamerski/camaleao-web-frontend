@@ -8,7 +8,7 @@ export default {
   },
   components: {
     TheHeaderbar,
-    TheSidebar
+    TheSidebar,
   },
   computed: {
     authUser () {
@@ -28,7 +28,9 @@ export default {
 
     <div id="content">
       <div class="container">
-        <router-view v-slot="{ Component, route }">
+        <router-view
+          v-slot="{ Component, route }"
+        >
           <Component
             :is="Component"
             :key="route.path"

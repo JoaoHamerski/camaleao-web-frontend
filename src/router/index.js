@@ -26,7 +26,7 @@ import myAccountRoutes from '@/views/my-account/routes'
 import weeklyProductionRoutes from '@/views/weekly-production/routes'
 import activitiesRoutes from '@/views/activities/routes'
 
-import NotFound404 from '@/views/_errors/NotFound404.vue'
+import ErrorNotFound from '@/views/_errors/ErrorNotFound.vue'
 
 Vue.use(VueRouter)
 
@@ -78,7 +78,7 @@ const routes = [
   ...usersRoutes,
   ...weeklyProductionRoutes,
   {
-    path: '/:pathMatch(.*)*', component: NotFound404
+    path: '/:pathMatch(.*)*', component: ErrorNotFound
   },
 ]
 
@@ -97,6 +97,7 @@ const router = new VueRouter({
 router.beforeEach((to, from, next) => {
   const { middleware, roles } = to.meta
   const context = { from, next, roles }
+  store.commit('SET_ERROR', null)
 
   if (!middleware) {
     return next()
