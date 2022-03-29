@@ -1,6 +1,6 @@
 <script>
 import roles from '@/constants/roles'
-import { faPlus, faList } from '@fortawesome/free-solid-svg-icons'
+import { faPlus, faList, faSearch } from '@fortawesome/free-solid-svg-icons'
 
 import ModalExpensesNew from './modals/ModalExpensesNew'
 
@@ -28,7 +28,8 @@ export default {
       roles,
       icons: {
         faPlus,
-        faList
+        faList,
+        faSearch
       },
       search: '',
       modalExpensesRegister: false,
@@ -73,6 +74,7 @@ export default {
 
     <div class="d-flex justify-content-between mb-2">
       <AppButton
+        class="flex-grow-1 flex-sm-grow-0 me-1 me-sm-0"
         :icon="icons.faPlus"
         color="success"
         btn-class="fw-bold"
@@ -83,6 +85,7 @@ export default {
 
       <AppButton
         v-if="$helpers.canView(roles.GERENCIA)"
+        class="flex-grow-1 flex-sm-grow-0 ms-1 ms-sm-0"
         outlined
         :icon="icons.faList"
         @click="onExpensesTypesClick"
@@ -91,7 +94,7 @@ export default {
       </AppButton>
     </div>
 
-    <div class="col-4 ms-auto">
+    <div class="col col-sm-4 ms-auto">
       <AppInput
         v-model="search"
         name="search"
@@ -102,10 +105,9 @@ export default {
         <template #append>
           <AppButton
             outlined
+            :icon="icons.faSearch"
             @click="onSearchClick"
-          >
-            Buscar
-          </AppButton>
+          />
         </template>
       </AppInput>
       <div class="text-end small py-1">

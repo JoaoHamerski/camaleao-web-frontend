@@ -46,7 +46,7 @@ export default {
     </template>
 
     <template #body>
-      <div class="activity-item-changes">
+      <div class="activity-item-changes table-responsive">
         <ActivityItemChangesProps
           :props-old="old"
           :props-updated="updated"

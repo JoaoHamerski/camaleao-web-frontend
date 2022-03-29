@@ -80,3 +80,15 @@ export default {
     </div>
   </div>
 </template>
+
+<style lang="scss" scoped>
+@import "@/sass/bootstrap-utilities";
+
+@include media-breakpoint-down (sm) {
+  .card {
+    width: 95%;
+    margin-left: auto;
+    margin-right: auto;
+  }
+}
+</style>

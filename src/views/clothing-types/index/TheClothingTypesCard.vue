@@ -113,8 +113,8 @@ export default {
               </div>
             </div>
             <div>
-              <div class="row mb-2">
-                <div class="col">
+              <div class="row flex-sm-row flex-column mb-2">
+                <div class="col mb-2 mb-sm-0">
                   <AppButton
                     v-tippy
                     :icon="type.is_hidden ? icons.faEyeSlash : icons.faEye"

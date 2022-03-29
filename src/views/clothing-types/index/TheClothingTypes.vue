@@ -72,24 +72,30 @@ export default {
 </script>
 
 <template>
-  <div class="mt-5">
-    <div class="d-flex justify-content-between mb-2">
-      <AppButton
-        btn-class="fw-bold"
-        :icon="icons.faPlus"
-        color="success"
-        @click.prevent="onNewClothingTypeClick"
-      >
-        Novo tipo de camisa
-      </AppButton>
+  <div class="my-5">
+    <div class="d-flex flex-column flex-sm-row justify-content-between mb-2">
+      <div class="col mb-2 mb-sm-0">
+        <AppButton
+          :block="$isMobile"
+          btn-class="fw-bold"
+          :icon="icons.faPlus"
+          color="success"
+          @click.prevent="onNewClothingTypeClick"
+        >
+          Novo tipo de camisa
+        </AppButton>
+      </div>
 
-      <AppButton
-        btn-class="fw-bold"
-        :icon="icons.faTshirt"
-        @click.prevent="onPrintCommissionClick"
-      >
-        Comissão de estampa
-      </AppButton>
+      <div class="col text-sm-end">
+        <AppButton
+          :block="$isMobile"
+          btn-class="fw-bold"
+          :icon="icons.faTshirt"
+          @click.prevent="onPrintCommissionClick"
+        >
+          Comissão de estampa
+        </AppButton>
+      </div>
     </div>
 
     <ModalNewClothingType

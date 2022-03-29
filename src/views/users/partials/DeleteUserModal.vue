@@ -61,6 +61,7 @@ export default {
     id="deleteUserModal"
     :value="value"
     color="danger"
+    centered
     v-on="$listeners"
   >
     <template #title>

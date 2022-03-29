@@ -1,7 +1,11 @@
 <script>
 import Form from '@/utils/Form'
 import { handleError } from '@/utils/forms'
-import { GetCashFlowEntries, GetCashFlowStatistics } from '@/graphql/CashFlow.gql'
+import { faSearch } from '@fortawesome/free-solid-svg-icons'
+import {
+  GetCashFlowEntries,
+  GetCashFlowStatistics
+} from '@/graphql/CashFlow.gql'
 
 import TheCashFlowFilter from './TheCashFlowFilter'
 import TheCashFlowBody from './TheCashFlowBody.vue'
@@ -55,7 +59,10 @@ export default {
       statistics: {},
       page: 1,
       search: '',
-      where: {}
+      where: {},
+      icons: {
+        faSearch
+      }
     }
   },
   computed: {
@@ -135,7 +142,7 @@ export default {
     />
 
     <div class="mt-2">
-      <div class="col-4 ms-auto">
+      <div class="col col-sm-4 ms-auto">
         <AppInput
           v-model="search"
           name="search"
@@ -146,10 +153,9 @@ export default {
           <template #append>
             <AppButton
               outlined
+              :icon="icons.faSearch"
               @click="onSearch"
-            >
-              Buscar
-            </AppButton>
+            />
           </template>
         </AppInput>
         <div

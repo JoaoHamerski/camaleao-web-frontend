@@ -67,6 +67,7 @@ export default {
   <AppModal
     id="changeUserRoleModal"
     :value="value"
+    centered
     v-on="$listeners"
     @show="onModalShow"
   >
