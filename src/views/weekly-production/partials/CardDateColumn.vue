@@ -1,4 +1,5 @@
 <script>
+import roles from '@/constants/roles'
 import { faUpload } from '@fortawesome/free-solid-svg-icons'
 
 import { formatDatetime } from '@/utils/formatters'
@@ -41,6 +42,7 @@ export default {
       DRAG_STATES,
       dragState: DRAG_STATES.DRAG_LEAVE,
       compactMode: false,
+      roles,
       icons: {
         faUpload
       }
@@ -111,6 +113,11 @@ export default {
       }
 
       this.onImageUploaded(files)
+    },
+    onDragOverCard (event) {
+      if (this.$helpers.canView(roles.GERENCIA, roles.ATENDIMENTO, roles.DESIGN)) {
+        this.dragState = DRAG_STATES.DRAG_ENTER
+      }
     }
   }
 }
@@ -159,13 +166,16 @@ export default {
         v-show="dragState === DRAG_STATES.DRAG_LEAVE"
         class="card-body px-2"
         :class="active && 'row gx-2'"
-        @dragenter.prevent.stop="dragState = DRAG_STATES.DRAG_ENTER"
+        @dragenter.prevent.stop="onDragOverCard"
       >
         <div
           v-if="active"
           class="d-flex justify-content-between mb-2"
         >
-          <div class="d-block mx-auto mx-sm-0 d-sm-inline-block">
+          <div
+            v-if="$helpers.canView(roles.GERENCIA, roles.ATENDIMENTO, roles.DESIGN)"
+            class="d-block mx-auto mx-sm-0 d-sm-inline-block"
+          >
             <AppInputFile
               id="orderImage"
               :default-margin="false"
@@ -175,6 +185,7 @@ export default {
               @input="onImageUploaded"
             />
           </div>
+          <div v-else />
           <div class="d-none d-sm-block">
             <AppCheckboxSwitch
               id="compact_mode"

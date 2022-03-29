@@ -1,5 +1,6 @@
 <script>
 import { faEdit, faTrashAlt } from '@fortawesome/free-solid-svg-icons'
+import roles from '@/constants/roles'
 
 export default {
   data () {
@@ -7,7 +8,8 @@ export default {
       icons: {
         faEdit,
         faTrashAlt
-      }
+      },
+      roles
     }
   },
   methods: {
@@ -32,7 +34,7 @@ export default {
         Editar dados
       </span>
     </div>
-    <div>
+    <div v-if="$helpers.canView(roles.GERENCIA)">
       <span class="link-danger clickable">
         <FontAwesomeIcon
           :icon="icons.faTrashAlt"

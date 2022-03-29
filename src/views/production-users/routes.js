@@ -16,7 +16,7 @@ const children = [
     component: TheProductionUsers,
     meta: {
       middleware: [role],
-      roles: [roles.ATENDIMENTO, roles.GERENCIA]
+      roles: [roles.GERENCIA]
     }
   }
 ]

@@ -4,6 +4,11 @@ import auth from '@/middleware/auth'
 import middlewarePipeline from '@/router/middlewarePipeline'
 import store from '@/store'
 import roles from '@/constants/roles'
+import {
+  clients,
+  production,
+  weeklyProduction
+} from '@/constants/route-names'
 
 import authRoutes from '@/views/auth/routes'
 import clientsRoutes from '@/views/clients/routes'
@@ -21,12 +26,18 @@ import myAccountRoutes from '@/views/my-account/routes'
 import weeklyProductionRoutes from '@/views/weekly-production/routes'
 import activitiesRoutes from '@/views/activities/routes'
 
+import NotFound404 from '@/views/_errors/NotFound404.vue'
+
 Vue.use(VueRouter)
 
 const isUserFromProduction = (user) => {
   const productionRoles = [roles.ESTAMPA, roles.COSTURA]
 
   return productionRoles.includes(+user.role.id)
+}
+
+const isUserFromDesign = (user) => {
+  return roles.DESIGN === +user.role.id
 }
 
 const routes = [
@@ -39,11 +50,16 @@ const routes = [
       const authUser = store.getters['auth/authUser']
 
       if (isUserFromProduction(authUser)) {
-        next('/producao')
+        next({name: production.index})
         return
       }
 
-      next('/clientes')
+      if (isUserFromDesign(authUser)) {
+        next({name: weeklyProduction.index})
+        return
+      }
+
+      next({name: clients.index})
     }
   },
   ...activitiesRoutes,
@@ -60,7 +76,10 @@ const routes = [
   ...productionRoutes,
   ...productionUsersRoutes,
   ...usersRoutes,
-  ...weeklyProductionRoutes
+  ...weeklyProductionRoutes,
+  {
+    path: '/:pathMatch(.*)*', component: NotFound404
+  },
 ]
 
 if (process.env.NODE_ENV === 'development') {

@@ -16,7 +16,7 @@ const children = [
     component: TheBranches,
     meta: {
       middleware: [role],
-      roles: [roles.GERENCIA, roles.ATENDIMENTO]
+      roles: [roles.GERENCIA]
     }
   }
 ]
