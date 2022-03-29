@@ -75,9 +75,9 @@ export default {
 </script>
 
 <template>
-  <div>
+  <div class="my-5">
     <TheDailyCashHeader
-      class="mt-5 mb-2"
+      class="mb-2"
       :pendencies="paymentsPendencies"
       :active-date="formatDatetime(paymentsParams.created_at)"
       @reset-payments="resetPayments"

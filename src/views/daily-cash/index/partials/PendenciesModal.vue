@@ -34,6 +34,7 @@ export default {
     :value="value"
     centered
     color="warning"
+    scrollable
     v-on="$listeners"
   >
     <template #title>
@@ -66,7 +67,8 @@ export default {
       >
         Sem pagamentos pendentes
       </div>
-
+    </template>
+    <template #footer>
       <div class="d-flex justify-content-end">
         <AppButton
           color="light"

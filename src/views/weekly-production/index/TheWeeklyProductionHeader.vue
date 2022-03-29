@@ -42,8 +42,8 @@ export default {
 
 <template>
   <div class="card">
-    <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
-      <div>
+    <div class="card-header bg-primary text-white d-flex flex-column flex-sm-row justify-content-between align-items-sm-center">
+      <div class="mb-3 mb-sm-0">
         <h5 class="fw-bold mb-0">
           <FontAwesomeIcon
             :icon="icons.faCalendarAlt"
@@ -59,6 +59,7 @@ export default {
         <AppInput
           id="week"
           v-model="week"
+          class="flex-grow-1"
           input-class="border-0"
           name="week"
           type="week"
