@@ -14,17 +14,13 @@ export default {
       default: null
     }
   },
-  data () {
-    return {
-      SVGInject
-    }
-  },
   computed: {
     isSidebarActive () {
       return this.$store.getters['sidebar/isSidebarActive']
     }
   },
   methods: {
+    SVGInject,
     toggleSidebarState () {
       this.$store.commit('sidebar/SET_SIDEBAR_STATE', !this.isSidebarActive, { root: true })
     }
@@ -51,7 +47,7 @@ export default {
         <div class="logo col-4 ms-sm-2 mx-auto">
           <img
             class="img-fluid"
-            src="@/assets/images/logo.svg"
+            src="@/assets/images/logo-brand.svg"
             @load="SVGInject($event.target)"
           >
         </div>
