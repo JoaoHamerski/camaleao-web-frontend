@@ -51,6 +51,11 @@ export default {
           id: orderKey,
           client_id: clientKey
         }
+      },
+      result ({data: {order}}) {
+        if (!order) {
+          this.$store.commit('SET_ERROR', 404)
+        }
       }
     }
   },

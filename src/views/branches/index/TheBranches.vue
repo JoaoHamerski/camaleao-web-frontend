@@ -66,8 +66,8 @@ export default {
 </script>
 
 <template>
-  <div>
-    <div class="d-flex justify-content-between mt-5 mb-2">
+  <div class="my-5">
+    <div class="d-flex justify-content-between mb-2">
       <AppButton
         btn-class="fw-bold"
         color="success"

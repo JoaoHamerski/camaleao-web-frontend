@@ -33,6 +33,11 @@ export default {
           orderWhere: this.ordersQuery.where,
           orderPage: this.ordersQuery.page
         }
+      },
+      result ({data: {client}}) {
+        if (!client) {
+          this.$store.commit('SET_ERROR', 404)
+        }
       }
     }
   },

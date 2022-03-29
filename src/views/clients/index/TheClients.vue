@@ -73,7 +73,7 @@ export default {
 </script>
 
 <template>
-  <div class="col col-sm-10 mx-auto my-5">
+  <div class="col col-sm-10 mx-auto py-5">
     <TheClientsHeader
       @search="onSearch"
       @search-clear="onSearchClear"
