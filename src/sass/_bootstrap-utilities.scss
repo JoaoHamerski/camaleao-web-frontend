@@ -1,0 +1,7 @@
+/// Import bootstrap utilities only, functions, variables, mixins etc...
+/// no css classes on this file.
+@import "variables/all";
+
+@import "~bootstrap/scss/functions";
+@import "~bootstrap/scss/variables";
+@import "~bootstrap/scss/mixins";
