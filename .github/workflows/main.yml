@@ -39,6 +39,6 @@ jobs:
           committer_name: "GitHub Actions Bot"
           committer_email: "actions@github.com"
           message: "Deploy"
-          push: "git push -f git@github.com:JoaoHamerski/camaleao-web-frontend.git master:deploy"
+          push: "-f git@github.com:JoaoHamerski/camaleao-web-frontend.git master:deploy"
             
           
