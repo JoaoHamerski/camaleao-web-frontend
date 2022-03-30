@@ -31,7 +31,7 @@ jobs:
           cd ./dist
           git init
           
-      - name: Deploy to repository
+      - name: Set git commit to repository
         uses: EndBug/add-and-commit@v8
         with: 
           committer_name: "GitHub Actions Bot"
@@ -39,7 +39,7 @@ jobs:
           message: "Deploy"
           add: "."
           cwd: "./dist"
-          push: true
-          tag_push: "--force"
+          push: false
           new_branch: "deploy"
+          tag_push: "--force"
           
