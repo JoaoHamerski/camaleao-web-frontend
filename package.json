@@ -6,7 +6,7 @@
         "node": "16"
     },
     "scripts": {
-        "serve": "npm-run-all -p vue-serve",
+        "serve": "npm-run-all -p vue-serve build-fragment",
         "build": "vue-cli-service build && npm run build-fragment",
         "lint": "vue-cli-service lint",
         "build-fragment": "node src/fragments-query.js",
@@ -40,7 +40,7 @@
         "vue-tippy": "^4.11.0",
         "vue-toastification": "^1.7.14",
         "vue2-datepicker": "^3.10.4",
-        "vuex": "^3.4.0"
+        "vuex": "^3.6.2"
     },
     "devDependencies": {
         "@apollo/client": "^3.5.10",
