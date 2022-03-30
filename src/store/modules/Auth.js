@@ -3,7 +3,7 @@ import {
   onLogin,
   onLogout
 } from '@/vue-apollo'
-import { GetAuthUser, Login } from '@/graphql/Auth.gql'
+import { GetAuthUser, Login, Logout } from '@/graphql/Auth.gql'
 import router from '@/router'
 
 export const namespaced = true
@@ -42,6 +42,10 @@ export const actions = {
   async login ({ commit, dispatch }, payload) {
     const { credentials } = payload
 
+    await fetch(`${process.env.VUE_APP_API_HTTP}/api/csrf-cookie`, {
+      credentials: 'include'
+    })
+
     const data = await apolloClient.mutate({
       mutation: Login,
       variables: credentials
@@ -56,6 +60,9 @@ export const actions = {
   async logout ({ getters, commit, dispatch }) {
     try {
       await commit('SET_USER', null)
+      await apolloClient.mutate({
+        mutation: Logout
+      })
 
       await onLogout(apolloClient)
 
@@ -64,7 +71,7 @@ export const actions = {
       }
     } catch (error) {
       // eslint-disable-next-line no-console
-      console.error(error.response)
+      console.error(error)
     }
   },
   async getAuthUser ({ commit }) {
