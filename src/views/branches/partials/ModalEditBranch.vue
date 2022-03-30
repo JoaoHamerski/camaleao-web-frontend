@@ -1,4 +1,5 @@
 <script>
+import { faBuilding } from '@fortawesome/free-solid-svg-icons'
 import BranchForm from './BranchForm'
 
 export default {
@@ -23,6 +24,13 @@ export default {
       default: () => []
     }
   },
+  data () {
+    return {
+      icons: {
+        faBuilding
+      }
+    }
+  },
   methods: {
     onSuccess () {
       this.$emit('success')
@@ -35,9 +43,14 @@ export default {
   <AppModal
     id="modalEditBranch"
     :value="value"
+    centered
     v-on="$listeners"
   >
     <template #title>
+      <FontAwesomeIcon
+        :icon="icons.faBuilding"
+        fixed-width
+      />
       Editar filial
     </template>
     <template #body>

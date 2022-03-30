@@ -94,7 +94,7 @@ export default {
 
       <hr v-show="!isEmpty(commissionByMonth)">
 
-      <h6 class="text-center fw-bold">
+      <h6 class="text-center text-secondary">
         Selecione o mês para calcular a comissão
       </h6>
 
@@ -130,6 +130,7 @@ export default {
 
         <div class="d-flex">
           <AppButton
+            :block="$isMobile"
             color="success"
             btn-class="fw-bold"
             :loading="isLoading"
@@ -137,6 +138,7 @@ export default {
             Calcular
           </AppButton>
           <AppButton
+            :block="$isMobile"
             type="button"
             class="ms-2"
             color="light"

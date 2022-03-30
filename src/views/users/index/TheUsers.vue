@@ -50,8 +50,8 @@ export default {
 }
 </script>
 <template>
-  <div>
-    <div class="mt-5 mb-2">
+  <div class="py-5">
+    <div class="mb-2">
       <AppButton
         :icon="icons.faUserPlus"
         color="success"

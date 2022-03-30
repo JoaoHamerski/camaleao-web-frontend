@@ -99,6 +99,7 @@ export default {
     id="deleteCityModal"
     :value="value"
     color="danger"
+    centered
     v-on="$listeners"
   >
     <template #title>

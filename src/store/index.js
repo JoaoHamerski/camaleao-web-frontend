@@ -14,11 +14,15 @@ export default new Vuex.Store({
   },
   plugins: [plugins],
   state: {
-    isMobile: checkIsMobile()
+    isMobile: checkIsMobile(),
+    error: null
   },
   mutations: {
     SET_IS_MOBILE (state, isMobile) {
       state.isMobile = isMobile
+    },
+    SET_ERROR (state, error) {
+      state.error = error
     }
   }
 })

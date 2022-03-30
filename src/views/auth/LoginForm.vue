@@ -17,11 +17,11 @@ export default {
     async onSubmit () {
       this.isLoading = true
 
-      const { email, password } = this.form.data()
+      const credentials = this.form.data()
 
       try {
         await this.$store.dispatch('auth/login', {
-          credentials: { email, password }
+          credentials
         })
       } catch (error) {
         handleError(this, error)
@@ -39,6 +39,7 @@ export default {
     @focus.capture="form.errors.clear($event.target.name)"
   >
     <AppInput
+      id="email"
       v-model="form.email"
       name="email"
       placeholder="Seu email..."
@@ -48,6 +49,7 @@ export default {
     </AppInput>
 
     <AppInput
+      id="password"
       v-model="form.password"
       name="password"
       placeholder="Sua senha..."

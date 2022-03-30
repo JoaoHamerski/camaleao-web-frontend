@@ -2,8 +2,11 @@
     "name": "frontend",
     "version": "0.1.0",
     "private": true,
+    "engines": {
+        "node": "16"
+    },
     "scripts": {
-        "serve": "npm-run-all -p vue-serve",
+        "serve": "npm-run-all -p vue-serve build-fragment",
         "build": "vue-cli-service build && npm run build-fragment",
         "lint": "vue-cli-service lint",
         "build-fragment": "node src/fragments-query.js",
@@ -21,7 +24,6 @@
         "bootstrap": "^5.1.1",
         "classnames": "^2.3.1",
         "cleave.js": "^1.6.0",
-        "core-js": "^3.6.5",
         "graphql": "^16.3.0",
         "hamburgers": "^1.1.3",
         "js-cookie": "^3.0.1",
@@ -38,7 +40,7 @@
         "vue-tippy": "^4.11.0",
         "vue-toastification": "^1.7.14",
         "vue2-datepicker": "^3.10.4",
-        "vuex": "^3.4.0"
+        "vuex": "^3.6.2"
     },
     "devDependencies": {
         "@apollo/client": "^3.5.10",
@@ -50,6 +52,7 @@
         "@vue/cli-plugin-vuex": "~5.0.4",
         "@vue/cli-service": "^5.0.4",
         "cache-loader": "^4.1.0",
+        "core-js": "^3.21.1",
         "dotenv": "^16.0.0",
         "eslint": "^8.12.0",
         "eslint-plugin-graphql": "^4.0.0",

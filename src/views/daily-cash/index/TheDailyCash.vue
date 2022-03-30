@@ -75,7 +75,7 @@ export default {
 </script>
 
 <template>
-  <div class="my-5">
+  <div class="py-5">
     <TheDailyCashHeader
       class="mb-2"
       :pendencies="paymentsPendencies"

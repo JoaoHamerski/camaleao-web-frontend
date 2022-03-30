@@ -21,6 +21,12 @@ mutation Login ($email: String! $password: String!) {
   }
 }
 
+mutation Logout {
+  logout {
+    id
+  }
+}
+
 mutation UpdateAuthUser ($input: AuthInput!) {
   authUpdate (input: $input) {
     ...UserParts

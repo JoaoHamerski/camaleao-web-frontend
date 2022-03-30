@@ -24,7 +24,7 @@ export default async function role (context) {
 
   if (!authHasRole(context.roles)) {
     // eslint-disable-next-line no-console
-    console.error('SEM PERMISSÃO DE ACESSO')
+    store.commit('SET_ERROR', 403)
     return
   }
 

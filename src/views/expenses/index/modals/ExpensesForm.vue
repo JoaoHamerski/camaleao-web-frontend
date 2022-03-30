@@ -178,7 +178,7 @@ export default {
     </AppSimpleSelect>
 
     <div class="row">
-      <div class="col">
+      <div class="col-12 col-sm">
         <AppInput
           id="value"
           v-model="form.value"
@@ -189,7 +189,7 @@ export default {
           Valor
         </AppInput>
       </div>
-      <div class="col">
+      <div class="col-12 col-sm">
         <AppSimpleSelect
           id="expense_via_id"
           v-model="form.expense_via_id"
@@ -208,6 +208,7 @@ export default {
       accept="image/*,application/pdf"
       centered
       optional
+      :default-margin="false"
       @input="onReceiptUploaded"
     >
       Comprovante

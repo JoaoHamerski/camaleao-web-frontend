@@ -1,4 +1,5 @@
 <script>
+import roles from '@/constants/roles'
 import {
   faExclamationCircle,
   faClipboardCheck,
@@ -10,11 +11,13 @@ import { TippyComponent } from 'vue-tippy'
 import { ConfirmCommissionProduction } from '@/graphql/Production.gql'
 
 import CommissionDetails from '../partials/CommissionDetails'
+import CommissionModal from '@/views/production-users/partials/CommissionModal.vue'
 
 export default {
   components: {
     Tippy: TippyComponent,
-    CommissionDetails
+    CommissionDetails,
+    CommissionModal
   },
   props: {
     items: {
@@ -25,6 +28,10 @@ export default {
   data () {
     return {
       loadingId: '',
+      commissionModal: {
+        value: false,
+        item: {}
+      },
       icons: {
         faExclamationCircle,
         faClipboardCheck,
@@ -47,6 +54,23 @@ export default {
   },
   methods: {
     formatDatetime,
+    onCommissionInfoClick(event, item) {
+      const { role } = item.pivot
+
+      if (!this.$isMobile || (+role.id === roles.ESTAMPA)) {
+        return
+      }
+
+      if (this.$isMobile && (+role.id === roles.COSTURA)) {
+        event.stopPropagation()
+      }
+
+      this.commissionModal.item = {
+        commission: item,
+        role
+      }
+      this.commissionModal.value = true
+    },
     hasImages ({ order: { art_paths, size_paths } }) {
       if (!art_paths || !size_paths) {
         return false
@@ -99,6 +123,11 @@ export default {
 
 <template>
   <div>
+    <CommissionModal
+      v-model="commissionModal.value"
+      :commission="commissionModal.item"
+    />
+
     <AppTable
       :row-class="rowClass"
       :items="items"
@@ -114,17 +143,18 @@ export default {
 
       <template #[`items.commission`]="{ item }">
         <div class="d-flex">
-          <div class="col-6">
+          <div class="col">
             {{ $helpers.toBRL(item.pivot.commission_value) }}
           </div>
 
-          <div class="col-1 me-auto">
+          <div class="col-1 col-sm-6 me-3 me-sm-auto">
             <FontAwesomeIcon
               :icon="icons.faExclamationCircle"
               :name="`detailsTriggerFor${item.id}`"
               fixed-width
               class="link-primary clickable"
               size="lg"
+              @click="onCommissionInfoClick($event, item)"
             />
 
             <Tippy

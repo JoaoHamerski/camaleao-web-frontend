@@ -60,8 +60,8 @@ export default {
 </script>
 
 <template>
-  <div class="mt-5">
-    <div class="col-6 mx-auto">
+  <div class="py-5">
+    <div class="col col-sm-6 mx-auto">
       <AppCard>
         <template #header>
           <h6 class="fw-bold mb-0">

@@ -14,19 +14,22 @@ export default {
       default: null
     }
   },
-  data () {
-    return {
-      SVGInject
-    }
-  },
   computed: {
     isSidebarActive () {
       return this.$store.getters['sidebar/isSidebarActive']
     }
   },
   methods: {
+    SVGInject,
+    redirectToHome() {
+      this.$router.push('/')
+    },
     toggleSidebarState () {
-      this.$store.commit('sidebar/SET_SIDEBAR_STATE', !this.isSidebarActive, { root: true })
+      this.$store.commit(
+        'sidebar/SET_SIDEBAR_STATE',
+        !this.isSidebarActive,
+        { root: true }
+      )
     }
   }
 }
@@ -48,10 +51,13 @@ export default {
           :is-active="isSidebarActive"
           @click="toggleSidebarState"
         />
-        <div class="logo col-4 ms-sm-2 mx-auto">
+        <div
+          class="logo col-4 ms-sm-2 mx-auto clickable"
+          @click="redirectToHome"
+        >
           <img
             class="img-fluid"
-            src="@/assets/images/logo.svg"
+            src="@/assets/images/logo-brand.svg"
             @load="SVGInject($event.target)"
           >
         </div>

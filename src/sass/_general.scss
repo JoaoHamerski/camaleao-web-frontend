@@ -44,5 +44,9 @@ select[disabled="disabled"] {
 }
 
 .animate__even-faster {
-  animation-duration: .25s;
+  animation-duration: .25s !important;
+}
+
+html, body, #app {
+  height: 100%;
 }

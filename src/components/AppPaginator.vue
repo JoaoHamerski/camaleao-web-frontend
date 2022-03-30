@@ -115,7 +115,7 @@ export default {
 </script>
 
 <template>
-  <div class="table-responsive">
+  <div class="table-responsive-sm">
     <nav
       v-if="hasPagination"
       aria-label="Paginação"

@@ -39,10 +39,15 @@ export default {
 
       <template #bodyAppend>
         <tr class="text-start fw-bold">
-          <td colspan="3">
+          <td
+            colspan="3"
+            nowrap
+          >
             TOTAL
           </td>
-          <td>{{ $helpers.toBRL(commission.seam_total_commission) }}</td>
+          <td nowrap>
+            {{ $helpers.toBRL(commission.seam_total_commission) }}
+          </td>
         </tr>
       </template>
     </AppTable>

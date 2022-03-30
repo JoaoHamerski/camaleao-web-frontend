@@ -47,7 +47,13 @@ const ITEMS = {
     title: 'Produção semanal',
     icon: faCalendarAlt,
     route: { name: 'weekly-production.index' },
-    condition: () => canView(ROLES.GERENCIA, ROLES.ATENDIMENTO)
+    condition: () => canView(
+      ROLES.GERENCIA,
+      ROLES.ATENDIMENTO,
+      ROLES.DESIGN,
+      ROLES.COSTURA,
+      ROLES.ESTAMPA
+    )
   },
   FINANCEIRO: {
     title: 'Financeiro',
@@ -75,7 +81,7 @@ const ITEMS = {
   GERENCIAMENTO: {
     title: 'Gerenciamento',
     icon: faCog,
-    condition: () => canView(ROLES.GERENCIA, ROLES.ATENDIMENTO),
+    condition: () => canView(ROLES.GERENCIA),
     get items () {
       return [
         this.USUARIOS,
@@ -94,26 +100,26 @@ const ITEMS = {
       title: 'Cidades',
       icon: faCity,
       route: { name: 'cities.index' },
-      condition: () => canView(ROLES.GERENCIA, ROLES.ATENDIMENTO)
+      condition: () => canView(ROLES.GERENCIA)
     },
     FILIAIS: {
       title: 'Filiais',
       icon: faBuilding,
       route: { name: 'branches.index' },
-      condition: () => canView(ROLES.GERENCIA, ROLES.ATENDIMENTO)
+      condition: () => canView(ROLES.GERENCIA)
     },
     TIPOS_DE_ROUPAS: {
       title: 'Tipos de roupas',
       icon: faTshirt,
       route: { name: 'clothing-types.index' },
-      condition: () => canView(ROLES.GERENCIA, ROLES.ATENDIMENTO)
+      condition: () => canView(ROLES.GERENCIA)
     }
   },
   PRODUCAO_USUARIOS: {
     title: 'Produção',
     icon: faBox,
     route: { name: 'production-users.index' },
-    condition: () => canView(ROLES.GERENCIA, ROLES.ATENDIMENTO)
+    condition: () => canView(ROLES.GERENCIA)
   },
   MINHA_CONTA: {
     title: 'Minha conta',

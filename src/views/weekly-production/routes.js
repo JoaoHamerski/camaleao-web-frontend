@@ -16,7 +16,13 @@ const children = [
     component: TheWeeklyProduction,
     meta: {
       middleware: [role],
-      roles: [roles.GERENCIA, roles.ATENDIMENTO]
+      roles: [
+        roles.GERENCIA,
+        roles.ATENDIMENTO,
+        roles.DESIGN,
+        roles.COSTURA,
+        roles.ESTAMPA,
+      ]
     }
   }
 ]

@@ -107,7 +107,7 @@ export default {
 
         <template v-if="changePassword">
           <div class="row">
-            <div class="col">
+            <div class="col-12 col-sm">
               <AppInput
                 id="password"
                 v-model="form.password"
@@ -120,7 +120,7 @@ export default {
                 Nova senha:
               </AppInput>
             </div>
-            <div class="col">
+            <div class="col-12 col-sm">
               <AppInput
                 id="password_confirmation"
                 v-model="form.password_confirmation"

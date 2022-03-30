@@ -16,8 +16,18 @@
 }
 
 .pagination {
+  .page-item:first-child .page-link {
+    border-left: none;
+  }
+  .page-item:last-child .page-link {
+    border-right: none;
+  }
+
   .page-link {
     font-size: .9rem;
+    border-top: none;
+    border-bottom: none;
+    border-color: rgba($secondary, .1);
   }
 }
 
@@ -55,4 +65,8 @@
 
 .btn {
   box-shadow: $card-box-shadow;
+}
+
+.pagination li {
+  box-shadow: $box-shadow;
 }

@@ -51,6 +51,11 @@ export default {
           id: orderKey,
           client_id: clientKey
         }
+      },
+      result ({data: {order}}) {
+        if (!order) {
+          this.$store.commit('SET_ERROR', 404)
+        }
       }
     }
   },
@@ -154,7 +159,7 @@ export default {
 
 <template>
   <div
-    class="my-5 mx-auto"
+    class="py-5 mx-auto"
   >
     <ModalOrderPayment
       v-if="!isLoading"

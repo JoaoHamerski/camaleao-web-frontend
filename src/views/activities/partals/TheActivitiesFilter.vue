@@ -80,7 +80,7 @@ export default {
         :on-submit="onSubmit"
       >
         <div class="row">
-          <div class="col">
+          <div class="col-12 col-sm">
             <AppSimpleSelect
               id="causer_id"
               v-model="form.causer_id"
@@ -93,7 +93,7 @@ export default {
               Usuário:
             </AppSimpleSelect>
           </div>
-          <div class="col">
+          <div class="col-12 col-sm">
             <AppSimpleSelect
               id="subject_type"
               v-model="form.subject_type"

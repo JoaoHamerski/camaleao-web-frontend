@@ -100,6 +100,10 @@ export default {
   },
   watch: {
     dates (dates) {
+      if (!this.$isMobile) {
+        return
+      }
+
       if (dates.length) {
         this.$nextTick(() => {
           this.goToTodayDate()

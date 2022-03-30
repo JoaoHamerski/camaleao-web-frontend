@@ -1,4 +1,5 @@
 <script>
+import roles from '@/constants/roles'
 import { faUpload } from '@fortawesome/free-solid-svg-icons'
 
 import { formatDatetime } from '@/utils/formatters'
@@ -41,6 +42,7 @@ export default {
       DRAG_STATES,
       dragState: DRAG_STATES.DRAG_LEAVE,
       compactMode: false,
+      roles,
       icons: {
         faUpload
       }
@@ -111,6 +113,11 @@ export default {
       }
 
       this.onImageUploaded(files)
+    },
+    onDragOverCard (event) {
+      if (this.$helpers.canView(roles.GERENCIA, roles.ATENDIMENTO, roles.DESIGN)) {
+        this.dragState = DRAG_STATES.DRAG_ENTER
+      }
     }
   }
 }
@@ -159,13 +166,16 @@ export default {
         v-show="dragState === DRAG_STATES.DRAG_LEAVE"
         class="card-body px-2"
         :class="active && 'row gx-2'"
-        @dragenter.prevent.stop="dragState = DRAG_STATES.DRAG_ENTER"
+        @dragenter.prevent.stop="onDragOverCard"
       >
         <div
           v-if="active"
           class="d-flex justify-content-between mb-2"
         >
-          <div class="d-block mx-auto mx-sm-0 d-sm-inline-block">
+          <div
+            v-if="$helpers.canView(roles.GERENCIA, roles.ATENDIMENTO, roles.DESIGN)"
+            class="d-block mx-auto mx-sm-0 d-sm-inline-block"
+          >
             <AppInputFile
               id="orderImage"
               :default-margin="false"
@@ -175,6 +185,7 @@ export default {
               @input="onImageUploaded"
             />
           </div>
+          <div v-else />
           <div class="d-none d-sm-block">
             <AppCheckboxSwitch
               id="compact_mode"
@@ -209,3 +220,99 @@ export default {
   </div>
 </template>
 
+<style lang="scss" scoped>
+@import "@/sass/bootstrap-utilities";
+
+.drag-enter-overlap {
+  z-index: 20;
+  color: $success;
+  position: absolute;
+  background-color: white;
+  right: 0;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  text-align: center;
+  opacity: .8;
+
+  .overlap-text {
+    font-weight: bold;
+  }
+}
+
+.card-column {
+  width: 20%;
+  transition: width .15s, box-shadow .25s;
+  z-index: 1;
+
+  &.active {
+    z-index: 10;
+    position: absolute;
+    transform: translate(50%, 0);
+    right: 50%;
+    width: 100%;
+    margin-left: auto;
+    margin-right: auto;
+    box-shadow: 0 3px 5px rgba(0, 0, 0, .1);
+  }
+
+  @include media-breakpoint-down (sm) {
+    &.active {
+      width: 95%;
+    }
+  }
+
+  @include media-breakpoint-up (sm) {
+    .card-body {
+      overflow-y: auto;
+      max-height: 69vh;
+    }
+  }
+
+  @include media-breakpoint-down (sm) {
+    .card-body {
+      overflow-y: auto;
+      max-height: 60vh;
+    }
+  }
+
+  .card-body::-webkit-scrollbar-track,
+  .card-body::-webkit-scrollbar {
+    background-color: white;
+  }
+
+  .card-body::-webkit-scrollbar-track {
+    background-color: lighten($primary, 40%);
+    width: 10px;
+  }
+
+  .card-body::-webkit-scrollbar {
+    width: 6px;
+  }
+
+  .card-body::-webkit-scrollbar-thumb
+  {
+    border-radius: 3rem;
+    border: 1px solid lighten($primary, 40%);
+    background-color: $primary;
+
+    &:hover {
+      background-color: lighten($primary, 5%);
+    }
+  }
+}
+
+
+@include media-breakpoint-down (sm) {
+  .card-column {
+    width: 100%;
+
+    &.active {
+      position: static;
+      right: 0;
+      transform: none;
+    }
+  }
+}
+
+</style>

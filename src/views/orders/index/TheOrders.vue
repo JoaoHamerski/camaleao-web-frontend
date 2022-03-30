@@ -103,7 +103,7 @@ export default {
 </script>
 
 <template>
-  <div class="mx-auto mt-5">
+  <div class="mx-auto py-5">
     <FilterGeneralReportCard
       class="mb-2"
       @report-generated="onReportGenerated"

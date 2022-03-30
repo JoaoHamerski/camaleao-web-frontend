@@ -75,7 +75,7 @@ export default {
     </AppInput>
 
     <div class="row">
-      <div class="col">
+      <div class="col-12 col-sm">
         <AppInput
           id="password"
           v-model="form.password"
@@ -89,7 +89,7 @@ export default {
         </AppInput>
       </div>
 
-      <div class="col">
+      <div class="col-12 col-sm">
         <AppInput
           id="password_confirmation"
           v-model="form.password_confirmation"
