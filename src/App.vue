@@ -16,8 +16,12 @@ export default {
   <div id="app">
     <ErrorPage
       v-if="error !== null"
+      key="app-error"
       :error="error"
     />
-    <router-view v-else />
+    <router-view
+      v-else
+      key="app-main"
+    />
   </div>
 </template>
