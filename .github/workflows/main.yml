@@ -30,7 +30,6 @@ jobs:
         run: |
           cd ./dist
           git init
-          git remote add origin https://github.com/JoaoHamerski/camaleao-web-frontend.git
           
       - name: Set git commit to repository
         uses: EndBug/add-and-commit@v8
@@ -38,8 +37,13 @@ jobs:
           committer_name: "GitHub Actions Bot"
           committer_email: "actions@github.com"
           message: "Deploy"
-          add: "."
           cwd: "./dist"
-          push: true
-          new_branch: deploy
+          add: "."
+          push: false
+          
+      - name: Deploy to repository
+        run: |
+          "cd ./dist"
+          "git push -f git@github.com:JoaoHamerski/camaleao-web-frontend.git master:deploy"
+            
           
