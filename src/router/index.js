@@ -109,4 +109,10 @@ router.beforeEach((to, from, next) => {
   )
 })
 
+router.afterEach((to, from) => {
+  const toDepth = to.path.split('/').length
+  const fromDepth = from.path.split('/').length
+  to.meta.transition = toDepth < fromDepth ? 'fadeInRight' : 'fadeInLeft'
+})
+
 export default router
