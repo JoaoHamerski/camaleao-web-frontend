@@ -1,7 +1,4 @@
 <script>
-/*
-    Based on animate.css
-  */
 export default {
   props: {
     enter: undefined,
