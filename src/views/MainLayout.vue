@@ -10,6 +10,11 @@ export default {
     TheHeaderbar,
     TheSidebar,
   },
+  data () {
+    return {
+      transition: ''
+    }
+  },
   computed: {
     authUser () {
       return this.$store.getters['auth/authUser']
@@ -28,14 +33,16 @@ export default {
 
     <div id="content">
       <div class="container">
-        <router-view
-          v-slot="{ Component, route }"
+        <AppTransition
+          enter="fadeIn"
+          leave="fadeOut"
+          speed="even-faster"
+          mode="out-in"
         >
-          <Component
-            :is="Component"
-            :key="route.path"
-          />
-        </router-view>
+          <router-view v-slot="{ Component }">
+            <Component :is="Component" />
+          </router-view>
+        </AppTransition>
       </div>
     </div>
   </div>
