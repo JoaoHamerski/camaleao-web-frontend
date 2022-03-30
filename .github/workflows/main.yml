@@ -39,7 +39,6 @@ jobs:
           message: "Deploy"
           add: "."
           cwd: "./dist"
-          push: false
+          push: true
           new_branch: "deploy"
-          tag_push: "--force"
           
