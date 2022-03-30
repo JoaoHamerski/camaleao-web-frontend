@@ -6,8 +6,8 @@
         "node": "16"
     },
     "scripts": {
-        "serve": "npm-run-all -p vue-serve build-fragment",
-        "build": "vue-cli-service build && npm run build-fragment",
+        "serve": "npm-run-all -p vue-serve",
+        "build": "vue-cli-service build",
         "lint": "vue-cli-service lint",
         "build-fragment": "node src/fragments-query.js",
         "vue-serve": "vue-cli-service serve"
