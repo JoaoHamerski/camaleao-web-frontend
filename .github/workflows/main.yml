@@ -30,6 +30,7 @@ jobs:
         run: |
           cd ./dist
           git init
+          git remote add origin https://github.com/JoaoHamerski/camaleao-web-frontend.git
           
       - name: Set git commit to repository
         uses: EndBug/add-and-commit@v8
@@ -40,5 +41,5 @@ jobs:
           add: "."
           cwd: "./dist"
           push: true
-          new_branch: "deploy"
+          new_branch: deploy
           
