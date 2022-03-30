@@ -42,8 +42,6 @@ jobs:
           push: false
           
       - name: Deploy to repository
-        run: |
-          "cd ./dist"
-          "git push -f git@github.com:JoaoHamerski/camaleao-web-frontend.git master:deploy"
+        run: "git push -f git@github.com:JoaoHamerski/camaleao-web-frontend.git master:deploy"
             
           
