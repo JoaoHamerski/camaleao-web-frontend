@@ -30,7 +30,6 @@ jobs:
         run: |
           cd ./dist
           git init
-          git show-ref
           
       - name: Deploy to repository
         uses: EndBug/add-and-commit@v8
@@ -40,6 +39,6 @@ jobs:
           committer_name: "GitHub Actions Bot"
           committer_email: "actions@github.com"
           message: "Deploy"
-          push: false
+          push: "git push -f git@github.com:JoaoHamerski/camaleao-web-frontend.git master:deploy"
             
           
