@@ -33,7 +33,7 @@ jobs:
           git add .
           
       - name: Deploy to repository
-        uses: EndBug/add-and-commit@v8
+        uses: EndBug/add-and-commit@v9
         with: 
           cwd: "./dist"
           committer_name: "GitHub Actions Bot"
