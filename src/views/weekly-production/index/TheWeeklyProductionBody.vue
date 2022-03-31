@@ -115,6 +115,12 @@ export default {
     window.addEventListener('keydown', this.disableActiveCard)
     window.addEventListener('paste', this.onPasteEvent)
     this.isCompact = Cookies.get('production-card-compact-mode') === 'true' ?? false
+
+    if (this.dates) {
+      this.$nextTick(() => {
+        this.goToTodayDate()
+      })
+    }
   },
   beforeDestroy () {
     window.removeEventListener('keydown', this.disableActiveCard)
