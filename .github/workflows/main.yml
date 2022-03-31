@@ -38,7 +38,7 @@ jobs:
           git init
           git add .
           git commit -m "Deploy"
-          git push -f https://${secrets.ACCESS_TOKEN}@github.com/JoaoHamerski/camaleao-web-frontend.git main:deploy
+          git push -f https://${{ secrets.ACCESS_TOKEN }}@github.com/JoaoHamerski/camaleao-web-frontend.git main:deploy
           
 
             
