@@ -17,6 +17,7 @@ export default {
   mounted ()  {
     console.log('OLA')
     console.log(process.env.VUE_APP_API_HTTP)
+    console.log(process.env.VUE_APP_GRAPHQL_HTTP)
   }
 }
 </script>
