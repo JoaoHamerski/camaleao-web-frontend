@@ -20,7 +20,7 @@ export default {
 <template>
   <div
     v-if="authUser"
-    class="text-center my-4"
+    class="text-center my-4 px-2"
   >
     <FontAwesomeIcon
       :icon="icons.faUserCircle"
