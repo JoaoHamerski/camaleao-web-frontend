@@ -54,7 +54,7 @@ export default {
       v-if="centered"
       class="text-secondary d-none d-sm-block"
     >
-      OU ARRASTE E SOLTE
+      OU ARRASTE E SOLTE AQUI
     </small>
   </div>
 </template>

@@ -57,7 +57,6 @@ $transition-duration: .15s;
 
 @include media-breakpoint-down(sm) {
   #sidebar {
-    position: absolute;
     max-width: 100%;
     min-width: 100%;
 
