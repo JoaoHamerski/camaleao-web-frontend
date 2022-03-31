@@ -156,7 +156,7 @@ export default {
       for (const type of clothingTypes) {
         this.form.clothing_types.push({
           key: type.key,
-          value: '',
+          value: 'R$ ',
           quantity: ''
         })
       }

@@ -175,7 +175,7 @@ export default {
                 numeric
                 :hint="$isMobile ? 'Quantidade': ''"
                 @input="form.set({
-                  [`form.clothing_types[${index}].quantity`]: $event
+                  [`clothing_types[${index}].quantity`]: $event
                 })"
                 @focus="form.errors.clear('price')"
               />
@@ -188,7 +188,7 @@ export default {
                 :hint="$isMobile ? 'Valor unitário': ''"
                 numeric
                 @input="form.set({
-                  [`form.clothing_types[${index}].value`]: $event
+                  [`clothing_types[${index}].value`]: $event
                 })"
                 @focus="form.errors.clear('price')"
               />
