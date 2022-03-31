@@ -34,7 +34,7 @@ jobs:
           
       - name: Deploy to repository
         run: |
-          cd ./build
+          cd ./dist
           git init
           git add .
           git commit -m "Deploy"
