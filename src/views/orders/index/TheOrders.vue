@@ -156,6 +156,7 @@ export default {
       </template>
     </AppCard>
 
+
     <AppPaginator
       v-model="params.page"
       class="mt-2"

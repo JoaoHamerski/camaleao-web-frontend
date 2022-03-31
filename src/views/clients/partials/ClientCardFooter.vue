@@ -15,6 +15,9 @@ export default {
   methods: {
     onEditClick () {
       this.$emit('edit-client')
+    },
+    onDeleteClick () {
+      this.$emit('delete-client')
     }
   }
 }
@@ -35,7 +38,10 @@ export default {
       </span>
     </div>
     <div v-if="$helpers.canView(roles.GERENCIA)">
-      <span class="link-danger clickable">
+      <span
+        class="link-danger clickable"
+        @click="onDeleteClick"
+      >
         <FontAwesomeIcon
           :icon="icons.faTrashAlt"
           fixed-width

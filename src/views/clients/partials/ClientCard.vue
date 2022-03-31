@@ -6,13 +6,16 @@ import ClientModalEdit from './ClientModalEdit'
 import ClientCardItems from './ClientCardItems'
 import ClientCardFooter from './ClientCardFooter'
 import ClientCardNotExist from './ClientCardNotExist'
+import ClientModalDelete from './ClientModalDelete.vue'
+import { clients } from '@/constants/route-names'
 
 export default {
   components: {
     ClientModalEdit,
     ClientCardItems,
     ClientCardFooter,
-    ClientCardNotExist
+    ClientCardNotExist,
+    ClientModalDelete
   },
   props: {
     client: {
@@ -38,6 +41,10 @@ export default {
         value: false,
         client: null
       },
+      clientModalDelete: {
+        value: false,
+        client: null
+      },
       icons: {
         faUser
       }
@@ -54,9 +61,21 @@ export default {
       this.clientModalEdit.client = this.client
       this.clientModalEdit.value = true
     },
+    onDeleteClient () {
+      this.clientModalDelete.client = this.client
+      this.clientModalDelete.value = true
+    },
     onEditSuccess () {
       this.clientModalEdit.client = null
       this.clientModalEdit.value = false
+    },
+    onDeleteSuccess () {
+      this.clientModalDelete.value = false
+      this.$nextTick(() => {
+        this.$helpers.clearCacheFrom({id: this.client.id, __typename: 'Client'})
+
+        this.$router.push({name: clients.index})
+      })
     }
   }
 }
@@ -89,11 +108,20 @@ export default {
         @success="onEditSuccess"
       />
 
+      <ClientModalDelete
+        v-model="clientModalDelete.value"
+        :client="clientModalDelete.client"
+        @success="onDeleteSuccess"
+      />
+
       <ClientCardItems :client="client" />
 
       <hr>
 
-      <ClientCardFooter @edit-client="onEditClient" />
+      <ClientCardFooter
+        @edit-client="onEditClient"
+        @delete-client="onDeleteClient"
+      />
     </template>
     <template
       v-else-if="isLoading"

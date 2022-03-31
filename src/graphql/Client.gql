@@ -124,3 +124,9 @@ mutation UpdateClient ($id: ID! $input: ClientInput!) {
     ...ClientParts
   }
 }
+
+mutation DeleteClient ($id: ID! $password: String!) {
+  clientDelete (id: $id password: $password) {
+    ...ClientParts
+  }
+}

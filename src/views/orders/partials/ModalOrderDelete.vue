@@ -46,6 +46,7 @@ export default {
         }
       })
 
+      this.$helpers.clearCacheFrom({id: this.order.id, __typename: 'Order'})
       this.$emit('success')
     },
     deleteOrder () {

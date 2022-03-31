@@ -103,13 +103,12 @@ export default {
           :is-loading="isLoading"
           :orders="orders.data"
         />
+        <AppPaginator
+          v-model="ordersQuery.page"
+          class="mt-2"
+          :pagination="orders.paginatorInfo"
+        />
       </div>
-
-      <AppPaginator
-        v-model="ordersQuery.page"
-        class="mt-2"
-        :pagination="orders.paginatorInfo"
-      />
     </div>
   </div>
 </template>
