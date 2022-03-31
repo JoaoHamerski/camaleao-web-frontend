@@ -102,13 +102,11 @@ export default {
       v-if="!isEmpty(client)"
       #body
     >
-      <template v-if="clientModalEdit.value">
-        <ClientModalEdit
-          v-model="clientModalEdit.value"
-          :client="clientModalEdit.client"
-          @success="onEditSuccess"
-        />
-      </template>
+      <ClientModalEdit
+        v-model="clientModalEdit.value"
+        :client="clientModalEdit.client"
+        @success="onEditSuccess"
+      />
 
       <ClientModalDelete
         v-model="clientModalDelete.value"
