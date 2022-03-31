@@ -7,6 +7,7 @@ import { InMemoryCache } from '@apollo/client/cache'
 import { setContext } from '@apollo/client/link/context'
 import possibleTypes from './fragmentTypes.json'
 
+console.log(process.env.VUE_APP_API_HTTP)
 Vue.use(VueApollo)
 
 const AUTH_TOKEN_NAME = 'auth-token'
