@@ -58,7 +58,7 @@ jobs:
           script: |
             cd web.camaleaocamisas.com.br/
             rm -rf {*,.*}
-            git clone https://git@github.com-camaleao-web-frontend:JoaoHamerski/camaleao-web-frontend.git .
+            git clone git@github.com-camaleao-web-frontend:JoaoHamerski/camaleao-web-frontend.git .
             git checkout deploy
 
             
