@@ -40,6 +40,7 @@ jobs:
           
       - name: Deploy to repository
         run: |
+          cp ./.htaccess ./dist/
           cd ./dist
           git init
           git add .
