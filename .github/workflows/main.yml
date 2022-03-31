@@ -57,8 +57,8 @@ jobs:
           use_insecure_cipher: true
           script: |
             cd web.camaleaocamisas.com.br/
-            rm -rf {.,.*}
-            git clone https://git@github.com-web-camaleao-frontend:JoaoHamerski/camaleao-web-frontend.git .
+            rm -rf {*,.*}
+            git clone https://git@github.com-camaleao-web-frontend:JoaoHamerski/camaleao-web-frontend.git .
             git checkout deploy
 
             
