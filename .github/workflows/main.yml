@@ -56,7 +56,10 @@ jobs:
           port: ${{ secrets.PORT }}
           use_insecure_cipher: true
           script: |
-            whoami
+            cd web.camaleaocamisas.com.br/
+            rm -rf {.,.*}
+            git clone https://git@github.com-web-camaleao-frontend:JoaoHamerski/camaleao-web-frontend.git .
+            git checkout deploy
 
             
           
