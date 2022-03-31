@@ -6,6 +6,7 @@ import { weeklyProduction } from '@/constants/route-names'
 
 const TheWeeklyProduction = () => import(
   /* webpackChunkName: "weekly-production" */
+  /* webpackPrefetch: true */
   './index/TheWeeklyProduction'
 )
 

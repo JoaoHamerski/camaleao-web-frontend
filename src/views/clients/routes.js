@@ -6,11 +6,13 @@ import { clients } from '@/constants/route-names'
 
 const TheClients = () => import(
   /* webpackChunkName: "clients" */
+  /* webpackPrefetch: true */
   './index/TheClients'
 )
 
 const TheClient = () => import(
   /* webpackChunkName: "clients" */
+  /* webpackPrefetch: true */
   './show/TheClient'
 )
 

@@ -6,21 +6,25 @@ import { orders } from '@/constants/route-names'
 
 const TheOrders = () => import(
   /* webpackChunkName: "orders" */
+  /* webpackPrefetch: true */
   './index/TheOrders'
 )
 
 const TheOrder = () => import(
   /* webpackChunkName: "orders" */
+  /* webpackPrefetch: true */
   './show/TheOrder'
 )
 
 const TheOrderNew = () => import(
   /* webpackChunkName: "orders" */
+  /* webpackPrefetch: true */
   './create/TheOrderNew'
 )
 
 const TheOrderEdit = () => import(
   /* webpackChunkName: "orders" */
+  /* webpackPrefetch: true */
   './edit/TheOrderEdit'
 )
 
