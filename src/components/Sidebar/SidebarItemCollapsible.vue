@@ -49,7 +49,7 @@ export default {
       <span>
         <FontAwesomeIcon
           :icon="icon"
-          class="text-primary me-1"
+          class="text-primary me-2"
           fixed-width
         />
         <slot name="title" />
