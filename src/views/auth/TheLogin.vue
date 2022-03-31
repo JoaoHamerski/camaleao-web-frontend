@@ -13,6 +13,10 @@ export default {
     return {
       faUserCircle
     }
+  },
+  mounted ()  {
+    console.log('OLA')
+    console.log(process.env.VUE_APP_API_HTTP)
   }
 }
 </script>
