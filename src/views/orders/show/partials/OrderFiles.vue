@@ -44,7 +44,7 @@ export default {
     id="files"
     header-class="text-secondary"
     collapsible
-    :value="true"
+    :value="!filesCount"
   >
     <template #title>
       <FontAwesomeIcon
@@ -94,8 +94,10 @@ export default {
           </div>
         </div>
       </div>
-      <div class="py-3 text-secondary text-center">
-        Nenhum anexo registrado
+      <div v-else>
+        <div class="text-center text-secondary py-3">
+          Nenhum anexo registrado
+        </div>
       </div>
     </template>
   </AppContainer>
