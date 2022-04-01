@@ -116,7 +116,7 @@ export default {
     window.addEventListener('paste', this.onPasteEvent)
     this.isCompact = Cookies.get('production-card-compact-mode') === 'true' ?? false
 
-    if (this.dates) {
+    if (this.$isMobile && this.dates) {
       this.$nextTick(() => {
         this.goToTodayDate()
       })
