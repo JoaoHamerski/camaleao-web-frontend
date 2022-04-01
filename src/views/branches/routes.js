@@ -6,6 +6,7 @@ import { branches } from '@/constants/route-names'
 
 const TheBranches = () => import(
   /* webpackChunkName: "branches" */
+  /* webpackPrefetch: true */
   './index/TheBranches'
 )
 

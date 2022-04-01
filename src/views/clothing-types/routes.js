@@ -5,6 +5,7 @@ import roles from '@/constants/roles'
 import { clothingTypes } from '@/constants/route-names'
 const TheClothingTypes = () => import(
   /* webpackChunkName: "clothing-types" */
+  /* webpackPrefetch: true */
   './index/TheClothingTypes'
 )
 

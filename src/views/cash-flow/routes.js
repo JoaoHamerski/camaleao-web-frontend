@@ -6,6 +6,7 @@ import { cashFlow } from '@/constants/route-names'
 
 const TheCashFlow = () => import(
   /* webpackChunkName: "cash-flow" */
+  /* webpackPrefetch: true */
   './index/TheCashFlow'
 )
 

@@ -6,6 +6,7 @@ import { dailyCash } from '@/constants/route-names'
 
 const TheDailyCash = () => import(
   /* webpackChunkName: "daily-cash" */
+  /* webpackPrefetch: true */
   './index/TheDailyCash'
 )
 

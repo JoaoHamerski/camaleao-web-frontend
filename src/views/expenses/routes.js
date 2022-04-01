@@ -4,7 +4,11 @@ import role from '@/middleware/role'
 import roles from '@/constants/roles'
 import { expenses } from '@/constants/route-names'
 
-import TheExpenses from './index/TheExpenses'
+const TheExpenses = () => import(
+  /* webpackChunkName: "expenses" */
+  /* webpackPrefetch: true */
+  './index/TheExpenses.vue'
+)
 
 const children = [
   {
