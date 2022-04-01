@@ -53,7 +53,7 @@ export default {
       font-size: .9rem;
       color: white;
       border-radius: 1.25rem 1.25rem 0 0;
-      padding: .25rem 0;
+      padding: .25rem .5rem;
     }
 
     .img-thumbnail {
