@@ -79,7 +79,7 @@ export default {
 </script>
 <template>
   <!-- eslint-disable vue/no-v-html -->
-  <div class="d-flex flex-column flex-sm-row justify-content-between align-items-sm-center">
+  <div class="d-flex flex-column flex-sm-row justify-content-between">
     <div
       :class="{
         'text-decoration-line-through': isItemDeleted
@@ -107,11 +107,12 @@ export default {
         v-html="text"
       />
     </div>
-    <div class="small text-secondary text-sm-center d-flex d-sm-block my-2 my-sm-0">
+    <div class="small text-secondary text-sm-end my-2 my-sm-0 ms-0 ms-sm-2">
       <div>
-        {{ formatDatetime(item.created_at) }} &nbsp;
+        {{ formatDatetime(item.created_at) }}
+        <br class="d-none d-sm-block">
+        {{ formatDatetime(item.created_at, 'HH:mm') }}
       </div>
-      <div>{{ formatDatetime(item.created_at, 'HH:mm') }}</div>
     </div>
   </div>
 </template>
