@@ -5,7 +5,8 @@ import {
   faHandHoldingUsd,
   faCalendarAlt,
   faDotCircle,
-  faCheckCircle
+  faCheckCircle,
+  faTshirt
 } from '@fortawesome/free-solid-svg-icons'
 import { formatDatetime } from '@/utils/formatters'
 
@@ -41,7 +42,8 @@ export default {
         faHandHoldingUsd,
         faCalendarAlt,
         faDotCircle,
-        faCheckCircle
+        faCheckCircle,
+        faTshirt
       }
     }
   },
@@ -65,6 +67,15 @@ export default {
       >
         {{ order.client.name }}
       </a>
+    </OrderListItem>
+    <OrderListItem
+      v-if="order.quantity"
+      v-tippy="{placement: 'bottom'}"
+      :icon="icons.faTshirt"
+      content="Quantidade"
+      class="fw-bold"
+    >
+      {{ order.quantity }} peças
     </OrderListItem>
     <OrderListItem
       v-if="order.reminder && isOrderPreRegistered"

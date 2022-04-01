@@ -5,6 +5,7 @@ query GetWeeklyProductionOrders ($date: String!) {
       id
       code
       price
+      quantity
       total_owing
       states
       art_paths

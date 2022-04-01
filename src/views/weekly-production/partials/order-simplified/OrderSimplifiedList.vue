@@ -1,5 +1,5 @@
 <script>
-import { faUser, faCalendarAlt } from '@fortawesome/free-solid-svg-icons'
+import { faUser, faCalendarAlt, faTshirt } from '@fortawesome/free-solid-svg-icons'
 import OrderListItem from '../OrderListItem'
 
 export default {
@@ -24,7 +24,8 @@ export default {
     return {
       icons: {
         faUser,
-        faCalendarAlt
+        faCalendarAlt,
+        faTshirt
       }
     }
   }
@@ -46,6 +47,15 @@ export default {
       >
         {{ order.client.name }}
       </a>
+    </OrderListItem>
+
+    <OrderListItem
+      v-if="order.quantity"
+      v-tippy="{placement: 'bottom'}"
+      :icon="icons.faTshirt"
+      content="Quantidade"
+    >
+      {{ order.quantity }} peças
     </OrderListItem>
 
     <OrderListItem
