@@ -73,7 +73,7 @@ export default {
       v-tippy="{placement: 'bottom'}"
       :icon="icons.faTshirt"
       content="Quantidade"
-      class="fw-bold"
+      class="fw-bold border-x-0"
     >
       {{ order.quantity }} peças
     </OrderListItem>
