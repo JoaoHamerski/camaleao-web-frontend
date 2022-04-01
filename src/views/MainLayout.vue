@@ -4,7 +4,10 @@ import TheSidebar from '@/components/Sidebar/TheSidebar'
 
 export default {
   metaInfo: {
-    titleTemplate: '%s | Camaleão Web'
+    titleTemplate: '%s | Camaleão Web',
+    meta: [
+      {name: 'title', content: 'Camaleão Camisas Interno'}
+    ]
   },
   components: {
     TheHeaderbar,
