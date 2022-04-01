@@ -1,5 +1,5 @@
 <script>
-import { faUserCircle } from '@fortawesome/free-solid-svg-icons'
+import { faUserCircle, faSignInAlt } from '@fortawesome/free-solid-svg-icons'
 import LoginForm from './LoginForm.vue'
 
 export default {
@@ -11,17 +11,30 @@ export default {
   },
   data () {
     return {
-      faUserCircle
+      icons: {
+        faUserCircle,
+        faSignInAlt
+      }
     }
   }
 }
 </script>
 
 <template>
-  <div class="col col-sm-8 col-md-6 col-lg-4 mx-auto mt-5">
+  <div
+    :class="{
+      'd-flex justify-content-center align-items-center w-100': !$isMobile,
+      'mx-auto py-5': $isMobile
+    }"
+    class="h-100 col col-11 col-sm-8 col-md-6 col-lg-3"
+  >
     <AppCard id="cardLogin">
       <template #header>
-        <h6 class="font-weight-bold text-white mb-0">
+        <h6 class="fw-bold text-white mb-0">
+          <FontAwesomeIcon
+            :icon="icons.faSignInAlt"
+            fixed-width
+          />
           Entre com sua conta
         </h6>
       </template>
@@ -29,7 +42,7 @@ export default {
       <template #body>
         <div class="text-center">
           <FontAwesomeIcon
-            :icon="faUserCircle"
+            :icon="icons.faUserCircle"
             size="5x"
             class="text-dark my-2"
           />
