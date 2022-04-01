@@ -1,6 +1,11 @@
 <script>
 import { faImage } from '@fortawesome/free-solid-svg-icons'
+import VueLoadImage from 'vue-load-image'
+
 export default {
+  components: {
+    VueLoadImage
+  },
   props: {
     orderImage: {
       type: String,
@@ -20,11 +25,20 @@ export default {
 <template>
   <div class="img-thumbnail">
     <AppViewer v-if="orderImage">
-      <img
-        class="img-fluid border-primary clickable"
-        :src="orderImage"
-        alt="Imagem do pedido"
-      >
+      <VueLoadImage>
+        <img
+          slot="image"
+          class="img-fluid border-primary clickable"
+          :src="orderImage"
+          alt="Imagem do pedido"
+        >
+        <div
+          slot="preloader"
+          class="position-relative py-5"
+        >
+          <AppLoading />
+        </div>
+      </VueLoadImage>
     </AppViewer>
     <div
       v-else

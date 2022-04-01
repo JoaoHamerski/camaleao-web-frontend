@@ -1,8 +1,12 @@
 <script>
 import { has } from 'lodash-es'
 import { faFileAlt, faFilePdf, faTrash } from '@fortawesome/free-solid-svg-icons'
+import VueLoadImage from 'vue-load-image'
 
 export default {
+  components: {
+    VueLoadImage
+  },
   props: {
     file: {
       type: [Object, String],
@@ -68,13 +72,22 @@ export default {
       @click="onFileClick('image')"
     >
       <div class="text-center">
-        <img
-          :src="src"
-          :alt="alt"
-          class="img-fluid img-thumbnail"
-          :class="{'border-danger': isInvalid, 'clickable': clickable}"
-          style="height: 120px"
-        >
+        <VueLoadImage>
+          <img
+            slot="image"
+            :src="src"
+            :alt="alt"
+            class="img-fluid img-thumbnail"
+            :class="{'border-danger': isInvalid, 'clickable': clickable}"
+            style="height: 120px"
+          >
+          <div
+            slot="preloader"
+            class="position-relative py-5 img-thumbnail"
+          >
+            <AppLoading />
+          </div>
+        </VueLoadImage>
       </div>
     </div>
     <div

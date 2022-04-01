@@ -1,11 +1,14 @@
 <script>
-import ViewerItemsCard from './ViewerItemsCard'
-import ViewerItemsList from './ViewerItemsList'
-
 export default {
   components: {
-    ViewerItemsCard,
-    ViewerItemsList
+    ViewerItemsCard: () => import(
+      /* webpackPrefetch: true */
+      './ViewerItemsCard.vue'
+    ),
+    ViewerItemsList: () => import(
+      /* webpackPrefetch: true */
+      './ViewerItemsList.vue'
+    )
   },
   props: {
     listType: {
