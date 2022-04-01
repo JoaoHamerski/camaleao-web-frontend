@@ -2,11 +2,12 @@
 import { faDollarSign } from '@fortawesome/free-solid-svg-icons'
 import { formatCurrencyBRL, formatDatetime } from '@/utils/formatters'
 
-import OrderPaymentForm from './OrderPaymentForm'
-
 export default {
   components: {
-    OrderPaymentForm
+    OrderPaymentForm:  () => import (
+      /* webpackPrefetch: true */
+      './OrderPaymentForm.vue'
+    )
   },
   props: {
     value: {
@@ -70,12 +71,15 @@ export default {
         <b>{{ formatDatetime(payment.date) }}</b>
       </div>
 
-      <OrderPaymentForm
-        :order="order"
-        :is-edit="isEdit"
-        :payment="payment"
-        @success="onSuccess"
-      />
+      <KeepAlive>
+        <OrderPaymentForm
+          v-if="value"
+          :order="order"
+          :is-edit="isEdit"
+          :payment="payment"
+          @success="onSuccess"
+        />
+      </KeepAlive>
     </template>
   </AppModal>
 </template>
