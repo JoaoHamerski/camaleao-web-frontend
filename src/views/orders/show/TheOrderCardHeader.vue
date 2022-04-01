@@ -27,9 +27,9 @@ export default {
 </script>
 
 <template>
-  <h6
+  <div
     v-if="order"
-    class="d-flex justify-content-between fw-bold align-items-center mb-0"
+    class="d-flex flex-column flex-sm-row justify-content-between fw-bold align-items-sm-center mb-0"
   >
     <div>
       <FontAwesomeIcon
@@ -41,10 +41,10 @@ export default {
     <div
       v-if="isOrderClosed"
     >
-      PEDIDO FECHADO
-      <div class="small">
+      FECHADO <span class="d-inline d-sm-none">-</span>
+      <span class="small d-inline d-sm-block">
         Em {{ formatDatetime(order.closed_at) }}
-      </div>
+      </span>
     </div>
-  </h6>
+  </div>
 </template>
