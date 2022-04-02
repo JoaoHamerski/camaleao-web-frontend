@@ -137,7 +137,7 @@ export default {
     :form="form"
     class="position-relative"
   >
-    <AppLoading v-show="isLoading" />
+    <AppLoading v-show="isLoadingQuery" />
 
     <template v-if="!isEdit">
       <AppInput
