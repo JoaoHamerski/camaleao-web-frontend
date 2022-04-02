@@ -40,6 +40,11 @@ export default {
       isLoading: false
     }
   },
+  computed: {
+    isLoadingQuery () {
+      return !!this.$apollo.queries.vias.loading
+    }
+  },
   watch: {
     vias: {
       handler(vias) {
@@ -130,7 +135,10 @@ export default {
   <AppForm
     :on-submit="onSubmit"
     :form="form"
+    class="position-relative"
   >
+    <AppLoading v-show="isLoading" />
+
     <template v-if="!isEdit">
       <AppInput
         id="value"
