@@ -10,6 +10,8 @@ import { ConfirmPayment } from '@/graphql/Payment.gql'
 import roles from '@/constants/roles'
 
 import ModalOrderPayment from '../../partials/ModalOrderPayment'
+import AssignConfirmationButton from '@/views/daily-cash/index/partials/DailyPaymentConfirmation.vue'
+import ModalHandleConfirmationError from '@/views/daily-cash/index/partials/DailyPaymentConfirmationErrorModal.vue'
 
 const PAYMENT_STATE = {
   null: 'PENDENTE',
@@ -19,7 +21,9 @@ const PAYMENT_STATE = {
 
 export default {
   components: {
-    ModalOrderPayment
+    ModalOrderPayment,
+    AssignConfirmationButton,
+    ModalHandleConfirmationError
   },
   props: {
     payments: {
@@ -37,7 +41,11 @@ export default {
         faHandHoldingUsd
       },
       selectedPayment: {},
-      loadingId: ''
+      loadingId: '',
+      modalPaymentError: {
+        value: false,
+        payment: {}
+      }
     }
   },
   methods: {
@@ -45,33 +53,19 @@ export default {
     getPaymentState (payment) {
       return PAYMENT_STATE[payment.is_confirmed]
     },
-    onEditPaymentClick (payment) {
+    onEditPayment (payment) {
       this.$emit('open-modal', {
         modal: 'payment',
         payload: { payment, isEdit: true }
       })
     },
-    async onConfirmPayment ({ id }, confirmation) {
-      this.loadingId = id
-
-      try {
-        await this.$apollo.mutate({
-          mutation: ConfirmPayment,
-          variables: { id, confirmation }
-        })
-
-        this.$helpers.clearCacheFrom({ fieldName: 'cashFlowEntries' })
-
-        this.$toast.success(
-          confirmation
-            ? 'Pagamento confirmado!'
-            : 'Pagamento recusado!'
-        )
-      } catch (error) {
-        this.$toast.error('Ops! Algo deu errado, tente novamente!')
-      }
-
-      this.loadingId = ''
+    onPaymentError(payment) {
+      this.modalPaymentError.payment =  payment
+      this.modalPaymentError.value = true
+    },
+    onPaymentModalErrorHidden() {
+      this.modalPaymentError.value = false
+      this.modalPaymentError.payment = {}
     }
   }
 }
@@ -91,6 +85,13 @@ export default {
           :payment="selectedPayment"
           @refresh="$emit('refresh')"
         />
+
+        <ModalHandleConfirmationError
+          :value="modalPaymentError.value"
+          :payment="modalPaymentError.payment"
+          @hidden="onPaymentModalErrorHidden"
+        />
+
         <ul class="list-group list-group-flush">
           <li
             v-for="payment in payments"
@@ -127,38 +128,11 @@ export default {
                 v-if="payment.is_confirmed === null"
                 class="d-flex"
               >
-                <template v-if="$helpers.canView(roles.GERENCIA)">
-                  <AppButton
-                    class="flex-grow-1"
-                    outlined
-                    :block="$isMobile"
-                    btn-class="btn-sm"
-                    color="success"
-                    :icon="icons.faCheck"
-                    tooltip="Confirmar"
-                    :loading="payment.id === loadingId"
-                    @click.prevent="onConfirmPayment(payment, true)"
-                  />
-                  <AppButton
-                    outlined
-                    btn-class="btn-sm"
-                    color="danger"
-                    :icon="icons.faTimes"
-                    class="mx-2 flex-grow-1"
-                    :block="$isMobile"
-                    tooltip="Recusar"
-                    :disabled="payment.id === loadingId"
-                    @click.prevent="onConfirmPayment(payment, false)"
-                  />
-                </template>
-                <AppButton
-                  outlined
-                  class="flex-grow-1"
-                  :block="$isMobile"
-                  btn-class="btn-sm"
-                  tooltip="Editar"
-                  :icon="icons.faEdit"
-                  @click.prevent="onEditPaymentClick(payment)"
+                <AssignConfirmationButton
+                  :payment="payment"
+                  :confirmation="payment.is_confirmed"
+                  @error="onPaymentError"
+                  @edit="onEditPayment"
                 />
               </div>
             </div>

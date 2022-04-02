@@ -34,6 +34,7 @@ export default {
     id="dailyPaymentConfirmationErrorModal"
     :value="value"
     color="danger"
+    centered
     v-on="$listeners"
   >
     <template #title>
@@ -56,7 +57,12 @@ export default {
         v-if="!isEmpty(payment)"
         class="text-center mb-4"
       >
-        O valor do pagamento <span class="fw-bold">({{ formatCurrencyBRL(payment.value) }})</span> excede o total que falta pagar do pedido <span class="fw-bold">({{ formatCurrencyBRL(payment.order.total_owing) }}).</span>
+        <template v-if="payment.order.total_owing === 0">
+          O pedido já está pago
+        </template>
+        <template v-else>
+          O valor do pagamento <span class="fw-bold">({{ formatCurrencyBRL(payment.value) }})</span> excede o total que falta pagar do pedido <span class="fw-bold">({{ formatCurrencyBRL(payment.order.total_owing) }}).</span>
+        </template>
       </div>
 
       <div class="text-center">

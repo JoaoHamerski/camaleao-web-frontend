@@ -28,6 +28,7 @@ export default {
   },
   data () {
     return {
+      vias: [],
       form: new Form({
         value: 'R$ ',
         date: '',
@@ -39,31 +40,31 @@ export default {
       isLoading: false
     }
   },
-  computed: {
-    clientKey () {
-      return this.$route.params.clientKey
-    },
-    orderKey () {
-      return this.$route.params.orderKey
-    },
-    paymentKey () {
-      return this.payment?.id
+  watch: {
+    vias: {
+      handler(vias) {
+        if (vias.length) {
+          this.$nextTick(() => {
+            this.populateForm()
+          })
+        }
+      }
     }
   },
-  watch: {
-    payment (payment) {
-      if (!payment) {
+  methods: {
+    populateForm () {
+      if (!this.payment) {
         this.form.payment_via_id = ''
         this.form.note = ''
 
         return
       }
 
-      this.form.payment_via_id = payment.via.id
-      this.form.note = payment.note
-    }
-  },
-  methods: {
+      this.form.set({
+        payment_via_id: this.payment.via.id,
+        note: this.payment.note
+      })
+    },
     onPayRestClick () {
       this.form.value = this.$helpers.toBRL(this.order.total_owing)
     },
@@ -102,9 +103,11 @@ export default {
           }
         })
 
-        this.clearDailyCashCache(this.payment.id)
+        this.$helpers.clearCacheFrom({fieldName: 'dailyCash'})
+
         handleSuccess(this, { message: 'Pagamento atualizado!' })
       } catch (error) {
+        console.log(error)
         handleError(this, error)
       }
     },
@@ -170,6 +173,7 @@ export default {
       name="payment_via_id"
       :options="vias"
       label-prop="name"
+      value-prop="id"
       :error="form.errors.get('payment_via_id')"
     >
       Via

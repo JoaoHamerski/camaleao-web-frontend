@@ -6,7 +6,8 @@ import {
   faCheck,
   faTimes,
   faMinus,
-  faExclamation
+  faExclamation,
+  faEdit
 } from '@fortawesome/free-solid-svg-icons'
 
 export default {
@@ -18,6 +19,10 @@ export default {
     confirmation: {
       type: undefined,
       required: true
+    },
+    showActions: {
+      type: Boolean,
+      default: true
     }
   },
   data () {
@@ -30,7 +35,8 @@ export default {
         faCheck,
         faTimes,
         faMinus,
-        faExclamation
+        faExclamation,
+        faEdit
       }
     }
   },
@@ -39,16 +45,15 @@ export default {
       return this.loadingConfirmBtn || this.loadingDeclineBtn
     },
     showConfirmationButtons () {
-      return this.$helpers.canView(roles.GERENCIA)
-        && this.confirmation === null
+      return this.showActions && this.confirmation === null
     },
-    authUser () {
-      return this.$store.getters['auth/authUser']
+    canBeConfirmed () {
+      return this.payment.value <= this.payment.order.total_owing
     }
   },
   methods: {
-    canBeConfirmed (payment) {
-      return payment.value <= payment.order.total_owing
+    onEditClick () {
+      this.$emit('edit', this.payment)
     },
     async assignPayment ({ confirmation }) {
       this.loadingConfirmBtn = confirmation
@@ -64,10 +69,13 @@ export default {
           refetchQueries: [{ query: GetPaymentsPendencies }]
         })
 
+        this.$helpers.clearCacheFrom({ fieldName: 'cashFlowEntries' })
+        this.$helpers.clearCacheFrom({ fieldName: 'payments' })
+
         this.$toast.success(
           confirmation
             ? 'Pagamento confirmado!'
-            : 'Pagamento rejeitado!'
+            : 'Pagamento recusado!'
         )
 
         this.$emit('success')
@@ -88,9 +96,10 @@ export default {
     class="text-center position-relative"
   >
     <AppButton
+      v-if="$helpers.canView(roles.GERENCIA)"
       :icon="icons.faCheck"
       color="success"
-      class="me-4"
+      class="me-2"
       tooltip="Confirmar"
       btn-class="btn-sm px-3 position-relative"
       outlined
@@ -99,7 +108,7 @@ export default {
       @click.prevent="assignPayment({confirmation: true })"
     >
       <span
-        v-if="!canBeConfirmed(payment)"
+        v-if="!canBeConfirmed"
         v-tippy
         content="O pagamento não pode ser confirmado"
         class="position-absolute top-0 start-100 translate-middle px-2 text-white bg-warning border border-light rounded-circle"
@@ -111,6 +120,7 @@ export default {
       </span>
     </AppButton>
     <AppButton
+      v-if="$helpers.canView(roles.GERENCIA)"
       :icon="icons.faTimes"
       color="danger"
       tooltip="Rejeitar"
@@ -119,6 +129,13 @@ export default {
       :disabled="isDisabled"
       :loading="loadingDeclineBtn"
       @click.prevent="assignPayment({ confirmation: false })"
+    />
+    <AppButton
+      :icon="icons.faEdit"
+      outlined
+      tooltip="Editar"
+      btn-class="btn-sm px-3 ms-2"
+      @click.prevent="onEditClick"
     />
   </div>
   <div

@@ -1,4 +1,5 @@
 <script>
+import roles from '@/constants/roles'
 import { faClipboardCheck } from '@fortawesome/free-solid-svg-icons'
 import { clients, orders } from '@/constants/route-names'
 import { formatCurrencyBRL } from '@/utils/formatters'
@@ -24,6 +25,7 @@ export default {
     return {
       clients,
       orders,
+      roles,
       icons: {
         faClipboardCheck
       }
@@ -44,13 +46,16 @@ export default {
   methods: {
     formatCurrencyBRL,
     paymentRowClass (payment) {
-      return PAYMENT_STATUS_CLASS[payment.is_confirmed]
+      return `align-middle ${PAYMENT_STATUS_CLASS[payment.is_confirmed]}`
     },
     onPaymentSuccess () {
       this.$emit('payment-success')
     },
     onPaymentError (payment) {
       this.$emit('payment-error', payment)
+    },
+    onPaymentEdit (payment) {
+      this.$emit('payment-edit', payment)
     }
   }
 }
@@ -99,8 +104,10 @@ export default {
       <DailyPaymentConfirmation
         :confirmation="item.is_confirmed"
         :payment="item"
+        :show-actions="$helpers.canView(roles.GERENCIA)"
         @success="onPaymentSuccess"
         @error="onPaymentError"
+        @edit="onPaymentEdit"
       />
     </template>
   </AppTable>

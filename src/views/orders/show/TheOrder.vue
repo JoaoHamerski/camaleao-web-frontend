@@ -92,6 +92,9 @@ export default {
     closeModal (modal) {
       this[modal].value = false
     },
+    onModalPaymentHidden () {
+      this.modalOrderPayment.payment = null
+    },
     async openModalReport () {
       this.modalOrderReport.loading = true
 
@@ -166,6 +169,7 @@ export default {
       v-model="modalOrderPayment.value"
       v-bind="{...modalOrderPayment, order}"
       @success="onPaymentCreated"
+      @hidden="onModalPaymentHidden"
     />
 
     <ModalOrderStatus

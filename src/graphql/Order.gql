@@ -109,6 +109,9 @@ fragment PaymentsPart on Order {
     confirmed_at
     is_confirmed
     created_at
+    order {
+      total_owing
+    }
     via {
       id
       name
