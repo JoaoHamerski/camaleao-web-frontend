@@ -1,6 +1,7 @@
 query GetWeeklyProductionOrders ($date: String!) {
   weeklyProduction (date: $date) {
     date
+    total_quantity
     orders {
       id
       code

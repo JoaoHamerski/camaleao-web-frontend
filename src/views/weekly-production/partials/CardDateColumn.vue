@@ -1,6 +1,6 @@
 <script>
 import roles from '@/constants/roles'
-import { faUpload } from '@fortawesome/free-solid-svg-icons'
+import { faUpload, faTshirt } from '@fortawesome/free-solid-svg-icons'
 
 import { formatDatetime } from '@/utils/formatters'
 import { DateTime } from 'luxon'
@@ -44,7 +44,8 @@ export default {
       compactMode: false,
       roles,
       icons: {
-        faUpload
+        faUpload,
+        faTshirt
       }
     }
   },
@@ -132,13 +133,24 @@ export default {
       class="card"
     >
       <div
-        class="card-header text-white text-center"
+        class="card-header text-white text-center py-1"
         :class="cardHeaderClasses"
         @click.prevent="onCardHeaderClick"
       >
-        <b class="text-uppercase">
+        <div class="text-uppercase fw-bold">
           {{ formatDate(date.date) }}
-        </b>
+        </div>
+        <div class="small">
+          <FontAwesomeIcon
+            :icon="icons.faTshirt"
+            fixed-width
+          />
+          {{
+            !date.total_quantity
+              ? 'Nenhuma peça'
+              : `${date.total_quantity} peças`
+          }}
+        </div>
       </div>
       <div
         v-show="dragState === DRAG_STATES.DRAG_ENTER"
