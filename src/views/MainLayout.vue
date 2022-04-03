@@ -22,6 +22,9 @@ export default {
     authUser () {
       return this.$store.getters['auth/authUser']
     }
+  },
+  mounted () {
+    this.$store.commit('SET_BOOTED', true)
   }
 }
 </script>

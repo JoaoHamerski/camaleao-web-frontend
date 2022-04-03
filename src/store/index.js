@@ -15,9 +15,13 @@ export default new Vuex.Store({
   plugins: [plugins],
   state: {
     isMobile: checkIsMobile(),
-    error: null
+    error: null,
+    booted: false,
   },
   mutations: {
+    SET_BOOTED (state, booted) {
+      state.booted = booted
+    },
     SET_IS_MOBILE (state, isMobile) {
       state.isMobile = isMobile
     },
