@@ -83,50 +83,56 @@ export default {
 }
 </script>
 <template>
-  <div class="text-center position-relative">
-    <AppButton
-      v-if="$helpers.canView(roles.GERENCIA)"
-      :icon="icons.faCheck"
-      color="success"
-      class="me-2"
-      tooltip="Confirmar"
-      btn-class="btn-sm px-3 position-relative"
-      outlined
-      :disabled="isButtonsDisabled"
-      :loading="loadingConfirmBtn"
-      @click.prevent="assignPayment({confirmation: true })"
-    >
-      <span
-        v-if="!canPaymentBeConfirmed"
-        v-tippy
-        content="O pagamento não pode ser confirmado"
-        class="position-absolute top-0 start-100 translate-middle px-2 text-white bg-warning border border-light rounded-circle"
+  <div class="d-flex justify-content-center text-center position-relative">
+    <div>
+      <AppButton
+        v-if="$helpers.canView(roles.GERENCIA)"
+        :icon="icons.faCheck"
+        color="success"
+        tooltip="Confirmar"
+        btn-class="btn-sm px-3 position-relative"
+        outlined
+        :disabled="isButtonsDisabled"
+        :loading="loadingConfirmBtn"
+        @click.prevent="assignPayment({confirmation: true })"
       >
-        <FontAwesomeIcon
-          :icon="icons.faExclamation"
-          size="sm"
-        />
-      </span>
-    </AppButton>
+        <span
+          v-if="!canPaymentBeConfirmed"
+          v-tippy
+          content="O pagamento não pode ser confirmado"
+          class="position-absolute top-0 start-100 translate-middle px-2 text-white bg-warning border border-light rounded-circle"
+        >
+          <FontAwesomeIcon
+            :icon="icons.faExclamation"
+            size="sm"
+          />
+        </span>
+      </AppButton>
+    </div>
 
-    <AppButton
-      v-if="$helpers.canView(roles.GERENCIA)"
-      :icon="icons.faTimes"
-      color="danger"
-      tooltip="Rejeitar"
-      btn-class="btn-sm px-3"
-      outlined
-      :disabled="isButtonsDisabled"
-      :loading="loadingDeclineBtn"
-      @click.prevent="assignPayment({ confirmation: false })"
-    />
+    <div>
+      <AppButton
+        v-if="$helpers.canView(roles.GERENCIA)"
+        :icon="icons.faTimes"
+        class="mx-2"
+        color="danger"
+        tooltip="Rejeitar"
+        btn-class="btn-sm px-3"
+        outlined
+        :disabled="isButtonsDisabled"
+        :loading="loadingDeclineBtn"
+        @click.prevent="assignPayment({ confirmation: false })"
+      />
+    </div>
 
-    <AppButton
-      :icon="icons.faEdit"
-      outlined
-      tooltip="Editar"
-      btn-class="btn-sm px-3 ms-2"
-      @click.prevent="onEditClick"
-    />
+    <div>
+      <AppButton
+        :icon="icons.faEdit"
+        outlined
+        tooltip="Editar"
+        btn-class="btn-sm px-3"
+        @click.prevent="onEditClick"
+      />
+    </div>
   </div>
 </template>
