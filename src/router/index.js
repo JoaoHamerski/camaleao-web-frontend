@@ -77,9 +77,6 @@ const routes = [
   ...productionUsersRoutes,
   ...usersRoutes,
   ...weeklyProductionRoutes,
-  {
-    path: '/:pathMatch(.*)*', component: ErrorNotFound
-  },
 ]
 
 if (process.env.NODE_ENV === 'development') {
@@ -88,6 +85,10 @@ if (process.env.NODE_ENV === 'development') {
     component: () => import('@/views/TheTest')
   })
 }
+
+routes.push({
+  path: '/:pathMatch(.*)*', component: ErrorNotFound
+})
 
 const router = new VueRouter({
   mode: 'history',

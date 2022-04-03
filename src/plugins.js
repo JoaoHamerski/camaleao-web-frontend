@@ -1,11 +1,12 @@
 import Vue from 'vue'
 import VueMeta from 'vue-meta'
-import Toast from 'vue-toastification'
+import Toast, { POSITION } from 'vue-toastification'
 import VueTippy from 'vue-tippy'
 import helpers from '@/utils/helpers'
 import store from '@/store'
 import 'cleave.js/dist/addons/cleave-phone.br'
 import '@/sass/_toast.scss'
+
 const custom = {
   install (Vue) {
     Vue.prototype.$helpers = helpers
@@ -21,7 +22,12 @@ Vue.use(VueTippy, {
   appendTo: () => document.querySelector('#app')
 })
 
-Vue.use(Toast)
+Vue.use(Toast, {
+  containerClassName: 'camaleao-container',
+  position: store.state.isMobile
+    ? POSITION.BOTTOM_CENTER
+    : POSITION.TOP_RIGHT
+})
 
 Vue.use(VueMeta)
 

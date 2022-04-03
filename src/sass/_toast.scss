@@ -1,4 +1,5 @@
-@import "variables/colors";
+@import "variables/all";
+@import "bootstrap-utilities";
 
 $vt-color-default: $primary;
 $vt-color-info: $info;
@@ -14,3 +15,36 @@ $vt-color-error: $danger;
 @import "vue-toastification/src/scss/_progressBar";
 @import "vue-toastification/src/scss/_icon";
 @import "vue-toastification/src/scss/animations/_bounce";
+
+.#{$vt-namespace}__container.camaleao-container {
+  .#{$vt-namespace}__toast {
+    border-radius: $border-radius-lg;
+    padding: 1.15rem 1.25rem;
+  }
+
+  .#{$vt-namespace}__toast-body {
+    font-weight: bold;
+    display: flex;
+    align-items: center;
+  }
+
+  .#{$vt-namespace}__bounce-move {
+    transition-duration: .1ms;
+  }
+}
+
+@include media-breakpoint-down (sm) {
+  .#{$vt-namespace}__container.camaleao-container {
+    opacity: .9;
+    width: 100%;
+
+    .#{$vt-namespace}__toast {
+      border-radius: 0;
+      padding: .45rem 1.1rem;
+    }
+
+    .#{$vt-namespace}__toast-body {
+      font-size: .9rem;
+    }
+  }
+}
