@@ -53,7 +53,13 @@ export default {
             this.populateForm()
           })
         }
-      }
+      },
+      immediate: true
+    }
+  },
+  activated () {
+    if (this.vias.length) {
+      this.populateForm()
     }
   },
   methods: {

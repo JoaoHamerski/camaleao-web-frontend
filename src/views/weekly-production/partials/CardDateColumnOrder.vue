@@ -73,8 +73,6 @@ export default {
     }
   }
 
-
-
   &.card-production-wrapper.card-compact {
     &.active {
       width: 20%;

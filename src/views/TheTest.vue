@@ -8,7 +8,9 @@
 export default {
   methods: {
     click () {
-      this.$toast.success('ola mundo')
+      this.$toast.success('ola mundo', {
+        timeout: 1000000
+      })
     }
   }
 }
