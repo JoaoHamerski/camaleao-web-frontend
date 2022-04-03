@@ -1,16 +1,16 @@
 <script>
 
-import DailyPaymentConfirmationErrorModal from './partials/DailyPaymentConfirmationErrorModal'
+import PaymentConfirmErrorModal from '@/views/resources/payments/PaymentConfirmErrorModal.vue'
 import TheDailyCashBodyTable from './TheDailyCashBodyTable'
 import TheDailyCashBodyDate from './TheDailyCashBodyDate'
-import ModalPaymentEdit from '@/views/orders/partials/ModalOrderPayment.vue'
+import ModalPaymentForm from '@/views/resources/payments/ModalPaymentForm.vue'
 
 export default {
   components: {
     TheDailyCashBodyTable,
     TheDailyCashBodyDate,
-    DailyPaymentConfirmationErrorModal,
-    ModalPaymentEdit
+    PaymentConfirmErrorModal,
+    ModalPaymentForm
   },
   props: {
     payments: {
@@ -59,12 +59,12 @@ export default {
 
 <template>
   <div>
-    <DailyPaymentConfirmationErrorModal
+    <PaymentConfirmErrorModal
       v-model="modalError.value"
       :payment="modalError.payment"
     />
 
-    <ModalPaymentEdit
+    <ModalPaymentForm
       v-model="modalEdit.value"
       :payment="modalEdit.payment"
       :order="modalEdit.payment.order"

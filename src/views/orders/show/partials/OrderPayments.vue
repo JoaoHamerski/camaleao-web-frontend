@@ -9,9 +9,9 @@ import { formatDatetime } from '@/utils/formatters'
 import { ConfirmPayment } from '@/graphql/Payment.gql'
 import roles from '@/constants/roles'
 
-import ModalOrderPayment from '../../partials/ModalOrderPayment'
-import AssignConfirmationButton from '@/views/daily-cash/index/partials/DailyPaymentConfirmation.vue'
-import ModalHandleConfirmationError from '@/views/daily-cash/index/partials/DailyPaymentConfirmationErrorModal.vue'
+import ModalPaymentForm from '@/views/resources/payments/ModalPaymentForm.vue'
+import PaymentState from '@/views/resources/payments/PaymentState.vue'
+import PaymentConfirmErrorModal from '@/views/resources/payments/PaymentConfirmErrorModal.vue'
 
 const PAYMENT_STATE = {
   null: 'PENDENTE',
@@ -21,9 +21,9 @@ const PAYMENT_STATE = {
 
 export default {
   components: {
-    ModalOrderPayment,
-    AssignConfirmationButton,
-    ModalHandleConfirmationError
+    ModalPaymentForm,
+    PaymentState,
+    PaymentConfirmErrorModal
   },
   props: {
     payments: {
@@ -79,14 +79,14 @@ export default {
     </template>
     <template #body>
       <div v-if="payments.length">
-        <ModalOrderPayment
+        <ModalPaymentForm
           modal-id="editPaymentModal"
           :is-edit="true"
           :payment="selectedPayment"
           @refresh="$emit('refresh')"
         />
 
-        <ModalHandleConfirmationError
+        <PaymentConfirmErrorModal
           :value="modalPaymentError.value"
           :payment="modalPaymentError.payment"
           @hidden="onPaymentModalErrorHidden"
@@ -128,7 +128,7 @@ export default {
                 v-if="payment.is_confirmed === null"
                 class="d-flex"
               >
-                <AssignConfirmationButton
+                <PaymentState
                   :payment="payment"
                   :confirmation="payment.is_confirmed"
                   @error="onPaymentError"

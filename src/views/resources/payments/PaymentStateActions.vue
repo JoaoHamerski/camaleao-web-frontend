@@ -1,14 +1,16 @@
 <script>
 import roles from '@/constants/roles'
-import { ConfirmPayment, GetPaymentsPendencies } from '@/graphql/Payment.gql'
-
 import {
   faCheck,
-  faTimes,
-  faMinus,
   faExclamation,
+  faTimes,
   faEdit
 } from '@fortawesome/free-solid-svg-icons'
+
+import {
+  ConfirmPayment,
+  GetPaymentsPendencies
+} from '@/graphql/Payment.gql'
 
 export default {
   props: {
@@ -19,10 +21,6 @@ export default {
     confirmation: {
       type: undefined,
       required: true
-    },
-    showActions: {
-      type: Boolean,
-      default: true
     }
   },
   data () {
@@ -30,24 +28,19 @@ export default {
       roles,
       loadingConfirmBtn: false,
       loadingDeclineBtn: false,
-      modalError: false,
       icons: {
         faCheck,
-        faTimes,
-        faMinus,
         faExclamation,
+        faTimes,
         faEdit
       }
     }
   },
   computed: {
-    isDisabled () {
+    isButtonsDisabled () {
       return this.loadingConfirmBtn || this.loadingDeclineBtn
     },
-    showConfirmationButtons () {
-      return this.showActions && this.confirmation === null
-    },
-    canBeConfirmed () {
+    canPaymentBeConfirmed () {
       return this.payment.value <= this.payment.order.total_owing
     }
   },
@@ -89,12 +82,8 @@ export default {
   }
 }
 </script>
-
 <template>
-  <div
-    v-if="showConfirmationButtons"
-    class="text-center position-relative"
-  >
+  <div class="text-center position-relative">
     <AppButton
       v-if="$helpers.canView(roles.GERENCIA)"
       :icon="icons.faCheck"
@@ -103,12 +92,12 @@ export default {
       tooltip="Confirmar"
       btn-class="btn-sm px-3 position-relative"
       outlined
-      :disabled="isDisabled"
+      :disabled="isButtonsDisabled"
       :loading="loadingConfirmBtn"
       @click.prevent="assignPayment({confirmation: true })"
     >
       <span
-        v-if="!canBeConfirmed"
+        v-if="!canPaymentBeConfirmed"
         v-tippy
         content="O pagamento não pode ser confirmado"
         class="position-absolute top-0 start-100 translate-middle px-2 text-white bg-warning border border-light rounded-circle"
@@ -119,6 +108,7 @@ export default {
         />
       </span>
     </AppButton>
+
     <AppButton
       v-if="$helpers.canView(roles.GERENCIA)"
       :icon="icons.faTimes"
@@ -126,10 +116,11 @@ export default {
       tooltip="Rejeitar"
       btn-class="btn-sm px-3"
       outlined
-      :disabled="isDisabled"
+      :disabled="isButtonsDisabled"
       :loading="loadingDeclineBtn"
       @click.prevent="assignPayment({ confirmation: false })"
     />
+
     <AppButton
       :icon="icons.faEdit"
       outlined
@@ -137,28 +128,5 @@ export default {
       btn-class="btn-sm px-3 ms-2"
       @click.prevent="onEditClick"
     />
-  </div>
-  <div
-    v-else
-    class="fw-bold"
-  >
-    <div
-      v-if="confirmation === true"
-      class="text-success"
-    >
-      <FontAwesomeIcon :icon="icons.faCheck" />
-    </div>
-    <div
-      v-else-if="confirmation === null"
-      class="text-warning"
-    >
-      <FontAwesomeIcon :icon="icons.faMinus" />
-    </div>
-    <div
-      v-else-if="confirmation === false"
-      class="text-danger"
-    >
-      <FontAwesomeIcon :icon="icons.faTimes" />
-    </div>
   </div>
 </template>

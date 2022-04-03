@@ -4,9 +4,9 @@ import { formatCurrencyBRL, formatDatetime } from '@/utils/formatters'
 
 export default {
   components: {
-    OrderPaymentForm:  () => import (
+    PaymentForm:  () => import (
       /* webpackPrefetch: true */
-      './OrderPaymentForm.vue'
+      './PaymentForm.vue'
     )
   },
   props: {
@@ -72,7 +72,7 @@ export default {
       </div>
 
       <KeepAlive>
-        <OrderPaymentForm
+        <PaymentForm
           v-if="value"
           :order="order"
           :is-edit="isEdit"

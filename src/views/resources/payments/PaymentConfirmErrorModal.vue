@@ -1,7 +1,6 @@
 <script>
 import { isEmpty } from 'lodash-es'
 import { formatCurrencyBRL } from '@/utils/formatters'
-
 import { faExclamationCircle } from '@fortawesome/free-solid-svg-icons'
 
 export default {

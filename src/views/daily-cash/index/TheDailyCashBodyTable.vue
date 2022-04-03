@@ -3,7 +3,7 @@ import roles from '@/constants/roles'
 import { faClipboardCheck } from '@fortawesome/free-solid-svg-icons'
 import { clients, orders } from '@/constants/route-names'
 import { formatCurrencyBRL } from '@/utils/formatters'
-import DailyPaymentConfirmation from './partials/DailyPaymentConfirmation'
+import PaymentState from '@/views/resources/payments/PaymentState.vue'
 
 const PAYMENT_STATUS_CLASS = {
   true: 'table-success',
@@ -13,7 +13,7 @@ const PAYMENT_STATUS_CLASS = {
 
 export default {
   components: {
-    DailyPaymentConfirmation
+    PaymentState
   },
   props: {
     items: {
@@ -101,7 +101,7 @@ export default {
     </template>
 
     <template #[`items.checked`]="{ item }">
-      <DailyPaymentConfirmation
+      <PaymentState
         :confirmation="item.is_confirmed"
         :payment="item"
         :show-actions="$helpers.canView(roles.GERENCIA)"

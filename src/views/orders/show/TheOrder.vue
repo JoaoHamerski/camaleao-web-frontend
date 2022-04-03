@@ -8,7 +8,7 @@ import { clients } from '@/constants/route-names'
 import ClientCard from '@/views/clients/partials/ClientCard'
 import TheOrderHeader from './TheOrderHeader'
 import TheOrderCard from './TheOrderCard'
-import ModalOrderPayment from '../partials/ModalOrderPayment'
+import ModalPaymentForm from '@/views/resources/payments/ModalPaymentForm.vue'
 import ModalOrderStatus from '../partials/ModalOrderStatus'
 import ModalOrderDelete from '../partials/ModalOrderDelete'
 
@@ -36,7 +36,7 @@ export default {
     ClientCard,
     TheOrderCard,
     TheOrderHeader,
-    ModalOrderPayment,
+    ModalPaymentForm,
     ModalOrderStatus,
     ModalOrderDelete
   },
@@ -164,7 +164,7 @@ export default {
   <div
     class="py-5 mx-auto"
   >
-    <ModalOrderPayment
+    <ModalPaymentForm
       v-if="!isLoading"
       v-model="modalOrderPayment.value"
       v-bind="{...modalOrderPayment, order}"
