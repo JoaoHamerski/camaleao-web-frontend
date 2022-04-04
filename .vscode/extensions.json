@@ -1,11 +1,14 @@
 {
-  "recommendations": [
-    "mgmcdermott.vscode-language-babel",
-    "dbaeumer.vscode-eslint",
-    "kumar-harsh.graphql-for-vscode",
-    "octref.vetur",
-    "streetsidesoftware.code-spell-checker",
-    "streetsidesoftware.code-spell-checker-portuguese-brazilian",
-    "aaron-bond.better-comments"
-  ]
+    "recommendations": [
+        "mgmcdermott.vscode-language-babel",
+        "dbaeumer.vscode-eslint",
+        "kumar-harsh.graphql-for-vscode",
+        "streetsidesoftware.code-spell-checker",
+        "streetsidesoftware.code-spell-checker-portuguese-brazilian",
+        "aaron-bond.better-comments",
+        "editorconfig.editorconfig",
+        "syler.sass-indented",
+        "octref.vetur",
+        "christian-kohler.npm-intellisense"
+    ]
 }
