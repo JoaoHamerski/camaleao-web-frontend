@@ -87,10 +87,6 @@ export default {
 </template>
 
 <style scoped>
-.responsive-iframe-container {
-  padding-top: 75%;
-}
-
 .responsive-iframe {
   position: absolute;
   top: 0;
