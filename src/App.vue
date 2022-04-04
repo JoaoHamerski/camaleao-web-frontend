@@ -1,4 +1,5 @@
 <script>
+import Vue from 'vue';
 import ErrorPage from '@/views/_errors/ErrorPage.vue'
 import SpinnerBootPage from '@/components/SpinnerBootPage.vue'
 
@@ -13,6 +14,13 @@ export default {
     },
     isBooted () {
       return this.$store.state.booted
+    },
+    getComponent () {
+      if (this.error !== null) {
+        return ErrorPage
+      }
+
+      return 'router-view'
     }
   }
 }
@@ -20,23 +28,19 @@ export default {
 <template>
   <div id="app">
     <SpinnerBootPage
-      v-show="!isBooted"
+      v-if="!isBooted"
       key="app-booting"
     />
 
     <AppTransition
+      class="h-100"
       enter="fadeIn"
       mode="out-in"
     >
-      <ErrorPage
-        v-if="error !== null"
-        key="app-error"
-        :error="error"
-      />
-
-      <RouterView
-        v-else
+      <Component
+        :is="getComponent"
         key="app-main"
+        :error="error"
       />
     </AppTransition>
   </div>

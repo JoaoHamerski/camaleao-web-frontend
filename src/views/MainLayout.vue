@@ -13,6 +13,12 @@ export default {
     TheHeaderbar,
     TheSidebar,
   },
+  props: {
+    error: {
+      type: [Number, String],
+      default: null
+    }
+  },
   data () {
     return {
       transition: ''
@@ -21,7 +27,10 @@ export default {
   computed: {
     authUser () {
       return this.$store.getters['auth/authUser']
-    }
+    },
+    hasError () {
+      return this.error !== null
+    },
   },
   mounted () {
     this.$store.commit('SET_BOOTED', true)
@@ -31,13 +40,20 @@ export default {
 
 <template>
   <div
-    v-if="authUser"
+    v-if="authUser || hasError"
     key="layout"
   >
-    <TheHeaderbar :auth-user="authUser" />
-    <TheSidebar :auth-user="authUser" />
+    <template v-if="authUser && !hasError">
+      <TheHeaderbar :auth-user="authUser" />
+      <TheSidebar :auth-user="authUser" />
+    </template>
 
-    <div id="content">
+    <slot v-if="$slots.default" />
+
+    <div
+      v-else
+      id="content"
+    >
       <div class="container">
         <AppTransition
           enter="fadeIn"
@@ -45,9 +61,9 @@ export default {
           speed="even-faster"
           mode="out-in"
         >
-          <router-view v-slot="{ Component }">
+          <RouterView v-slot="{ Component }">
             <Component :is="Component" />
-          </router-view>
+          </RouterView>
         </AppTransition>
       </div>
     </div>

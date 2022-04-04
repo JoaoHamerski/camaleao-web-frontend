@@ -51,7 +51,6 @@ export default {
 
 <style lang="scss" scoped>
 @import "@/sass/variables/all";
-
 .message-wrapper {
   span {
     font-weight: bold;
@@ -60,6 +59,10 @@ export default {
 }
 
 ::v-deep {
+  img.camaleao-svg {
+    visibility: hidden;
+  }
+
   .camaleao-svg {
     height: 200px !important;
   }

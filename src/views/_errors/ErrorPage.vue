@@ -1,4 +1,5 @@
 <script>
+import MainLayout from '@/views/MainLayout.vue'
 import ErrorLayout from './ErrorLayout.vue'
 
 const errors = {
@@ -7,7 +8,13 @@ const errors = {
 }
 
 export default {
+  metaInfo() {
+    return {
+      title: errors[this.error]
+    }
+  },
   components: {
+    MainLayout,
     ErrorLayout
   },
   props: {
@@ -34,7 +41,7 @@ export default {
 }
 </script>
 <template>
-  <div class="h-100">
+  <MainLayout :error="error">
     <ErrorLayout>
       <template #code>
         {{ error }}
@@ -43,5 +50,5 @@ export default {
         {{ errors[error] }}
       </template>
     </ErrorLayout>
-  </div>
+  </MainLayout>
 </template>
