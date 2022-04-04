@@ -16,6 +16,9 @@ export default {
         faSignInAlt
       }
     }
+  },
+  mounted () {
+    this.$store.commit('SET_BOOTED', true)
   }
 }
 </script>
