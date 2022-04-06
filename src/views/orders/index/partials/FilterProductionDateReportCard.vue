@@ -42,7 +42,10 @@ export default {
           fetchPolicy: 'network-only'
         })
 
-        this.$emit('report-generated', data.ordersReportProductionDate)
+        this.$emit('report-generated', {
+          title: 'Relatório de produção',
+          src: data.ordersReportProductionDate
+        })
       } catch (error) {
         handleError(this, error)
       }

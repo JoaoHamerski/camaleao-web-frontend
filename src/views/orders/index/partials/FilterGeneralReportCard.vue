@@ -74,7 +74,10 @@ export default {
 
       this.isLoading = false
 
-      this.$emit('report-generated', data.ordersReport)
+      this.$emit('report-generated', {
+        title: 'Relatório geral de pedidos',
+        src: data.ordersReport,
+      })
     },
     onModalHidden () {
       this.src = ''

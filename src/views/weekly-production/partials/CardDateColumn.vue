@@ -127,10 +127,12 @@ export default {
       const date = this.date.date
 
       this.isReportLoading = true
+
       try {
         const { data: {orderWeeklyProduction: src } } = await this.$apollo.query({
           query: GetOrderWeeklyProductionReport,
-          variables: { date }
+          variables: { date },
+          fetchPolicy: 'network-only'
         })
 
         this.$emit('report-generated', src)
@@ -139,7 +141,6 @@ export default {
       }
 
       this.isReportLoading = false
-
     }
   }
 }

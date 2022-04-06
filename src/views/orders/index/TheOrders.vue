@@ -42,7 +42,8 @@ export default {
       },
       modalReport: {
         value: false,
-        src: ''
+        src: '',
+        title: 'Relatório'
       },
       orders: {
         data: [],
@@ -91,7 +92,8 @@ export default {
 
       this.onFilterButtonsChanged(this.buttonSelected)
     },
-    onReportGenerated (src) {
+    onReportGenerated ({src, title}) {
+      this.modalReport.title = title
       this.modalReport.src = src
       this.modalReport.value = true
     },
@@ -131,7 +133,7 @@ export default {
       id="orderReport"
       v-model="modalReport.value"
       :src="modalReport.src"
-      title="Relatório do pedido"
+      :title="modalReport.title"
       @hidden="onCloseModalReport"
     />
 
