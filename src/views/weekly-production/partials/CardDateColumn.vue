@@ -135,7 +135,6 @@ export default {
           fetchPolicy: 'network-only'
         })
 
-        console.log(src)
         this.$emit('report-generated', src)
       } catch (error) {
         this.$toast.error('Ops! Algo deu errado, tente novamente!')
@@ -227,7 +226,7 @@ export default {
                 roles.ATENDIMENTO,
                 roles.DESIGN,
                 roles.COSTURA,
-                roles.PRODUCAO
+                roles.ESTAMPA
               )"
               class="ms-0 ms-sm-2"
               :icon="icons.faFilePdf"
