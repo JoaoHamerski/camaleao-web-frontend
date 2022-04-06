@@ -21,7 +21,8 @@ function renderCardDateColumn (h, context, date) {
     'is-compact:update': context.onCompactModeChange,
     'change-state': context.onStateChanged,
     'uploaded-file': context.onFileUploaded,
-    'cancel-create': context.onCancelCreate
+    'cancel-create': context.onCancelCreate,
+    'report-generated': context.onReportGenerated
   }
 
   return (
@@ -95,7 +96,11 @@ export default {
   data () {
     return {
       activeDate: '',
-      isCompact: false
+      isCompact: false,
+      modalReport: {
+        value: false,
+        src: ''
+      }
     }
   },
   watch: {
@@ -185,6 +190,13 @@ export default {
     onCompactModeChange (value) {
       Cookies.set('production-card-compact-mode', value)
       this.isCompact = value
+    },
+    onReportGenerated (src) {
+      this.modalReport.value = true
+      this.modalReport.src = src
+    },
+    onReportModalHidden() {
+      this.modalReport.src = ''
     }
   },
   render (h) {
@@ -194,6 +206,16 @@ export default {
       }])}
       >
         { this.isLoading && <AppLoading /> }
+
+        {
+          <AppFileModal
+            id="weeklyProductionReport"
+            vModel={this.modalReport.value}
+            src={this.modalReport.src}
+            title="Relatório de produção"
+            vOn:hidden={this.onReportModalHidden}
+          />
+        }
 
         {
           this.$isMobile

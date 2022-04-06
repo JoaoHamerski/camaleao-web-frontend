@@ -1,6 +1,7 @@
 <script>
 import roles from '@/constants/roles'
-import { faUpload, faTshirt } from '@fortawesome/free-solid-svg-icons'
+import { faUpload, faTshirt, faFilePdf } from '@fortawesome/free-solid-svg-icons'
+import { GetOrderWeeklyProductionReport } from '@/graphql/Order.gql'
 
 import { formatDatetime } from '@/utils/formatters'
 import { DateTime } from 'luxon'
@@ -45,7 +46,8 @@ export default {
       roles,
       icons: {
         faUpload,
-        faTshirt
+        faTshirt,
+        faFilePdf
       }
     }
   },
@@ -119,6 +121,15 @@ export default {
       if (this.$helpers.canView(roles.GERENCIA, roles.ATENDIMENTO, roles.DESIGN)) {
         this.dragState = DRAG_STATES.DRAG_ENTER
       }
+    },
+    async onWeeklyProductionReportClick () {
+      const date = this.date.date
+      const { data: {orderWeeklyProduction: src } } = await this.$apollo.query({
+        query: GetOrderWeeklyProductionReport,
+        variables: { date }
+      })
+
+      this.$emit('report-generated', src)
     }
   }
 }
@@ -186,19 +197,26 @@ export default {
         >
           <div
             v-if="$helpers.canView(roles.GERENCIA, roles.ATENDIMENTO, roles.DESIGN)"
-            class="d-block mx-auto mx-sm-0 d-sm-inline-block"
+            class="d-flex flex-column flex-sm-row mx-auto mx-sm-0"
           >
             <AppInputFile
               id="orderImage"
               :default-margin="false"
               :disable-input-area="true"
               accept="image/*"
-              placeholder="asd"
+              class="mb-2 mb-sm-0"
               @input="onImageUploaded"
             />
+            <AppButton
+              class="ms-0 ms-sm-2"
+              :icon="icons.faFilePdf"
+              btn-class="fw-bold"
+              @click.prevent="onWeeklyProductionReportClick"
+            >
+              Gerar relatório
+            </AppButton>
           </div>
-          <div v-else />
-          <div class="d-none d-sm-block">
+          <div v-if="!$isMobile">
             <AppCheckboxSwitch
               id="compact_mode"
               :value="isCompact"
