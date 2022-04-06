@@ -207,11 +207,13 @@ export default {
           v-if="active"
           class="d-flex justify-content-between mb-2"
         >
-          <div
-            v-if="$helpers.canView(roles.GERENCIA, roles.ATENDIMENTO, roles.DESIGN)"
-            class="d-flex flex-column flex-sm-row mx-auto mx-sm-0"
-          >
+          <div class="d-flex flex-column flex-sm-row mx-auto mx-sm-0">
             <AppInputFile
+              v-if="$helpers.canView(
+                roles.GERENCIA,
+                roles.ATENDIMENTO,
+                roles.DESIGN
+              )"
               id="orderImage"
               :default-margin="false"
               :disable-input-area="true"
@@ -220,6 +222,13 @@ export default {
               @input="onImageUploaded"
             />
             <AppButton
+              v-if="$helpers.canView(
+                roles.GERENCIA,
+                roles.ATENDIMENTO,
+                roles.DESIGN,
+                roles.COSTURA,
+                roles.PRODUCAO
+              )"
               class="ms-0 ms-sm-2"
               :icon="icons.faFilePdf"
               btn-class="fw-bold"
