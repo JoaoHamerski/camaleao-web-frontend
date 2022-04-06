@@ -1,7 +1,7 @@
 <script>
 import roles from '@/constants/roles'
 import { faUpload, faTshirt, faFilePdf } from '@fortawesome/free-solid-svg-icons'
-import { GetOrderWeeklyProductionReport } from '@/graphql/Order.gql'
+import { GetOrdersWeeklyProductionReport } from '@/graphql/Order.gql'
 
 import { formatDatetime } from '@/utils/formatters'
 import { DateTime } from 'luxon'
@@ -129,14 +129,15 @@ export default {
       this.isReportLoading = true
 
       try {
-        const { data: {orderWeeklyProduction: src } } = await this.$apollo.query({
-          query: GetOrderWeeklyProductionReport,
+        const { data: {ordersWeeklyProductionReport: src } } = await this.$apollo.query({
+          query: GetOrdersWeeklyProductionReport,
           variables: { date },
           fetchPolicy: 'network-only'
         })
 
+        console.log(src)
         this.$emit('report-generated', src)
-      } catch {
+      } catch (error) {
         this.$toast.error('Ops! Algo deu errado, tente novamente!')
       }
 
