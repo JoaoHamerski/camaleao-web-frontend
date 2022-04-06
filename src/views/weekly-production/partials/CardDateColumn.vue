@@ -44,6 +44,7 @@ export default {
       dragState: DRAG_STATES.DRAG_LEAVE,
       compactMode: false,
       roles,
+      isReportLoading: false,
       icons: {
         faUpload,
         faTshirt,
@@ -124,12 +125,21 @@ export default {
     },
     async onWeeklyProductionReportClick () {
       const date = this.date.date
-      const { data: {orderWeeklyProduction: src } } = await this.$apollo.query({
-        query: GetOrderWeeklyProductionReport,
-        variables: { date }
-      })
 
-      this.$emit('report-generated', src)
+      this.isReportLoading = true
+      try {
+        const { data: {orderWeeklyProduction: src } } = await this.$apollo.query({
+          query: GetOrderWeeklyProductionReport,
+          variables: { date }
+        })
+
+        this.$emit('report-generated', src)
+      } catch {
+        this.$toast.error('Ops! Algo deu errado, tente novamente!')
+      }
+
+      this.isReportLoading = false
+
     }
   }
 }
@@ -211,6 +221,7 @@ export default {
               class="ms-0 ms-sm-2"
               :icon="icons.faFilePdf"
               btn-class="fw-bold"
+              :loading="isReportLoading"
               @click.prevent="onWeeklyProductionReportClick"
             >
               Gerar relatório
