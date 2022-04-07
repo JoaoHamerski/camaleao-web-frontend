@@ -3,6 +3,7 @@ import classNames from 'classnames'
 import { isEmpty } from 'lodash-es'
 import Cleave from 'cleave.js'
 import { DateTime } from 'luxon'
+import 'cleave.js/dist/addons/cleave-phone.br'
 
 import {
   renderInput,
@@ -146,6 +147,11 @@ export default {
     },
     hasHint () {
       return !!(this.hint || this.$slots.hint)
+    }
+  },
+  async created () {
+    if (this.dateRelated.includes(this.type)) {
+      await import('@/sass/_datepicker.scss')
     }
   },
   methods: {

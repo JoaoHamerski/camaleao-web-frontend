@@ -1,6 +1,6 @@
-import './sass/app.scss'
+import '@/sass/app.scss'
 import '@/components'
-import './plugins'
+import '@/plugins'
 import 'bootstrap'
 import Vue from 'vue'
 import App from './App.vue'

@@ -3,6 +3,7 @@ import { isBoolean } from 'lodash-es'
 
 import Multiselect from 'vue-multiselect'
 import { TippyComponent } from 'vue-tippy'
+import('@/sass/_multiselect.scss')
 
 export default {
   components: {

@@ -2,15 +2,11 @@
 import { camelCase } from 'lodash-es'
 import classNames from 'classnames'
 
-import AppLoading from '@/components/AppLoading'
 import renderCardHeader from './CardHeader'
 import renderCardBody from './CardBody'
 import renderCardFooter from './CardFooter'
 
 export default {
-  components: {
-    AppLoading
-  },
   props: {
     id: {
       type: [String, Number],

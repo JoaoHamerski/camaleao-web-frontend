@@ -4,7 +4,6 @@ import Toast, { POSITION } from 'vue-toastification'
 import VueTippy from 'vue-tippy'
 import helpers from '@/utils/helpers'
 import store from '@/store'
-import 'cleave.js/dist/addons/cleave-phone.br'
 
 const custom = {
   install (Vue) {
