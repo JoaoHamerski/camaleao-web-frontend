@@ -3,11 +3,12 @@ import pasteFilesMixin from '@/mixins/pasteFilesMixin'
 import filesMixin from '@/mixins/filesMixin'
 import Cookies from 'js-cookie'
 import classNames from 'classnames'
-import { Carousel, Slide } from 'vue-carousel'
 import { DateTime } from 'luxon'
-import CardDateColumn from '../partials/CardDateColumn.vue'
 
-function renderCardDatePlaceholder(h, date) {
+const CardDateColumnsMobile = () => import('./CardDateColumnsMobile.vue')
+const CardDateColumn = () => import('../partials/CardDateColumn.vue')
+
+function renderCardDatePlaceholder (h, date) {
   return (
     <div
       class="col"
@@ -16,7 +17,7 @@ function renderCardDatePlaceholder(h, date) {
   )
 }
 
-function renderCardDateColumn (h, context, date) {
+export const renderCardDateColumn = (h, context, date) => {
   const listeners = {
     'is-compact:update': context.onCompactModeChange,
     'change-state': context.onStateChanged,
@@ -37,42 +38,20 @@ function renderCardDateColumn (h, context, date) {
   )
 }
 
-function renderCardDateColumns (h, context) {
-  const shouldRenderPlaceholder = (date) => context.activeDate === date.date
+function shouldRenderPlaceholder (context, date) {
+  return context.activeDate === date.date
+}
 
+function renderCardDateColumns (h, context) {
   return context.dates.map((date) => {
     return [
       renderCardDateColumn(h, context, date),
-      shouldRenderPlaceholder(date) && renderCardDatePlaceholder(h, date)
+      shouldRenderPlaceholder(context, date) && renderCardDatePlaceholder(h, date)
     ]
   })
 }
 
-function renderCardDateColumnsMobile (h, context) {
-  return (
-    <Carousel
-      ref="carousel"
-      per-page={1}
-      pagination-enabled={false}
-      min-swipe-distance={40}
-    >
-      {
-        context.dates.map((date) => {
-          return (
-            <Slide key={`${date.date}__slide`}>
-              { renderCardDateColumn(h, context, date) }
-            </Slide>
-          )
-        })
-      }
-    </Carousel>
-  )
-}
-
 export default {
-  components: {
-    CardDateColumn,
-  },
   mixins: [filesMixin, pasteFilesMixin],
   props: {
     isLoading: {
@@ -110,7 +89,7 @@ export default {
 
       if (dates.length) {
         this.$nextTick(() => {
-          this.goToTodayDate()
+          // this.goToTodayDate()
         })
       }
     }
@@ -122,7 +101,7 @@ export default {
 
     if (this.$isMobile && this.dates) {
       this.$nextTick(() => {
-        this.goToTodayDate()
+        // this.goToTodayDate()
       })
     }
   },
@@ -222,7 +201,9 @@ export default {
 
         {
           this.$isMobile
-            ? renderCardDateColumnsMobile(h, this)
+            ? <CardDateColumnsMobile
+                context={this}
+              />
             : renderCardDateColumns(h, this)
         }
       </div>

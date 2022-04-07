@@ -1,13 +1,17 @@
 <script>
-import OrderSimplified from './order-simplified/OrderSimplified.vue'
-import OrderExtended from './order-extended/OrderExtended.vue'
-import OrderCreateCard from './OrderCreateCard.vue'
+const OrderSimplified = () => import(
+  /* webpackPrefetch: true */
+  './order-simplified/OrderSimplified.vue'
+)
+
+const OrderExtended = () =>  import(
+  /* webpackPrefetch: true */
+  './order-extended/OrderExtended.vue'
+)
 
 export default {
   components: {
-    OrderSimplified,
-    OrderExtended,
-    OrderCreateCard
+    OrderCreateCard: () => import('./OrderCreateCard.vue')
   },
   props: {
     isCompact: {
@@ -22,6 +26,18 @@ export default {
       type: Object,
       default: null
     }
+  },
+  computed: {
+    isOrderExtended () {
+      return !this.order.isPreCreated && this.isActive
+    },
+    getOrderCardComponent () {
+      if (this.isOrderExtended) {
+        return OrderExtended
+      }
+
+      return OrderSimplified
+    }
   }
 }
 </script>
@@ -33,20 +49,14 @@ export default {
   >
     <OrderCreateCard
       v-if="order.isPreCreated && isActive"
+      key="new-order"
       v-bind="$props"
       v-on="$listeners"
     />
 
-    <OrderExtended
-      v-show="!order.isPreCreated && isActive"
-      :key="`extended-${order.id}`"
-      v-bind="$props"
-      v-on="$listeners"
-    />
-
-    <OrderSimplified
-      v-show="!isActive"
-      :key="`simplified-${order.id}`"
+    <Component
+      :is="getOrderCardComponent"
+      :key="`order__${order.id}`"
       v-bind="$props"
       v-on="$listeners"
     />
@@ -54,10 +64,7 @@ export default {
 </template>
 
 <style lang="scss" scoped>
-@import "@/sass/variables/_colors";
-@import "~bootstrap/scss/functions";
-@import "~bootstrap/scss/variables";
-@import "~bootstrap/scss/mixins";
+@import "@/sass/bootstrap-utilities";
 
 ::v-deep {
   &.card-production-wrapper {
