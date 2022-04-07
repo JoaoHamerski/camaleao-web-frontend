@@ -4,7 +4,10 @@ import Form from '@/utils/Form'
 import { handleError } from '@/utils/forms'
 import { formatDatetime } from '@/utils/formatters'
 
-import { CreatePreRegisteredOrder } from '@/graphql/WeeklyProduction.gql'
+import {
+  CreatePreRegisteredOrder,
+  GetWeeklyProductionOrders
+} from '@/graphql/WeeklyProduction.gql'
 import { status } from '@/graphql/Status.gql'
 
 export default {
@@ -55,9 +58,8 @@ export default {
         await this.$apollo.mutate({
           mutation: CreatePreRegisteredOrder,
           variables: { input },
-          refetchQueries: [
-            'GetWeeklyProductionOrders'
-          ]
+          awaitRefetchQueries: true,
+          refetchQueries: [GetWeeklyProductionOrders]
         })
 
         this.$helpers.clearCacheFrom({ fieldName: 'orders' })

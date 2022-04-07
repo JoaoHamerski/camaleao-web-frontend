@@ -81,29 +81,10 @@ export default {
       }
     }
   },
-  watch: {
-    dates (dates) {
-      if (!this.$isMobile) {
-        return
-      }
-
-      if (dates.length) {
-        this.$nextTick(() => {
-          // this.goToTodayDate()
-        })
-      }
-    }
-  },
   mounted () {
     window.addEventListener('keydown', this.disableActiveCard)
     window.addEventListener('paste', this.onPasteEvent)
     this.isCompact = Cookies.get('production-card-compact-mode') === 'true' ?? false
-
-    if (this.$isMobile && this.dates) {
-      this.$nextTick(() => {
-        // this.goToTodayDate()
-      })
-    }
   },
   beforeDestroy () {
     window.removeEventListener('keydown', this.disableActiveCard)
@@ -113,17 +94,6 @@ export default {
     isColumnActive (date) {
       return this.activeDate === date.date
         || this.$isMobile
-    },
-    goToTodayDate () {
-      const today = DateTime.now().toFormat('yyyy-MM-dd')
-      const index = this.dates.findIndex(date => date.date === today)
-
-      if (index === -1) {
-        this.$refs.carousel.goToPage(0)
-        return
-      }
-
-      this.$refs.carousel.goToPage(index)
     },
     afterPaste (files) {
       const validFiles = this.getOnlyValidFiles(files, ['image'])

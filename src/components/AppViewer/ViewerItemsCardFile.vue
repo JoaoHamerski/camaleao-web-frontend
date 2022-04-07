@@ -71,24 +71,22 @@ export default {
       v-if="isType(file, ['image', 'jpg', 'jpeg', 'png'])"
       @click="onFileClick('image')"
     >
-      <div class="text-center">
-        <VueLoadImage>
-          <img
-            slot="image"
-            :src="src"
-            :alt="alt"
-            class="img-fluid img-thumbnail"
-            :class="{'border-danger': isInvalid, 'clickable': clickable}"
-            style="height: 120px"
-          >
-          <div
-            slot="preloader"
-            class="position-relative py-5 img-thumbnail"
-          >
-            <AppLoading />
-          </div>
-        </VueLoadImage>
-      </div>
+      <VueLoadImage>
+        <img
+          slot="image"
+          :src="src"
+          :alt="alt"
+          class="img-fluid img-thumbnail"
+          :class="{'border-danger': isInvalid, 'clickable': clickable}"
+          style="height: 120px"
+        >
+        <div
+          slot="preloader"
+          class="position-relative py-5 img-thumbnail"
+        >
+          <AppLoading />
+        </div>
+      </VueLoadImage>
     </div>
     <div
       v-else
@@ -117,6 +115,7 @@ export default {
         </div>
       </div>
     </div>
+
     <AppButton
       v-if="showDeleteButton"
       block

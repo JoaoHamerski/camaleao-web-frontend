@@ -1,6 +1,7 @@
 <script>
 import { faFileImage } from '@fortawesome/free-solid-svg-icons'
 import { keys, isEmpty } from 'lodash-es'
+import OrderFilesItems from './OrderFilesItems.vue'
 
 const FILES_MAP = {
   art_paths: 'Imagens da arte',
@@ -9,6 +10,9 @@ const FILES_MAP = {
 }
 
 export default {
+  components: {
+    OrderFilesItems
+  },
   props: {
     order: {
       type: Object,
@@ -60,39 +64,10 @@ export default {
 
     <template #body>
       <div v-if="filesCount">
-        <div
-          v-for="(label, key) in FILES_MAP"
-          :key="key"
-        >
-          <div
-            v-if="order[key]"
-            class="mb-3"
-          >
-            <div class="text-subtitle fw-bold text-secondary mb-1">
-              {{ label }}
-            </div>
-            <div v-if="order[key].length">
-              <AppViewerItems
-                :alt="label"
-                :files="order[key]"
-              />
-            </div>
-            <div
-              v-else
-              class="text-center text-secondary py-4"
-            >
-              Nenhum anexo registrado
-            </div>
-          </div>
-          <div v-else>
-            <div class="texse me dissesset-secondary mb-1">
-              &bull; {{ label }}
-            </div>
-            <div class="small text-center text-secondary py-5">
-              Nenhum anexo registrado
-            </div>
-          </div>
-        </div>
+        <OrderFilesItems
+          :order="order"
+          :files-map="FILES_MAP"
+        />
       </div>
       <div v-else>
         <div class="text-center text-secondary py-3">

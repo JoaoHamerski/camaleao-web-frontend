@@ -5,7 +5,6 @@ import VueTippy from 'vue-tippy'
 import helpers from '@/utils/helpers'
 import store from '@/store'
 import 'cleave.js/dist/addons/cleave-phone.br'
-import '@/sass/_toast.scss'
 
 const custom = {
   install (Vue) {
