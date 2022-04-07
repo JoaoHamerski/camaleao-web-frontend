@@ -1,5 +1,9 @@
 <script>
-import { faFunnelDollar, faHandHoldingUsd } from '@fortawesome/free-solid-svg-icons'
+import {
+  faFunnelDollar,
+  faHandHoldingUsd
+} from '@fortawesome/free-solid-svg-icons'
+
 export default {
   data () {
     return {

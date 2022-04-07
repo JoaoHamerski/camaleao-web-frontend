@@ -10,7 +10,7 @@ import {
 } from '@fortawesome/free-solid-svg-icons'
 import { formatDatetime } from '@/utils/formatters'
 
-import OrderListItem from '../OrderListItem'
+import OrderListItem from '../OrderListItem.vue'
 
 export default {
   components: {

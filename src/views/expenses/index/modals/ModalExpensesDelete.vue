@@ -3,7 +3,7 @@ import { isEmpty } from 'lodash-es'
 import { faTrashAlt } from '@fortawesome/free-solid-svg-icons'
 import { formatCurrencyBRL, formatDatetime } from '@/utils/formatters'
 
-import ViewerItemsCardFile from '@/components/AppViewer/ViewerItemsCardFile'
+import ViewerItemsCardFile from '@/components/AppViewer/ViewerItemsCardFile.vue'
 
 export default {
   chimera: {

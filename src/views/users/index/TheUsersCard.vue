@@ -1,9 +1,9 @@
 <script>
 import { faUsers } from '@fortawesome/free-solid-svg-icons'
 
-import TheUsersCardTable from './TheUsersCardTable'
-import ChangeUserRoleModal from '../partials/ChangeUserRoleModal'
-import DeleteUserModal from '../partials/DeleteUserModal'
+import TheUsersCardTable from './TheUsersCardTable.vue'
+import ChangeUserRoleModal from '../partials/ChangeUserRoleModal.vue'
+import DeleteUserModal from '../partials/DeleteUserModal.vue'
 
 export default {
   components: {

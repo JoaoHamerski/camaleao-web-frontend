@@ -1,7 +1,8 @@
 <script>
 import { faBoxes } from '@fortawesome/free-solid-svg-icons'
 
-import OrdersQuestionIconTippy from '@/views/orders/partials/OrdersQuestionIconTippy'
+import OrdersQuestionIconTippy from '@/views/orders/partials/OrdersQuestionIconTippy.vue'
+
 export default {
   components: {
     OrdersQuestionIconTippy

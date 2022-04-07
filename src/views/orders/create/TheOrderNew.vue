@@ -7,7 +7,7 @@ import {
 import { orders, clients } from '@/constants/route-names'
 import { GetClient } from '@/graphql/Client.gql'
 
-import OrderForm from '../form/OrderForm'
+import OrderForm from '../form/OrderForm.vue'
 
 export default {
   components: {

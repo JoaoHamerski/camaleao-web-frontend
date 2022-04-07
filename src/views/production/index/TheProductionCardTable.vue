@@ -10,7 +10,7 @@ import { formatDatetime } from '@/utils/formatters'
 import { TippyComponent } from 'vue-tippy'
 import { ConfirmCommissionProduction } from '@/graphql/Production.gql'
 
-import CommissionDetails from '../partials/CommissionDetails'
+import CommissionDetails from '../partials/CommissionDetails.vue'
 import CommissionModal from '@/views/production-users/partials/CommissionModal.vue'
 
 export default {

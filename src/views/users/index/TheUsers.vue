@@ -3,8 +3,8 @@ import { users } from '@/graphql/User.gql'
 import { roles } from '@/graphql/Role.gql'
 import { faUserPlus } from '@fortawesome/free-solid-svg-icons'
 
-import TheUsersCard from './TheUsersCard'
-import NewUserModal from '../partials/NewUserModal'
+import TheUsersCard from './TheUsersCard.vue'
+import NewUserModal from '../partials/NewUserModal.vue'
 
 export default {
   metaInfo: {

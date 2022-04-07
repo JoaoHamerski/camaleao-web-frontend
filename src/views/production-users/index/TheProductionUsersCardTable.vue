@@ -4,7 +4,7 @@ import { faMinus, faQuestionCircle, faExclamationCircle } from '@fortawesome/fre
 import { formatDatetime } from '@/utils/formatters'
 import { TippyComponent } from 'vue-tippy'
 import { orders } from '@/constants/route-names'
-import CommissionDetails from '@/views/production/partials/CommissionDetails'
+import CommissionDetails from '@/views/production/partials/CommissionDetails.vue'
 import CommissionModal from '../partials/CommissionModal.vue'
 
 export default {

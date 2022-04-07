@@ -7,7 +7,7 @@ import {
   GetCashFlowStatistics
 } from '@/graphql/CashFlow.gql'
 
-import TheCashFlowFilter from './TheCashFlowFilter'
+import TheCashFlowFilter from './TheCashFlowFilter.vue'
 import TheCashFlowBody from './TheCashFlowBody.vue'
 
 export default {

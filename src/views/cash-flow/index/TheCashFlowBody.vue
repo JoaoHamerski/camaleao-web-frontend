@@ -2,8 +2,8 @@
 import { faCashRegister, faExclamationCircle } from '@fortawesome/free-solid-svg-icons'
 import { isEmpty } from 'lodash-es'
 
-import CashFlowBodyTable from './partials/CashFlowBodyTable'
-import CashFlowBodyStatistics from './partials/CashFlowBodyStatstics'
+import CashFlowBodyTable from './partials/CashFlowBodyTable.vue'
+import CashFlowBodyStatistics from './partials/CashFlowBodyStatstics.vue'
 
 export default {
   components: {

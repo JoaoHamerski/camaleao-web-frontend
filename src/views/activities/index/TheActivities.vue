@@ -1,9 +1,9 @@
 <script>
 import { map, filter, isEmpty } from 'lodash-es'
 import { activities } from '@/graphql/Activity.gql'
-import TheActivitiesCard from './TheActivitiesCard'
-import TheActivitiesFilter from '../partals/TheActivitiesFilter'
 import { DateTime } from 'luxon'
+import TheActivitiesCard from './TheActivitiesCard.vue'
+import TheActivitiesFilter from '../partials/TheActivitiesFilter.vue'
 
 const QUERY_FILTER_MAP = [
   {

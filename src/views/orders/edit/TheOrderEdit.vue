@@ -1,5 +1,6 @@
 <script>
 import { isEmpty, cloneDeep } from 'lodash-es'
+import { orders } from '@/constants/route-names'
 import {
   faBoxOpen,
   faArrowCircleLeft
@@ -7,10 +8,9 @@ import {
 
 import { GetOrder } from '@/graphql/Order.gql'
 import orderStatesMixin from '../orderStatesMixin'
-import { orders } from '@/constants/route-names'
 
-import OrderForm from '../form/OrderForm'
-import OrderReminder from '../show/partials/OrderReminder'
+import OrderForm from '../form/OrderForm.vue'
+import OrderReminder from '../show/partials/OrderReminder.vue'
 
 export default {
   metaInfo () {

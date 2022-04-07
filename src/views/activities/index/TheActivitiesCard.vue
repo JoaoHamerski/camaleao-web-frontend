@@ -1,7 +1,7 @@
 <script>
 import { faListAlt } from '@fortawesome/free-solid-svg-icons'
-import ActivityItem from './ActivityItem'
-import ActivitiesLegendIcon from '../partals/ActivitiesLegendIcon'
+import ActivityItem from './ActivityItem.vue'
+import ActivitiesLegendIcon from '../partials/ActivitiesLegendIcon.vue'
 
 export default {
   components: {

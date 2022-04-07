@@ -1,8 +1,8 @@
 <script>
 import { GetUsersCommissions } from '@/graphql/Production.gql'
 
-import TheProductionUsersCommission from './TheProductionUsersCommission'
-import TheProductionUsersCard from './TheProductionUsersCard'
+import TheProductionUsersCommission from './TheProductionUsersCommission.vue'
+import TheProductionUsersCard from './TheProductionUsersCard.vue'
 
 export const OPTIONS = {
   ALL: 'all',

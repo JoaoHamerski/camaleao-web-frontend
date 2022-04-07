@@ -1,8 +1,7 @@
 <script>
-
 import PaymentConfirmErrorModal from '@/views/resources/payments/PaymentConfirmErrorModal.vue'
-import TheDailyCashBodyTable from './TheDailyCashBodyTable'
-import TheDailyCashBodyDate from './TheDailyCashBodyDate'
+import TheDailyCashBodyTable from './TheDailyCashBodyTable.vue'
+import TheDailyCashBodyDate from './TheDailyCashBodyDate.vue'
 import ModalPaymentForm from '@/views/resources/payments/ModalPaymentForm.vue'
 
 export default {

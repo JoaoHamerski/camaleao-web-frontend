@@ -7,7 +7,7 @@ import { formatDatetime } from '@/utils/formatters'
 import { DateTime } from 'luxon'
 import filesMixin from '@/mixins/filesMixin'
 
-import CardDateColumnOrder from './CardDateColumnOrder'
+import CardDateColumnOrder from './CardDateColumnOrder.vue'
 
 const DRAG_STATES = {
   DRAG_LEAVE: 0,

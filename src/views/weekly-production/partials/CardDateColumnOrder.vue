@@ -1,7 +1,7 @@
 <script>
-import OrderSimplified from './order-simplified/OrderSimplified'
-import OrderExtended from './order-extended/OrderExtended'
-import OrderCreateCard from './OrderCreateCard'
+import OrderSimplified from './order-simplified/OrderSimplified.vue'
+import OrderExtended from './order-extended/OrderExtended.vue'
+import OrderCreateCard from './OrderCreateCard.vue'
 
 export default {
   components: {

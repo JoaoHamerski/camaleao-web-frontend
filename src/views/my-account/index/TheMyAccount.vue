@@ -7,8 +7,8 @@ import {
 } from '@fortawesome/free-solid-svg-icons'
 import { formatDatetime } from '@/utils/formatters'
 
-import ModalEditAccount from '../partials/ModalEditAccount'
-import ModalDeleteAccount from '../partials/ModalDeleteAccount'
+import ModalEditAccount from '../partials/ModalEditAccount.vue'
+import ModalDeleteAccount from '../partials/ModalDeleteAccount.vue'
 
 export default {
   metaInfo: {

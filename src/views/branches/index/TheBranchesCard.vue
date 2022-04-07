@@ -1,9 +1,9 @@
 <script>
 import { faBuilding } from '@fortawesome/free-solid-svg-icons'
 
-import TheBranchesCardTable from './TheBranchesCardTable'
-import ModalEditBranch from '../partials/ModalEditBranch'
-import ModalDeleteBranch from '../partials/ModalDeleteBranch'
+import TheBranchesCardTable from './TheBranchesCardTable.vue'
+import ModalEditBranch from '../partials/ModalEditBranch.vue'
+import ModalDeleteBranch from '../partials/ModalDeleteBranch.vue'
 
 export default {
   components: {

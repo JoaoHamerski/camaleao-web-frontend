@@ -1,13 +1,13 @@
 <script>
 import { faUser } from '@fortawesome/free-solid-svg-icons'
 import { isEmpty } from 'lodash-es'
-
-import ClientModalEdit from './ClientModalEdit'
-import ClientCardItems from './ClientCardItems'
-import ClientCardFooter from './ClientCardFooter'
-import ClientCardNotExist from './ClientCardNotExist'
-import ClientModalDelete from './ClientModalDelete.vue'
 import { clients } from '@/constants/route-names'
+
+import ClientModalEdit from './ClientModalEdit.vue'
+import ClientCardItems from './ClientCardItems.vue'
+import ClientCardFooter from './ClientCardFooter.vue'
+import ClientCardNotExist from './ClientCardNotExist.vue'
+import ClientModalDelete from './ClientModalDelete.vue'
 
 export default {
   components: {

@@ -3,8 +3,8 @@
 import { map, upperFirst } from 'lodash-es'
 import { formatDatetime, formatCurrencyBRL, formatPhone } from '@/utils/formatters'
 
-import ActivityItemChanges from './ActivityItemChanges'
-import ActivityItemText from './ActivityItemText'
+import ActivityItemChanges from './ActivityItemChanges.vue'
+import ActivityItemText from './ActivityItemText.vue'
 
 export default {
   components: {

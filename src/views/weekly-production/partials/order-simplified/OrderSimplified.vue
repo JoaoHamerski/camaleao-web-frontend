@@ -1,9 +1,9 @@
 <script>
 import orderCardMixin from '../../mixins/orderCardMixin'
 import orderStatesMixin from '../../../orders/orderStatesMixin'
-import OrderSimplifiedTitle from './OrderSimplifiedTitle'
-import OrderSimplifiedImage from './OrderSimplifiedImage'
-import OrderSimplifiedList from './OrderSimplifiedList'
+import OrderSimplifiedTitle from './OrderSimplifiedTitle.vue'
+import OrderSimplifiedImage from './OrderSimplifiedImage.vue'
+import OrderSimplifiedList from './OrderSimplifiedList.vue'
 
 export default {
   components: {

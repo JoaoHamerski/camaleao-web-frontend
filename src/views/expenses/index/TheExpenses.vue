@@ -3,9 +3,9 @@ import { GetExpenses } from '@/graphql/Expense.gql'
 import { GetExpenseTypes } from '@/graphql/ExpenseType.gql'
 import { vias } from '@/graphql/Via.gql'
 
-import TheExpensesReportCard from './TheExpensesReportCard'
-import TheExpensesBody from './TheExpensesBody'
-import TheExpensesHeader from './TheExpensesHeader'
+import TheExpensesReportCard from './TheExpensesReportCard.vue'
+import TheExpensesBody from './TheExpensesBody.vue'
+import TheExpensesHeader from './TheExpensesHeader.vue'
 
 export default {
   metaInfo () {

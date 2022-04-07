@@ -1,6 +1,6 @@
 <script>
 import { faPlus } from '@fortawesome/free-solid-svg-icons'
-import BranchForm from './BranchForm'
+import BranchForm from './BranchForm.vue'
 
 export default {
   components: {

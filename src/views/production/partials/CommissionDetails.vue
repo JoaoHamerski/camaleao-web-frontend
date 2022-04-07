@@ -1,8 +1,8 @@
 <script>
 import roles from '@/constants/roles'
 
-import CommissionDetailsSeam from './CommissionDetailsSeam'
-import CommissionDetailsPrint from './CommissionDetailsPrint'
+import CommissionDetailsSeam from './CommissionDetailsSeam.vue'
+import CommissionDetailsPrint from './CommissionDetailsPrint.vue'
 
 export default {
   components: {

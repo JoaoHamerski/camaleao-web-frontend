@@ -3,8 +3,9 @@ import Vue from 'vue'
 import { uniqueId, cloneDeep } from 'lodash-es'
 import { GetWeeklyProductionOrders } from '@/graphql/WeeklyProduction.gql'
 import { DateTime } from 'luxon'
-import TheWeeklyProductionHeader from './TheWeeklyProductionHeader'
-import TheWeeklyProductionBody from './TheWeeklyProductionBody'
+
+import TheWeeklyProductionHeader from './TheWeeklyProductionHeader.vue'
+import TheWeeklyProductionBody from './TheWeeklyProductionBody.vue'
 
 export const weeklyProductionParams = Vue.observable({
   date: DateTime.now().toFormat('dd/MM/y')

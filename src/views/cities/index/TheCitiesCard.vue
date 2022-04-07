@@ -1,11 +1,11 @@
 <script>
 import { faCity } from '@fortawesome/free-solid-svg-icons'
 
-import TheCitiesCardTable from './TheCitiesCardTable'
-import EditCitiesModal from '../partials/EditCitiesModal'
-import EditCityModal from '../partials/EditCityModal'
-import DeleteCityModal from '../partials/DeleteCityModal'
-import ShowCityClientsModal from '../partials/ShowCityClientsModal'
+import TheCitiesCardTable from './TheCitiesCardTable.vue'
+import EditCitiesModal from '../partials/EditCitiesModal.vue'
+import EditCityModal from '../partials/EditCityModal.vue'
+import DeleteCityModal from '../partials/DeleteCityModal.vue'
+import ShowCityClientsModal from '../partials/ShowCityClientsModal.vue'
 
 export default {
   components: {

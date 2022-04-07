@@ -1,5 +1,4 @@
 <script>
-import Vue from 'vue';
 import ErrorPage from '@/views/_errors/ErrorPage.vue'
 import SpinnerBootPage from '@/components/SpinnerBootPage.vue'
 

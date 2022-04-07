@@ -1,5 +1,5 @@
 <script>
-import ActivityItemChangesProps from './ActivityItemChangesProps'
+import ActivityItemChangesProps from './ActivityItemChangesProps.vue'
 
 export default {
   components: {

@@ -1,8 +1,8 @@
 <script>
 import { isEmpty } from 'lodash-es'
 
-import EntryDetailsPayment from './EntryDetailsPayment'
-import EntryDetailsExpense from './EntryDetailsExpense'
+import EntryDetailsPayment from './EntryDetailsPayment.vue'
+import EntryDetailsExpense from './EntryDetailsExpense.vue'
 
 export default {
   components: {

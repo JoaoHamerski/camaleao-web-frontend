@@ -6,9 +6,9 @@ import { formatDatetime } from '@/utils/formatters'
 import { DateTime } from 'luxon'
 import { GetPayments, GetPaymentsPendencies } from '@/graphql/Payment.gql'
 
-import DailyPaymentModal from './partials/DailyPaymentModal'
-import TheDailyCashHeader from './TheDailyCashHeader'
-import TheDailyCashBody from './TheDailyCashBody'
+import DailyPaymentModal from './partials/DailyPaymentModal.vue'
+import TheDailyCashHeader from './TheDailyCashHeader.vue'
+import TheDailyCashBody from './TheDailyCashBody.vue'
 
 export default {
   metaInfo () {

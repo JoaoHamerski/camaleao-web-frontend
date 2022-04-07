@@ -3,9 +3,9 @@ import pasteFilesMixin from '@/mixins/pasteFilesMixin'
 import filesMixin from '@/mixins/filesMixin'
 import Cookies from 'js-cookie'
 import classNames from 'classnames'
-import CardDateColumn from '../partials/CardDateColumn'
 import { Carousel, Slide } from 'vue-carousel'
 import { DateTime } from 'luxon'
+import CardDateColumn from '../partials/CardDateColumn.vue'
 
 function renderCardDatePlaceholder(h, date) {
   return (
@@ -30,8 +30,7 @@ function renderCardDateColumn (h, context, date) {
       class="mb-2"
       key={`${date.date}__date`}
       date={date}
-      selected-date={context.selectedDate}
-      active={context.activeDate === date.date || context.$isMobile}
+      active={context.isColumnActive(date)}
       is-compact={context.isCompact}
       {...{on: listeners}}
     />
@@ -132,6 +131,10 @@ export default {
     window.removeEventListener('paste', this.onPasteEvent)
   },
   methods: {
+    isColumnActive (date) {
+      return this.activeDate === date.date
+        || this.$isMobile
+    },
     goToTodayDate () {
       const today = DateTime.now().toFormat('yyyy-MM-dd')
       const index = this.dates.findIndex(date => date.date === today)

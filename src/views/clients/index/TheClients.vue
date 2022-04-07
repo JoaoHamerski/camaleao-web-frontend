@@ -4,8 +4,8 @@ import { formatPhone } from '@/utils/formatters'
 
 import { GetClients } from '@/graphql/Client.gql'
 
-import TheClientsCard from './TheClientsCard'
-import TheClientsHeader from './TheClientsHeader'
+import TheClientsCard from './TheClientsCard.vue'
+import TheClientsHeader from './TheClientsHeader.vue'
 
 export const clientsParams = {
   query: {},

@@ -1,6 +1,6 @@
 <script>
 import { faUserPlus } from '@fortawesome/free-solid-svg-icons'
-import ClientForm from '../partials/ClientForm'
+import ClientForm from '../partials/ClientForm.vue'
 
 export default {
   components: {

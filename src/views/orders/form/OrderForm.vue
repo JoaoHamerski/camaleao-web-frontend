@@ -6,11 +6,11 @@ import { map, pick } from 'lodash-es'
 import { CreateOrder, UpdateOrder } from '@/graphql/Order.gql'
 import { handleError } from '@/utils/forms'
 
-import OrderFormClient from './OrderFormClient'
-import OrderFormBasicInfo from './OrderFormBasicInfo'
-import OrderFormValues from './OrderFormValues'
-import OrderFormProduction from './OrderFormProduction'
-import OrderFormFiles from './OrderFormFiles'
+import OrderFormClient from './OrderFormClient.vue'
+import OrderFormBasicInfo from './OrderFormBasicInfo.vue'
+import OrderFormValues from './OrderFormValues.vue'
+import OrderFormProduction from './OrderFormProduction.vue'
+import OrderFormFiles from './OrderFormFiles.vue'
 
 export default {
   components: {

@@ -9,8 +9,8 @@ import {
 import { formatCurrencyBRL } from '@/utils/formatters'
 import { TippyComponent } from 'vue-tippy'
 
-import ModalEntryDetails from './ModalEntryDetails'
-import CashFlowLegendType from './CashFlowLegendType'
+import ModalEntryDetails from './ModalEntryDetails.vue'
+import CashFlowLegendType from './CashFlowLegendType.vue'
 
 export default {
   components: {

@@ -1,6 +1,6 @@
 <script>
-import TheHeaderbar from '@/components/Headerbar/TheHeaderbar'
-import TheSidebar from '@/components/Sidebar/TheSidebar'
+import TheHeaderbar from '@/components/Headerbar/TheHeaderbar.vue'
+import TheSidebar from '@/components/Sidebar/TheSidebar.vue'
 
 export default {
   metaInfo: {

@@ -8,7 +8,7 @@ import pasteFilesMixin from '@/mixins/pasteFilesMixin'
 import Form from '@/utils/Form'
 import { CreateExpense, UpdateExpense } from '@/graphql/Expense.gql'
 
-import ViewerItemsCardFile from '@/components/AppViewer/ViewerItemsCardFile'
+import ViewerItemsCardFile from '@/components/AppViewer/ViewerItemsCardFile.vue'
 
 export default {
   components: {

@@ -1,7 +1,7 @@
 <script>
 import { faBox } from '@fortawesome/free-solid-svg-icons'
-import TheProductionUsersCardTable from './TheProductionUsersCardTable'
-import ProductionUsersNavTab from '../partials/ProductionUsersNavTabs'
+import TheProductionUsersCardTable from './TheProductionUsersCardTable.vue'
+import ProductionUsersNavTab from '../partials/ProductionUsersNavTabs.vue'
 
 export default {
   components: {

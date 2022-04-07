@@ -1,6 +1,6 @@
 <script>
 import { faUser, faCalendarAlt, faTshirt } from '@fortawesome/free-solid-svg-icons'
-import OrderListItem from '../OrderListItem'
+import OrderListItem from '../OrderListItem.vue'
 
 export default {
   components: {

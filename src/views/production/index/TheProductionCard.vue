@@ -2,7 +2,7 @@
 import { some } from 'lodash-es'
 import { faBox, faExclamationTriangle } from '@fortawesome/free-solid-svg-icons'
 
-import TheProductionCardTable from './TheProductionCardTable'
+import TheProductionCardTable from './TheProductionCardTable.vue'
 
 export default {
   components: {

@@ -1,8 +1,8 @@
 <script>
 import { GetAuthUserCommissions } from '@/graphql/Production.gql'
 
-import TheProductionCard from './TheProductionCard'
-import TheProductionCardCommission from './TheProductionCardCommission'
+import TheProductionCard from './TheProductionCard.vue'
+import TheProductionCardCommission from './TheProductionCardCommission.vue'
 
 export default {
   metaInfo: {

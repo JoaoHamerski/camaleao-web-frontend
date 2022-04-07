@@ -4,9 +4,9 @@ import { GetBranches } from '@/graphql/Branch.gql'
 import { GetShippingCompanies } from '@/graphql/ShippingCompany.gql'
 import { GetCities } from '@/graphql/City.gql'
 
-import TheBranchesCard from './TheBranchesCard'
-import ModalShippingCompanies from '../partials/ModalShippingCompanies'
-import ModalNewBranch from '../partials/ModalNewBranch'
+import TheBranchesCard from './TheBranchesCard.vue'
+import ModalShippingCompanies from '../partials/ModalShippingCompanies.vue'
+import ModalNewBranch from '../partials/ModalNewBranch.vue'
 
 export default {
   metaInfo: {

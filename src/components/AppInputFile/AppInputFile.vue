@@ -1,6 +1,6 @@
 <script>
-import InputFileButton from './InputFileButton'
-import InputFileDragLabel from './InputFileDragLabel'
+import InputFileButton from './InputFileButton.vue'
+import InputFileDragLabel from './InputFileDragLabel.vue'
 
 const DRAG_STATES = {
   DRAG_LEAVE: 0,

@@ -3,9 +3,9 @@ import { isEmpty } from 'lodash'
 import { faPlus } from '@fortawesome/free-solid-svg-icons'
 import { GetClientWithOrders } from '@/graphql/Client.gql'
 
-import ClientCard from '../partials/ClientCard'
-import ClientOrdersCard from './ClientOrdersCard'
-import ClientOrdersHeader from './ClientOrdersHeader'
+import ClientCard from '../partials/ClientCard.vue'
+import ClientOrdersCard from './ClientOrdersCard.vue'
+import ClientOrdersHeader from './ClientOrdersHeader.vue'
 
 export default {
   metaInfo () {

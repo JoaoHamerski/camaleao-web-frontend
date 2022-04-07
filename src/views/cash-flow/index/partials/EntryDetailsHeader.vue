@@ -1,5 +1,8 @@
 <script>
-import { formatCurrencyBRL, formatDatetime } from '@/utils/formatters'
+import {
+  formatCurrencyBRL,
+  formatDatetime
+} from '@/utils/formatters'
 
 export default {
   props: {

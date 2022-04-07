@@ -3,8 +3,8 @@ import { faPlus } from '@fortawesome/free-solid-svg-icons'
 import { GetSimpleCities } from '@/graphql/City.gql'
 import { states } from '@/graphql/State.gql'
 
-import TheCitiesCard from './TheCitiesCard'
-import NewCityModal from '../partials/NewCityModal'
+import TheCitiesCard from './TheCitiesCard.vue'
+import NewCityModal from '../partials/NewCityModal.vue'
 
 export default {
   metaInfo: {

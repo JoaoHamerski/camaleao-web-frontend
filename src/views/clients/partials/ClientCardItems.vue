@@ -1,6 +1,6 @@
 <script>
-import ClientCardItem from './ClientCardItem'
 import { formatPhone } from '@/utils/formatters'
+import ClientCardItem from './ClientCardItem.vue'
 
 export default {
   components: {

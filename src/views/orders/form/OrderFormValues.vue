@@ -5,7 +5,7 @@ import { formatCurrencyBRL } from '@/utils/formatters'
 import { maskCurrencyBRL, maskInteger } from '@/utils/masks'
 import { GetClothingTypes } from '@/graphql/ClothingType.gql'
 
-import OrderFormValuesFinal from './OrderFormValuesFinal'
+import OrderFormValuesFinal from './OrderFormValuesFinal.vue'
 
 export default {
   components: {

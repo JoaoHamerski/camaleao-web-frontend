@@ -1,6 +1,6 @@
 <script>
 import { faPlus } from '@fortawesome/free-solid-svg-icons'
-import ClothingTypeForm from './ClothingTypeForm'
+import ClothingTypeForm from './ClothingTypeForm.vue'
 
 export default {
   components: {

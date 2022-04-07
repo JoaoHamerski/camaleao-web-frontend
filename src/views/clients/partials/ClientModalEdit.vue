@@ -1,7 +1,7 @@
 <script>
 import { faEdit } from '@fortawesome/free-solid-svg-icons'
 
-import ClientForm from './ClientForm'
+import ClientForm from './ClientForm.vue'
 
 export default {
   components: {

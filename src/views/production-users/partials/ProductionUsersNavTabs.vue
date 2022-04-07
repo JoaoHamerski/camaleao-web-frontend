@@ -1,6 +1,6 @@
 <script>
 
-import { OPTIONS } from '../index/TheProductionUsers'
+import { OPTIONS } from '../index/TheProductionUsers.vue'
 
 export default {
   data () {

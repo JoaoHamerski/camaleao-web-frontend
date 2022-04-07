@@ -4,8 +4,8 @@ import { CreateShippingCompany } from '@/graphql/ShippingCompany.gql'
 import { handleError } from '@/utils/forms'
 import Form from '@/utils/Form'
 
-import ModalShippingCompaniesTable from './ModalShippingCompaniesTable'
-import ModalShippingCompaniesDelete from './ModalShippingCompaniesDelete'
+import ModalShippingCompaniesTable from './ModalShippingCompaniesTable.vue'
+import ModalShippingCompaniesDelete from './ModalShippingCompaniesDelete.vue'
 
 export default {
   components: {

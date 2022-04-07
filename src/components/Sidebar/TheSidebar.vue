@@ -5,9 +5,9 @@ import sidebarItems from './sidebar-items'
 import { kebabCase, map } from 'lodash-es'
 import { mapGetters, mapActions } from 'vuex'
 
-import SidebarItem from './SidebarItem'
-import SidebarHeader from './SidebarHeader'
-import SidebarItemCollapsible from './SidebarItemCollapsible'
+import SidebarItem from './SidebarItem.vue'
+import SidebarHeader from './SidebarHeader.vue'
+import SidebarItemCollapsible from './SidebarItemCollapsible.vue'
 
 function renderSidebarNormalItem (h, context, item) {
   const id = kebabCase(item.title)

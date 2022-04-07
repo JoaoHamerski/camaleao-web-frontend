@@ -3,7 +3,7 @@ import { formatBytes } from '@/utils/formatters'
 import { truncate } from 'lodash-es'
 import filesMixin from '@/mixins/filesMixin'
 import pasteFilesMixin from '@/mixins/pasteFilesMixin'
-import OrderFormFilesModal from './OrderFormFilesModal'
+import OrderFormFilesModal from './OrderFormFilesModal.vue'
 
 const VALID_TYPES = {
   art_paths: 'image',

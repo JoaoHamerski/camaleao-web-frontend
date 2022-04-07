@@ -5,7 +5,7 @@ import {
 } from '@fortawesome/free-solid-svg-icons'
 import { isEmpty } from 'lodash-es'
 
-import PendenciesModal from './partials/PendenciesModal'
+import PendenciesModal from './partials/PendenciesModal.vue'
 
 export default {
   components: {

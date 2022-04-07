@@ -1,6 +1,6 @@
 <script>
 import { isEmpty } from 'lodash-es'
-import CommissionDetails from '@/views/production/partials/CommissionDetails'
+import CommissionDetails from '@/views/production/partials/CommissionDetails.vue'
 
 export default {
   components: {

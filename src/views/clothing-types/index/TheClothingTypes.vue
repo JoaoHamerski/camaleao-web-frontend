@@ -2,10 +2,10 @@
 import { faPlus, faTshirt } from '@fortawesome/free-solid-svg-icons'
 import { GetClothingTypes } from '@/graphql/ClothingType.gql'
 
-import TheClothingTypesCard from './TheClothingTypesCard'
-import ModalNewClothingType from '../partials/ModalNewClothingType'
-import ModalEditClothingType from '../partials/ModalEditClothingType'
-import ModalPrintCommission from '../partials/ModalPrintCommission'
+import TheClothingTypesCard from './TheClothingTypesCard.vue'
+import ModalNewClothingType from '../partials/ModalNewClothingType.vue'
+import ModalEditClothingType from '../partials/ModalEditClothingType.vue'
+import ModalPrintCommission from '../partials/ModalPrintCommission.vue'
 
 export default {
   metaInfo: {

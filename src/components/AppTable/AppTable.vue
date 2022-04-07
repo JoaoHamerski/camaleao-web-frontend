@@ -2,8 +2,8 @@
 import { get, map } from 'lodash'
 import classNames from 'classnames'
 
-import TableCell from './TableCell'
-import TableEmpty from './TableEmpty'
+import TableCell from './TableCell.vue'
+import TableEmpty from './TableEmpty.vue'
 
 const tableHeadContent = (h, context, header) => {
   if (!context.hasSlot(`headers.${header.value}`)) {

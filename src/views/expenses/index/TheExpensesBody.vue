@@ -12,8 +12,8 @@ import {
 
 import Vue from 'vue'
 import VueViewer from 'v-viewer'
-import ModalExpensesDelete from './modals/ModalExpensesDelete'
-import ModalExpensesEdit from './modals/ModalExpensesEdit'
+import ModalExpensesDelete from './modals/ModalExpensesDelete.vue'
+import ModalExpensesEdit from './modals/ModalExpensesEdit.vue'
 import { config as viewerConfig } from '@/components/AppViewer/AppViewer'
 
 Vue.use(VueViewer)

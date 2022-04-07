@@ -1,6 +1,6 @@
 <script>
 import { faPlus } from '@fortawesome/free-solid-svg-icons'
-import DailyPaymentForm from './DailyPaymentForm'
+import DailyPaymentForm from './DailyPaymentForm.vue'
 
 export default {
   components: {

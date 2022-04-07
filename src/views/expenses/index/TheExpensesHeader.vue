@@ -2,7 +2,7 @@
 import roles from '@/constants/roles'
 import { faPlus, faList, faSearch } from '@fortawesome/free-solid-svg-icons'
 
-import ModalExpensesNew from './modals/ModalExpensesNew'
+import ModalExpensesNew from './modals/ModalExpensesNew.vue'
 
 export default {
   components: {

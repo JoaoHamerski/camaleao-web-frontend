@@ -1,7 +1,7 @@
 <script>
 import { faPlus } from '@fortawesome/free-solid-svg-icons'
 
-import CityForm from './CityForm'
+import CityForm from './CityForm.vue'
 
 export default {
   components: {

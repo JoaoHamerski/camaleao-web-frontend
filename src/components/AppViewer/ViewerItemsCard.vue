@@ -1,11 +1,11 @@
 <script>
 import { has } from 'lodash-es'
-
 import { faTrash } from '@fortawesome/free-solid-svg-icons'
 import { formatBytes } from '@/utils/formatters'
 import viewerMixin from './viewerMixin'
-import ViewerFileModal from './ViewerFileModal'
-import ViewerItemsCardFile from './ViewerItemsCardFile'
+
+import ViewerFileModal from './ViewerFileModal.vue'
+import ViewerItemsCardFile from './ViewerItemsCardFile.vue'
 
 export default {
   components: {

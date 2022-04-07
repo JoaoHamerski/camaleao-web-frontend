@@ -1,7 +1,10 @@
 <script>
-import { faHandHoldingUsd, faExclamationCircle } from '@fortawesome/free-solid-svg-icons'
+import {
+  faHandHoldingUsd,
+  faExclamationCircle
+} from '@fortawesome/free-solid-svg-icons'
 import { formatDatetime } from '@/utils/formatters'
-import EntryDetailsHeader from './EntryDetailsHeader'
+import EntryDetailsHeader from './EntryDetailsHeader.vue'
 
 export default {
   components: {

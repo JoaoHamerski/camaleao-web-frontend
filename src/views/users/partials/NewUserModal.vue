@@ -1,7 +1,7 @@
 <script>
 import { faUserPlus } from '@fortawesome/free-solid-svg-icons'
 
-import NewUserForm from './NewUserForm'
+import NewUserForm from './NewUserForm.vue'
 
 export default {
   components: {

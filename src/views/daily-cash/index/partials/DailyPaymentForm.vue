@@ -7,8 +7,8 @@ import { handleSuccess, handleError } from '@/utils/forms'
 
 import { vias } from '@/graphql/Via.gql'
 import { GetPayments, CreateDailyPayment } from '@/graphql/Payment.gql'
-import DailyPaymentFormClient from './DailyPaymentFormClient'
-import DailyPaymentFormOrder from './DailyPaymentFormOrder'
+import DailyPaymentFormClient from './DailyPaymentFormClient.vue'
+import DailyPaymentFormOrder from './DailyPaymentFormOrder.vue'
 
 export default {
   apollo: {
