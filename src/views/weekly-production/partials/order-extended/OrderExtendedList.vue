@@ -70,7 +70,7 @@ export default {
     </OrderListItem>
     <OrderListItem
       v-if="order.quantity"
-      v-tippy="{placement: 'bottom'}"
+      v-tippy="{placement: $isMobile ? 'bottom' : 'right'}"
       :icon="icons.faTshirt"
       content="Quantidade"
       class="fw-bold border-x-0"

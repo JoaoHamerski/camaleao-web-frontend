@@ -3,12 +3,12 @@ import { faBoxes } from '@fortawesome/free-solid-svg-icons'
 import { GetOrdersSimplified } from '@/graphql/Order.gql'
 import { QUERIES } from './constants'
 
-import FilterGeneralReportCard from './partials/FilterGeneralReportCard'
-import FilterProductionDateReportCard from './partials/FilterProductionDateReportCard'
-import FilterSortButtons from './partials/FilterSortButtons'
-import FilterSearchInput from './partials/FilterSearchInput'
-import TheOrdersTable from './TheOrdersTable'
-import OrdersQuestionIconTippy from '@/views/orders/partials/OrdersQuestionIconTippy'
+import TheOrdersTable from './TheOrdersTable.vue'
+import FilterSearchInput from './partials/FilterSearchInput.vue'
+import FilterSortButtons from './partials/FilterSortButtons.vue'
+import FilterGeneralReportCard from './partials/FilterGeneralReportCard.vue'
+import OrdersQuestionIconTippy from '@/views/orders/partials/OrdersQuestionIconTippy.vue'
+import FilterProductionDateReportCard from './partials/FilterProductionDateReportCard.vue'
 
 export default {
   components: {
@@ -139,7 +139,7 @@ export default {
 
     <AppCard :has-body-padding="false">
       <template #header>
-        <div class="d-flex justify-content-between">
+        <div class="d-flex justify-content-between align-items-baseline">
           <h6 class="fw-bold mb-0">
             <FontAwesomeIcon
               :icon="icons.faBoxes"
