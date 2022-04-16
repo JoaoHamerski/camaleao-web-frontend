@@ -91,6 +91,7 @@ export default {
 
   &.card {
     .card-header {
+      word-break: break-all;
       padding: .5rem 1rem;
     }
 

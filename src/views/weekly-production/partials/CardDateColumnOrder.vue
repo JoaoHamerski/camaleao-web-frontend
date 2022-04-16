@@ -65,7 +65,8 @@ export default {
 
     @include media-breakpoint-up (sm) {
       &.active {
-        width: 25%;
+        max-width: 25%;
+        min-width: 25%;
       }
     }
 
@@ -76,7 +77,8 @@ export default {
 
   &.card-production-wrapper.card-compact {
     &.active {
-      width: 20%;
+      max-width: 20%;
+      min-width: 20%;
     }
 
     .card {

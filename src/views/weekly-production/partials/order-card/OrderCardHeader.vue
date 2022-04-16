@@ -71,10 +71,12 @@ export default {
     :class="!isExpanded && 'text-center'"
   >
     <a
+      v-if="orderUrl"
       :href="orderUrl"
       target="_blank"
       class="stretched-link"
     />
+
     <FontAwesomeIcon
       v-show="isExpanded"
       :icon="icons.faBoxOpen"
