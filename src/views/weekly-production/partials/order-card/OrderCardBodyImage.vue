@@ -1,26 +1,34 @@
 <script>
-import { faImage } from '@fortawesome/free-solid-svg-icons'
+import OrderCardBodyImageEmpty from './OrderCardBodyImageEmpty.vue'
 import VueLoadImage from 'vue-load-image'
 
 export default {
   components: {
-    VueLoadImage
+    VueLoadImage,
+    OrderCardBodyImageEmpty
   },
   props: {
-    orderImage: {
-      type: String,
-      default: ''
+    order: {
+      type: Object,
+      required: true
     }
   },
-  data () {
-    return {
-      icons: {
-        faImage
+  computed: {
+    orderImage () {
+      if (this.order.art_paths) {
+        return this.order.art_paths[0]
       }
-    }
+
+      if (this.order.isPreCreated) {
+        return this.order.image.base64
+      }
+
+      return null
+    },
   }
 }
 </script>
+
 <template>
   <div class="img-thumbnail border-0">
     <AppViewer v-if="orderImage">
@@ -29,7 +37,7 @@ export default {
           slot="image"
           class="img-fluid clickable"
           :src="orderImage"
-          alt=""
+          alt="Imagem da arte"
         >
         <div
           slot="preloader"
@@ -39,19 +47,6 @@ export default {
         </div>
       </VueLoadImage>
     </AppViewer>
-    <div
-      v-else
-      class="text-center text-secondary"
-    >
-      <div>
-        <FontAwesomeIcon
-          :icon="icons.faImage"
-          size="5x"
-        />
-      </div>
-      <div class="small">
-        SEM IMAGEM
-      </div>
-    </div>
+    <OrderCardBodyImageEmpty v-else />
   </div>
 </template>

@@ -24,46 +24,6 @@ export default {
 
       return null
     },
-    clientUrl () {
-      if (!this.order.client) {
-        return null
-      }
-
-      const resolvedRoute = this.$router.resolve({
-        name: 'clients.show',
-        params: {
-          clientKey: this.order.client.id
-        }
-      })
-
-      return resolvedRoute.href
-    },
-    orderUrl () {
-      if (this.order.isPreCreated) {
-        return null
-      }
-
-      if (!this.order.client) {
-        const resolvedRoute = this.$router.resolve({
-          name: 'orders.show.pre-registered',
-          params: {
-            orderKey: this.order.id
-          }
-        })
-
-        return resolvedRoute.href
-      }
-
-      const resolvedRoute = this.$router.resolve({
-        name: 'orders.show',
-        params: {
-          clientKey: this.order.client.id,
-          orderKey: this.order.id
-        }
-      })
-
-      return resolvedRoute.href
-    },
     orderTitle () {
       if (this.order.code) {
         return this.order.code

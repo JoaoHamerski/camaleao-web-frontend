@@ -1,16 +1,9 @@
 <script>
-const OrderSimplified = () => import(
-  /* webpackPrefetch: true */
-  './order-simplified/OrderSimplified.vue'
-)
-
-const OrderExtended = () =>  import(
-  /* webpackPrefetch: true */
-  './order-extended/OrderExtended.vue'
-)
+import OrderCard from './order-card/OrderCard.vue'
 
 export default {
   components: {
+    OrderCard,
     OrderCreateCard: () => import('./OrderCreateCard.vue')
   },
   props: {
@@ -54,8 +47,8 @@ export default {
       v-on="$listeners"
     />
 
-    <Component
-      :is="getOrderCardComponent"
+    <OrderCard
+      v-else
       :key="`order__${order.id}`"
       v-bind="$props"
       v-on="$listeners"
@@ -69,6 +62,7 @@ export default {
 ::v-deep {
   &.card-production-wrapper {
     transition: width .15s, font-size .15s;
+
     @include media-breakpoint-up (sm) {
       &.active {
         width: 25%;
@@ -85,27 +79,23 @@ export default {
       width: 20%;
     }
 
-    .list-group-item {
-      font-size: .82rem;
-    }
+    .card {
+      .card-header {
+        font-size: .85rem;
+      }
 
-    .card-header {
-      font-size: .9rem;
-    }
+      .card-body {
+        .list-group {
+          .list-group-item {
+            padding: .3rem .7rem;
+            font-size: .8rem;
+          }
+        }
+      }
 
-    .btn {
-      font-size: .85rem;
-    }
-  }
-
-  .list-group {
-    .list-group-item {
-      border: 1px solid  lighten($secondary, 40%);
-      border-top: 0;
-    }
-
-    .list-group-item:last-child {
-      border-radius: 0 0 .15rem .15rem;
+      .btn {
+        font-size: .85rem;
+      }
     }
   }
 }

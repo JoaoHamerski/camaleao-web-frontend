@@ -229,6 +229,20 @@ export const clearCacheFrom = (payload) => {
   apolloClient.cache.gc()
 }
 
+export const plural = (value, gender = 'M', word, wordPlural = null) => {
+  const pronoun = gender.toLocaleLowerCase() === 'm'
+    ? 'nenhum'
+    : 'nenhuma'
+
+  if (value === null || value === 0) {
+    return `${pronoun} ${word}`
+  }
+
+  return value !== 1
+    ? `${value} ${wordPlural || word + 's'}`
+    : `${value} ${word}`
+}
+
 export default {
   fallback,
   toBRL,
@@ -242,5 +256,6 @@ export default {
   redirectTo,
   getUrl,
   replaceStrArray,
-  clearCacheFrom
+  clearCacheFrom,
+  plural
 }
