@@ -72,7 +72,7 @@ export default {
   <div>
     <div class="d-flex justify-content-between mb-2">
       <div class="d-flex flex-column flex-sm-row mx-auto mx-sm-0 col">
-        <div class="col-2">
+        <div class="col col-sm-2 text-center">
           <AppInputFile
             v-if="$helpers.canView(
               roles.GERENCIA,
@@ -87,7 +87,7 @@ export default {
             @input="onImageInput"
           />
         </div>
-        <div class="col-5">
+        <div class="col col-sm-5">
           <div class="app-input-group">
             <AppButton
               v-if="$helpers.canView(
@@ -110,7 +110,7 @@ export default {
               v-model="selectedStatus"
               remove-default-margin
               name="status"
-              class="col-5"
+              class="col-5 flex-grow-1"
               value-prop="id"
               label-prop="text"
               placeholder="Todos"
