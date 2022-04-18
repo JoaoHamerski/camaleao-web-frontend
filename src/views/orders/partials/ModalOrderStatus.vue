@@ -1,7 +1,7 @@
 <script>
 import { faExchangeAlt } from '@fortawesome/free-solid-svg-icons'
 
-import { status } from '@/graphql/Status.gql'
+import { GetStatus } from '@/graphql/Status.gql'
 import { UpdateOrder } from '@/graphql/Order.gql'
 
 import { handleError, handleSuccess } from '@/utils/forms'
@@ -9,7 +9,7 @@ import { handleError, handleSuccess } from '@/utils/forms'
 export default {
   apollo: {
     status: {
-      query: status
+      query: GetStatus
     }
   },
   props: {

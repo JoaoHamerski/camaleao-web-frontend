@@ -2,7 +2,7 @@
 import { faClipboardList } from '@fortawesome/free-solid-svg-icons'
 import { maskDate } from '@/utils/masks'
 import { GetCities } from '@/graphql/City.gql'
-import { status } from '@/graphql/Status.gql'
+import { GetStatus } from '@/graphql/Status.gql'
 import { GetOrdersReport } from '@/graphql/Order.gql'
 import Form from '@/utils/Form'
 
@@ -12,7 +12,7 @@ export default {
       query: GetCities
     },
     status: {
-      query: status
+      query: GetStatus
     }
   },
   data () {
