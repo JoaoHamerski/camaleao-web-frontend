@@ -15,7 +15,8 @@ import {
   faTshirt,
   faUser,
   faListAlt,
-  faSignOutAlt
+  faSignOutAlt,
+  faCheckCircle
 } from '@fortawesome/free-solid-svg-icons'
 
 const ITEMS = {
@@ -87,7 +88,8 @@ const ITEMS = {
         this.USUARIOS,
         this.CIDADES,
         this.FILIAIS,
-        this.TIPOS_DE_ROUPAS
+        this.TIPOS_DE_ROUPAS,
+        this.STATUS
       ]
     },
     USUARIOS: {
@@ -112,6 +114,12 @@ const ITEMS = {
       title: 'Tipos de roupas',
       icon: faTshirt,
       route: { name: 'clothing-types.index' },
+      condition: () => canView(ROLES.GERENCIA)
+    },
+    STATUS: {
+      title: 'Status',
+      icon: faCheckCircle,
+      route: { name: 'status.index' },
       condition: () => canView(ROLES.GERENCIA)
     }
   },
