@@ -37,3 +37,34 @@ select[disabled="disabled"] {
 .animate__even-faster {
   animation-duration: .1s !important;
 }
+
+.app-input-group {
+  display: flex;
+  flex-direction: row;
+  flex-grow: 1;
+  align-content: stretch;
+
+  >* {
+    &:first-child {
+
+      &:is(select, button, input),
+      :is(select, button, input) {
+        border-bottom-right-radius: 0;
+        border-top-right-radius: 0;
+      }
+    }
+
+    &:not(:first-child, :last-child) {
+      border-radius: 0;
+    }
+
+    &:last-child {
+
+      &:is(select, button, input),
+      :is(select, button, input) {
+        border-top-left-radius: 0;
+        border-bottom-left-radius: 0;
+      }
+    }
+  }
+}
