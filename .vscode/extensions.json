@@ -8,7 +8,6 @@
         "aaron-bond.better-comments",
         "editorconfig.editorconfig",
         "syler.sass-indented",
-        "octref.vetur",
-        "christian-kohler.npm-intellisense"
+        "octref.vetur"
     ]
 }
