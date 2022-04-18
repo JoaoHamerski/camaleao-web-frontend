@@ -174,8 +174,8 @@ query GetOrdersByProductionDate ($input: OrdersReportProductionDateInput!) {
   ordersReportProductionDate (input: $input)
 }
 
-query GetOrdersWeeklyProductionReport ($date: String!) {
-  ordersWeeklyProductionReport (date: $date)
+query GetOrdersWeeklyProductionReport ($input: OrdersWeeklyProductionReport!) {
+  ordersWeeklyProductionReport (input: $input)
 }
 
 mutation UpdateOrder ($id: ID! $input: OrderInput!) {

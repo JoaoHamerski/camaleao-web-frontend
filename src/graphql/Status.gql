@@ -1,6 +1,6 @@
-query status {
+query GetStatus {
   status {
-    id 
+    id
     text
   }
 }
