@@ -2,5 +2,34 @@ query GetStatus {
   status {
     id
     text
+    is_available
+  }
+}
+
+mutation CreateStatus ($input: StatusInput!) {
+  statusCreate (input: $input) {
+    id
+  }
+}
+
+mutation UpdateStatus ($id: ID! $input: StatusInput!) {
+  statusUpdate (id: $id input: $input) {
+    id
+    text
+    is_available
+  }
+}
+
+mutation DeleteStatus ($id: ID! $input: StatusDeleteInput!) {
+  statusDelete(id: $id input: $input) {
+    id
+  }
+}
+
+mutation SetAvailableStatus ($ids: [ID]) {
+  statusSetAvailable (ids: $ids) {
+    id
+    text
+    is_available
   }
 }
