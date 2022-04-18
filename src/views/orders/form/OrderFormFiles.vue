@@ -31,12 +31,12 @@ export default {
       VALID_TYPES,
       maxFileSize: 1048576,
       modal: false,
-      transferedItems: [],
+      transferredItems: [],
       pasteEnabled: false
     }
   },
   watch: {
-    transferedItems (items) {
+    transferredItems (items) {
       if (items.length === 0) {
         this.modal = false
       }
@@ -52,7 +52,7 @@ export default {
     formatBytes,
     truncate,
     afterPaste (pastedFiles) {
-      this.transferedItems = pastedFiles
+      this.transferredItems = pastedFiles
       this.modal = true
     },
     async onFileSelected (fileList, field) {
@@ -65,7 +65,7 @@ export default {
     },
     onTransferToField (field) {
       const files = this.getOnlyValidFiles(
-        this.transferedItems,
+        this.transferredItems,
         VALID_TYPES[field]
       )
 
@@ -74,7 +74,7 @@ export default {
       })
 
       this.modal = false
-      this.transferedItems = []
+      this.transferredItems = []
     },
     onFileDelete (fileKey, field) {
       this.$emit('delete-file', {
@@ -82,14 +82,14 @@ export default {
       })
     },
     onCancel () {
-      this.transferedItems = []
+      this.transferredItems = []
     },
     onModalDeleteFile (key) {
-      const index = this.transferedItems.findIndex(
+      const index = this.transferredItems.findIndex(
         item => item.key === key
       )
 
-      this.transferedItems.splice(index, 1)
+      this.transferredItems.splice(index, 1)
     }
   }
 }
@@ -105,7 +105,7 @@ export default {
       <OrderFormFilesModal
         v-model="modal"
         :max-file-size="maxFileSize"
-        :items="transferedItems"
+        :items="transferredItems"
         @cancel="onCancel"
         @transfer-to-field="onTransferToField"
         @delete-file="onModalDeleteFile"
