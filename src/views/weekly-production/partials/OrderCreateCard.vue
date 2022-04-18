@@ -8,7 +8,7 @@ import {
   CreatePreRegisteredOrder,
   GetWeeklyProductionOrders
 } from '@/graphql/WeeklyProduction.gql'
-import { status } from '@/graphql/Status.gql'
+import { GetStatus } from '@/graphql/Status.gql'
 
 export default {
   props: {
@@ -19,7 +19,7 @@ export default {
   },
   apollo: {
     status: {
-      query: status
+      query: GetStatus
     }
   },
   data () {

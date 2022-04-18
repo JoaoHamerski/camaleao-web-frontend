@@ -1,7 +1,7 @@
 <script>
 import { faBoxOpen } from '@fortawesome/free-solid-svg-icons'
 const ORDER_TITLES = {
-  PRE_REGISTERED: 'PRÉ REGISTRO',
+  PRE_REGISTERED: 'PRÉ-REGISTRO',
   PRE_CREATED: 'FALTA CADASTRAR'
 }
 

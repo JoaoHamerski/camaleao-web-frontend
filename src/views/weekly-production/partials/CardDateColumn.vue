@@ -1,22 +1,22 @@
 <script>
 import roles from '@/constants/roles'
-import { faUpload, faTshirt, faFilePdf } from '@fortawesome/free-solid-svg-icons'
-import { GetOrdersWeeklyProductionReport } from '@/graphql/Order.gql'
-
-import { formatDatetime } from '@/utils/formatters'
-import { DateTime } from 'luxon'
 import filesMixin from '@/mixins/filesMixin'
 
 import CardDateColumnOrder from './CardDateColumnOrder.vue'
+import CardDateColumnHeader from './CardDateColumHeader.vue'
+import CardDateColumnSubHeader from './CardDateColumnSubHeader.vue'
 
-const DRAG_STATES = {
+export const DRAG_STATES = {
   DRAG_LEAVE: 0,
   DRAG_ENTER: 1
 }
 
 export default {
   components: {
-    CardDateColumnOrder
+    CardDateColumnOrder,
+    CardDateColumnHeader,
+    CardDateColumnDragged: () => import('./CardDateColumnDragged.vue'),
+    CardDateColumnSubHeader
   },
   mixins: [filesMixin],
   props: {
@@ -39,39 +39,28 @@ export default {
   },
   data () {
     return {
-      DateTime,
       DRAG_STATES,
-      dragState: DRAG_STATES.DRAG_LEAVE,
-      compactMode: false,
-      roles,
-      isReportLoading: false,
-      icons: {
-        faUpload,
-        faTshirt,
-        faFilePdf
-      }
+      dragState: DRAG_STATES.DRAG_LEAVE
     }
   },
   computed: {
-    isDateToday () {
-      return this.date.date === DateTime.now().toISODate()
-    },
-    cardHeaderClasses () {
-      const hasBgClickable = !this.$isMobile
-      const classMiddleFix = hasBgClickable ? '-link-' : '-'
-      return [
-        this.isDateToday ? `bg${classMiddleFix}success` : `bg${classMiddleFix}primary`,
-        !this.$isMobile && 'clickable'
-      ]
+    hasOrders () {
+      return this.date.orders.length
     }
   },
   methods: {
     onCompactModeChange (value) {
       this.$emit('is-compact:update', value)
     },
-    async onImageUploaded (fileList) {
+    onHeaderClicked({date, active}) {
+      this.$emit('change-state', {date, active})
+    },
+    onDragStateChanged(state) {
+      this.dragState = state
+    },
+    async onImageUploaded (event) {
       try {
-        const files = await this.getBase64Files(fileList)
+        const files = await this.getBase64Files(event)
         const validFiles = this.getOnlyValidFiles(files, ['image'])
         const file = validFiles[0]
 
@@ -83,23 +72,6 @@ export default {
       } catch (error) {
         this.$toast.error('Ops! Algo deu errado, tente novamente.')
       }
-    },
-    onCardHeaderClick (event) {
-      if (this.$isMobile) {
-        event.preventDefault()
-      }
-
-      this.$emit('change-state', {
-        date: this.date.date,
-        active: !this.active
-      })
-    },
-    formatDate (date) {
-      if (this.active) {
-        return formatDatetime(date, 'dd/MM - EEEE')
-      }
-
-      return formatDatetime(date, 'dd/MM - EEE')
     },
     onCancelCreate (order) {
       this.$emit('cancel-create', order)
@@ -122,25 +94,6 @@ export default {
       if (this.$helpers.canView(roles.GERENCIA, roles.ATENDIMENTO, roles.DESIGN)) {
         this.dragState = DRAG_STATES.DRAG_ENTER
       }
-    },
-    async onWeeklyProductionReportClick () {
-      const date = this.date.date
-
-      this.isReportLoading = true
-
-      try {
-        const { data: {ordersWeeklyProductionReport: src } } = await this.$apollo.query({
-          query: GetOrdersWeeklyProductionReport,
-          variables: { date },
-          fetchPolicy: 'network-only'
-        })
-
-        this.$emit('report-generated', src)
-      } catch (error) {
-        this.$toast.error('Ops! Algo deu errado, tente novamente!')
-      }
-
-      this.isReportLoading = false
     }
   }
 }
@@ -154,104 +107,35 @@ export default {
     <div
       class="card"
     >
+      <CardDateColumnHeader
+        v-bind="{ date, active }"
+        @header-clicked="onHeaderClicked"
+      />
+
+      <CardDateColumnDragged
+        v-if="dragState === DRAG_STATES.DRAG_ENTER"
+        @drag-state-changed="onDragStateChanged"
+        @file-drop="onFileDrop"
+      />
+
       <div
-        class="card-header text-white text-center py-1"
-        :class="cardHeaderClasses"
-        @click.prevent="onCardHeaderClick"
-      >
-        <div class="text-uppercase fw-bold">
-          {{ formatDate(date.date) }}
-        </div>
-        <div class="small">
-          <FontAwesomeIcon
-            :icon="icons.faTshirt"
-            fixed-width
-          />
-          {{
-            !date.total_quantity
-              ? 'Nenhuma peça'
-              : `${date.total_quantity} peças`
-          }}
-        </div>
-      </div>
-      <div
-        v-show="dragState === DRAG_STATES.DRAG_ENTER"
-        class="card-body position-relative"
-        @dragover.prevent.stop="dragState = DRAG_STATES.DRAG_ENTER"
-        @dragleave.prevent.stop="dragState = DRAG_STATES.DRAG_LEAVE"
-        @drop.prevent.stop="onFileDrop"
-      >
-        <div class="pointer-events-none text-center text-success">
-          <div
-            class="my-4"
-            :class="active && 'my-5 py-5'"
-          >
-            <FontAwesomeIcon
-              :icon="icons.faUpload"
-              size="2x"
-            />
-            <div class="mt-2 fw-bold">
-              SOLTE AQUI
-            </div>
-          </div>
-        </div>
-      </div>
-      <div
-        v-show="dragState === DRAG_STATES.DRAG_LEAVE"
+        v-else
         class="card-body px-2"
         :class="active && 'row gx-2'"
         @dragenter.prevent.stop="onDragOverCard"
       >
-        <div
-          v-if="active"
-          class="d-flex justify-content-between mb-2"
-        >
-          <div class="d-flex flex-column flex-sm-row mx-auto mx-sm-0">
-            <AppInputFile
-              v-if="$helpers.canView(
-                roles.GERENCIA,
-                roles.ATENDIMENTO,
-                roles.DESIGN
-              )"
-              id="orderImage"
-              :default-margin="false"
-              :disable-input-area="true"
-              accept="image/*"
-              class="mb-2 mb-sm-0"
-              @input="onImageUploaded"
-            />
-            <AppButton
-              v-if="$helpers.canView(
-                roles.GERENCIA,
-                roles.ATENDIMENTO,
-                roles.DESIGN,
-                roles.COSTURA,
-                roles.ESTAMPA
-              )"
-              class="ms-0 ms-sm-2"
-              :icon="icons.faFilePdf"
-              btn-class="fw-bold"
-              :loading="isReportLoading"
-              @click.prevent="onWeeklyProductionReportClick"
-            >
-              Gerar relatório
-            </AppButton>
-          </div>
-          <div v-if="!$isMobile">
-            <AppCheckboxSwitch
-              id="compact_mode"
-              :value="isCompact"
-              @input="onCompactModeChange"
-            >
-              Modo compacto
-            </AppCheckboxSwitch>
-          </div>
-        </div>
+        <CardDateColumnSubHeader
+          v-show="active"
+          v-bind="{ date, isCompact }"
+          @compact-mode-changed="onCompactModeChange"
+          @input-image="onImageUploaded"
+          @report-generated="$emit('report-generated', $event)"
+        />
 
-        <template v-if="date.orders.length">
+        <template v-if="hasOrders">
           <CardDateColumnOrder
             v-for="order in date.orders"
-            :key="`order-${order.id}`"
+            :key="`order__${order.id}`"
             :order="order"
             :is-active="active"
             :is-compact="isCompact"
@@ -259,13 +143,16 @@ export default {
             @order-created="onOrderCreated"
           />
         </template>
-        <small
+        <span
           v-else
           class="d-block text-center text-secondary py-3"
-          :class="active && 'py-5 my-5'"
+          :class="{
+            'py-5 my-5 h6': active,
+            'small': !active
+          }"
         >
           SEM PEDIDOS
-        </small>
+        </span>
       </div>
     </div>
   </div>
@@ -341,8 +228,7 @@ export default {
     width: 6px;
   }
 
-  .card-body::-webkit-scrollbar-thumb
-  {
+  .card-body::-webkit-scrollbar-thumb {
     border-radius: 3rem;
     border: 1px solid lighten($primary, 40%);
     background-color: $primary;
@@ -365,5 +251,4 @@ export default {
     }
   }
 }
-
 </style>

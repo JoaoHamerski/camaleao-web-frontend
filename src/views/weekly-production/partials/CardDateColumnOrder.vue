@@ -61,12 +61,13 @@ export default {
 
 ::v-deep {
   &.card-production-wrapper {
-    transition: width .15s, font-size .15s;
+    &, .list-group-item, .card-header {
+      transition: width .05s, font-size .05s;
+    }
 
     @include media-breakpoint-up (sm) {
       &.active {
-        max-width: 25%;
-        min-width: 25%;
+        width: 25%;
       }
     }
 
@@ -77,8 +78,7 @@ export default {
 
   &.card-production-wrapper.card-compact {
     &.active {
-      max-width: 20%;
-      min-width: 20%;
+      width: 20%;
     }
 
     .card {
