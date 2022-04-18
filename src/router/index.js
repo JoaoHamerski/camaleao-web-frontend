@@ -25,6 +25,7 @@ import productionUsersRoutes from '@/views/production-users/routes'
 import myAccountRoutes from '@/views/my-account/routes'
 import weeklyProductionRoutes from '@/views/weekly-production/routes'
 import activitiesRoutes from '@/views/activities/routes'
+import statusRoutes from '@/views/status/routes'
 
 import ErrorNotFound from '@/views/_errors/ErrorNotFound.vue'
 
@@ -77,6 +78,7 @@ const routes = [
   ...productionUsersRoutes,
   ...usersRoutes,
   ...weeklyProductionRoutes,
+  ...statusRoutes
 ]
 
 if (process.env.NODE_ENV === 'development') {
