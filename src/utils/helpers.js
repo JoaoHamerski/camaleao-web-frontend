@@ -243,6 +243,13 @@ export const plural = (value, gender = 'M', word, wordPlural = null) => {
     : `${value} ${word}`
 }
 
+export const openInNewTab = (href) => {
+  Object.assign(document.createElement('a'), {
+    target: '_blank',
+    href: href,
+  }).click();
+}
+
 export default {
   fallback,
   toBRL,
@@ -257,5 +264,6 @@ export default {
   getUrl,
   replaceStrArray,
   clearCacheFrom,
-  plural
+  plural,
+  openInNewTab
 }

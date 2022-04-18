@@ -57,7 +57,7 @@ export default {
 
         const { data: { ordersWeeklyProductionReport: src} } = data
 
-        this.$emit('report-generated', src)
+        this.$helpers.openInNewTab(src)
       } catch (error) {
         this.$toast.error('Ops! Algo deu errado, tente novamente!')
       }

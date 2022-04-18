@@ -129,7 +129,6 @@ export default {
           v-bind="{ date, isCompact }"
           @compact-mode-changed="onCompactModeChange"
           @input-image="onImageUploaded"
-          @report-generated="$emit('report-generated', $event)"
         />
 
         <template v-if="hasOrders">
