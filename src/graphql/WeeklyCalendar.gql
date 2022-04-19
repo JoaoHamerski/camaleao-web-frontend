@@ -1,5 +1,5 @@
-query GetWeeklyProductionOrders ($date: String!) {
-  weeklyProduction (date: $date) {
+query GetWeeklyCalendarOrders ($date: String! $field: QueryFromDateColumns!) {
+  weeklyCalendar (date: $date field: $field) {
     date
     total_quantity
     orders {

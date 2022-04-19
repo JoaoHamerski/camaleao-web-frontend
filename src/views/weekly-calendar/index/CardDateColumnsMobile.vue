@@ -1,5 +1,5 @@
 <script>
-import { renderCardDateColumn } from './TheWeeklyProductionBody.vue'
+import { renderCardDateColumn } from './WeeklyCalendarBody.vue'
 import { Carousel, Slide } from 'vue-carousel'
 import { DateTime } from 'luxon'
 

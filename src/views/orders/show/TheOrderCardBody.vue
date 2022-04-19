@@ -101,11 +101,17 @@ export default {
           </div>
         </div>
 
-        <div class="mt-3 d-flex justify-content-between">
+        <div class="mt-3 d-flex flex-column flex-sm-row justify-content-between">
           <div>
-            <b class="small text-secondary">Data de produção</b>
+            <b class="small text-secondary">Data de estampa</b>
             <div>
-              {{ $helpers.fallback(formatDatetime(order.production_date)) }}
+              {{ $helpers.fallback(formatDatetime(order.print_date)) }}
+            </div>
+          </div>
+          <div>
+            <b class="small text-secondary">Data de costura</b>
+            <div>
+              {{ $helpers.fallback(formatDatetime(order.seam_date)) }}
             </div>
           </div>
           <div>

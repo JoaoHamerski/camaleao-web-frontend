@@ -19,23 +19,37 @@ export default {
 <template>
   <AppContainer class="mt-3">
     <template #title>
-      Produção e entrega
+      Datas
     </template>
 
     <template #body>
       <div class="row">
         <div class="col-12 col-sm">
           <AppInput
-            id="production_date"
-            :value="form.production_date"
+            id="print_date"
+            :value="form.print_date"
             type="date"
-            name="production_date"
+            name="print_date"
             placeholder="dd/mm/aaaa"
             :mask="maskDate"
-            :error="form.errors.get('production_date')"
-            @input="form.set({production_date: $event})"
+            :error="form.errors.get('print_date')"
+            @input="form.set({print_date: $event})"
           >
-            Data de produção
+            Data de estampa
+          </AppInput>
+        </div>
+        <div class="col-12 col-sm">
+          <AppInput
+            id="seam_date"
+            :value="form.seam_date"
+            type="date"
+            name="seam_date"
+            placeholder="dd/mm/aaaa"
+            :mask="maskDate"
+            :error="form.errors.get('seam_date')"
+            @input="form.set({seam_date: $event})"
+          >
+            Data de costura
           </AppInput>
         </div>
         <div class="col-12 col-sm">

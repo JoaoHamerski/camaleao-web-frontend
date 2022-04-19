@@ -20,6 +20,10 @@ export default {
   },
   mixins: [filesMixin],
   props: {
+    field: {
+      type: String,
+      required: true
+    },
     date: {
       type: Object,
       default: () => ({})
@@ -126,7 +130,7 @@ export default {
       >
         <CardDateColumnSubHeader
           v-show="active"
-          v-bind="{ date, isCompact }"
+          v-bind="{ date, isCompact, field }"
           @compact-mode-changed="onCompactModeChange"
           @input-image="onImageUploaded"
         />

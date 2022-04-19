@@ -38,8 +38,12 @@
         "text": "Data de entrega",
         "format": "datetime"
     },
-    "production_date": {
-        "text": "Data de produção",
+    "print_date": {
+        "text": "Data de estampa",
+        "format": "datetime"
+    },
+    "seam_date": {
+        "text": "Data de costura",
         "format": "datetime"
     },
     "art_paths": {

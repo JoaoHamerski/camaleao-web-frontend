@@ -31,8 +31,9 @@ export default {
         { text: 'Valor total', value: 'price', format: 'currencyBRL' },
         { text: 'Total pago', value: 'total_paid', format: 'currencyBRL' },
         { text: 'Quantidade', value: 'quantity', align: 'center' },
-        { text: 'Data de produção', value: 'production_date', align: 'center', format: 'datetime' },
-        { text: 'Data de entrega', value: 'delivery_date', align: 'center', format: 'datetime' }
+        { text: 'Estampa', value: 'print_date', align: 'center', format: 'datetime' },
+        { text: 'Costura', 'value': 'seam_date', align: 'center', format: 'datetime'},
+        { text: 'Entrega', value: 'delivery_date', align: 'center', format: 'datetime' }
       ]
     }
   },
