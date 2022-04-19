@@ -3,7 +3,6 @@ import pasteFilesMixin from '@/mixins/pasteFilesMixin'
 import filesMixin from '@/mixins/filesMixin'
 import Cookies from 'js-cookie'
 import classNames from 'classnames'
-import { DateTime } from 'luxon'
 
 const CardDateColumnsMobile = () => import('./CardDateColumnsMobile.vue')
 const CardDateColumn = () => import('../partials/CardDateColumn.vue')
@@ -32,6 +31,7 @@ export const renderCardDateColumn = (h, context, date) => {
       date={date}
       active={context.isColumnActive(date)}
       is-compact={context.isCompact}
+      field={context.field}
       {...{on: listeners}}
     />
   )
@@ -53,6 +53,10 @@ function renderCardDateColumns (h, context) {
 export default {
   mixins: [filesMixin, pasteFilesMixin],
   props: {
+    field: {
+      type: String,
+      required: true
+    },
     isLoading: {
       type: Boolean,
       default: false

@@ -1,7 +1,7 @@
 <script>
 import { faFilePdf } from '@fortawesome/free-solid-svg-icons'
 import roles from '@/constants/roles'
-import { GetOrdersWeeklyProductionReport } from '@/graphql/Order.gql'
+import { GetOrdersWeeklyCalendarReport } from '@/graphql/Order.gql'
 import { GetStatus } from '@/graphql/Status.gql'
 
 export default {
@@ -11,6 +11,10 @@ export default {
     }
   },
   props: {
+    field: {
+      type: String,
+      required: true
+    },
     isCompact: {
       type: Boolean,
       required: true
@@ -45,20 +49,22 @@ export default {
 
       try {
         const data = await this.$apollo.query({
-          query: GetOrdersWeeklyProductionReport,
+          query: GetOrdersWeeklyCalendarReport,
           variables: {
             input: {
-              production_date: date,
+              field: this.field,
+              date: date,
               status_id: this.selectedStatus
             }
           },
           fetchPolicy: 'network-only'
         })
 
-        const { data: { ordersWeeklyProductionReport: src} } = data
+        const { data: { ordersWeeklyCalendarReport: src} } = data
 
         this.$helpers.openInNewTab(src)
       } catch (error) {
+        console.log(error)
         this.$toast.error('Ops! Algo deu errado, tente novamente!')
       }
 

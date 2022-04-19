@@ -3,11 +3,12 @@ import { faBoxOpen, faQuestionCircle } from '@fortawesome/free-solid-svg-icons'
 import Form from '@/utils/Form'
 import { handleError } from '@/utils/forms'
 import { formatDatetime } from '@/utils/formatters'
+import { filter } from 'lodash-es'
 
 import {
   CreatePreRegisteredOrder,
-  GetWeeklyProductionOrders
-} from '@/graphql/WeeklyProduction.gql'
+  GetWeeklyCalendarOrders
+} from '@/graphql/WeeklyCalendar.gql'
 import { GetStatus } from '@/graphql/Status.gql'
 
 export default {
@@ -40,12 +41,12 @@ export default {
   methods: {
     getFormattedForm () {
       const { reminder, status_id } = this.form.data()
-      const { production_date } = this.order
+      const { date } = this.order
 
       return {
         reminder,
         status_id,
-        production_date: formatDatetime(production_date),
+        [this.order.date_field]: formatDatetime(date),
         art_paths: [this.order.image.base64]
       }
     },
@@ -59,7 +60,7 @@ export default {
           mutation: CreatePreRegisteredOrder,
           variables: { input },
           awaitRefetchQueries: true,
-          refetchQueries: [GetWeeklyProductionOrders]
+          refetchQueries: [GetWeeklyCalendarOrders]
         })
 
         this.$helpers.clearCacheFrom({ fieldName: 'orders' })
@@ -128,7 +129,7 @@ export default {
             label-prop="text"
             select-class="form-select-sm"
           >
-            Statuts:
+            Status:
           </AppSimpleSelect>
         </AppForm>
       </div>

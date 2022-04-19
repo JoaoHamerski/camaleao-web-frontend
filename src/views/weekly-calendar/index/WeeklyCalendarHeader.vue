@@ -1,15 +1,43 @@
 <script>
-import { faCalendarAlt, faSyncAlt } from '@fortawesome/free-solid-svg-icons'
+import {
+  faSyncAlt,
+  faTshirt,
+  faCut,
+  faTruck
+} from '@fortawesome/free-solid-svg-icons'
 import { DateTime } from 'luxon'
+import { FIELD_TYPES } from './WeeklyCalendar.vue'
 
 export default {
+  props: {
+    field: {
+      type: String,
+      required: true
+    }
+  },
   data () {
     return {
+      FIELD_TYPES,
       week: '',
       icons: {
-        faCalendarAlt,
         faSyncAlt
       }
+    }
+  },
+  computed: {
+    getIconByFieldType () {
+      if (this.field === 'PRINT_DATE') {
+        return faTshirt
+      }
+
+      if (this.field === 'SEAM_DATE') {
+        return faCut
+      }
+
+      return faTruck
+    },
+    fieldTypeLabel () {
+      return FIELD_TYPES[this.field]
     }
   },
   methods: {
@@ -46,13 +74,17 @@ export default {
       <div class="mb-3 mb-sm-0">
         <h5 class="fw-bold mb-0">
           <FontAwesomeIcon
-            :icon="icons.faCalendarAlt"
+            :icon="getIconByFieldType"
             fixed-width
           />
-          Produção semanal
+          Calendário semanal - {{ fieldTypeLabel }}
         </h5>
         <div class="small">
-          Pedidos com data de produção pela semana
+          Pedidos com
+          <span class="fw-bold">
+            data de <span class="text-lowercase">{{ FIELD_TYPES[field] }}</span>
+          </span>
+          pela semana
         </div>
       </div>
       <div class="d-flex">
