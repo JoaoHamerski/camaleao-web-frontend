@@ -23,7 +23,7 @@ import clothingTypesRoutes from '@/views/clothing-types/routes'
 import productionRoutes from '@/views/production/routes'
 import productionUsersRoutes from '@/views/production-users/routes'
 import myAccountRoutes from '@/views/my-account/routes'
-import weeklyProductionRoutes from '@/views/weekly-production/routes'
+import weeklyProductionRoutes from '@/views/weekly-calendar/routes'
 import activitiesRoutes from '@/views/activities/routes'
 import statusRoutes from '@/views/status/routes'
 
