@@ -9,7 +9,7 @@ import { handleError } from '@/utils/forms'
 import OrderFormClient from './OrderFormClient.vue'
 import OrderFormBasicInfo from './OrderFormBasicInfo.vue'
 import OrderFormValues from './OrderFormValues.vue'
-import OrderFormProduction from './OrderFormProduction.vue'
+import OrderFormDates from './OrderFormDates.vue'
 import OrderFormFiles from './OrderFormFiles.vue'
 
 export default {
@@ -17,7 +17,7 @@ export default {
     OrderFormClient,
     OrderFormBasicInfo,
     OrderFormValues,
-    OrderFormProduction,
+    OrderFormDates,
     OrderFormFiles
   },
   props: {
@@ -44,7 +44,8 @@ export default {
         discount: '',
         down_payment: '',
         payment_via_id: '',
-        production_date: '',
+        seam_date: '',
+        print_date: '',
         delivery_date: '',
         clothing_types: [],
         art_paths: [],
@@ -212,7 +213,7 @@ export default {
       @clothing-types-loaded="onClothingTypesLoaded"
     />
 
-    <OrderFormProduction
+    <OrderFormDates
       :form="form"
       class="mb-3"
     />
