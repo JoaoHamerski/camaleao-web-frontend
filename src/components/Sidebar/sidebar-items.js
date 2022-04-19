@@ -16,7 +16,9 @@ import {
   faUser,
   faListAlt,
   faSignOutAlt,
-  faCheckCircle
+  faCheckCircle,
+  faCut,
+  faTruck
 } from '@fortawesome/free-solid-svg-icons'
 
 const ITEMS = {
@@ -44,17 +46,38 @@ const ITEMS = {
     route: { name: 'daily-cash.index' },
     condition: () => canView(ROLES.GERENCIA, ROLES.ATENDIMENTO)
   },
-  PRODUCAO_SEMANAL: {
-    title: 'Produção semanal',
+  CALENDARIO_SEMANAL: {
+    title: 'Calendário semanal',
     icon: faCalendarAlt,
-    route: { name: 'weekly-production.index' },
     condition: () => canView(
       ROLES.GERENCIA,
       ROLES.ATENDIMENTO,
       ROLES.DESIGN,
       ROLES.COSTURA,
       ROLES.ESTAMPA
-    )
+    ),
+    get items() {
+      return [
+        this.ESTAMPA,
+        this.COSTURA,
+        this.ENTREGA
+      ]
+    },
+    ESTAMPA: {
+      title: 'Estampa',
+      icon: faTshirt,
+      route: { name: 'weekly-calendar.print.index' }
+    },
+    COSTURA: {
+      title: 'Costura',
+      icon: faCut,
+      route: { name: 'weekly-calendar.seam.index' }
+    },
+    ENTREGA: {
+      title: 'Entrega',
+      icon: faTruck,
+      route: { name: 'weekly-calendar.delivery.index' }
+    }
   },
   FINANCEIRO: {
     title: 'Financeiro',
@@ -152,11 +175,11 @@ export default [
   ITEMS.CLIENTE,
   ITEMS.PEDIDOS,
   ITEMS.CAIXA_DIARIO,
-  ITEMS.PRODUCAO_SEMANAL,
+  ITEMS.CALENDARIO_SEMANAL,
   ITEMS.FINANCEIRO,
-  ITEMS.GERENCIAMENTO,
   ITEMS.PRODUCAO_USUARIOS,
   ITEMS.MINHA_CONTA,
+  ITEMS.GERENCIAMENTO,
   ITEMS.ATIVIDADES,
   ITEMS.SAIR
 ]
