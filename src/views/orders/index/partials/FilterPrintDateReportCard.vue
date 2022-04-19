@@ -1,7 +1,7 @@
 <script>
 import { faClipboardList } from '@fortawesome/free-solid-svg-icons'
 import { maskDate } from '@/utils/masks'
-import { GetOrdersByProductionDate } from '@/graphql/Order.gql'
+import { GetOrdersByPrintDate } from '@/graphql/Order.gql'
 import Form from '@/utils/Form'
 import { handleError } from '@/utils/forms'
 
@@ -34,8 +34,8 @@ export default {
       this.isLoading = true
 
       try {
-        const { data } = await this.$apollo.query({
-          query: GetOrdersByProductionDate,
+        const { data: { ordersReportPrintDate: src } } = await this.$apollo.query({
+          query: GetOrdersByPrintDate,
           variables: {
             input
           },
@@ -44,7 +44,7 @@ export default {
 
         this.$emit('report-generated', {
           title: 'Relatório de produção',
-          src: data.ordersReportProductionDate
+          src
         })
       } catch (error) {
         handleError(this, error)
@@ -58,7 +58,7 @@ export default {
 
 <template>
   <AppCard
-    id="productionDateReportCard"
+    id="printDateReportCard"
     color="success"
     :collapsible="true"
     :collapsed="true"
@@ -68,7 +68,7 @@ export default {
         <FontAwesomeIcon
           :icon="icons.faClipboardList"
           fixed-width
-        /> Relatório por data de produção
+        /> Relatório por data de estampa
       </h6>
     </template>
     <template #body>
@@ -89,7 +89,7 @@ export default {
           type="date"
           :error="form.errors.get('date')"
         >
-          Data de produção
+          Data de estampa
         </AppInput>
         <AppRadio
           v-model="form.state"

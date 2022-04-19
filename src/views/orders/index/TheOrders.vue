@@ -8,12 +8,12 @@ import FilterSearchInput from './partials/FilterSearchInput.vue'
 import FilterSortButtons from './partials/FilterSortButtons.vue'
 import FilterGeneralReportCard from './partials/FilterGeneralReportCard.vue'
 import OrdersQuestionIconTippy from '@/views/orders/partials/OrdersQuestionIconTippy.vue'
-import FilterProductionDateReportCard from './partials/FilterProductionDateReportCard.vue'
+import FilterPrintDateReportCard from './partials/FilterPrintDateReportCard.vue'
 
 export default {
   components: {
     FilterGeneralReportCard,
-    FilterProductionDateReportCard,
+    FilterPrintDateReportCard,
     FilterSortButtons,
     FilterSearchInput,
     TheOrdersTable,
@@ -111,7 +111,7 @@ export default {
       @report-generated="onReportGenerated"
     />
 
-    <FilterProductionDateReportCard
+    <FilterPrintDateReportCard
       class="mb-2"
       @report-generated="onReportGenerated"
     />
