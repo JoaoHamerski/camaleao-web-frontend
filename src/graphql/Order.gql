@@ -12,7 +12,8 @@ fragment OrderParts on Order {
   total_paid
   total_owing
   total_clothings_value
-  production_date
+  print_date
+  seam_date
   delivery_date
   created_at
   closed_at
@@ -28,7 +29,8 @@ fragment OrderSimplifiedParts on Order {
   quantity
   price
   total_paid
-  production_date
+  seam_date
+  print_date
   delivery_date
   states
   total_owing
@@ -170,12 +172,12 @@ query GetOrdersReport ($input: OrdersReportInput!) {
   ordersReport (input: $input)
 }
 
-query GetOrdersByProductionDate ($input: OrdersReportProductionDateInput!) {
-  ordersReportProductionDate (input: $input)
+query GetOrdersByPrintDate ($input: OrdersReportPrintDateInput!) {
+  ordersReportPrintDate (input: $input)
 }
 
-query GetOrdersWeeklyProductionReport ($input: OrdersWeeklyProductionReport!) {
-  ordersWeeklyProductionReport (input: $input)
+query GetOrdersWeeklyCalendarReport ($input: OrdersWeeklyCalendarReport!) {
+  ordersWeeklyCalendarReport (input: $input)
 }
 
 mutation UpdateOrder ($id: ID! $input: OrderInput!) {
