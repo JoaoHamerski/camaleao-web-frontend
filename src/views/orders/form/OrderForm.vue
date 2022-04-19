@@ -131,7 +131,8 @@ export default {
         ? 'R$ '
         : this.$helpers.toBRL(fields.discount)
       fields.price = this.$helpers.toBRL(fields.price)
-      fields.production_date = formatDatetime(fields.production_date)
+      fields.seam_date = formatDatetime(fields.seam_date)
+      fields.print_date = formatDatetime(fields.print_date)
       fields.delivery_date = formatDatetime(fields.delivery_date)
 
       for (const field in fields) {
