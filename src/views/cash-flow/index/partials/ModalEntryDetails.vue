@@ -1,14 +1,10 @@
 <script>
 import { isEmpty } from 'lodash-es'
 
-import EntryDetailsPayment from './EntryDetailsPayment.vue'
-import EntryDetailsExpense from './EntryDetailsExpense.vue'
+const EntryDetailsPayment = () => import('./EntryDetailsPayment.vue')
+const EntryDetailsExpense = () => import('./EntryDetailsExpense.vue')
 
 export default {
-  components: {
-    EntryDetailsPayment,
-    EntryDetailsExpense
-  },
   props: {
     value: {
       type: Boolean,
@@ -16,12 +12,42 @@ export default {
     },
     entry: {
       type: Object,
-      required: true
+      default: null
     }
   },
   computed: {
     modalColor () {
-      return this.is_expense ? 'danger' : 'success'
+      if (this.entry) {
+        return this.entry.is_expense ? 'danger' : 'success'
+      }
+
+      return ''
+    },
+    getEntryComponent () {
+      if (!this.entry) {
+        return
+      }
+
+      if (this.entry.is_expense) {
+        return EntryDetailsExpense
+      }
+
+      return EntryDetailsPayment
+    },
+    getEntryBinds () {
+      if (!this.entry) {
+        return
+      }
+
+      if (this.entry.is_expense) {
+        return {
+          expense: this.entry
+        }
+      }
+
+      return {
+        payment: this.entry
+      }
     }
   },
   methods: {
@@ -41,16 +67,11 @@ export default {
     </template>
 
     <template #body>
-      <div v-if="!isEmpty(entry)">
-        <EntryDetailsExpense
-          v-if="entry.is_expense"
-          :expense="entry"
-        />
-        <EntryDetailsPayment
-          v-else
-          :payment="entry"
-        />
-      </div>
+      <Component
+        :is="getEntryComponent"
+        v-if="entry"
+        v-bind="getEntryBinds"
+      />
     </template>
   </AppModal>
 </template>

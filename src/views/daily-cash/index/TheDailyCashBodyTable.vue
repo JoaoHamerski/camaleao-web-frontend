@@ -37,7 +37,7 @@ export default {
         { text: 'PEDIDO', value: 'order' },
         { text: 'CLIENTE', value: 'client' },
         { text: 'VALOR', value: 'value', format: 'currencyBRL' },
-        { text: 'VIA', value: 'via' },
+        { text: 'VIA', value: 'via.name' },
         { text: 'REGISTRO ÀS', value: 'created_at', format: 'datetime', formatting: 'HH:mm', align: 'center' },
         { text: 'CHECKED', value: 'checked', align: 'center' }
       ]
@@ -87,10 +87,6 @@ export default {
 
     <template #[`items.value`]="{ item }">
       <span class="fw-bold">{{ formatCurrencyBRL(item.value) }}</span>
-    </template>
-
-    <template #[`items.via`]="{ item }">
-      {{ item.via.name }}
     </template>
 
     <template #[`headers.checked`]>

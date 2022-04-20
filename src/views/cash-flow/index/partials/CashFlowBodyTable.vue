@@ -28,7 +28,7 @@ export default {
     return {
       modalEntryDetails: {
         modal: false,
-        entry: {}
+        entry: null
       },
       icons: {
         faExclamationCircle,
@@ -75,7 +75,7 @@ export default {
       this.modalEntryDetails.modal = true
     },
     onModalHidden () {
-      this.modalEntryDetails.entry = {}
+      this.modalEntryDetails.entry = null
     }
   }
 }

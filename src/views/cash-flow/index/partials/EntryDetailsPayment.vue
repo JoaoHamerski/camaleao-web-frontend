@@ -52,7 +52,6 @@ export default {
     getOrderNameOrCode (order) {
       return order.name || `[CÓD.] ${order.code}`
     }
-
   }
 }
 </script>
@@ -97,7 +96,7 @@ export default {
         </li>
 
         <li class="list-group-item">
-          <b>Via: </b> {{ payment.via.name }}
+          <b>Via: </b> {{ $helpers.fallback(payment.via, 'name') }}
         </li>
 
         <li class="list-group-item d-flex justify-content-between">
