@@ -59,17 +59,6 @@ export default {
 
       return 'table-success'
     },
-    getOrderUrl (entry) {
-      const resolvedRoute = this.$router.resolve({
-        name: 'orders.show',
-        params: {
-          clientKey: entry.order.client.id,
-          orderKey: entry.order.code
-        }
-      })
-
-      return resolvedRoute.href
-    },
     onDetailsShowClick (entry) {
       this.modalEntryDetails.entry = entry
       this.modalEntryDetails.modal = true
@@ -131,7 +120,10 @@ export default {
           v-else
           target="_blank"
           class="text-decoration-none"
-          :href="getOrderUrl(item)"
+          :href="$helpers.getUrl('orders.show', {
+            client: item.order.client.id,
+            order: item.order.id
+          })"
         >
           {{ item.description }}
         </a>
