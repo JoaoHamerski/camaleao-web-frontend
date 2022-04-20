@@ -109,7 +109,7 @@ export default {
                   em
                   <b>{{ formatDatetime(payment.date) }}</b>
                   via
-                  <b>{{ payment.via.name }}</b>
+                  <b>{{ $helpers.fallback(payment.via, 'name') }}</b>
                   <span
                     v-if="!payment.is_confirmed"
                     class="fw-bold"
