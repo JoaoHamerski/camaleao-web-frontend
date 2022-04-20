@@ -43,7 +43,7 @@ export default {
       return [
         { text: 'Tipo', value: 'type', align: 'center' },
         { text: 'Descrição/Pedido', value: 'description' },
-        { text: 'Via', value: 'via' },
+        { text: 'Via', value: 'via.name' },
         { text: 'Valor', value: 'value', format: 'currencyBRL', nowrap: true },
         { text: 'Data', value: 'date', align: 'center', format: 'datetime' },
         { text: 'Detalhes', value: 'details', align: 'center' }
@@ -135,9 +135,6 @@ export default {
         >
           {{ item.description }}
         </a>
-      </template>
-      <template #[`items.via`]="{ item }">
-        {{ item.via.name }}
       </template>
       <template #[`items.value`]="{ item }">
         {{ formatCurrencyBRL(item.is_expense ? -item.value : item.value) }}
