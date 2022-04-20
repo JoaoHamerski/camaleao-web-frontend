@@ -1,4 +1,6 @@
 <script>
+import  { isEmpty } from 'lodash-es'
+
 export default {
   props: {
     order: {
@@ -9,6 +11,9 @@ export default {
       type: Object,
       required: true
     }
+  },
+  methods: {
+    isEmpty
   }
 }
 </script>
@@ -22,9 +27,8 @@ export default {
       >
         {{ label }}
       </div>
-
       <AppViewerItems
-        v-if="order[key]"
+        v-if="!isEmpty(order[key])"
         :key="`order_files_${filesMap[key]}`"
         class="mb-3"
         :alt="label"
