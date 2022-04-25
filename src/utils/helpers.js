@@ -3,7 +3,7 @@
  * através de $helpers variavel
  */
 import { apolloClientInstance } from '@/vue-apollo'
-import { configGet } from '@/graphql/Config.gql'
+import { GetConfig } from '@/graphql/Config.gql'
 
 import store from '@/store'
 import router from '@/router'
@@ -61,15 +61,15 @@ export const isNumeric = (value) => {
 export const getConfig = async (name, key = null) => {
   const { apolloClient } = apolloClientInstance
 
-  const { data } = await apolloClient.query({
-    query: configGet,
+  const { data: {configGet: config} } = await apolloClient.query({
+    query: GetConfig,
     variables: {
-      name, key
+      name, key, encoded: true
     },
-    fetchPolicy: 'no-cache'
+    fetchPolicy: 'network-only'
   })
 
-  return JSON.parse(data.configGet)
+  return JSON.parse(config)
 }
 
 export const canView = (...roleIds) => {
