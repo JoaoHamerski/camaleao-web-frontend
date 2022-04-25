@@ -78,6 +78,7 @@ export default {
           awaitRefetchQueries: true
         })
 
+        this.$helpers.clearCacheFrom({ fieldName: 'orders' })
         this.$toast.success(`Status do pedido concluído para ${status.text}`)
       } catch (error) {
         this.$toast.error('Ops! Algo deu errado!')
