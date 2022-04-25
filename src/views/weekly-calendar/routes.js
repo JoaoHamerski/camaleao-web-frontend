@@ -4,19 +4,19 @@ import role from '@/middleware/role'
 import roles from '@/constants/roles'
 
 const TheWeeklyCalendarDelivery = () => import(
-  /* webpackChunkName: "weekly-calendar-delivery" */
+  /* webpackChunkName: "weekly-calendar" */
   /* webpackPrefetch: true */
   './TheWeeklyCalendarDelivery.vue'
 )
 
 const TheWeeklyCalendarSeam = () => import(
-  /* webpackChunkName: "weekly-calendar-seam" */
+  /* webpackChunkName: "weekly-calendar" */
   /* webpackPrefetch: true */
   './TheWeeklyCalendarSeam.vue'
 )
 
 const TheWeeklyCalendarPrint = () => import(
-  /* webpackChunkName: "weekly-calendar-print" */
+  /* webpackChunkName: "weekly-calendar" */
   /* webpackPrefetch: true */
   './TheWeeklyCalendarPrint.vue'
 )
