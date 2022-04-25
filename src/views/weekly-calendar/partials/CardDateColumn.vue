@@ -142,6 +142,7 @@ export default {
             :order="order"
             :is-active="active"
             :is-compact="isCompact"
+            :field="field"
             @cancel-create="onCancelCreate"
             @order-created="onOrderCreated"
           />

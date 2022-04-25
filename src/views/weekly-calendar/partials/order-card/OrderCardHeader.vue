@@ -41,25 +41,15 @@ export default {
       }
 
       if (!this.order.client) {
-        const resolvedRoute = this.$router.resolve({
-          name: 'orders.show.pre-registered',
-          params: {
-            orderKey: this.order.id
-          }
+        return this.$helpers.getUrl('orders.show.pre-registered', {
+          order: this.order.id
         })
-
-        return resolvedRoute.href
       }
 
-      const resolvedRoute = this.$router.resolve({
-        name: 'orders.show',
-        params: {
-          clientKey: this.order.client.id,
-          orderKey: this.order.id
-        }
+      return this.$helpers.getUrl('orders.show', {
+        client: this.order.client.id,
+        order: this.order.id
       })
-
-      return resolvedRoute.href
     },
   }
 }

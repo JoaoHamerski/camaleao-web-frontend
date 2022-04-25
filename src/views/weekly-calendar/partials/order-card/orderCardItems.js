@@ -61,7 +61,8 @@ export default [
       : faDotCircle,
     classes: (context) => context.order.status.is_available
       ? 'text-success fw-bold'
-      : 'text-warning fw-bold'
+      : 'text-warning fw-bold',
+    renderCheckButton: (context) => context.order.can_be_concluded
   },
   {
     title: 'Data de cadastro',
