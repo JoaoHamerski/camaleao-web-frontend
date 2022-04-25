@@ -85,6 +85,7 @@ export default {
       </div>
 
       <AppTransition
+        v-if="value"
         mode="out-in"
         enter="fadeIn"
         speed="faster"

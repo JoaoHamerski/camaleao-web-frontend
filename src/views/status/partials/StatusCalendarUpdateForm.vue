@@ -16,7 +16,7 @@ export default {
         key: 'update_status_map',
         encoded: true
       },
-      result ({loading, data}) {
+      result ({loading}) {
         if (!loading) {
           this.populateForm()
         }
