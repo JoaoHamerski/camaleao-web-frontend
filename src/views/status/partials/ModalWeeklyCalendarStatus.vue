@@ -1,6 +1,4 @@
 <script>
-import { GetConfig } from '@/graphql/Config.gql'
-
 export const CALENDAR_MAP = {
   print_date: 'Estampa',
   seam_date: 'Costura',
@@ -20,38 +18,6 @@ export default {
     StatusCalendarConcludeForm,
     StatusCalendarUpdateForm
   },
-  apollo: {
-    concludeStatusMap: {
-      query: GetConfig,
-      variables: {
-        name: 'status',
-        key: 'conclude_status_map',
-        encoded: true
-      },
-      update ({configGet}) {
-        if (!configGet) {
-          return []
-        }
-
-        return JSON.parse(configGet)
-      }
-    },
-    updateStatusMap: {
-      query: GetConfig,
-      variables: {
-        name: 'status',
-        key: 'update_status_map',
-        encoded: true
-      },
-      update ({configGet}) {
-        if (!configGet) {
-          return []
-        }
-
-        return JSON.parse(configGet)
-      }
-    }
-  },
   props: {
     value: {
       type: Boolean,
@@ -67,14 +33,6 @@ export default {
       FORMS_OPTIONS,
       loaded: false,
       option: FORMS_OPTIONS.CONCLUDE,
-      concludeStatusMap: [],
-      updateStatusMap: []
-    }
-  },
-  computed: {
-    isLoading () {
-      return !!this.$apollo.queries.concludeStatusMap.loading
-        || !!this.$apollo.queries.updateStatusMap.loading
     }
   },
   methods: {
@@ -126,31 +84,20 @@ export default {
         </nav>
       </div>
 
-      <div
-        v-show="isLoading"
-        class="py-5 my-5"
+      <AppTransition
+        mode="out-in"
+        enter="fadeIn"
+        speed="faster"
       >
-        <AppLoading />
-      </div>
-
-      <template v-if="!isLoading">
-        <AppTransition
-          mode="out-in"
-          enter="fadeIn"
-          speed="faster"
-        >
-          <StatusCalendarConcludeForm
-            v-if="option === FORMS_OPTIONS.CONCLUDE"
-            :status-list="statusList"
-            :conclude-status-map="concludeStatusMap"
-          />
-          <StatusCalendarUpdateForm
-            v-else
-            :status-list="statusList"
-            :update-status-map="updateStatusMap"
-          />
-        </AppTransition>
-      </template>
+        <StatusCalendarConcludeForm
+          v-if="option === FORMS_OPTIONS.CONCLUDE"
+          :status-list="statusList"
+        />
+        <StatusCalendarUpdateForm
+          v-else
+          :status-list="statusList"
+        />
+      </AppTransition>
     </template>
   </AppModal>
 </template>

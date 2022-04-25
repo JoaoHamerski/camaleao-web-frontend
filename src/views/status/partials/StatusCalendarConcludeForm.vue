@@ -7,12 +7,30 @@ import { handleSuccess } from '@/utils/forms'
 import { CALENDAR_MAP } from './ModalWeeklyCalendarStatus.vue'
 
 export default {
+  apollo: {
+    concludeStatusMap: {
+      query: GetConfig,
+      variables: {
+        name: 'status',
+        key: 'conclude_status_map',
+        encoded: true
+      },
+      result ({loading, data}) {
+        if (!loading) {
+          this.populateForm()
+        }
+      },
+      update ({configGet}) {
+        if (!configGet) {
+          return []
+        }
+
+        return JSON.parse(configGet)
+      }
+    },
+  },
   props: {
     statusList: {
-      type: Array,
-      required: true
-    },
-    concludeStatusMap: {
       type: Array,
       required: true
     }
@@ -21,6 +39,7 @@ export default {
     return {
       CALENDAR_MAP,
       isLoading: false,
+      concludeStatusMap: [],
       form: new Form({
         'print_date': [],
         'seam_date': [],
@@ -28,8 +47,10 @@ export default {
       }),
     }
   },
-  mounted () {
-    this.populateForm()
+  computed: {
+    isQueryLoading () {
+      return !!this.$apollo.queries.concludeStatusMap.loading
+    }
   },
   methods: {
     populateForm () {
@@ -82,6 +103,7 @@ export default {
     :form="form"
     :on-submit="onSubmit"
   >
+    <AppLoading v-show="isQueryLoading" />
     <div class="mb-3">
       <div class="fw-bold text-subtitle text-primary horizontal-line text-center">
         <span>Status concluídos</span>

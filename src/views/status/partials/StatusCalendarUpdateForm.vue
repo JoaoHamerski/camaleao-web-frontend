@@ -1,4 +1,6 @@
 <script>
+import { GetConfig } from '@/graphql/Config.gql'
+
 import { pick, cloneDeep } from 'lodash-es'
 import { faTshirt, faCut, faTruck } from '@fortawesome/free-solid-svg-icons'
 import Form from '@/utils/Form'
@@ -6,11 +8,29 @@ import { UpdateUpdatableStatusFromWeeklyCalendar } from '@/graphql/WeeklyCalenda
 import { CALENDAR_MAP } from './ModalWeeklyCalendarStatus.vue'
 
 export default {
-  props: {
+  apollo: {
     updateStatusMap: {
-      type: Array,
-      required: true
-    },
+      query: GetConfig,
+      variables: {
+        name: 'status',
+        key: 'update_status_map',
+        encoded: true
+      },
+      result ({loading, data}) {
+        if (!loading) {
+          this.populateForm()
+        }
+      },
+      update ({configGet}) {
+        if (!configGet) {
+          return []
+        }
+
+        return JSON.parse(configGet)
+      }
+    }
+  },
+  props: {
     statusList: {
       type: Array,
       required: true
@@ -20,6 +40,7 @@ export default {
     return {
       isLoading: false,
       CALENDAR_MAP,
+      updateStatusMap: [],
       form: new Form({
         'print_date': {
           status: [],
@@ -34,6 +55,11 @@ export default {
           update_to: ''
         }
       })
+    }
+  },
+  computed: {
+    isQueryLoading () {
+      return !!this.$apollo.queries.updateStatusMap.loading
     }
   },
   mounted () {
@@ -108,6 +134,7 @@ export default {
     :form="form"
     :on-submit="onSubmit"
   >
+    <AppLoading v-show="isQueryLoading" />
     <div class="mb-3">
       <div class="fw-bold text-subtitle text-primary horizontal-line text-center">
         <span>Status ao concluir</span>
