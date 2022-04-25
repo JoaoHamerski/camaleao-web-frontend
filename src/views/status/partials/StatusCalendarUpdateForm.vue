@@ -141,7 +141,7 @@ export default {
       </div>
 
       <small class="text-secondary">
-        Selecione qual será o próximo status ao concluir um determinado status.
+        Selecione qual será o <b>próximo status</b> ao concluir um determinado status.
       </small>
     </div>
 

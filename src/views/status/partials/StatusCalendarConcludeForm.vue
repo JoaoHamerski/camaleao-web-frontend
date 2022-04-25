@@ -109,7 +109,7 @@ export default {
         <span>Status concluídos</span>
       </div>
       <small class="text-secondary">
-        Selecione quais status devem aparecer em <strong>cinza</strong> como <strong>concluídos</strong> no calendário mensal
+        Selecione quais status devem aparecer em <strong>cinza</strong> como <strong>concluídos</strong>.
       </small>
     </div>
 
