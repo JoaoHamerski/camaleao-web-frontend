@@ -1,4 +1,5 @@
 <script>
+import { GetWeeklyCalendarOrders } from '@/graphql/WeeklyCalendar.gql'
 import { ConcludeOrderStatus } from '@/graphql/WeeklyCalendar.gql'
 import orderStatesMixin from '../../../orders/orderStatesMixin'
 
@@ -72,10 +73,10 @@ export default {
           variables: {
             id: this.order.id,
             field: this.field
-          }
+          },
+          refetchQueries: [GetWeeklyCalendarOrders],
+          awaitRefetchQueries: true
         })
-
-        this.$helpers.clearCacheFrom({ fieldName: 'weeklyCalendar' })
 
         this.$toast.success(`Status do pedido concluído para ${status.text}`)
       } catch (error) {
