@@ -3,11 +3,13 @@ import { faPlus } from '@fortawesome/free-solid-svg-icons'
 
 import ModalStatusNew from '../partials/ModalStatusNew.vue'
 import ModalStatusAvailable from '../partials/ModalStatusAvailable.vue'
+import ModalWeeklyCalendarStatus from '../partials/ModalWeeklyCalendarStatus.vue'
 
 export default {
   components: {
     ModalStatusNew,
-    ModalStatusAvailable
+    ModalStatusAvailable,
+    ModalWeeklyCalendarStatus
   },
   props: {
     statusList: {
@@ -19,6 +21,7 @@ export default {
     return {
       modalNew: false,
       modalAvailableStatus: false,
+      modalWeeklyCalendarStatus: false,
       icons: {
         faPlus
       }
@@ -37,12 +40,15 @@ export default {
     onAvailableStatusSuccess () {
       this.modalAvailableStatus = false
     },
+    onWeeklyCalendarStatusClick () {
+      this.modalWeeklyCalendarStatus = true
+    }
   }
 }
 </script>
 
 <template>
-  <div class="d-flex justify-content-between mb-2">
+  <div class="d-flex flex-column flex-sm-row justify-content-between mb-2">
     <ModalStatusNew
       v-model="modalNew"
       @success="onModalNewSuccess"
@@ -54,6 +60,11 @@ export default {
       @success="onAvailableStatusSuccess"
     />
 
+    <ModalWeeklyCalendarStatus
+      v-model="modalWeeklyCalendarStatus"
+      :status-list="statusList"
+    />
+
     <AppButton
       :icon="icons.faPlus"
       color="success"
@@ -62,11 +73,25 @@ export default {
     >
       Novo status
     </AppButton>
-    <AppButton
-      btn-class="fw-bold"
-      @click.prevent="onAvailableStatusClick"
-    >
-      Status disponíveis
-    </AppButton>
+
+    <div class="mt-2 mt-sm-0">
+      <AppButton
+        btn-class="fw-bold"
+        class="me-2"
+        :block="$isMobile"
+        @click.prevent="onWeeklyCalendarStatusClick"
+      >
+        Status do calendário semanal
+      </AppButton>
+
+      <AppButton
+        class="mt-1 mt-sm-0"
+        btn-class="fw-bold"
+        :block="$isMobile"
+        @click.prevent="onAvailableStatusClick"
+      >
+        Status disponíveis
+      </AppButton>
+    </div>
   </div>
 </template>
