@@ -13,6 +13,17 @@
     height: 34px;
   }
 
+  .multiselect__tags {
+    .multiselect__tag {
+      display: block;
+
+      .multiselect__tag-icon {
+        border-top-left-radius: 0;
+        border-bottom-left-radius: 0;
+      }
+    }
+  }
+
   &.is-invalid .multiselect__tags {
     border: 1px solid $danger;
   }
