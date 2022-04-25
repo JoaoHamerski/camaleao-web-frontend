@@ -92,11 +92,10 @@ export default {
     },
     getFormattedForm() {
       const data = cloneDeep(this.form.data())
-      const calendarMap = pick(CALENDAR_MAP, ['print_date', 'seam_date'])
 
-      for (const key in calendarMap) {
+      for (const key in CALENDAR_MAP) {
         data[key].status = data[key].status.map(({id}) => id)
-        data[key].update_to = data[key].update_to.id || ''
+        data[key].update_to = data[key]?.update_to?.id || ''
       }
 
       return data
