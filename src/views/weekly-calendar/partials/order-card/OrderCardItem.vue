@@ -1,4 +1,5 @@
 <script>
+import { faCheck } from '@fortawesome/free-solid-svg-icons'
 import { get, isFunction } from 'lodash-es'
 import classNames from 'classnames'
 
@@ -23,6 +24,24 @@ function renderListItemText (h, context) {
 
   return text
 }
+function renderCheckItemButton (h, context) {
+  if (!context.shouldRenderCheckButton()) {
+    return
+  }
+
+  return (
+    <AppButton
+      vOn:click_prevent={() => context.btnClicked(context.item.prop)}
+      btn-class="btn-sm"
+      icon={faCheck}
+      color="success"
+      outlined
+      loading={context.loadingButton}
+      content="Concluir status"
+      v-tippy={{placement: 'top'}}
+    ></AppButton>
+  )
+}
 
 function renderListItem (h, context) {
   if (!get(context.order, context.item.prop)) {
@@ -37,33 +56,40 @@ function renderListItem (h, context) {
       }}
       content={context.item.title}
       class={classNames([
-        'list-group-item',
+        'list-group-item d-flex justify-content-between align-items-center',
         isFunction(context.item.classes)
           ? context.item.classes(context)
           : context.item.classes
       ])}
     >
-      <FontAwesomeIcon
-        icon={
-          isFunction(context.item.icon)
-            ? context.item.icon(context)
-            : context.item.icon
+      <span>
+        <FontAwesomeIcon
+          icon={
+            isFunction(context.item.icon)
+              ? context.item.icon(context)
+              : context.item.icon
+          }
+          fixed-width
+          class="me-1"
+        />
+        {
+          context.item.link
+            ? renderListItemLink(h, context)
+            : renderListItemText(h, context)
         }
-        fixed-width
-        class="me-1"
-      />
+      </span>
 
-      {
-        context.item.link
-          ? renderListItemLink(h, context)
-          : renderListItemText(h, context)
-      }
+      { renderCheckItemButton(h, context) }
     </li>
   )
 }
 
 export default {
   props: {
+    loadingButton: {
+      type: Boolean,
+      default: false
+    },
     isExpanded: {
       type: Boolean,
       default: false
@@ -75,6 +101,31 @@ export default {
     order: {
       type: Object,
       default: null
+    },
+  },
+  data () {
+    return {
+      itemsWithButtons: [
+        'status.text'
+      ]
+    }
+  },
+  methods: {
+    shouldRenderCheckButton () {
+      if (!this.itemsWithButtons.includes(this.item.prop)) {
+        return false
+      }
+
+      if (this.item.renderCheckButton(this)) {
+        return true
+      }
+
+      return false
+    },
+    btnClicked(prop) {
+      if (prop === 'status.text') {
+        this.$emit('btn-status-clicked')
+      }
     }
   },
   render (h) {

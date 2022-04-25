@@ -1,9 +1,10 @@
 <script>
+import { ConcludeOrderStatus } from '@/graphql/WeeklyCalendar.gql'
 import orderStatesMixin from '../../../orders/orderStatesMixin'
+
 import OrderCardHeader from './OrderCardHeader.vue'
 import OrderCardBodyImage from './OrderCardBodyImage.vue'
 import OrderCardItems from './OrderCardItems.vue'
-
 export default {
   components: {
     OrderCardHeader,
@@ -23,6 +24,15 @@ export default {
     order: {
       type: Object,
       default: null
+    },
+    field: {
+      type: String,
+      required: true
+    }
+  },
+  data () {
+    return {
+      isLoading: false
     }
   },
   computed: {
@@ -38,6 +48,10 @@ export default {
         return 'warning'
       }
 
+      if(this.order.is_concluded) {
+        return 'secondary'
+      }
+
       return 'primary'
     },
     orderHeaderClass () {
@@ -46,6 +60,29 @@ export default {
       }
 
       return `clickable bg-link-${this.cardColor}`
+    }
+  },
+  methods: {
+    async onConcludeStatus () {
+      this.isLoading = true
+
+      try {
+        const { data: { orderConcludeStatus: { status } } } = await this.$apollo.mutate({
+          mutation: ConcludeOrderStatus,
+          variables: {
+            id: this.order.id,
+            field: this.field
+          }
+        })
+
+        this.$helpers.clearCacheFrom({ fieldName: 'weeklyCalendar' })
+
+        this.$toast.success(`Status do pedido concluído para ${status.text}`)
+      } catch (error) {
+        this.$toast.error('Ops! Algo deu errado!')
+      }
+
+      this.isLoading = false
     }
   }
 }
@@ -66,6 +103,8 @@ export default {
       <OrderCardItems
         :order="order"
         :is-expanded="isOrderExpanded"
+        :loading-button="isLoading"
+        @conclude-status="onConcludeStatus"
       />
     </div>
   </div>

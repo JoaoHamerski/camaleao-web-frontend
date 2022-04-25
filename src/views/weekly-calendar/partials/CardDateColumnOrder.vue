@@ -18,6 +18,10 @@ export default {
     order: {
       type: Object,
       default: null
+    },
+    field: {
+      type: String,
+      required: true
     }
   },
   computed: {
@@ -91,6 +95,10 @@ export default {
           .list-group-item {
             padding: .3rem .7rem;
             font-size: .8rem;
+
+            .btn {
+              font-size: .6rem;
+            }
           }
         }
       }

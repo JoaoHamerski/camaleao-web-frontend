@@ -8,6 +8,10 @@ export default {
     OrderCardItem
   },
   props: {
+    loadingButton: {
+      type: Boolean,
+      default: false
+    },
     order: {
       type: Object,
       default: null
@@ -23,7 +27,10 @@ export default {
     }
   },
   methods: {
-    get
+    get,
+    onBtnStatusClicked() {
+      this.$emit('conclude-status')
+    }
   }
 }
 </script>
@@ -32,11 +39,13 @@ export default {
   <ul class="list-group list-group-flush">
     <template v-for="item in orderCardItems">
       <OrderCardItem
-        v-show="!item.hideOnShrink || isExpanded"
         :key="item.title"
+        :class="[!item.hideOnShrink || isExpanded ? 'd-block' : 'd-none']"
         :order="order"
         :item="item"
         :is-expanded="isExpanded"
+        :loading-button="loadingButton"
+        @btn-status-clicked="onBtnStatusClicked"
       />
     </template>
   </ul>
