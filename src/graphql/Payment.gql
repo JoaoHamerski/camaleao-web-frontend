@@ -20,6 +20,7 @@ fragment PaymentsOrderParts on Order {
   total_owing
   total_paid
   states
+  payment_voucher_paths
   client {
     id
     name

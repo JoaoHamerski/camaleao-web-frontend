@@ -3,13 +3,15 @@ import PaymentConfirmErrorModal from '@/views/resources/payments/PaymentConfirmE
 import TheDailyCashBodyTable from './TheDailyCashBodyTable.vue'
 import TheDailyCashBodyDate from './TheDailyCashBodyDate.vue'
 import ModalPaymentForm from '@/views/resources/payments/ModalPaymentForm.vue'
+import ModalShowPaymentVouchers from './partials/ModalShowPaymentVouchers.vue'
 
 export default {
   components: {
     TheDailyCashBodyTable,
     TheDailyCashBodyDate,
     PaymentConfirmErrorModal,
-    ModalPaymentForm
+    ModalPaymentForm,
+    ModalShowPaymentVouchers
   },
   props: {
     payments: {
@@ -30,6 +32,10 @@ export default {
       modalEdit:  {
         value: false,
         payment: {}
+      },
+      modalPaymentVouchers: {
+        value: false,
+        payment: null
       }
     }
   },
@@ -51,6 +57,10 @@ export default {
     },
     onModalEditHidden () {
       this.modalEdit.payment = {}
+    },
+    onShowPaymentVouchers (item) {
+      this.modalPaymentVouchers.value = true
+      this.modalPaymentVouchers.payment = item
     }
   }
 }
@@ -72,6 +82,11 @@ export default {
       @hidden="onModalEditHidden"
     />
 
+    <ModalShowPaymentVouchers
+      v-model="modalPaymentVouchers.value"
+      :payment="modalPaymentVouchers.payment"
+    />
+
     <TheDailyCashBodyDate :date="date" />
 
     <hr class="bg-secondary">
@@ -81,6 +96,7 @@ export default {
       @payment-success="onDailyPaymentSuccess"
       @payment-error="onDailyPaymentError"
       @payment-edit="onDailyPaymentEdit"
+      @show-payment-voucher="onShowPaymentVouchers"
     />
   </div>
 </template>

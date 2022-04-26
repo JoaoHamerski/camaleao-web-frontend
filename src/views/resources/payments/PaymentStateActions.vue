@@ -62,8 +62,7 @@ export default {
           refetchQueries: [{ query: GetPaymentsPendencies }]
         })
 
-        this.$helpers.clearCacheFrom({ fieldName: 'cashFlowEntries' })
-        this.$helpers.clearCacheFrom({ fieldName: 'payments' })
+        this.$helpers.clearCacheFrom({ field: 'orders' })
 
         this.$toast.success(
           confirmation

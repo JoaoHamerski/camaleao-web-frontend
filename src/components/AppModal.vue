@@ -86,35 +86,39 @@ export default {
     this.modal = new Modal(this.$refs.modal)
 
     if (this.$refs.modal) {
-      EVENTS_EMITTED.forEach(event => {
+      EVENTS_EMITTED.forEach(name => {
         this.$refs.modal.addEventListener(
-          `${event}.bs.modal`,
-          this.emitter(event)
+          `${name}.bs.modal`,
+          this.emitter
         )
       })
     }
   },
   beforeDestroy () {
-    EVENTS_EMITTED.forEach(event => {
+    EVENTS_EMITTED.forEach(name => {
       this.$refs.modal.removeEventListener(
-        event,
+        `${name}.bs.modal`,
         this.emitter
       )
     })
   },
   methods: {
-    emitter (name) {
-      return () => {
-        if (name === 'hidden') {
-          this.$emit('input', false)
-        }
+    emitter (event) {
+      const name = event.type
 
-        if (name === 'shown') {
-          this.$emit('input', true)
-        }
-
-        this.$emit(name)
+      if (!event.target.isEqualNode(this.$refs.modal)) {
+        return
       }
+
+      if (name === 'hidden.bs.modal') {
+        this.$emit('input', false)
+      }
+
+      if (name === 'shown.bs.modal') {
+        this.$emit('input', true)
+      }
+
+      this.$emit(name.substring(0, name.indexOf('.')))
     }
   }
 }
@@ -126,7 +130,9 @@ export default {
     ref="modal"
     class="modal fade"
     :aria-labelledby="`${id}Label`"
-    aria-hidden="true"
+    :aria-hidden="value ? 'true' : 'false'"
+    :aria-modal="value ? 'true' : 'false'"
+    tabindex="-1"
   >
     <div
       class="modal-dialog"

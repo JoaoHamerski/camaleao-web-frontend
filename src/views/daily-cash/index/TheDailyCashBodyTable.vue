@@ -1,6 +1,7 @@
 <script>
+import { isEmpty } from 'lodash-es'
 import roles from '@/constants/roles'
-import { faClipboardCheck } from '@fortawesome/free-solid-svg-icons'
+import { faClipboardCheck, faFileAlt } from '@fortawesome/free-solid-svg-icons'
 import { clients, orders } from '@/constants/route-names'
 import { formatCurrencyBRL } from '@/utils/formatters'
 import PaymentState from '@/views/resources/payments/PaymentState.vue'
@@ -27,7 +28,8 @@ export default {
       orders,
       roles,
       icons: {
-        faClipboardCheck
+        faClipboardCheck,
+        faFileAlt
       }
     }
   },
@@ -39,12 +41,17 @@ export default {
         { text: 'VALOR', value: 'value', format: 'currencyBRL' },
         { text: 'VIA', value: 'via.name' },
         { text: 'REGISTRO ÀS', value: 'created_at', format: 'datetime', formatting: 'HH:mm', align: 'center' },
-        { text: 'CHECKED', value: 'checked', align: 'center' }
+        { text: 'COMPROVANTE', value: 'payment_voucher', align: 'center'},
+        { text: 'CHECKED', value: 'checked', align: 'center' },
       ]
     }
   },
   methods: {
     formatCurrencyBRL,
+    isEmpty,
+    onShowPaymentVoucherClick (item) {
+      this.$emit('show-payment-voucher', item)
+    },
     paymentRowClass (payment) {
       return `align-middle ${PAYMENT_STATUS_CLASS[payment.is_confirmed]}`
     },
@@ -104,6 +111,23 @@ export default {
         @success="onPaymentSuccess"
         @error="onPaymentError"
         @edit="onPaymentEdit"
+      />
+    </template>
+
+    <template #[`headers.payment_voucher`]>
+      <FontAwesomeIcon
+        :icon="icons.faFileAlt"
+        size="lg"
+      />
+    </template>
+    <template #[`items.payment_voucher`]="{ item }">
+      <AppButton
+        :color="isEmpty(item.order.payment_voucher_paths) ? 'secondary' : 'primary'"
+        :disabled-message="isEmpty(item.order.payment_voucher_paths) && 'Sem comprovantes'"
+        :icon="icons.faFileAlt"
+        outlined
+        btn-class="btn-sm px-3"
+        @click.prevent="onShowPaymentVoucherClick(item)"
       />
     </template>
   </AppTable>

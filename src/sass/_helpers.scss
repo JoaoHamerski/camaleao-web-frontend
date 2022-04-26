@@ -11,11 +11,11 @@
 }
 
 .no-select {
-    user-select: none;
+  user-select: none;
 }
 
 .horizontal-line {
-  border-bottom: 1px solid rgba(0,0,0,.2);
+  border-bottom: 1px solid rgba(0, 0, 0, .2);
   line-height: .1em;
   margin: 10px 0 20px;
   width: 100%;
@@ -32,7 +32,8 @@
 }
 
 
-@each $name, $color in $theme-colors {
+@each $name,
+$color in $theme-colors {
   .bg-link-#{$name} {
     background-color: $color;
     transition: background-color .15s;
@@ -59,4 +60,14 @@
 
 .radius-0 {
   border-radius: 0 !important;
+}
+
+.responsive-iframe {
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  width: 100%;
+  height: 100%;
 }

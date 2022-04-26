@@ -1,4 +1,6 @@
 <script>
+import TheTestModal from './TheTestModal.vue'
+
 /**
  * @file
  *
@@ -6,11 +8,20 @@
  * Acessado em /testes
  */
 export default {
+  components: {
+    TheTestModal
+  },
+  data () {
+    return {
+      modal: false
+    }
+  },
+  mounted () {
+    this.$store.commit('SET_BOOTED', true)
+  },
   methods: {
-    click () {
-      this.$toast.success('ola mundo', {
-        timeout: 1000000
-      })
+    openModal () {
+      this.modal = true
     }
   }
 }
@@ -18,8 +29,10 @@ export default {
 
 <template>
   <div class="p-5">
-    <AppButton @click="click">
-      Click me
+    <AppButton @click="openModal">
+      Open modal
     </AppButton>
+
+    <TheTestModal v-model="modal" />
   </div>
 </template>
