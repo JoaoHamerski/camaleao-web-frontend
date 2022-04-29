@@ -1,20 +1,30 @@
 <script>
+import Vue from 'vue'
+import VueViewer from 'v-viewer'
+import { config as viewerConfig } from '@/components/AppViewer/AppViewer'
+import roles from '@/constants/roles'
+
 import PaymentConfirmErrorModal from '@/views/resources/payments/PaymentConfirmErrorModal.vue'
 import TheDailyCashBodyTable from './TheDailyCashBodyTable.vue'
 import TheDailyCashBodyDate from './TheDailyCashBodyDate.vue'
-import ModalPaymentForm from '@/views/resources/payments/ModalPaymentForm.vue'
-import ModalShowPaymentVouchers from './partials/ModalShowPaymentVouchers.vue'
+import DailyCashPaymentVouchersModal from '../partials/DailyCashPaymentVouchersModal.vue'
+import DailyCashEditModal from '../partials/DailyCashEditModal.vue'
+import ViewerFileModal from '@/components/AppViewer/ViewerFileModal.vue'
+
+Vue.use(VueViewer)
 
 export default {
   components: {
     TheDailyCashBodyTable,
     TheDailyCashBodyDate,
     PaymentConfirmErrorModal,
-    ModalPaymentForm,
-    ModalShowPaymentVouchers
+    DailyCashPaymentVouchersModal,
+    DailyCashEditModal,
+    ViewerFileModal,
+    DailyCashBalance: () => import('../partials/DailyCashBalance.vue'),
   },
   props: {
-    payments: {
+    entries: {
       type: Array,
       default: () => ([])
     },
@@ -25,42 +35,59 @@ export default {
   },
   data () {
     return {
+      roles,
       modalError: {
         value: false,
         payment: {}
       },
       modalEdit:  {
         value: false,
-        payment: {}
+        item: null
       },
       modalPaymentVouchers: {
         value: false,
         payment: null
+      },
+      modalFileViewer: {
+        value: false,
+        src: ''
       }
     }
   },
   methods: {
-    onDailyPaymentSuccess () {
-      this.$emit('daily-payment-success')
-    },
-    onDailyPaymentEdit (payment) {
-      this.modalEdit.payment = payment
+    onEntryEdit (item) {
+      this.modalEdit.item = item
       this.modalEdit.value = true
+    },
+    onEntryEditSuccess () {
+      this.modalEdit.value = false
+      this.modalEdit.item = null
     },
     onDailyPaymentError (payment) {
       this.modalError.payment = payment
       this.modalError.value = true
     },
-    onPaymentSuccess () {
-      this.modalEdit.payment = {}
-      this.modalEdit.value = false
-    },
-    onModalEditHidden () {
-      this.modalEdit.payment = {}
-    },
-    onShowPaymentVouchers (item) {
+    onShowVouchers (item) {
+      if (item.is_expense) {
+        if (this.$helpers.strContainsAny(item.receipt_path, '.pdf')) {
+          this.modalFileViewer.src = item.receipt_path
+          this.modalFileViewer.value = true
+          return
+        }
+
+        this.$viewerApi({
+          images: [item.receipt_path],
+          options: viewerConfig
+        })
+
+        return
+      }
+
       this.modalPaymentVouchers.value = true
       this.modalPaymentVouchers.payment = item
+    },
+    onViewerFileModalHidden () {
+      this.modalFileViewer.src = ''
     }
   }
 }
@@ -73,18 +100,27 @@ export default {
       :payment="modalError.payment"
     />
 
-    <ModalPaymentForm
+    <DailyCashEditModal
       v-model="modalEdit.value"
-      :payment="modalEdit.payment"
-      :order="modalEdit.payment.order"
-      :is-edit="true"
-      @success="onPaymentSuccess"
-      @hidden="onModalEditHidden"
+      :entry="modalEdit.item"
+      @success="onEntryEditSuccess"
     />
 
-    <ModalShowPaymentVouchers
+    <DailyCashPaymentVouchersModal
       v-model="modalPaymentVouchers.value"
       :payment="modalPaymentVouchers.payment"
+    />
+
+    <ViewerFileModal
+      v-model="modalFileViewer.value"
+      :src="modalFileViewer.src"
+      modal-dialog-class="modal-fullscreen"
+      @hidden="onViewerFileModalHidden"
+    />
+
+    <DailyCashBalance
+      v-if="$helpers.canView(roles.GERENCIA)"
+      class="mt-3"
     />
 
     <TheDailyCashBodyDate :date="date" />
@@ -92,11 +128,10 @@ export default {
     <hr class="bg-secondary">
 
     <TheDailyCashBodyTable
-      :items="payments"
-      @payment-success="onDailyPaymentSuccess"
+      :items="entries"
       @payment-error="onDailyPaymentError"
-      @payment-edit="onDailyPaymentEdit"
-      @show-payment-voucher="onShowPaymentVouchers"
+      @edit="onEntryEdit"
+      @show-voucher="onShowVouchers"
     />
   </div>
 </template>

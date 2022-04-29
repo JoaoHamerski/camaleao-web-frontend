@@ -22,9 +22,11 @@ const renderTableHead = (h, context) => {
           map(context.headers, (header, index) => {
             return (
               <th
-                nowrap
                 key={index}
-                class={header.align && `text-${header.align}`}>
+                class={[
+                  header.align && `text-${header.align}`,
+                  'text-nowrap'
+                ]}>
                 { tableHeadContent(h, context, header) }
               </th>
             )

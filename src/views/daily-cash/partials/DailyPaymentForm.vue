@@ -6,7 +6,8 @@ import Form from '@/utils/Form'
 import { handleSuccess, handleError } from '@/utils/forms'
 
 import { vias } from '@/graphql/Via.gql'
-import { GetPayments, CreateDailyPayment } from '@/graphql/Payment.gql'
+import { CreateDailyPayment } from '@/graphql/Payment.gql'
+import { GetDailyCash, GetDailyCashBalance } from '@/graphql/DailyCash.gql'
 import DailyPaymentFormClient from './DailyPaymentFormClient.vue'
 import DailyPaymentFormOrder from './DailyPaymentFormOrder.vue'
 
@@ -81,12 +82,13 @@ export default {
         await this.$apollo.mutate({
           mutation: CreateDailyPayment,
           variables: { input },
-          refetchQueries: [GetPayments]
+          refetchQueries: [GetDailyCash, GetDailyCashBalance]
         })
 
         this.$helpers.clearCacheFrom([
           { fieldName: 'orders' },
-          { fieldName: 'clients' }
+          { fieldName: 'clients' },
+          { fieldName: 'dailyCash'}
         ])
 
         handleSuccess(this, { message: 'Entrada registrada!', resetForm: true })

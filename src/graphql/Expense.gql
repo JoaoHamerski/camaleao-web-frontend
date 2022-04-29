@@ -75,3 +75,12 @@ mutation UpdateExpense ($id: ID! $input: ExpenseInput!) {
     ...ExpenseViaSimpleParts
   }
 }
+
+mutation AssignExpenseConfirmation ($id: ID! $confirmation: Boolean!) {
+  expenseAssignConfirmation (id: $id confirmation: $confirmation) {
+    ...ExpenseParts
+    ...ExpenseUserSimpleParts
+    ...ExpenseTypeSimpleParts
+    ...ExpenseViaSimpleParts
+  }
+}

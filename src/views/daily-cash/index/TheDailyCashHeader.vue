@@ -5,7 +5,7 @@ import {
 } from '@fortawesome/free-solid-svg-icons'
 import { isEmpty } from 'lodash-es'
 
-import PendenciesModal from './partials/PendenciesModal.vue'
+import PendenciesModal from '../partials/PendenciesModal.vue'
 
 export default {
   components: {
@@ -66,16 +66,28 @@ export default {
     />
 
     <div class="d-flex flex-column flex-sm-row justify-content-between align-items-sm-center">
-      <AppButton
-        class="fw-bold mb-2 mb-sm-0"
-        :block="$isMobile"
-        color="success"
-        btn-class="btn-lg"
-        :icon="icons.faPlus"
-        @click="$emit('on-new-entry-click')"
-      >
-        Nova entrada
-      </AppButton>
+      <div>
+        <AppButton
+          class="fw-bold mb-2 mb-sm-0 me-0 me-sm-2"
+          :block="$isMobile"
+          color="success"
+          btn-class="btn-lg"
+          :icon="icons.faPlus"
+          @click="$emit('on-new-entry-click')"
+        >
+          Nova entrada
+        </AppButton>
+        <AppButton
+          class="fw-bold mb-2 mb-sm-0"
+          :block="$isMobile"
+          color="danger"
+          btn-class="btn-lg"
+          :icon="icons.faPlus"
+          @click="$emit('on-new-expense-click')"
+        >
+          Nova saída
+        </AppButton>
+      </div>
       <div class="d-flex">
         <AppButton
           color="warning"

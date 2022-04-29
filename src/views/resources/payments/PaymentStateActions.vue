@@ -7,10 +7,7 @@ import {
   faEdit
 } from '@fortawesome/free-solid-svg-icons'
 
-import {
-  ConfirmPayment,
-  GetPaymentsPendencies
-} from '@/graphql/Payment.gql'
+import { AssignPaymentConfirmation } from '@/graphql/Payment.gql'
 
 export default {
   props: {
@@ -54,12 +51,11 @@ export default {
 
       try {
         await this.$apollo.mutate({
-          mutation: ConfirmPayment,
+          mutation: AssignPaymentConfirmation,
           variables: {
             id: this.payment.id,
             confirmation
-          },
-          refetchQueries: [{ query: GetPaymentsPendencies }]
+          }
         })
 
         this.$helpers.clearCacheFrom({ field: 'orders' })

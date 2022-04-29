@@ -25,10 +25,6 @@ export default {
     ViewerFileModal: () => import('@/components/AppViewer/ViewerFileModal')
   },
   props: {
-    vias: {
-      type: Array,
-      default: () => ([])
-    },
     expenses: {
       type: Array,
       default: () => ([])
@@ -40,10 +36,6 @@ export default {
     page: {
       type: Number,
       required: true
-    },
-    expenseTypes: {
-      type: Array,
-      default: () => ([])
     },
     isLoading: {
       type: Boolean,
@@ -79,7 +71,7 @@ export default {
   computed: {
     headers () {
       return [
-        { text: 'Descrição', value: 'description' },
+        { text: 'Descrição', value: 'description', wrap: true },
         { text: 'Tipo', value: 'type' },
         { text: 'Via', value: 'via' },
         { text: 'Valor', value: 'value', format: 'currencyBRL', nowrap: true },
@@ -147,9 +139,7 @@ export default {
   <div>
     <ModalExpensesEdit
       v-model="modalExpensesEdit.modal"
-      :vias="vias"
       :expense="modalExpensesEdit.expense"
-      :expense-types="expenseTypes"
       @success="onSuccessEdit"
     />
 

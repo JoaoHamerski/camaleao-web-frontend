@@ -38,25 +38,25 @@ export default {
     v-on="$listeners"
   >
     <template #title>
-      Pagamentos pendentes
+      <span class="text-dark">Entradas e saídas pendentes</span>
     </template>
     <template #body>
       <template v-if="pendencies.length">
         <div class="list-group mb-3">
           <a
             v-for="pendency in pendencies"
-            :key="pendency.created_at_payment"
+            :key="pendency.created_at_entry"
             href="#"
             class="list-group-item list-group-item-action d-flex justify-content-between link-primary"
-            :class="{'active text-white': isActiveListItem(pendency.created_at_payment, activeDate)}"
-            @click.prevent="onPendencyClick(pendency.created_at_payment)"
+            :class="{'active text-white': isActiveListItem(pendency.created_at_entry, activeDate)}"
+            @click.prevent="onPendencyClick(pendency.created_at_entry)"
           >
             <div class="fw-bold">
-              {{ formatDatetime(pendency.created_at_payment) }}
+              {{ formatDatetime(pendency.created_at_entry) }}
             </div>
             <span
               class="badge bg-primary align-self-center py-2"
-              :class="{'bg-light text-primary': isActiveListItem(pendency.created_at_payment, activeDate)}"
+              :class="{'bg-light text-primary': isActiveListItem(pendency.created_at_entry, activeDate)}"
             >{{ pendency.total }}</span>
           </a>
         </div>
@@ -65,7 +65,7 @@ export default {
         v-else
         class="text-center text-secondary my-5"
       >
-        Sem pagamentos pendentes
+        Sem pendencias
       </div>
     </template>
     <template #footer>
