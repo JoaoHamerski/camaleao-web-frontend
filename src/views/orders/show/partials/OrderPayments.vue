@@ -6,7 +6,6 @@ import {
   faHandHoldingUsd
 } from '@fortawesome/free-solid-svg-icons'
 import { formatDatetime } from '@/utils/formatters'
-import { ConfirmPayment } from '@/graphql/Payment.gql'
 import roles from '@/constants/roles'
 
 import ModalPaymentForm from '@/views/resources/payments/ModalPaymentForm.vue'

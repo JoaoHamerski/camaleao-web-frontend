@@ -83,8 +83,8 @@ mutation UpdatePayment ($id: ID! $input: PaymentInput!) {
   }
 }
 
-mutation ConfirmPayment ($id: ID! $confirmation: Boolean!) {
-  paymentConfirm (id: $id confirmation: $confirmation) {
+mutation AssignPaymentConfirmation ($id: ID! $confirmation: Boolean!) {
+  paymentAssignConfirmation (id: $id confirmation: $confirmation) {
     id
     order {
       ...PaymentsOrderParts

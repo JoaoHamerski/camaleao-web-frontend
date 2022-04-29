@@ -6,7 +6,11 @@ import { formatBytes } from '@/utils/formatters'
 import fileMixin from '@/mixins/filesMixin'
 import pasteFilesMixin from '@/mixins/pasteFilesMixin'
 import Form from '@/utils/Form'
+
 import { CreateExpense, UpdateExpense } from '@/graphql/Expense.gql'
+import { GetExpenseTypes } from '@/graphql/ExpenseType.gql'
+import { GetDailyCash } from '@/graphql/DailyCash.gql'
+import { vias } from '@/graphql/Via.gql'
 
 import ViewerItemsCardFile from '@/components/AppViewer/ViewerItemsCardFile.vue'
 
@@ -15,6 +19,14 @@ export default {
     ViewerItemsCardFile
   },
   mixins: [fileMixin, pasteFilesMixin],
+  apollo: {
+    vias: {
+      query: vias
+    },
+    expenseTypes: {
+      query: GetExpenseTypes
+    },
+  },
   props: {
     expense: {
       type: Object,
@@ -24,20 +36,14 @@ export default {
       type: Boolean,
       default: false
     },
-    expenseTypes: {
-      type: Array,
-      default: () => ([])
-    },
-    vias: {
-      type: Array,
-      default: () => ([])
-    }
   },
   data () {
     return {
       maskDate,
       maskCurrencyBRL,
       isLoading: false,
+      vias: [],
+      expenseTypes: [],
       form: new Form({
         description: '',
         expense_type_id: '',
@@ -48,7 +54,27 @@ export default {
       })
     }
   },
+  computed: {
+    isQueryLoading () {
+      return !!this.$apollo.queries.vias.loading
+        || !!this.$apollo.queries.expenseTypes.loading
+    }
+  },
   watch: {
+    vias () {
+      if (this.isEdit && !this.$apollo.queries.vias.loading) {
+        this.$nextTick(() => {
+          this.form.expense_via_id = this.expense.expense_via_id
+        })
+      }
+    },
+    expenseTypes () {
+      if (this.isEdit && !this.$apollo.queries.expenseTypes.loading) {
+        this.$nextTick(() => {
+          this.form.expense_type_id = this.expense.expense_type_id
+        })
+      }
+    },
     'form.receipt_path' () {
       if (this.form.errors.get('receipt_path')) {
         this.form.errors.clear('receipt_path')
@@ -62,12 +88,18 @@ export default {
     this.attachEventListener()
 
     if (this.isEdit) {
-      this.form = new Form({ ...omit(this.expense, 'id') })
+      this.populateForm()
     }
   },
   methods: {
     formatBytes,
     truncate,
+    populateForm () {
+      this.form = new Form({
+        ...omit(this.expense, ['id']),
+        ...{expense_type_id: '', expense_via_id: ''}
+      })
+    },
     attachEventListener () {
       document.addEventListener('paste', this.onPasteEvent)
     },
@@ -117,7 +149,9 @@ export default {
           variables: {
             id: this.expense.id,
             input
-          }
+          },
+          refetchQueries: [GetDailyCash],
+          awaitRefetchQueries: true
         })
 
         this.$helpers.clearCacheFrom({ fieldName: 'cashFlowEntries' })
@@ -133,12 +167,15 @@ export default {
       try {
         await this.$apollo.mutate({
           mutation: CreateExpense,
-          variables: { input }
+          variables: { input },
+          refetchQueries: ['GetDailyCash', 'GetDailyCashBalance'],
+          awaitRefetchQueries: true
         })
 
         this.$helpers.clearCacheFrom([
           { fieldName: 'expenses' },
-          { fieldName: 'cashFlowEntries' }
+          { fieldName: 'cashFlowEntries' },
+          { fieldName: 'dailyCash'}
         ])
 
         handleSuccess(this, { message: 'Despesa cadastrada!', resetForm: true })
@@ -155,6 +192,8 @@ export default {
     :on-submit="onSubmit"
     :form="form"
   >
+    <AppLoading v-show="isQueryLoading" />
+
     <AppInput
       id="description"
       v-model="form.description"
@@ -185,6 +224,7 @@ export default {
           name="value"
           :mask="maskCurrencyBRL()"
           :error="form.errors.get('value')"
+          numeric
         >
           Valor
         </AppInput>
@@ -247,6 +287,7 @@ export default {
       :mask="maskDate"
       placeholder="dd/mm/aaaa"
       :error="form.errors.get('date')"
+      today-button
     >
       Data
     </AppInput>

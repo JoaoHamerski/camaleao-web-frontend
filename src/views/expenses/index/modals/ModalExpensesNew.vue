@@ -1,7 +1,7 @@
 <script>
 
 import { faPlus } from '@fortawesome/free-solid-svg-icons'
-import ExpensesForm from './ExpensesForm.vue'
+import ExpensesForm from '../ExpensesForm.vue'
 
 export default {
   components: {

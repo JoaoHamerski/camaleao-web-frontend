@@ -1,0 +1,81 @@
+#import "./_PaginatorFragment.gql"
+
+query GetDailyCash (
+  $first: Int!
+  $page: Int
+  $orderBy: [QueryDailyCashOrderByOrderByClause!]
+  $where: QueryDailyCashWhereWhereConditions
+  $created_at: String
+) {
+  dailyCash(
+    first: $first
+    page: $page
+    orderBy: $orderBy
+    where: $where
+    created_at: $created_at
+  ) {
+    paginatorInfo {
+      ...PaginatorSimpleParts
+    }
+
+    data {
+      id
+      value
+      description
+      note
+      confirmed_at
+      is_confirmed
+      created_at
+      is_expense
+      receipt_path
+      date
+      via {
+        id
+        name
+      }
+      type {
+        id
+        name
+      }
+      order {
+        id
+        code
+        payment_voucher_paths
+        total_owing
+        client {
+          id
+          name
+        }
+      }
+    }
+  }
+}
+
+query GetDailyCashPendencies {
+  dailyCashPendencies {
+    created_at_entry
+    total
+  }
+}
+
+fragment BalanceParts on BalanceData {
+  entry
+  out
+  balance
+}
+
+query GetDailyCashBalance {
+  dailyCashBalance {
+    balance_of_day {
+      ...BalanceParts
+    }
+
+    balance_of_week {
+      ...BalanceParts
+    }
+
+    balance_of_month {
+      ...BalanceParts
+    }
+  }
+}

@@ -4,11 +4,12 @@ import {
 } from '@fortawesome/free-solid-svg-icons'
 import { formatDatetime } from '@/utils/formatters'
 import { DateTime } from 'luxon'
-import { GetPayments, GetPaymentsPendencies } from '@/graphql/Payment.gql'
+import { GetDailyCash, GetDailyCashPendencies } from '@/graphql/DailyCash.gql'
 
-import DailyPaymentModal from './partials/DailyPaymentModal.vue'
+import DailyPaymentModal from '../partials/DailyPaymentModal.vue'
 import TheDailyCashHeader from './TheDailyCashHeader.vue'
 import TheDailyCashBody from './TheDailyCashBody.vue'
+import ModalExpensesNew from '@/views/expenses/index/modals/ModalExpensesNew.vue'
 
 export default {
   metaInfo () {
@@ -19,27 +20,34 @@ export default {
   components: {
     TheDailyCashHeader,
     TheDailyCashBody,
-    DailyPaymentModal
+    DailyPaymentModal,
+    ModalExpensesNew
   },
   apollo: {
-    payments: {
-      query: GetPayments,
+    dailyCashPendencies: {
+      query: GetDailyCashPendencies
+    },
+    dailyCash: {
+      query: GetDailyCash,
       variables () {
         return { ...this.paymentsParams }
       }
-    },
-    paymentsPendencies: {
-      query: GetPaymentsPendencies
     }
   },
   data () {
     return {
-      payments: [],
-      paymentsPendencies: [],
+      dailyCashPendencies: [],
+      dailyCash: {
+        paginatorInfo: {},
+        data: []
+      },
       modalPayment: false,
+      modalExpense: false,
       paymentsParams: {
+        first: 100,
         created_at: DateTime.now().toISODate(),
-        pendencies: false
+        where: {},
+        orderBy: [{column: 'CREATED_AT', order: 'DESC'}]
       },
       icons: {
         faCashRegister
@@ -48,27 +56,38 @@ export default {
   },
   computed: {
     isLoading () {
-      return !!this.$apollo.queries.payments.loading
+      return !!this.$apollo.queries.dailyCash.loading
     }
   },
   methods: {
     formatDatetime,
     onLoadPendenciesFromDate (date) {
-      this.paymentsParams.pendencies = true
+      this.paymentsParams.where = {
+        column: 'IS_CONFIRMED',
+        operator: 'IS_NULL'
+      }
+
       this.paymentsParams.created_at = date
     },
     onNewEntryClick () {
       this.modalPayment = true
     },
+    onNewExpenseClick () {
+      this.modalExpense = true
+    },
+    onNewExpenseSuccess () {
+      this.$apollo.refetchQue
+      this.modalExpense = false
+    },
     onPaymentSuccess () {
       this.modalPayment = false
     },
     resetPayments () {
-      this.paymentsParams.pendencies = false
+      this.paymentsParams.where = {}
       this.paymentsParams.created_at = DateTime.now().toISODate()
 
-      this.$apollo.queries.payments.refetch()
-      this.$apollo.queries.paymentsPendencies.refetch()
+      this.$apollo.queries.dailyCash.refetch()
+      this.$apollo.queries.dailyCashPendencies.refetch()
     }
   }
 }
@@ -78,10 +97,11 @@ export default {
   <div class="py-5">
     <TheDailyCashHeader
       class="mb-2"
-      :pendencies="paymentsPendencies"
+      :pendencies="dailyCashPendencies"
       :active-date="formatDatetime(paymentsParams.created_at)"
       @reset-payments="resetPayments"
       @on-new-entry-click="onNewEntryClick"
+      @on-new-expense-click="onNewExpenseClick"
       @load-pendencies-from-date="onLoadPendenciesFromDate"
     />
 
@@ -104,8 +124,13 @@ export default {
           @on-payment-success="onPaymentSuccess"
         />
 
+        <ModalExpensesNew
+          v-model="modalExpense"
+          @success="onNewExpenseSuccess"
+        />
+
         <TheDailyCashBody
-          :payments="payments"
+          :entries="dailyCash.data"
           :date="formatDatetime(paymentsParams.created_at, 'dd/MM/y')"
         />
       </template>

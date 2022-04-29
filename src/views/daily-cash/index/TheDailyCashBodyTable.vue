@@ -1,20 +1,21 @@
 <script>
 import { isEmpty } from 'lodash-es'
 import roles from '@/constants/roles'
-import { faClipboardCheck, faFileAlt } from '@fortawesome/free-solid-svg-icons'
+import {
+  faClipboardCheck,
+  faFileAlt,
+  faHandHoldingUsd,
+  faFunnelDollar,
+  faEdit
+} from '@fortawesome/free-solid-svg-icons'
 import { clients, orders } from '@/constants/route-names'
 import { formatCurrencyBRL } from '@/utils/formatters'
-import PaymentState from '@/views/resources/payments/PaymentState.vue'
 
-const PAYMENT_STATUS_CLASS = {
-  true: 'table-success',
-  false: 'table-danger',
-  null: 'table-warning'
-}
+import DailyCashStatus from '../partials/DailyCashStatus.vue'
 
 export default {
   components: {
-    PaymentState
+    DailyCashStatus
   },
   props: {
     items: {
@@ -29,40 +30,48 @@ export default {
       roles,
       icons: {
         faClipboardCheck,
-        faFileAlt
+        faFileAlt,
+        faHandHoldingUsd,
+        faFunnelDollar,
+        faEdit
       }
     }
   },
   computed: {
     headers () {
       return [
-        { text: 'PEDIDO', value: 'order' },
+        { text: '', value: 'icon', align: 'center'},
+        { text: 'PEDIDO/DESPESA', value: 'order', wrap: true },
         { text: 'CLIENTE', value: 'client' },
         { text: 'VALOR', value: 'value', format: 'currencyBRL' },
         { text: 'VIA', value: 'via.name' },
         { text: 'REGISTRO ÀS', value: 'created_at', format: 'datetime', formatting: 'HH:mm', align: 'center' },
         { text: 'COMPROVANTE', value: 'payment_voucher', align: 'center'},
-        { text: 'CHECKED', value: 'checked', align: 'center' },
+        { text: 'STATUS', value: 'status', align: 'center' },
       ]
     }
   },
   methods: {
     formatCurrencyBRL,
     isEmpty,
-    onShowPaymentVoucherClick (item) {
-      this.$emit('show-payment-voucher', item)
+    getVoucher (item) {
+      if (item.is_expense) {
+        return item.receipt_path
+      }
+
+      return item.order.payment_voucher_paths
     },
-    paymentRowClass (payment) {
-      return `align-middle ${PAYMENT_STATUS_CLASS[payment.is_confirmed]}`
+    onShowVoucher (item) {
+      this.$emit('show-voucher', item)
     },
-    onPaymentSuccess () {
-      this.$emit('payment-success')
+    entryRowClass (entry) {
+      return [
+        'align-middle',
+        entry.is_expense ? 'table-danger' : 'table-success'
+      ]
     },
-    onPaymentError (payment) {
-      this.$emit('payment-error', payment)
-    },
-    onPaymentEdit (payment) {
-      this.$emit('payment-edit', payment)
+    onEditClick (entry) {
+      this.$emit('edit', entry)
     }
   }
 }
@@ -71,47 +80,52 @@ export default {
   <AppTable
     :headers="headers"
     :items="items"
-    :row-class="paymentRowClass"
+    :row-class="entryRowClass"
   >
+    <template #[`items.icon`]="{ item }">
+      <FontAwesomeIcon
+        v-show="item.is_expense"
+        :icon="icons.faFunnelDollar"
+        class="text-danger"
+      />
+      <FontAwesomeIcon
+        v-show="!item.is_expense"
+        :icon="icons.faHandHoldingUsd"
+        class="text-success"
+      />
+    </template>
+
     <template #[`items.order`]="{ item }">
-      <a
-        :href="$helpers.getUrl(
-          orders.show,
-          {client: item.order.client, order: item.order}
-        )"
-        target="_blank"
-        class="text-decoration-none fw-bold"
-      >{{ item.order.code }}</a>
+      <template v-if="item.order">
+        <a
+          :href="$helpers.getUrl(
+            orders.show,
+            {client: item.order.client, order: item.order}
+          )"
+          target="_blank"
+          class="text-decoration-none fw-bold"
+        >{{ item.order.code }}</a>
+      </template>
+      <template v-else>
+        {{ item.description }}
+      </template>
     </template>
 
     <template #[`items.client`]="{ item }">
-      <a
-        :href="$helpers.getUrl(clients.show, {client: item.order.client})"
-        target="_blank"
-        class="text-decoration-none fw-bold"
-      >{{ item.order.client.name }}</a>
+      <template v-if="item.order">
+        <a
+          :href="$helpers.getUrl(clients.show, {client: item.order.client})"
+          target="_blank"
+          class="text-decoration-none fw-bold"
+        >{{ item.order.client.name }}</a>
+      </template>
+      <template v-else>
+        N/A
+      </template>
     </template>
 
     <template #[`items.value`]="{ item }">
       <span class="fw-bold">{{ formatCurrencyBRL(item.value) }}</span>
-    </template>
-
-    <template #[`headers.checked`]>
-      <FontAwesomeIcon
-        :icon="icons.faClipboardCheck"
-        size="lg"
-      />
-    </template>
-
-    <template #[`items.checked`]="{ item }">
-      <PaymentState
-        :confirmation="item.is_confirmed"
-        :payment="item"
-        :show-actions="$helpers.canView(roles.GERENCIA)"
-        @success="onPaymentSuccess"
-        @error="onPaymentError"
-        @edit="onPaymentEdit"
-      />
     </template>
 
     <template #[`headers.payment_voucher`]>
@@ -120,15 +134,31 @@ export default {
         size="lg"
       />
     </template>
+
     <template #[`items.payment_voucher`]="{ item }">
       <AppButton
-        :color="isEmpty(item.order.payment_voucher_paths) ? 'secondary' : 'primary'"
-        :disabled-message="isEmpty(item.order.payment_voucher_paths) && 'Sem comprovantes'"
+        :color="isEmpty(getVoucher(item)) ? 'secondary' : 'primary'"
+        :disabled-message="isEmpty(getVoucher(item)) && 'Sem comprovantes'"
         :icon="icons.faFileAlt"
         outlined
         btn-class="btn-sm px-3"
-        @click.prevent="onShowPaymentVoucherClick(item)"
+        @click.prevent="onShowVoucher(item)"
       />
+    </template>
+
+    <template #[`items.status`]="{ item }">
+      <div class="d-flex flex-column justify-content-center flex-sm-row">
+        <DailyCashStatus :entry="item" />
+        <AppButton
+          v-if="item.is_confirmed === null"
+          :icon="icons.faEdit"
+          color="primary"
+          btn-class="btn-sm px-3"
+          tooltip="Editar"
+          outlined
+          @click.prevent="onEditClick(item)"
+        />
+      </div>
     </template>
   </AppTable>
 </template>

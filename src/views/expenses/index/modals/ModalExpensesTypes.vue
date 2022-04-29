@@ -3,17 +3,18 @@ import { isEmpty } from 'lodash-es'
 import { faList, faEdit } from '@fortawesome/free-solid-svg-icons'
 import Form from '@/utils/Form'
 import { handleSuccess, handleError } from '@/utils/forms'
-import { CreateExpenseType, UpdateExpenseType } from '@/graphql/ExpenseType.gql'
+import { CreateExpenseType, UpdateExpenseType, GetExpenseTypes } from '@/graphql/ExpenseType.gql'
 
 export default {
   props: {
     value: {
       type: Boolean,
       default: false
-    },
+    }
+  },
+  apollo: {
     expenseTypes: {
-      type: Array,
-      default: () => ([])
+      query: GetExpenseTypes
     }
   },
   data () {
@@ -30,7 +31,8 @@ export default {
       editForm: new Form({
         name: ''
       }),
-      editingType: {}
+      editingType: {},
+      expenseTypes: []
     }
   },
   methods: {

@@ -1,7 +1,5 @@
 <script>
 import { GetExpenses } from '@/graphql/Expense.gql'
-import { GetExpenseTypes } from '@/graphql/ExpenseType.gql'
-import { vias } from '@/graphql/Via.gql'
 
 import TheExpensesReportCard from './TheExpensesReportCard.vue'
 import TheExpensesBody from './TheExpensesBody.vue'
@@ -19,12 +17,6 @@ export default {
     TheExpensesHeader
   },
   apollo: {
-    vias: {
-      query: vias
-    },
-    expenseTypes: {
-      query: GetExpenseTypes
-    },
     expenses: {
       query: GetExpenses,
       variables () {
@@ -87,14 +79,10 @@ export default {
     />
 
     <TheExpensesHeader
-      :vias="vias"
-      :expense-types="expenseTypes"
       @search="onSearch"
     />
 
     <TheExpensesBody
-      :vias="vias"
-      :expense-types="expenseTypes"
       :expenses="expenses.data"
       :pagination="expenses.paginatorInfo"
       :page.sync="page"

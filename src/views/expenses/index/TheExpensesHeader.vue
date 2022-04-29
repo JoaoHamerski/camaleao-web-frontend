@@ -7,7 +7,7 @@ import ModalExpensesNew from './modals/ModalExpensesNew.vue'
 export default {
   components: {
     ModalExpensesNew,
-    ModalExpensesTypes: () => import('./modals/ModalExpensesTypes')
+    ModalExpensesTypes: () => import('./modals/ModalExpensesTypes.vue')
   },
   props: {
     expenses: {
@@ -61,15 +61,12 @@ export default {
   <div>
     <ModalExpensesNew
       v-model="modalExpensesRegister"
-      :expense-types="expenseTypes"
-      :vias="vias"
       @success="onExpenseRegisterSuccess"
     />
 
     <ModalExpensesTypes
       v-if="$helpers.canView(roles.GERENCIA)"
       v-model="modalExpensesTypes"
-      :expense-types="expenseTypes"
     />
 
     <div class="d-flex justify-content-between mb-2">

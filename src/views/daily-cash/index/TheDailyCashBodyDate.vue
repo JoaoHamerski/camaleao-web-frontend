@@ -42,8 +42,8 @@ export default {
     <div
       class="small text-secondary text-center"
     >
-      <span v-if="isSelectedDateToday">Pagamentos de hoje</span>
-      <span v-else>Pagamentos antigos</span>
+      <span v-if="isSelectedDateToday">Fluxo de hoje</span>
+      <span v-else>Fluxo antigo</span>
     </div>
   </div>
 </template>
