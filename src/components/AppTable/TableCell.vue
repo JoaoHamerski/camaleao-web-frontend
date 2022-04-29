@@ -44,10 +44,14 @@ function renderNormalCell (h, context) {
 function renderCell (h, context, element) {
   return (
     <td
-      nowrap
       class={classNames([
         `text-${context.header.align}`,
-        { 'has-link': context.hasRowLinks }
+        {
+          'has-link': context.hasRowLinks,
+          'text-nowrap': context.header.wrap
+            ? !context.header.wrap
+            : true
+        }
       ])}
     >
       { element }
