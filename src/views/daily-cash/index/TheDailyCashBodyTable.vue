@@ -6,7 +6,8 @@ import {
   faFileAlt,
   faHandHoldingUsd,
   faFunnelDollar,
-  faEdit
+  faEdit,
+  faExclamationCircle
 } from '@fortawesome/free-solid-svg-icons'
 import { clients, orders } from '@/constants/route-names'
 import { formatCurrencyBRL } from '@/utils/formatters'
@@ -33,7 +34,8 @@ export default {
         faFileAlt,
         faHandHoldingUsd,
         faFunnelDollar,
-        faEdit
+        faEdit,
+        faExclamationCircle
       }
     }
   },
@@ -46,6 +48,7 @@ export default {
         { text: 'VALOR', value: 'value', format: 'currencyBRL' },
         { text: 'VIA', value: 'via.name' },
         { text: 'REGISTRO ÀS', value: 'created_at', format: 'datetime', formatting: 'HH:mm', align: 'center' },
+        { text: 'DATA', value: 'date', format: 'datetime', formatting: 'dd/MM/y', align: 'center' },
         { text: 'COMPROVANTE', value: 'payment_voucher', align: 'center'},
         { text: 'STATUS', value: 'status', align: 'center' },
       ]
@@ -128,6 +131,15 @@ export default {
       <span class="fw-bold">{{ formatCurrencyBRL(item.value) }}</span>
     </template>
 
+    <template #[`headers.date`]>
+      DATA <FontAwesomeIcon
+        v-tippy
+        class="text-primary"
+        :icon="icons.faExclamationCircle"
+        fixed-width
+        content="Data para qual foi registrada a entrada/saída"
+      />
+    </template>
     <template #[`headers.payment_voucher`]>
       <FontAwesomeIcon
         :icon="icons.faFileAlt"
