@@ -37,7 +37,8 @@ export default {
         payment: {
           id: this.entry.id,
           via: this.entry.via,
-          note: this.entry.note
+          note: this.entry.note,
+          date: formatDatetime(this.entry.date)
         }
       }
     },

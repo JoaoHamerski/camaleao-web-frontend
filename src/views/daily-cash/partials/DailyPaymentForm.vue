@@ -1,8 +1,9 @@
 <script>
 import { isEmpty, isObject, omit, cloneDeep } from 'lodash-es'
 import { formatCurrencyBRL } from '@/utils/formatters'
-import { maskCurrencyBRL } from '@/utils/masks'
+import { maskCurrencyBRL, maskDate } from '@/utils/masks'
 import Form from '@/utils/Form'
+import { DateTime } from 'luxon'
 import { handleSuccess, handleError } from '@/utils/forms'
 
 import { vias } from '@/graphql/Via.gql'
@@ -24,6 +25,7 @@ export default {
   data () {
     return {
       maskCurrencyBRL: maskCurrencyBRL(),
+      maskDate,
       isLoading: false,
       form: new Form({
         client: {
@@ -38,7 +40,8 @@ export default {
           reminder: '',
           isNew: false
         },
-        value: '',
+        date: DateTime.now().toFormat('dd/MM/y'),
+        value: 'R$ ',
         via_id: ''
       })
     }
@@ -51,6 +54,9 @@ export default {
   methods: {
     isEmpty,
     formatCurrencyBRL,
+    onDateInputFocus () {
+      this.form.date = ''
+    },
     customLabelVias ({ name }) {
       return name
     },
@@ -158,6 +164,21 @@ export default {
           Via
         </AppSimpleSelect>
       </div>
+    </div>
+
+    <div>
+      <AppInput
+        id="date"
+        v-model="form.date"
+        name="date"
+        :error="form.errors.get('date')"
+        placeholder="Data do pagamento"
+        :mask="maskDate"
+        today-button
+        @focus="onDateInputFocus"
+      >
+        Data
+      </AppInput>
     </div>
 
     <div class="row">

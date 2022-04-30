@@ -73,7 +73,8 @@ export default {
 
       this.form.set({
         payment_via_id: this.payment.via.id,
-        note: this.payment.note
+        note: this.payment.note,
+        date: this.payment.date
       })
     },
     onPayRestClick () {
@@ -166,20 +167,20 @@ export default {
           </AppButton>
         </template>
       </AppInput>
-
-      <AppInput
-        id="date"
-        v-model="form.date"
-        placeholder="dd/mm/aaaa"
-        name="date"
-        type="date"
-        today-button
-        :mask="maskDate"
-        :error="form.errors.get('date')"
-      >
-        Data de pagamento
-      </AppInput>
     </template>
+
+    <AppInput
+      id="date"
+      v-model="form.date"
+      placeholder="dd/mm/aaaa"
+      name="date"
+      type="date"
+      today-button
+      :mask="maskDate"
+      :error="form.errors.get('date')"
+    >
+      Data de pagamento
+    </AppInput>
 
     <AppSimpleSelect
       id="payment_via_id"
