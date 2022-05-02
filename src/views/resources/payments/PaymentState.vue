@@ -4,7 +4,6 @@ import PaymentStateActions from './PaymentStateActions.vue'
 
 export default {
   components: {
-    PaymentStateInfo,
     PaymentStateActions
   },
   props: {
@@ -23,7 +22,8 @@ export default {
   },
   computed: {
     showConfirmationButtons () {
-      return this.showActions && this.confirmation === null
+      return this.showActions
+        && (this.confirmation === null || this.confirmation === true)
     }
   },
   methods: {
@@ -47,10 +47,5 @@ export default {
     @success="onSuccess"
     @edit="onEdit"
     @error="onError"
-  />
-
-  <PaymentStateInfo
-    v-else
-    :confirmation="confirmation"
   />
 </template>

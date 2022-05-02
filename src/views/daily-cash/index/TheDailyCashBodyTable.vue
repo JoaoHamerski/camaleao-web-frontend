@@ -51,6 +51,7 @@ export default {
         { text: 'DATA', value: 'date', format: 'datetime', formatting: 'dd/MM/y', align: 'center' },
         { text: 'COMPROVANTE', value: 'payment_voucher', align: 'center'},
         { text: 'STATUS', value: 'status', align: 'center' },
+        { text: 'EDITAR', value: 'edit', align: 'center' }
       ]
     }
   },
@@ -76,6 +77,23 @@ export default {
     },
     onEditClick (entry) {
       this.$emit('edit', entry)
+    },
+    showEditButton(entry) {
+      return entry.is_confirmed === null
+        || [null, true].includes(entry.is_confirmed) && this.$helpers.canView(roles.GERENCIA)
+    },
+    getDisabledEditMessage(entry) {
+      const type = !entry.is_expense ? 'entradas' : 'saídas'
+
+      if (entry.is_confirmed === false) {
+        return `Impossível editar ${type} rejeitadas`
+      }
+
+      if (entry.is_confirmed === true) {
+        return `Apenas usuários da gerência podem editar ${type} já confirmadas`
+      }
+
+      return 'Não é possível editar'
     }
   }
 }
@@ -94,12 +112,12 @@ export default {
         :class="entryRowClass(item, true)"
       >
         <template v-if="item.is_expense && $helpers.canView(roles.GERENCIA)">
-          <td colspan="9">
+          <td colspan="10">
             <strong>Registrado por: </strong>{{ item.user.name }}
           </td>
         </template>
         <template v-else-if="item.note">
-          <td colspan="9">
+          <td colspan="10">
             <strong>Nota:</strong> {{ item.note }}
           </td>
         </template>
@@ -181,16 +199,27 @@ export default {
     <template #[`items.status`]="{ item }">
       <div class="d-flex flex-column justify-content-center flex-sm-row">
         <DailyCashStatus :entry="item" />
-        <AppButton
-          v-if="item.is_confirmed === null"
-          :icon="icons.faEdit"
-          color="primary"
-          btn-class="btn-sm px-3"
-          tooltip="Editar"
-          outlined
-          @click.prevent="onEditClick(item)"
-        />
       </div>
+    </template>
+    <template #[`items.edit`]="{ item }">
+      <AppButton
+        v-if="showEditButton(item)"
+        :icon="icons.faEdit"
+        color="primary"
+        btn-class="btn-sm px-3"
+        tooltip="Editar"
+        outlined
+        @click.prevent="onEditClick(item)"
+      />
+      <AppButton
+        v-else
+        :icon="icons.faEdit"
+        disabled
+        color="secondary"
+        btn-class="btn-sm px-3"
+        :tooltip="getDisabledEditMessage(item)"
+        outlined
+      />
     </template>
   </AppTable>
 </template>

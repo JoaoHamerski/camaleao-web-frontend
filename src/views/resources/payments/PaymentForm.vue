@@ -3,6 +3,7 @@ import { vias } from '@/graphql/Via.gql'
 import { CreatePayment, UpdatePayment } from '@/graphql/Payment.gql'
 
 import Form from '@/utils/Form'
+import { formatDatetime } from '@/utils/formatters'
 import { maskCurrencyBRL, maskDate } from '@/utils/masks'
 import { handleError, handleSuccess } from '@/utils/forms'
 
@@ -74,7 +75,7 @@ export default {
       this.form.set({
         payment_via_id: this.payment.via.id,
         note: this.payment.note,
-        date: this.payment.date
+        date: formatDatetime(this.payment.date)
       })
     },
     onPayRestClick () {

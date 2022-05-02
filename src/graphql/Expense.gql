@@ -6,6 +6,8 @@ fragment ExpenseParts on Expense {
   date
   description
   receipt_path
+  is_confirmed
+  confirmed_at
 }
 
 fragment ExpenseUserSimpleParts on Expense {

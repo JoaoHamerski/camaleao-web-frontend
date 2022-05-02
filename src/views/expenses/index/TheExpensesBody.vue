@@ -7,7 +7,10 @@ import {
   faFile,
   faEdit,
   faTrashAlt,
-  faExclamationCircle
+  faExclamationCircle,
+  faTimes,
+  faCheck,
+  faMinus
 } from '@fortawesome/free-solid-svg-icons'
 
 import Vue from 'vue'
@@ -15,14 +18,17 @@ import VueViewer from 'v-viewer'
 import ModalExpensesDelete from './modals/ModalExpensesDelete.vue'
 import ModalExpensesEdit from './modals/ModalExpensesEdit.vue'
 import { config as viewerConfig } from '@/components/AppViewer/AppViewer'
-
+import DailyCashStatusConfirmation from '@/views/daily-cash/partials/DailyCashStatusConfirmation.vue'
+import DailyCashStatusInfo from '@/views/daily-cash/partials/DailyCashStatusInfo.vue'
 Vue.use(VueViewer)
 
 export default {
   components: {
     ModalExpensesDelete,
     ModalExpensesEdit,
-    ViewerFileModal: () => import('@/components/AppViewer/ViewerFileModal')
+    ViewerFileModal: () => import('@/components/AppViewer/ViewerFileModal'),
+    DailyCashStatusConfirmation,
+    DailyCashStatusInfo
   },
   props: {
     expenses: {
@@ -71,13 +77,14 @@ export default {
   computed: {
     headers () {
       return [
-        { text: 'Descrição', value: 'description', wrap: true },
-        { text: 'Tipo', value: 'type' },
-        { text: 'Via', value: 'via' },
-        { text: 'Valor', value: 'value', format: 'currencyBRL', nowrap: true },
-        { text: 'Data', value: 'date', format: 'datetime' },
-        { text: 'Comprovante', value: 'receipt', align: 'center' },
-        { text: 'Ações', value: 'actions', align: 'center' }
+        { text: 'DESCRIÇÃO', value: 'description', wrap: true },
+        { text: 'TIPO', value: 'type' },
+        { text: 'VIA', value: 'via' },
+        { text: 'VALOR', value: 'value', format: 'currencyBRL', nowrap: true },
+        { text: 'DATA', value: 'date', format: 'datetime' },
+        { text: 'COMPROVANTE', value: 'receipt', align: 'center' },
+        { text: 'STATUS', value: 'status', align: 'center' },
+        { text: 'EDITAR', value: 'editar', align: 'center' },
       ]
     },
     authUser () {
@@ -130,6 +137,35 @@ export default {
       this.modalExpensesDelete.modal = false
       this.$toast.success('Despesa deletada com sucesso!')
       this.$emit('refresh-expenses')
+    },
+    getStatusColor (expense) {
+      if (expense.is_confirmed === true) {
+        return 'success'
+      }
+
+      if (expense.is_confirmed === false) {
+        return 'danger'
+      }
+      return 'warning'
+    },
+    getStatusIcon(expense) {
+      if (expense.is_confirmed === true) {
+        return faCheck
+      }
+
+      if (expense.is_confirmed === false) {
+        return faTimes
+      }
+
+      return faMinus
+    },
+    showEditButton (expense) {
+      if (expense.is_confirmed === false) {
+        return false
+      }
+
+      return expense.is_confirmed === null
+        || expense.is_confirmed === true && this.$helpers.canView(roles.GERENCIA)
     }
   }
 }
@@ -198,7 +234,7 @@ export default {
           <template #[`items.receipt`]="{ item }">
             <AppButton
               :color="item.receipt_path ? 'primary' : 'secondary'"
-              btn-class="btn-sm"
+              btn-class="btn-sm px-3"
               :icon="getReceiptIcon(item)"
               outlined
               :tooltip="item.receipt_path ? 'Ver' : 'Sem comprovante'"
@@ -206,26 +242,35 @@ export default {
               @click="showReceipt(item)"
             />
           </template>
-          <template #[`items.actions`]="{ item }">
-            <div>
-              <AppButton
-                class="me-2"
-                tooltip="Editar"
-                btn-class="btn-sm"
-                :icon="icons.faEdit"
-                outlined
-                @click.prevent="onEditButtonClick(item)"
-              />
-              <AppButton
-                v-if="authUser.role.id === roles.GERENCIA"
-                btn-class="btn-sm"
-                tooltip="Excluir"
-                :icon="icons.faTrashAlt"
-                outlined
-                color="danger"
-                @click.prevent="onDeleteButtonClick(item)"
-              />
-            </div>
+          <template #[`items.editar`]="{ item }">
+            <AppButton
+              v-if="showEditButton(item)"
+              class="me-2"
+              tooltip="Editar"
+              btn-class="btn-sm px-3"
+              :icon="icons.faEdit"
+              outlined
+              @click.prevent="onEditButtonClick(item)"
+            />
+            <AppButton
+              v-else
+              class="me-2"
+              btn-class="btn-sm px-3"
+              outlined
+              color="secondary"
+              disabled
+              :icon="icons.faEdit"
+            />
+          </template>
+          <template #[`items.status`]="{ item }">
+            <DailyCashStatusConfirmation
+              v-if="item.is_confirmed === null && $helpers.canView(roles.GERENCIA)"
+              :entry="{...item, is_expense: true}"
+            />
+            <DailyCashStatusInfo
+              v-else
+              :entry="{...item, is_expense: true}"
+            />
           </template>
         </AppTable>
       </template>

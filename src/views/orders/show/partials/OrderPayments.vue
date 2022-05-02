@@ -123,10 +123,7 @@ export default {
                   <strong>NOTA:</strong> {{ payment.note }}
                 </div>
               </div>
-              <div
-                v-if="payment.is_confirmed === null"
-                class="d-flex"
-              >
+              <div class="d-flex">
                 <PaymentState
                   :payment="payment"
                   :confirmation="payment.is_confirmed"

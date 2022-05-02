@@ -21,7 +21,7 @@ export default {
         return {
           expense: {
             id: this.entry.id,
-            date: formatDatetime(this.entry.date),
+            date: this.entry.date,
             description: this.entry.description,
             expense_type_id: '',
             value: this.$helpers.toBRL(this.entry.value),
@@ -38,7 +38,7 @@ export default {
           id: this.entry.id,
           via: this.entry.via,
           note: this.entry.note,
-          date: formatDatetime(this.entry.date)
+          date: this.entry.date
         }
       }
     },
