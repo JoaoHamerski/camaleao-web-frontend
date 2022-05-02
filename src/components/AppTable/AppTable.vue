@@ -74,7 +74,9 @@ const renderTableRow = (h, context, item, index) => {
     >
       { renderTableCell(h, context, item) }
     </tr>,
-  context.$scopedSlots['table-row.item']({ item })
+    context.$scopedSlots['table-row.item']
+      ? context.$scopedSlots['table-row.item']({ item })
+      : null
   ])
 }
 
