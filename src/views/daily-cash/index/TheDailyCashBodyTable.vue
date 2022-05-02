@@ -94,6 +94,13 @@ export default {
       }
 
       return 'Não é possível editar'
+    },
+    showLineAppend(entry) {
+      if (entry.is_expense) {
+        return !!entry.user
+      }
+
+      return !!entry.note
     }
   }
 }
@@ -108,6 +115,7 @@ export default {
       #[`table-row.item`]="{ item }"
     >
       <tr
+        v-if="showLineAppend(item)"
         class="text-secondary small"
         :class="entryRowClass(item, true)"
       >
