@@ -29,6 +29,12 @@ query GetDailyCash (
       is_expense
       receipt_path
       date
+
+      user {
+        id
+        name
+      }
+
       via {
         id
         name

@@ -67,14 +67,15 @@ const renderTableCell = (h, context, item) => {
 }
 
 const renderTableRow = (h, context, item, index) => {
-  return (
+  return ([
     <tr
       key={`tr_${index}`}
       class={context.rowClass(item)}
     >
       { renderTableCell(h, context, item) }
-    </tr>
-  )
+    </tr>,
+  context.$scopedSlots['table-row.item']({ item })
+  ])
 }
 
 const renderTableBody = (h, context) => {

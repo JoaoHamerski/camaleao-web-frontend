@@ -67,10 +67,11 @@ export default {
     onShowVoucher (item) {
       this.$emit('show-voucher', item)
     },
-    entryRowClass (entry) {
+    entryRowClass (entry, isNote) {
       return [
-        'align-middle',
-        entry.is_expense ? 'table-danger' : 'table-success'
+        'align-middle ',
+        entry.is_expense ? 'table-danger' : 'table-success',
+        isNote ? 'border-bottom-2' : ''
       ]
     },
     onEditClick (entry) {
@@ -85,6 +86,25 @@ export default {
     :items="items"
     :row-class="entryRowClass"
   >
+    <template
+      #[`table-row.item`]="{ item }"
+    >
+      <tr
+        class="text-secondary small"
+        :class="entryRowClass(item, true)"
+      >
+        <template v-if="item.is_expense && $helpers.canView(roles.GERENCIA)">
+          <td colspan="9">
+            <strong>Registrado por: </strong>{{ item.user.name }}
+          </td>
+        </template>
+        <template v-else>
+          <td colspan="9">
+            <strong>Nota:</strong> {{ item.note }}
+          </td>
+        </template>
+      </tr>
+    </template>
     <template #[`items.icon`]="{ item }">
       <FontAwesomeIcon
         v-show="item.is_expense"
@@ -174,3 +194,9 @@ export default {
     </template>
   </AppTable>
 </template>
+
+<style scoped>
+.border-bottom-2 {
+  border-bottom-width: 2px;
+}
+</style>
