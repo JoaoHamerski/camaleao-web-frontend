@@ -98,7 +98,7 @@ export default {
             <strong>Registrado por: </strong>{{ item.user.name }}
           </td>
         </template>
-        <template v-else>
+        <template v-else-if="item.note">
           <td colspan="9">
             <strong>Nota:</strong> {{ item.note }}
           </td>
