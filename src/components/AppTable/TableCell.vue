@@ -45,7 +45,7 @@ function renderCell (h, context, element) {
   return (
     <td
       class={classNames([
-        `text-${context.header.align}`,
+        context.header.align && `text-${context.header.align}`,
         {
           'has-link': context.hasRowLinks,
           'text-nowrap': context.header.wrap
