@@ -63,6 +63,9 @@ export default {
       this.modalEdit.value = false
       this.modalEdit.item = null
     },
+    onEntryModalClose () {
+      this.modalEdit.item = null
+    },
     onDailyPaymentError (payment) {
       this.modalError.payment = payment
       this.modalError.value = true
@@ -104,6 +107,7 @@ export default {
       v-model="modalEdit.value"
       :entry="modalEdit.item"
       @success="onEntryEditSuccess"
+      @hidden="onEntryModalClose"
     />
 
     <DailyCashPaymentVouchersModal
