@@ -124,7 +124,7 @@ export default {
 
     <DailyCashBalance
       v-if="$helpers.canView(roles.GERENCIA)"
-      class="mt-3"
+      class="mt-3 mb-5"
     />
 
     <TheDailyCashBodyDate :date="date" />
