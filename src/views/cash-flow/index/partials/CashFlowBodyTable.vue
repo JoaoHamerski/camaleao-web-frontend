@@ -42,10 +42,11 @@ export default {
     headers () {
       return [
         { text: 'Tipo', value: 'type', align: 'center' },
-        { text: 'Descrição/Pedido', value: 'description' },
+        { text: 'Descrição/Pedido', value: 'description', wrap: true },
         { text: 'Via', value: 'via.name' },
         { text: 'Valor', value: 'value', format: 'currencyBRL', nowrap: true },
         { text: 'Data', value: 'date', align: 'center', format: 'datetime' },
+        { text: 'CADASTRO EM', value: 'created_at', align: 'center', format: 'datetime', formatting: "dd/MM/y 'às' HH:mm"},
         { text: 'Detalhes', value: 'details', align: 'center' }
       ]
     }

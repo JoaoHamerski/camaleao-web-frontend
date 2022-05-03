@@ -27,7 +27,8 @@ export default {
         return {
           page: this.page,
           first: 10,
-          where: this.where
+          where: this.where,
+          orderBy: this.orderBy
         }
       },
       result ({ loading }) {
@@ -60,6 +61,7 @@ export default {
       page: 1,
       search: '',
       where: {},
+      orderBy: [{column: 'CREATED_AT', order: 'DESC'}],
       icons: {
         faSearch
       }
@@ -74,6 +76,8 @@ export default {
     async onSearch () {
       const search = this.search
 
+      this.orderBy = [{column: 'DATE', order: 'DESC'}]
+
       this.where = {
         column: 'DESCRIPTION',
         operator: 'LIKE',
@@ -86,6 +90,7 @@ export default {
     },
     onFilterClear () {
       this.filterForm.reset()
+      this.orderBy = [{column: 'CREATED_AT', order: 'DESC'}]
       this.filterDates = {}
       this.where = {}
     },
@@ -113,6 +118,8 @@ export default {
       }
 
       if (start_date && final_date) {
+        this.orderBy = [{column: 'DATE', order: 'DESC'}]
+
         this.where = {
           column: 'DATE',
           operator: 'BETWEEN',

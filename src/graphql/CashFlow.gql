@@ -52,15 +52,13 @@ query GetCashFlowEntries (
   $first: Int = 10
   $page: Int
   $where: QueryCashFlowEntriesWhereWhereConditions
+  $orderBy: [QueryCashFlowEntriesOrderByOrderByClause!]
 ) {
   cashFlowEntries (
     first: $first
     page: $page
     where: $where
-    orderBy: [
-      {column: CREATED_AT order: DESC}
-      {column: DATE order: DESC}
-    ]
+    orderBy: $orderBy
   ) {
     paginatorInfo {
       ...PaginatorSimpleParts
