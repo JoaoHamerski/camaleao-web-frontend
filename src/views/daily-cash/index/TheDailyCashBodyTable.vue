@@ -205,10 +205,9 @@ export default {
     </template>
 
     <template #[`items.status`]="{ item }">
-      <div class="d-flex flex-column justify-content-center flex-sm-row">
-        <DailyCashStatus :entry="item" />
-      </div>
+      <DailyCashStatus :entry="item" />
     </template>
+
     <template #[`items.edit`]="{ item }">
       <AppButton
         v-if="showEditButton(item)"

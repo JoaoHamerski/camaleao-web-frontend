@@ -12,23 +12,23 @@ import {
   faCheck,
   faMinus
 } from '@fortawesome/free-solid-svg-icons'
+import { config as viewerConfig } from '@/components/AppViewer/AppViewer'
+
 
 import Vue from 'vue'
 import VueViewer from 'v-viewer'
 import ModalExpensesDelete from './modals/ModalExpensesDelete.vue'
 import ModalExpensesEdit from './modals/ModalExpensesEdit.vue'
-import { config as viewerConfig } from '@/components/AppViewer/AppViewer'
-import DailyCashStatusConfirmation from '@/views/daily-cash/partials/DailyCashStatusConfirmation.vue'
-import DailyCashStatusInfo from '@/views/daily-cash/partials/DailyCashStatusInfo.vue'
+import ExpenseState from './ExpenseState.vue'
+
 Vue.use(VueViewer)
 
 export default {
   components: {
     ModalExpensesDelete,
     ModalExpensesEdit,
+    ExpenseState,
     ViewerFileModal: () => import('@/components/AppViewer/ViewerFileModal'),
-    DailyCashStatusConfirmation,
-    DailyCashStatusInfo
   },
   props: {
     expenses: {
@@ -86,9 +86,6 @@ export default {
         { text: 'STATUS', value: 'status', align: 'center' },
         { text: 'EDITAR', value: 'editar', align: 'center' },
       ]
-    },
-    authUser () {
-      return this.$store.getters['auth/authUser']
     }
   },
   methods: {
@@ -159,13 +156,16 @@ export default {
 
       return faMinus
     },
-    showEditButton (expense) {
-      if (expense.is_confirmed === false) {
-        return false
+    isEditEnabled (expense) {
+      if (expense.is_confirmed === null) {
+        return true
       }
 
-      return expense.is_confirmed === null
-        || expense.is_confirmed === true && this.$helpers.canView(roles.GERENCIA)
+      if (expense.is_confirmed === true && this.$helpers.canView(roles.GERENCIA)) {
+        return true
+      }
+
+      return false
     }
   }
 }
@@ -198,7 +198,7 @@ export default {
         :icon="icons.faExclamationCircle"
         fixed-width
       />
-      <span v-if="+authUser.role.id === roles.GERENCIA">
+      <span v-if="$helpers.canView(roles.GERENCIA)">
         Exibindo despesas registradas por todos usuários.
       </span>
       <span v-else>
@@ -244,33 +244,18 @@ export default {
           </template>
           <template #[`items.editar`]="{ item }">
             <AppButton
-              v-if="showEditButton(item)"
+              :disabled="!isEditEnabled(item)"
+              :color="isEditEnabled(item) ? 'primary' : 'secondary'"
               class="me-2"
-              tooltip="Editar"
+              :tooltip="isEditEnabled(item) ? 'Editar' : 'Não é possível editar'"
               btn-class="btn-sm px-3"
               :icon="icons.faEdit"
               outlined
               @click.prevent="onEditButtonClick(item)"
             />
-            <AppButton
-              v-else
-              class="me-2"
-              btn-class="btn-sm px-3"
-              outlined
-              color="secondary"
-              disabled
-              :icon="icons.faEdit"
-            />
           </template>
           <template #[`items.status`]="{ item }">
-            <DailyCashStatusConfirmation
-              v-if="item.is_confirmed === null && $helpers.canView(roles.GERENCIA)"
-              :entry="{...item, is_expense: true}"
-            />
-            <DailyCashStatusInfo
-              v-else
-              :entry="{...item, is_expense: true}"
-            />
+            <ExpenseState :expense="item" />
           </template>
         </AppTable>
       </template>

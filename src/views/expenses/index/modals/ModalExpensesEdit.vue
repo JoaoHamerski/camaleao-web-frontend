@@ -47,7 +47,7 @@ export default {
         value: formatCurrencyBRL(expense.value),
         expense_via_id: expense.via.id,
         receipt_path: expense.receipt_path,
-        date: formatDatetime(expense.date)
+        date: expense.date
       }
     },
     onModalHidden () {

@@ -29,20 +29,24 @@ export default {
 }
 </script>
 <template>
-  <div
-    class="d-flex justify-content-around table-responsive position-relative"
-  >
+  <div>
     <AppLoading v-show="isQueryLoading" />
-    <template v-if="!isEmpty(dailyCashBalance)">
+    <div
+      v-if="!isEmpty(dailyCashBalance)"
+      class="d-flex justify-content-center justify-content-sm-around flex-column flex-sm-row"
+    >
       <DailyCashBalanceItem :balance="dailyCashBalance.balance_of_day">
         BALANÇO DO DIA
       </DailyCashBalanceItem>
-      <DailyCashBalanceItem :balance="dailyCashBalance.balance_of_week">
+      <DailyCashBalanceItem
+        :balance="dailyCashBalance.balance_of_week"
+        class="my-3 my-sm-0"
+      >
         BALANÇO DA SEMANA
       </DailyCashBalanceItem>
       <DailyCashBalanceItem :balance="dailyCashBalance.balance_of_month">
         BALANÇO DO MÊS
       </DailyCashBalanceItem>
-    </template>
+    </div>
   </div>
 </template>

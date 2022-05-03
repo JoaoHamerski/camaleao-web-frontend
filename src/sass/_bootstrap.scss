@@ -10,7 +10,7 @@
   font-size: .85rem;
 }
 
-.input-group > .form-select {
+.input-group>.form-select {
   width: fit-content;
   flex-grow: 0;
 }
@@ -19,6 +19,7 @@
   .page-item:first-child .page-link {
     border-left: none;
   }
+
   .page-item:last-child .page-link {
     border-right: none;
   }
@@ -38,12 +39,12 @@
     cursor: pointer;
   }
 
-  tbody tr:last-child td  {
+  tbody tr:last-child td {
     border-bottom: none;
   }
 }
 
-.table > :not(:last-child) > :last-child > * {
+.table> :not(:last-child)> :last-child>* {
   border-bottom: 2px solid $gray-300;
 }
 
@@ -60,7 +61,7 @@
 
 .btn-group .btn,
 .input-group .btn {
-    box-shadow: none;
+  box-shadow: none;
 }
 
 .btn {

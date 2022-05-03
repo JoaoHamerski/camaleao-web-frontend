@@ -131,7 +131,7 @@ export default {
         {
           [`btn-${this.color}`]: !this.outlined,
           [`btn-outline-${this.color}`]: this.outlined,
-          'd-block w-100': this.block
+          'd-block w-100': this.block,
         },
         isButtonAppended && { ...appendClasses },
         this.btnClass

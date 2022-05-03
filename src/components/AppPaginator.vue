@@ -43,7 +43,7 @@ export default {
     pageList () {
       const totalPages = this.totalPages
       const page = this.pagination.currentPage
-      const maxLength = 10
+      const maxLength = this.$isMobile ? 6 : 10
 
       const range = (start, end) => {
         return Array.from(Array(end - start + 1), (_, i) => i + start)
@@ -115,7 +115,7 @@ export default {
 </script>
 
 <template>
-  <div class="table-responsive-sm">
+  <div class="table-responsive">
     <nav
       v-if="hasPagination"
       aria-label="Paginação"
@@ -130,10 +130,13 @@ export default {
             @click="paginate(null, false)"
           >
             <FontAwesomeIcon
+              class="d-inline-block d-sm-none"
               :icon="icons.faArrowLeft"
             />
+            <span class="d-none d-sm-block">Anterior</span>
           </a>
         </li>
+
         <li
           v-for="(pageNumber, index) in pageList"
           :key="index"
@@ -150,17 +153,20 @@ export default {
             {{ pageNumber === 0 ? '...' : pageNumber }}
           </a>
         </li>
+
         <li
           class="page-item"
           :class="(isLastPageActive || isLoading) && 'disabled'"
         >
           <a
-            class="page-link clickable px-3 "
+            class="page-link clickable px-3"
             @click="paginate(null, true)"
           >
             <FontAwesomeIcon
+              class="d-inline-block d-sm-none"
               :icon="icons.faArrowRight"
             />
+            <span class="d-none d-sm-block">Próximo</span>
           </a>
         </li>
       </ul>

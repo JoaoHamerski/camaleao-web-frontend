@@ -2,7 +2,7 @@
 import { truncate, isEmpty, omit } from 'lodash-es'
 import { maskDate, maskCurrencyBRL } from '@/utils/masks'
 import { handleError, handleSuccess } from '@/utils/forms'
-import { formatBytes } from '@/utils/formatters'
+import { formatBytes, formatDatetime } from '@/utils/formatters'
 import fileMixin from '@/mixins/filesMixin'
 import pasteFilesMixin from '@/mixins/pasteFilesMixin'
 import Form from '@/utils/Form'
@@ -96,8 +96,12 @@ export default {
     truncate,
     populateForm () {
       this.form = new Form({
-        ...omit(this.expense, ['id']),
-        ...{expense_type_id: '', expense_via_id: ''}
+        ...omit(this.expense, ['id', 'date']),
+        ...{
+          date: formatDatetime(this.expense.date),
+          expense_type_id: '',
+          expense_via_id: ''
+        }
       })
     },
     attachEventListener () {

@@ -9,7 +9,7 @@ import { formatDatetime } from '@/utils/formatters'
 import roles from '@/constants/roles'
 
 import ModalPaymentForm from '@/views/resources/payments/ModalPaymentForm.vue'
-import PaymentState from '@/views/resources/payments/PaymentState.vue'
+import OrderPaymentState from './OrderPaymentsState.vue'
 import PaymentConfirmErrorModal from '@/views/resources/payments/PaymentConfirmErrorModal.vue'
 
 const PAYMENT_STATE = {
@@ -21,7 +21,7 @@ const PAYMENT_STATE = {
 export default {
   components: {
     ModalPaymentForm,
-    PaymentState,
+    OrderPaymentState,
     PaymentConfirmErrorModal
   },
   props: {
@@ -65,6 +65,13 @@ export default {
     onPaymentModalErrorHidden() {
       this.modalPaymentError.value = false
       this.modalPaymentError.payment = {}
+    },
+    getListGroupClass (payment) {
+      return {
+        'list-group-item-success': payment.is_confirmed === true,
+        'list-group-item-danger': payment.is_confirmed === false,
+        'list-group-item-warning': payment.is_confirmed === null,
+      }
     }
   }
 }
@@ -96,10 +103,7 @@ export default {
             v-for="payment in payments"
             :key="payment.id"
             class="list-group-item text-subtitle"
-            :class="{
-              'list-group-item-danger': payment.is_confirmed === false,
-              'list-group-item-warning': payment.is_confirmed === null,
-            }"
+            :class="getListGroupClass(payment)"
           >
             <div class="d-flex flex-column flex-sm-row justify-content-between align-items-sm-center">
               <div class="mb-3 mb-sm-0">
@@ -124,9 +128,8 @@ export default {
                 </div>
               </div>
               <div class="d-flex">
-                <PaymentState
+                <OrderPaymentState
                   :payment="payment"
-                  :confirmation="payment.is_confirmed"
                   @error="onPaymentError"
                   @edit="onEditPayment"
                 />

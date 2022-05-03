@@ -15,6 +15,10 @@ const CONFIRMATION = {
 
 export default {
   props: {
+    isExpense: {
+      type: Boolean,
+      required: true
+    },
     entry: {
       type: Object,
       required: true
@@ -76,7 +80,7 @@ export default {
     async assignConfirmation (confirmation) {
       this.isLoading = confirmation
 
-      if (this.entry.is_expense) {
+      if (this.isExpense) {
         await this.assignExpenseConfirmation(confirmation)
       } else {
         await this.assignPaymentConfirmation(confirmation)
@@ -102,8 +106,8 @@ export default {
     <AppButton
       :loading="isLoading === CONFIRMATION.REJECT"
       :disabled="isLoading === CONFIRMATION.ACCEPT"
-      class="mx-0 my-2 my-sm-0 mx-sm-2"
       :icon="icons.faTimes"
+      class="ms-2"
       color="danger"
       btn-class="btn-sm px-3"
       tooltip="Rejeitar"
