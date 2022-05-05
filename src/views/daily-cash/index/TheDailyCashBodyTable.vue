@@ -44,7 +44,7 @@ export default {
       return [
         { text: '', value: 'icon', align: 'center'},
         { text: 'PEDIDO/DESPESA', value: 'order', wrap: true },
-        { text: 'CLIENTE', value: 'client' },
+        { text: 'CLIENTE', value: 'client', wrap: true },
         { text: 'VALOR', value: 'value', format: 'currencyBRL' },
         { text: 'VIA', value: 'via.name' },
         { text: 'REGISTRO ÀS', value: 'created_at', format: 'datetime', formatting: 'HH:mm', align: 'center' },
