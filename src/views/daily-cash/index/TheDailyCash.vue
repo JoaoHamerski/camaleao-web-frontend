@@ -10,6 +10,7 @@ import DailyPaymentModal from '../partials/DailyPaymentModal.vue'
 import TheDailyCashHeader from './TheDailyCashHeader.vue'
 import TheDailyCashBody from './TheDailyCashBody.vue'
 import ModalExpensesNew from '@/views/expenses/index/modals/ModalExpensesNew.vue'
+import DailyCashReminderFormModal from '../partials/DailyCashReminderFormModal.vue'
 
 export default {
   metaInfo () {
@@ -21,7 +22,8 @@ export default {
     TheDailyCashHeader,
     TheDailyCashBody,
     DailyPaymentModal,
-    ModalExpensesNew
+    ModalExpensesNew,
+    DailyCashReminderFormModal
   },
   apollo: {
     dailyCashPendencies: {
@@ -43,6 +45,7 @@ export default {
       },
       modalPayment: false,
       modalExpense: false,
+      modalReminder: false,
       paymentsParams: {
         first: 100,
         created_at: DateTime.now().toISODate(),
@@ -69,6 +72,12 @@ export default {
 
       this.paymentsParams.created_at = date
     },
+    onReminderClick () {
+      this.modalReminder = true
+    },
+    onReminderSuccess () {
+      this.modalReminder = false
+    },
     onNewEntryClick () {
       this.modalPayment = true
     },
@@ -76,7 +85,6 @@ export default {
       this.modalExpense = true
     },
     onNewExpenseSuccess () {
-      this.$apollo.refetchQue
       this.modalExpense = false
     },
     onPaymentSuccess () {
@@ -103,6 +111,7 @@ export default {
       @on-new-entry-click="onNewEntryClick"
       @on-new-expense-click="onNewExpenseClick"
       @load-pendencies-from-date="onLoadPendenciesFromDate"
+      @on-reminder-click="onReminderClick"
     />
 
     <AppCard>
@@ -127,6 +136,12 @@ export default {
         <ModalExpensesNew
           v-model="modalExpense"
           @success="onNewExpenseSuccess"
+        />
+
+        <DailyCashReminderFormModal
+          v-model="modalReminder"
+          @success="onReminderSuccess"
+          @dismiss="modalReminder = false"
         />
 
         <TheDailyCashBody
