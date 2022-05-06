@@ -4,7 +4,7 @@ import { handleError } from '@/utils/forms'
 import { faSearch } from '@fortawesome/free-solid-svg-icons'
 import {
   GetCashFlowEntries,
-  GetCashFlowStatistics
+  GetCashFlowBalance
 } from '@/graphql/CashFlow.gql'
 
 import TheCashFlowFilter from './TheCashFlowFilter.vue'
@@ -53,11 +53,10 @@ export default {
       filterForm: new Form({
         start_date: '',
         final_date: '',
-        showStatistics: false,
         showBalance: false
       }),
       filterDates: {},
-      statistics: {},
+      balance: null,
       page: 1,
       search: '',
       where: {},
@@ -93,11 +92,12 @@ export default {
       this.orderBy = [{column: 'CREATED_AT', order: 'DESC'}]
       this.filterDates = {}
       this.where = {}
+      this.balance = null
     },
-    async submitStatistics ({ start_date, final_date }) {
+    async submitBalance ({ start_date, final_date }) {
       try {
-        const { data } = await this.$apollo.query({
-          query: GetCashFlowStatistics,
+        const { data: { cashFlowBalance } } = await this.$apollo.query({
+          query: GetCashFlowBalance,
           variables: {
             input: {
               start_date, final_date
@@ -105,16 +105,16 @@ export default {
           }
         })
 
-        this.statistics = data.cashFlowStatistics
+        this.balance = cashFlowBalance
       } catch (error) {}
     },
     async onSubmit () {
       const data = this.filterForm.data()
-      const { showStatistics, showBalance } = data
+      const { showBalance } = data
       const { start_date, final_date } = data
 
-      if (showStatistics || showBalance) {
-        this.submitStatistics(data)
+      if (showBalance) {
+        this.submitBalance(data)
       }
 
       if (start_date && final_date) {
@@ -177,10 +177,9 @@ export default {
 
     <TheCashFlowBody
       :is-loading="isLoading"
-      :show-statistics="filterForm.showStatistics"
       :show-balance="filterForm.showBalance"
       :page.sync="page"
-      :statistics="statistics"
+      :balance="balance"
       :filter-dates="filterDates"
       :data="cashFlowEntries.data"
       :pagination="cashFlowEntries.paginatorInfo"

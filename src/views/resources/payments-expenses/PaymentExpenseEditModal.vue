@@ -1,6 +1,4 @@
 <script>
-import { formatDatetime } from '@/utils/formatters'
-
 const ExpensesForm = () => import('@/views/expenses/index/ExpensesForm.vue')
 const PaymentForm = () => import('@/views/resources/payments/PaymentForm.vue')
 

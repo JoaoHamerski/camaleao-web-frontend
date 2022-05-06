@@ -1,14 +1,15 @@
 <script>
-import { faCashRegister, faExclamationCircle } from '@fortawesome/free-solid-svg-icons'
-import { isEmpty } from 'lodash-es'
+import {
+  faCashRegister,
+  faExclamationCircle
+} from '@fortawesome/free-solid-svg-icons'
+import { isEmpty, isNil } from 'lodash-es'
 
-import CashFlowBodyTable from './partials/CashFlowBodyTable.vue'
-import CashFlowBodyStatistics from './partials/CashFlowBodyStatstics.vue'
+import PaymentExpenseTable, { headers } from '@/views/resources/payments-expenses/PaymentExpenseTable.vue'
 
 export default {
   components: {
-    CashFlowBodyTable,
-    CashFlowBodyStatistics
+    PaymentExpenseTable
   },
   props: {
     isLoading: {
@@ -31,10 +32,7 @@ export default {
       type: Number,
       required: true
     },
-    statistics: {
-      type: Object,
-      default: () => ({})
-    },
+    balance: undefined,
     showStatistics: {
       type: Boolean,
       default: false
@@ -53,6 +51,17 @@ export default {
     }
   },
   computed: {
+    headers () {
+      const index = headers.findIndex(item => item.value === 'created_at')
+
+      headers.splice(
+        index,
+        1,
+        {text: 'CADASTRO EM', value: 'created_at', format: 'datetime', formatting: 'dd/MM/y HH:mm' }
+      )
+
+      return headers
+    },
     displayFilteredDate () {
       const { start_date, final_date } = this.filterDates
 
@@ -64,6 +73,7 @@ export default {
     }
   },
   methods: {
+    isNil,
     isEmpty
   }
 }
@@ -71,10 +81,7 @@ export default {
 
 <template>
   <div>
-    <AppCard
-      class="mt-2"
-      :has-body-padding="false"
-    >
+    <AppCard class="mt-2">
       <template #header>
         <h6 class="mb-0 fw-bold d-flex justify-content-between">
           <div>
@@ -107,13 +114,26 @@ export default {
             {{ displayFilteredDate }}
           </h5>
         </div>
-        <CashFlowBodyStatistics
-          v-if="!isEmpty(statistics)"
-          :show-statistics="showStatistics"
-          :show-balance="showBalance"
-          :data="statistics"
+
+        <div
+          v-if="showBalance && !isNil(balance)"
+          class="mb-3"
+        >
+          <div class="text-secondary text-center text-subtitle fw-bold">
+            BALANÇO
+          </div>
+          <h4
+            class="text-center fw-bold"
+            :class="balance >= 0 ? 'text-success' : 'text-danger'"
+          >
+            {{ $helpers.toBRL(balance) }}
+          </h4>
+        </div>
+
+        <PaymentExpenseTable
+          :items="data"
+          :headers="headers"
         />
-        <CashFlowBodyTable :data="data" />
       </template>
     </AppCard>
 

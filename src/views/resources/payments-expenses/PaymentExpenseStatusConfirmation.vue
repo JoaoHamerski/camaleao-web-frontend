@@ -4,6 +4,7 @@ import {
   faCheck
 } from '@fortawesome/free-solid-svg-icons'
 
+import { GetCashFlowEntries, GetCashFlowBalance } from '@/graphql/CashFlow.gql'
 import { GetDailyCash, GetDailyCashBalance } from '@/graphql/DailyCash.gql'
 import { AssignPaymentConfirmation } from '@/graphql/Payment.gql'
 import { AssignExpenseConfirmation } from '@/graphql/Expense.gql'
@@ -43,7 +44,12 @@ export default {
             id: this.entry.id,
             confirmation
           },
-          refetchQueries: [GetDailyCash, GetDailyCashBalance],
+          refetchQueries: [
+            GetDailyCash,
+            GetDailyCashBalance,
+            GetCashFlowEntries,
+            GetCashFlowBalance
+          ],
           awaitRefetchQueries: true
         })
 
@@ -64,7 +70,12 @@ export default {
             id: this.entry.id,
             confirmation
           },
-          refetchQueries: [GetDailyCash, GetDailyCashBalance],
+          refetchQueries: [
+            GetDailyCash,
+            GetDailyCashBalance,
+            GetCashFlowEntries,
+            GetCashFlowBalance
+          ],
           awaitRefetchQueries: true
         })
 

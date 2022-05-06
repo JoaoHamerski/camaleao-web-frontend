@@ -132,15 +132,6 @@ export default {
         </AppCheckbox>
 
         <AppCheckbox
-          id="show_statistics"
-          :value="form.showStatistics"
-          name="show_statistics"
-          @input="form.set({showStatistics: $event})"
-        >
-          Exibir estatísticas
-        </AppCheckbox>
-
-        <AppCheckbox
           id="show_balance"
           :value="form.showBalance"
           name="show_balance"

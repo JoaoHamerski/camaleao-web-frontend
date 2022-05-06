@@ -8,6 +8,7 @@ fragment CashFlowEntryParts on CashFlowEntry {
   is_expense
   receipt_path
   note
+  is_confirmed
   confirmed_at
   created_at
   employee_name
@@ -31,9 +32,7 @@ fragment CashFlowEntryOrderParts on CashFlowEntry {
   order {
     id
     code
-    name
-    quantity
-    art_paths
+    payment_voucher_paths
     client {
       id
       name
@@ -74,14 +73,6 @@ query GetCashFlowEntries (
   }
 }
 
-query GetCashFlowStatistics ($input: CashFlowFilterDatesInput!) {
-  cashFlowStatistics(input: $input) {
-    created_orders
-    created_shirts
-    closed_orders
-    closed_shirts
-    no_payments_orders
-    no_payments_shirts
-    balance
-  }
+query GetCashFlowBalance ($input: CashFlowFilterDatesInput!) {
+  cashFlowBalance(input: $input)
 }
