@@ -31,6 +31,7 @@ export default {
             type="date"
             name="print_date"
             placeholder="dd/mm/aaaa"
+            numeric
             :mask="maskDate"
             :error="form.errors.get('print_date')"
             @input="form.set({print_date: $event})"
@@ -46,6 +47,7 @@ export default {
             name="seam_date"
             placeholder="dd/mm/aaaa"
             :mask="maskDate"
+            numeric
             :error="form.errors.get('seam_date')"
             @input="form.set({seam_date: $event})"
           >
@@ -60,6 +62,7 @@ export default {
             type="date"
             placeholder="dd/mm/aaaa"
             :mask="maskDate"
+            numeric
             :error="form.errors.get('delivery_date')"
             @input="form.set({delivery_date: $event})"
           >
