@@ -3,13 +3,15 @@ import {
   faCashRegister,
   faExclamationCircle
 } from '@fortawesome/free-solid-svg-icons'
-import { isEmpty, isNil } from 'lodash-es'
+import { isEmpty } from 'lodash-es'
 
 import PaymentExpenseTable, { headers } from '@/views/resources/payments-expenses/PaymentExpenseTable.vue'
+import CashFlowBalance from './partials/CashFlowBalance.vue'
 
 export default {
   components: {
-    PaymentExpenseTable
+    PaymentExpenseTable,
+    CashFlowBalance
   },
   props: {
     isLoading: {
@@ -32,10 +34,9 @@ export default {
       type: Number,
       required: true
     },
-    balance: undefined,
-    showStatistics: {
-      type: Boolean,
-      default: false
+    balance: {
+      type: Object,
+      default: () => {}
     },
     showBalance: {
       type: Boolean,
@@ -73,7 +74,6 @@ export default {
     }
   },
   methods: {
-    isNil,
     isEmpty
   }
 }
@@ -115,20 +115,12 @@ export default {
           </h5>
         </div>
 
-        <div
-          v-if="showBalance && !isNil(balance)"
-          class="mb-3"
-        >
-          <div class="text-secondary text-center text-subtitle fw-bold">
-            BALANÇO
-          </div>
-          <h4
-            class="text-center fw-bold"
-            :class="balance >= 0 ? 'text-success' : 'text-danger'"
-          >
-            {{ $helpers.toBRL(balance) }}
-          </h4>
-        </div>
+        <CashFlowBalance
+          v-if="!balance.isLoading"
+          :balance="balance"
+          :show-balance="showBalance"
+        />
+        <AppLoading v-else />
 
         <PaymentExpenseTable
           :items="data"

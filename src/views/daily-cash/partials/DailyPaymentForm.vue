@@ -40,7 +40,7 @@ export default {
           reminder: '',
           isNew: false
         },
-        date: DateTime.now().toFormat('dd/MM/y'),
+        date: '',
         value: 'R$ ',
         via_id: ''
       })
@@ -54,9 +54,6 @@ export default {
   methods: {
     isEmpty,
     formatCurrencyBRL,
-    onDateInputFocus () {
-      this.form.date = ''
-    },
     customLabelVias ({ name }) {
       return name
     },
@@ -132,6 +129,7 @@ export default {
           v-model="form.value"
           name="value"
           value="R$ "
+          numeric
           :error="form.errors.get('value')"
           :mask="maskCurrencyBRL"
         >
@@ -175,7 +173,8 @@ export default {
         placeholder="Data do pagamento"
         :mask="maskDate"
         today-button
-        @focus="onDateInputFocus"
+        type="date"
+        numeric
       >
         Data
       </AppInput>

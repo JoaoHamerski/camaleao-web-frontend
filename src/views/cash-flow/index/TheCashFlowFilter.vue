@@ -61,6 +61,9 @@ export default {
     onClearFilterClick () {
       this.hasDateInterval = false
       this.$emit('clear-filter')
+    },
+    balanceToggle(value) {
+      this.$emit('balance-show-toggle', value)
     }
   }
 }
@@ -137,7 +140,7 @@ export default {
           id="show_balance"
           :value="form.showBalance"
           name="show_balance"
-          @input="form.set({showBalance: $event})"
+          @input="balanceToggle"
         >
           Exibir balanço final
         </AppCheckbox>

@@ -191,6 +191,7 @@ export default {
       :error="form.errors.get('order.price')"
       name="order.price"
       :mask="maskCurrencyBRL"
+      numeric
       @input="form.set({'order.price': $event})"
     >
       Valor

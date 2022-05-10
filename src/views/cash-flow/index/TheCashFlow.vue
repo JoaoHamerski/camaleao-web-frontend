@@ -58,7 +58,10 @@ export default {
         showBalance: false
       }),
       filterDates: {},
-      balance: null,
+      balance: {
+        isLoading: false,
+        value: null
+      },
       page: 1,
       search: '',
       where: {},
@@ -90,13 +93,16 @@ export default {
       this.where = {}
     },
     onFilterClear () {
+      this.page = 1
       this.filterForm.reset()
       this.orderBy = [{column: 'CREATED_AT', order: 'DESC'}]
       this.filterDates = {}
       this.where = {}
-      this.balance = null
+      this.balance.value = null
     },
     async submitBalance ({ start_date, final_date }) {
+      this.balance.isLoading = true
+
       try {
         const { data: { cashFlowBalance } } = await this.$apollo.query({
           query: GetCashFlowBalance,
@@ -107,8 +113,10 @@ export default {
           }
         })
 
-        this.balance = cashFlowBalance
+        this.balance.value = cashFlowBalance
       } catch (error) {}
+
+      this.balance.isLoading = false
     },
     async onSubmit () {
       const data = this.filterForm.data()
@@ -136,6 +144,13 @@ export default {
         operator: 'EQ',
         value: start_date
       }
+    },
+    onBalanceShowToggle (value) {
+      this.filterForm.set({showBalance: value})
+
+      if (!value) {
+        this.balance.value = null
+      }
     }
   }
 }
@@ -148,6 +163,7 @@ export default {
       :form.sync="filterForm"
       :on-submit="onSubmit"
       @clear-filter="onFilterClear"
+      @balance-show-toggle="onBalanceShowToggle"
     />
 
     <div class="mt-2">
