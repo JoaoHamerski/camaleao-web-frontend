@@ -186,6 +186,12 @@ mutation UpdateOrder ($id: ID! $input: OrderInput!) {
   }
 }
 
+mutation UpdateOrderStatus ($id: ID! $status_id: ID!) {
+  orderUpdateStatus (id: $id status_id: $status_id) {
+    ...OrderType
+  }
+}
+
 mutation ToggleOrder ($id: ID!) {
   orderToggle (id: $id) {
     ...OrderType
