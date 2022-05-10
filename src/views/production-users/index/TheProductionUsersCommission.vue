@@ -117,6 +117,7 @@ export default {
           id="month"
           v-model="form.month"
           type="month"
+          numeric
           name="month"
           :mask="maskMonth"
           placeholder="mm/aaaa"

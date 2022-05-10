@@ -116,6 +116,7 @@ export default {
             type="date"
             placeholder="Digite uma data..."
             :mask="maskDate"
+            numeric
           >
             Data:
           </AppInput>

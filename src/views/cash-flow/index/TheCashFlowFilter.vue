@@ -100,6 +100,7 @@ export default {
               :value="form.start_date"
               name="start_date"
               type="date"
+              numeric
               placeholder="dd/mm/aaaa"
               :mask="maskDate"
               :error="form.errors.get('start_date')"
@@ -115,6 +116,7 @@ export default {
               :value="form.final_date"
               name="final_date"
               type="date"
+              numeric
               placeholder="dd/mm/aaaa"
               :mask="maskDate"
               :error="form.errors.get('final_date')"

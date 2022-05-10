@@ -87,6 +87,7 @@ export default {
           placeholder="dd/mm/aaaa"
           :mask="maskDate"
           type="date"
+          numeric
           :error="form.errors.get('date')"
         >
           Data de estampa

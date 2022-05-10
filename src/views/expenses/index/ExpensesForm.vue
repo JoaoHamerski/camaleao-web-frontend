@@ -288,6 +288,7 @@ export default {
       v-model="form.date"
       name="date"
       type="date"
+      numeric
       :mask="maskDate"
       placeholder="dd/mm/aaaa"
       :error="form.errors.get('date')"

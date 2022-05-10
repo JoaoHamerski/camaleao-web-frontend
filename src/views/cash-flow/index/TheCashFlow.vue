@@ -39,8 +39,10 @@ export default {
         }
       },
       error (error) {
-        handleError(this, error, { formProp: 'filterForm' })
-        this.where = {}
+        if ('message' in {...error}) {
+          handleError(this, error, { formProp: 'filterForm' })
+          this.where = {}
+        }
       }
     }
   },

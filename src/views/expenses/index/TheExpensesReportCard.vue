@@ -81,6 +81,7 @@ export default {
                 name="start_date"
                 placeholder="dd/mm/aaaa"
                 type="date"
+                numeric
                 :mask="maskDate"
                 :error="form.errors.get('start_date')"
               />
@@ -94,6 +95,7 @@ export default {
                 name="final_date"
                 placeholder="dd/mm/aaaa"
                 type="date"
+                numeric
                 :mask="maskDate"
                 :error="form.errors.get('final_date')"
               />

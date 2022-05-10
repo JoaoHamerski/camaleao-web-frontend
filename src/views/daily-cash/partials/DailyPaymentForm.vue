@@ -36,7 +36,7 @@ export default {
         order: {
           id: '',
           code: '',
-          price: '',
+          price: 'R$ ',
           reminder: '',
           isNew: false
         },

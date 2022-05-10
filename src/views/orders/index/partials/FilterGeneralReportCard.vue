@@ -160,6 +160,7 @@ export default {
               name="closed_at"
               placeholder="dd/mm/aaaa"
               type="date"
+              numeric
             >
               Data de fechamento
             </AppInput>
@@ -172,6 +173,7 @@ export default {
               name="delivery_date"
               placeholder="dd/mm/aaaa"
               type="date"
+              numeric
             >
               Data de entrega
             </AppInput>

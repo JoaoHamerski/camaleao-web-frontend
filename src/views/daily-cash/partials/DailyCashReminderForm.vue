@@ -130,6 +130,7 @@ export default {
       :mask="maskDate"
       placeholder="dd/mm/aaaa"
       type="date"
+      numeric
       :error="form.errors.get('date')"
       today-button
     >
