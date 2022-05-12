@@ -75,6 +75,7 @@ export default {
 
       const query = this.getQueryToSearch(options)
 
+      console.log(query)
       this.$emit('search', query)
     },
     clearSearch () {
@@ -125,7 +126,7 @@ export default {
             <AppButton
               :icon="icons.faSearch"
               outlined
-              @click="handleSearch"
+              @click.prevent="handleSearch"
             />
           </template>
         </AppInput>

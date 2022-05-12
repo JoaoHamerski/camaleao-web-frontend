@@ -7,11 +7,6 @@ import { GetClients } from '@/graphql/Client.gql'
 import TheClientsCard from './TheClientsCard.vue'
 import TheClientsHeader from './TheClientsHeader.vue'
 
-export const clientsParams = {
-  query: {},
-  orderBy: [{ column: 'CREATED_AT', order: 'DESC' }]
-}
-
 export const COLUMNS = {
   NAME: 'NAME',
   CITY: 'CITY',
@@ -30,14 +25,21 @@ export default {
     clients: {
       query: GetClients,
       variables () {
-        return { ...clientsParams, page: this.page }
+        return {
+          ...this.clientsVariables,
+          orderBy:  [{ column: 'CREATED_AT', order: 'DESC' }],
+          page: this.page
+        }
       }
     }
   },
   data () {
     return {
       page: 1,
-      clientsParams,
+      clientsVariables: {
+        where: {},
+        hasCity: null,
+      },
       clients: {
         data: [],
         paginatorInfo: {}
@@ -56,16 +58,13 @@ export default {
     formatPhone,
     onSearch (query) {
       this.page = 1
-      this.clientsParams.query = {
-        ...this.clientsParams.query,
-        ...query
-      }
+      this.clientsVariables = query
     },
     onSearchClear () {
       this.page = 1
-      this.clientsParams.query = {
+      this.clientsVariables = {
         hasCity: null,
-        where: null
+        where: {}
       }
     }
   }
