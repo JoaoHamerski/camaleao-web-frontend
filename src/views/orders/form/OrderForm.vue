@@ -116,6 +116,7 @@ export default {
     },
     populateForm (order) {
       const fields = pick(order, [
+        'client',
         'name',
         'price',
         'code',
@@ -127,6 +128,8 @@ export default {
         'size_paths',
         'payment_voucher_paths'
       ])
+
+      fields.client_id = fields.client
 
       fields.discount = +fields.discount === 0
         ? 'R$ '
@@ -200,7 +203,6 @@ export default {
     :form="form"
   >
     <OrderFormClient
-      v-if="order && !order.client"
       :form="form"
     />
 
