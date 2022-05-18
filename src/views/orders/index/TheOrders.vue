@@ -31,7 +31,8 @@ export default {
       query: GetOrdersSimplified,
       variables () {
         return { ...this.params }
-      }
+      },
+      deep: true
     }
   },
   data () {
@@ -139,10 +140,10 @@ export default {
       return whereConditions
     },
     getOrderBy({order}) {
-      if (order === 'OLDER') {
+      if (order === 'NEWER') {
         return {
           column: 'CREATED_AT',
-          order: 'ASC'
+          order: 'DESC'
         }
       }
 
