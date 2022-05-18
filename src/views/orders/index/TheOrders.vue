@@ -1,4 +1,6 @@
 <script>
+import { DateTime } from 'luxon'
+
 import { faBoxes } from '@fortawesome/free-solid-svg-icons'
 import { GetOrdersSimplified } from '@/graphql/Order.gql'
 import { QUERIES } from './constants'
@@ -122,7 +124,7 @@ export default {
         whereConditions.push({
           column: 'CLOSED_AT',
           operator: 'EQ',
-          value: data.closed_at
+          value: DateTime.fromFormat(data.closed_at, 'dd/MM/y').toFormat('y-MM-d')
         })
       }
 
