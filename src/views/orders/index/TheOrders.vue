@@ -6,13 +6,13 @@ import { QUERIES } from './constants'
 import TheOrdersTable from './TheOrdersTable.vue'
 import FilterSearchInput from './partials/FilterSearchInput.vue'
 import FilterSortButtons from './partials/FilterSortButtons.vue'
-import FilterGeneralReportCard from './partials/FilterGeneralReportCard.vue'
+import FilterGeneralCard from './partials/FilterGeneralCard.vue'
 import OrdersQuestionIconTippy from '@/views/orders/partials/OrdersQuestionIconTippy.vue'
 import FilterPrintDateReportCard from './partials/FilterPrintDateReportCard.vue'
 
 export default {
   components: {
-    FilterGeneralReportCard,
+    FilterGeneralCard,
     FilterPrintDateReportCard,
     FilterSortButtons,
     FilterSearchInput,
@@ -63,6 +63,112 @@ export default {
     }
   },
   methods: {
+    getHasPaymentsParams ({payment_paid, payment_pending}) {
+      const whereConditions = []
+
+      if (payment_paid) {
+        whereConditions.push({
+          column: 'VALUE',
+          operator: 'GT',
+          value: 0
+        })
+      }
+
+      if (payment_pending) {
+        whereConditions.push({
+          column: 'IS_CONFIRMED',
+          operator: 'IS_NULL'
+        })
+      }
+
+      if (payment_paid || payment_pending) {
+        return {
+          OR: whereConditions
+        }
+      }
+
+      return null
+    },
+    getHasClientParams({city_id}) {
+      if (city_id) {
+        return {
+          column: 'CITY_ID',
+          operator: 'EQ',
+          value: city_id
+        }
+      }
+
+      return null
+    },
+    getWhereConditions (data) {
+      const whereConditions = []
+
+      if (data.state === 'OPEN' && !data.closed_at) {
+        whereConditions.push({
+          column: 'CLOSED_AT',
+          operator: 'IS_NULL'
+        })
+      }
+
+      if (data.status_id) {
+        whereConditions.push({
+          column: 'STATUS_ID',
+          operator: 'IN',
+          value: data.status_id
+        })
+      }
+
+      if (data.closed_at) {
+        whereConditions.push({
+          column: 'CLOSED_AT',
+          operator: 'EQ',
+          value: data.closed_at
+        })
+      }
+
+      if (data.delivery_date) {
+        whereConditions.push({
+          column: 'DELIVERY_DATE',
+          operator: 'EQ',
+          value: data.delivery_date
+        })
+      }
+
+      return whereConditions
+    },
+    getOrderBy({order}) {
+      if (order === 'OLDER') {
+        return {
+          column: 'CREATED_AT',
+          order: 'ASC'
+        }
+      }
+
+      if (order === 'DELIVERY_DATE') {
+        return {
+          column: 'DELIVERY_DATE',
+          order: 'DESC'
+        }
+      }
+
+      return {
+        column: 'CREATED_AT',
+        order: 'ASC'
+      }
+    },
+    onFilterOrders (data) {
+      this.params = {
+        page: 1,
+        hasPayments: this.getHasPaymentsParams(data),
+        hasClient: this.getHasClientParams(data),
+        where: {
+          AND: this.getWhereConditions(data)
+        },
+        orderBy: [this.getOrderBy(data)]
+      }
+
+      console.log(this.params)
+    },
     onFilterButtonsChanged (value) {
       const query = QUERIES[value.toUpperCase()]
 
@@ -106,9 +212,10 @@ export default {
 
 <template>
   <div class="mx-auto py-5">
-    <FilterGeneralReportCard
+    <FilterGeneralCard
       class="mb-2"
       @report-generated="onReportGenerated"
+      @filter-orders="onFilterOrders"
     />
 
     <FilterPrintDateReportCard

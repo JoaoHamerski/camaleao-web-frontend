@@ -203,6 +203,7 @@ export default {
     :form="form"
   >
     <OrderFormClient
+      v-if="isEdit"
       :form="form"
     />
 

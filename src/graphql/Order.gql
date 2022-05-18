@@ -140,12 +140,16 @@ fragment OrderType on Order {
 
 query GetOrdersSimplified (
   $page: Int
+  $hasClient: QueryOrdersHasClientWhereHasConditions
+  $hasPayments: QueryOrdersHasPaymentsWhereHasConditions
   $orderBy: [QueryOrdersOrderByOrderByClause!]
   $where: QueryOrdersWhereWhereConditions
 ) {
   orders (
     first: 10
     page: $page
+    hasClient: $hasClient
+    hasPayments: $hasPayments
     orderBy: $orderBy
     where: $where
   ) {

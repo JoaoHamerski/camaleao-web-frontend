@@ -8,6 +8,10 @@ export default {
       type: [Number, String],
       default: ''
     },
+    multiple: {
+      type: Boolean,
+      default: false
+    },
     error: {
       type: [Boolean, String],
       default: false
@@ -102,12 +106,13 @@ export default {
       :id="id"
       :value="value"
       :name="name"
+      :multiple="multiple"
       class="form-select"
       :class="[error && 'is-invalid', selectClass]"
       @change="$emit('input', $event.target.value)"
     >
       <option
-        v-if="!hideDefaultOption"
+        v-if="!hideDefaultOption && !multiple"
         value=""
       >
         {{ placeholder }}

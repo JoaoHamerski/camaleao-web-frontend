@@ -1,4 +1,5 @@
 <script>
+import { map } from 'lodash-es'
 import { faClipboardList } from '@fortawesome/free-solid-svg-icons'
 import { maskDate } from '@/utils/masks'
 import { GetCities } from '@/graphql/City.gql'
@@ -28,6 +29,8 @@ export default {
         delivery_date: '',
         state: 'OPEN',
         order: 'OLDER',
+        payment_pending: false,
+        payment_paid: false,
         display_filter_info: false
       }),
       icons: {
@@ -55,9 +58,14 @@ export default {
       const data = this.form.data()
 
       data.city_id = data.city_id?.id ?? ''
-      data.status_id = data.status_id?.id ?? ''
+      data.status_id = data.status_id ? map(data.status_id, 'id') : ''
 
       return data
+    },
+    filterOrders () {
+      const data = this.getFormattedData()
+
+      this.$emit('filter-orders', data)
     },
     async generateReport () {
       const input = this.getFormattedData()
@@ -108,7 +116,7 @@ export default {
         <FontAwesomeIcon
           :icon="icons.faClipboardList"
           fixed-width
-        /> Relatório geral
+        /> Relatório e filtro
       </h6>
     </template>
 
@@ -128,7 +136,7 @@ export default {
         :on-submit="generateReport"
       >
         <div class="row">
-          <div class="col-12 col-sm-3">
+          <div class="col-12 col-sm-6">
             <AppSelect
               id="city_id"
               v-model="form.city_id"
@@ -140,19 +148,25 @@ export default {
               Cidade
             </AppSelect>
           </div>
-          <div class="col-12 col-sm-3">
-            <AppSimpleSelect
+          <div class="col-12 col-sm-6">
+            <AppSelect
               id="status_id"
               v-model="form.status_id"
               name="status_id"
               :options="status"
-              value-prop="id"
-              :label-prop="customLabelStatus"
+              :custom-label="({text}) => text"
+              multiple
+              :close-on-select="false"
+              track-by="id"
+              placeholder="Selecione uma ou mais opções"
             >
               Status
-            </AppSimpleSelect>
+            </AppSelect>
           </div>
-          <div class="col-12 col-sm-3">
+        </div>
+
+        <div class="row">
+          <div class="col-12 col-sm-6">
             <AppInput
               id="closed_at"
               v-model="form.closed_at"
@@ -165,7 +179,7 @@ export default {
               Data de fechamento
             </AppInput>
           </div>
-          <div class="col-12 col-sm-3">
+          <div class="col-12 col-sm-6">
             <AppInput
               id="delivery_date"
               v-model="form.delivery_date"
@@ -200,6 +214,27 @@ export default {
           </template>
         </AppRadio>
 
+        <div>
+          <label
+            class="form-label fw-bold"
+          >Com pagamentos</label>
+          <div class="d-flex">
+            <AppCheckbox
+              id="payment-pending"
+              v-model="form.payment_pending"
+              class="me-2"
+            >
+              Pendentes
+            </AppCheckbox>
+            <AppCheckbox
+              id="payment-paid"
+              v-model="form.payment_paid"
+            >
+              Algum valor já pago
+            </AppCheckbox>
+          </div>
+        </div>
+
         <AppCheckboxSwitch
           id="displayFilterInfo"
           v-model="form.display_filter_info"
@@ -207,14 +242,22 @@ export default {
           Exibir informações do filtro no relatório
         </AppCheckboxSwitch>
 
-        <AppButton
-          outlined
-          class="mt-4"
-          :loading="isLoading"
-          @click.prevent="generateReport"
-        >
-          Gerar relatório
-        </AppButton>
+        <div class="mt-3">
+          <AppButton
+            class="me-2"
+            outlined
+            @click.prevent="filterOrders"
+          >
+            Filtrar pedidos
+          </AppButton>
+          <AppButton
+            outlined
+            :loading="isLoading"
+            @click.prevent="generateReport"
+          >
+            Gerar relatório
+          </AppButton>
+        </div>
       </AppForm>
     </template>
   </AppCard>
