@@ -128,7 +128,7 @@ export default {
         Filtre por <b>um</b> ou <b>vários campos</b> combinados.
       </div>
       <div class="small text-secondary">
-        Pedidos pré-registrados não são incluidos no relatório.
+        Pedidos pré-registrados não são incluídos no relatório.
       </div>
 
       <AppForm
@@ -215,9 +215,12 @@ export default {
         </AppRadio>
 
         <div>
-          <label
-            class="form-label fw-bold"
-          >Com pagamentos</label>
+          <div>
+            <label class="form-label fw-bold">Com pagamentos</label>
+            <small class="text-secondary">
+              (apenas filtro, indisponível para relatório)
+            </small>
+          </div>
           <div class="d-flex">
             <AppCheckbox
               id="payment-pending"
