@@ -5,6 +5,14 @@
 .multiselect {
   min-height: 36px !important;
 
+  &.multiselect-tags-block {
+    .multiselect__tags {
+      .multiselect__tag {
+        display: block;
+      }
+    }
+  }
+
   .multiselect__select {
     height: 35px;
   }
@@ -15,8 +23,6 @@
 
   .multiselect__tags {
     .multiselect__tag {
-      display: block;
-
       .multiselect__tag-icon {
         border-top-left-radius: 0;
         border-bottom-left-radius: 0;

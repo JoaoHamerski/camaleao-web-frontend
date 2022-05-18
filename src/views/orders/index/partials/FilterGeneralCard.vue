@@ -155,6 +155,7 @@ export default {
               name="status_id"
               :options="status"
               :custom-label="({text}) => text"
+              :tags-as-block="false"
               multiple
               :close-on-select="false"
               track-by="id"

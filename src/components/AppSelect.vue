@@ -12,6 +12,10 @@ export default {
   },
   props: {
     value: undefined,
+    tagsAsBlock: {
+      type: Boolean,
+      default: true
+    },
     defaultMargin: {
       type: Boolean,
       default: true
@@ -95,7 +99,10 @@ export default {
         :value="value"
         :custom-label="customLabel"
         :placeholder="placeholder"
-        :class="hasError && 'is-invalid'"
+        :class="{
+          'multiselect-tags-block': tagsAsBlock,
+          'is-invalid': hasError
+        }"
         select-label="Selecionar"
         selected-label="Selecionado"
         deselect-label="Remover"
