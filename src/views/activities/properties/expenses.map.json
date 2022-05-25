@@ -12,6 +12,9 @@
     "via.name": {
         "text": "Via"
     },
+    "productType.name": {
+        "text": "Produto"
+    },
     "date": {
         "text": "Data",
         "format": "datetime"
