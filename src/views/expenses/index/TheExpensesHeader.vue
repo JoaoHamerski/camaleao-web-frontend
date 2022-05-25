@@ -79,9 +79,9 @@ export default {
       v-model="modalProductTypes"
     />
 
-    <div class="d-flex justify-content-between mb-2">
+    <div class="d-flex flex-column flex-sm-row justify-content-between mb-2">
       <AppButton
-        class="flex-grow-1 flex-sm-grow-0 me-1 me-sm-0"
+        class="flex-grow-1 flex-sm-grow-0 me-1 me-sm-0 mb-2 mb-sm-0"
         :icon="icons.faPlus"
         color="success"
         btn-class="fw-bold"
@@ -90,7 +90,7 @@ export default {
         Cadastrar despesa
       </AppButton>
 
-      <div>
+      <div class="d-flex">
         <AppButton
           v-if="$helpers.canView(roles.GERENCIA)"
           class="me-2"
