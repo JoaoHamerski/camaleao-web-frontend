@@ -5,7 +5,6 @@ import roles from '@/constants/roles'
 
 const TheReportUpdate = () => import (
   /* webpackChunkName: "developer" */
-  /* webpackPrefetch: false */
   './TheReportUpdate.vue'
 )
 

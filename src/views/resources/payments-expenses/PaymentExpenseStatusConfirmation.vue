@@ -7,7 +7,10 @@ import {
 import { GetCashFlowEntries, GetCashFlowBalance } from '@/graphql/CashFlow.gql'
 import { GetDailyCash, GetDailyCashBalance } from '@/graphql/DailyCash.gql'
 import { AssignPaymentConfirmation } from '@/graphql/Payment.gql'
-import { AssignExpenseConfirmation } from '@/graphql/Expense.gql'
+import {
+  AssignExpenseConfirmation,
+  GetProductTypeExpensesByMonth
+} from '@/graphql/Expense.gql'
 
 const CONFIRMATION = {
   ACCEPT: true,
@@ -74,7 +77,8 @@ export default {
             GetDailyCash,
             GetDailyCashBalance,
             GetCashFlowEntries,
-            GetCashFlowBalance
+            GetCashFlowBalance,
+            GetProductTypeExpensesByMonth
           ],
           awaitRefetchQueries: true
         })

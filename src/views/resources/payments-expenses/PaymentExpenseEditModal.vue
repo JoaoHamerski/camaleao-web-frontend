@@ -25,6 +25,7 @@ export default {
             value: this.$helpers.toBRL(this.entry.value),
             expense_via_id: this.entry.via.id,
             expense_type_id: this.entry.type.id,
+            product_type_id: this.entry.product_type.id,
             receipt_path: this.entry.receipt_path,
           }
         }

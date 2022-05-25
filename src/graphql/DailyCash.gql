@@ -30,6 +30,11 @@ query GetDailyCash (
       receipt_path
       date
 
+      product_type {
+        id
+        name
+      }
+
       user {
         id
         name

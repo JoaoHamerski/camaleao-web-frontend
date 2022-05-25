@@ -1,0 +1,20 @@
+query GetProductTypes {
+  productTypes {
+    id
+    name
+  }
+}
+
+mutation CreateProductType ($input: ProductTypeInput) {
+  productTypeCreate (input: $input){
+    id
+    name
+  }
+}
+
+mutation UpdateProductType ($id: ID! $input: ProductTypeInput) {
+  productTypeUpdate (id: $id input: $input) {
+    id
+    name
+  }
+}

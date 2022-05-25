@@ -1,6 +1,6 @@
 <script>
 import { isEmpty } from 'lodash-es'
-import { faList, faEdit } from '@fortawesome/free-solid-svg-icons'
+import { faList, faEdit, faFunnelDollar } from '@fortawesome/free-solid-svg-icons'
 import Form from '@/utils/Form'
 import { handleSuccess, handleError } from '@/utils/forms'
 import { CreateExpenseType, UpdateExpenseType, GetExpenseTypes } from '@/graphql/ExpenseType.gql'
@@ -21,7 +21,8 @@ export default {
     return {
       icons: {
         faList,
-        faEdit
+        faEdit,
+        faFunnelDollar
       },
       isLoadingCreate: false,
       form: new Form({
@@ -112,6 +113,13 @@ export default {
       Gerenciar tipos de despesas
     </template>
     <template #body>
+      <div class="text-center">
+        <FontAwesomeIcon
+          size="3x"
+          class="text-primary mb-4 mt-2"
+          :icon="icons.faFunnelDollar"
+        />
+      </div>
       <AppForm
         :form="form"
         :on-submit="onCreate"

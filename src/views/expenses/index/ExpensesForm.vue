@@ -7,11 +7,11 @@ import fileMixin from '@/mixins/filesMixin'
 import pasteFilesMixin from '@/mixins/pasteFilesMixin'
 import Form from '@/utils/Form'
 
-import { CreateExpense, UpdateExpense } from '@/graphql/Expense.gql'
+import { CreateExpense, UpdateExpense, GetProductTypeExpensesByMonth } from '@/graphql/Expense.gql'
 import { GetExpenseTypes } from '@/graphql/ExpenseType.gql'
-import { GetDailyCash } from '@/graphql/DailyCash.gql'
+import { GetDailyCash, GetDailyCashBalance } from '@/graphql/DailyCash.gql'
 import { vias } from '@/graphql/Via.gql'
-
+import { GetProductTypes } from '@/graphql/ProductType.gql'
 import ViewerItemsCardFile from '@/components/AppViewer/ViewerItemsCardFile.vue'
 
 export default {
@@ -26,6 +26,9 @@ export default {
     expenseTypes: {
       query: GetExpenseTypes
     },
+    productTypes: {
+      query: GetProductTypes
+    }
   },
   props: {
     expense: {
@@ -44,9 +47,11 @@ export default {
       isLoading: false,
       vias: [],
       expenseTypes: [],
+      productTypes: [],
       form: new Form({
         description: '',
         expense_type_id: '',
+        product_type_id: '',
         value: 'R$ ',
         expense_via_id: '',
         receipt_path: '',
@@ -75,6 +80,13 @@ export default {
         })
       }
     },
+    productTypes () {
+      if (this.isEdit && !this.$apollo.queries.productTypes.loading) {
+        this.$nextTick(() => {
+          this.form.product_type_id = this.expense.product_type_id
+        })
+      }
+    },
     'form.receipt_path' () {
       if (this.form.errors.get('receipt_path')) {
         this.form.errors.clear('receipt_path')
@@ -100,7 +112,8 @@ export default {
         ...{
           date: formatDatetime(this.expense.date),
           expense_type_id: '',
-          expense_via_id: ''
+          expense_via_id: '',
+          product_type_id: ''
         }
       })
     },
@@ -154,7 +167,7 @@ export default {
             id: this.expense.id,
             input
           },
-          refetchQueries: [GetDailyCash],
+          refetchQueries: [GetDailyCash, GetProductTypeExpensesByMonth],
           awaitRefetchQueries: true
         })
 
@@ -172,7 +185,11 @@ export default {
         await this.$apollo.mutate({
           mutation: CreateExpense,
           variables: { input },
-          refetchQueries: ['GetDailyCash', 'GetDailyCashBalance'],
+          refetchQueries: [
+            GetDailyCash,
+            GetDailyCashBalance,
+            GetProductTypeExpensesByMonth
+          ],
           awaitRefetchQueries: true
         })
 
@@ -218,6 +235,18 @@ export default {
       :error="form.errors.get('expense_type_id')"
     >
       Tipo de despesa
+    </AppSimpleSelect>
+
+    <AppSimpleSelect
+      id="product_type_id"
+      v-model="form.product_type_id"
+      name="product_type_id"
+      :options="productTypes"
+      label-prop="name"
+      placeholder="Selecione um produto"
+      :error="form.errors.get('product_type_id')"
+    >
+      Produto
     </AppSimpleSelect>
 
     <div class="row">

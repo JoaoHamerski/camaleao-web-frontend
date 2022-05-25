@@ -43,6 +43,10 @@ export default {
   methods: {
     formatDatetime,
     shouldDisplayModal (reports) {
+      if (!reports.length) {
+        return false
+      }
+
       const lastReport = reports[0]
       const viewByUsers = lastReport.read_by_user_ids
 

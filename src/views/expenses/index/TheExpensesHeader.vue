@@ -7,7 +7,8 @@ import ModalExpensesNew from './modals/ModalExpensesNew.vue'
 export default {
   components: {
     ModalExpensesNew,
-    ModalExpensesTypes: () => import('./modals/ModalExpensesTypes.vue')
+    ModalExpensesTypes: () => import('./modals/ModalExpensesTypes.vue'),
+    ModalProductTypes: () => import('./modals/ModalProductTypes.vue'),
   },
   props: {
     expenses: {
@@ -33,7 +34,8 @@ export default {
       },
       search: '',
       modalExpensesRegister: false,
-      modalExpensesTypes: false
+      modalExpensesTypes: false,
+      modalProductTypes: false,
     }
   },
   methods: {
@@ -52,6 +54,9 @@ export default {
     },
     onExpenseRegisterSuccess () {
       this.modalExpensesRegister = false
+    },
+    onProductTypesClick () {
+      this.modalProductTypes = true
     }
   }
 }
@@ -69,6 +74,11 @@ export default {
       v-model="modalExpensesTypes"
     />
 
+    <ModalProductTypes
+      v-if="$helpers.canView(roles.GERENCIA)"
+      v-model="modalProductTypes"
+    />
+
     <div class="d-flex justify-content-between mb-2">
       <AppButton
         class="flex-grow-1 flex-sm-grow-0 me-1 me-sm-0"
@@ -80,15 +90,27 @@ export default {
         Cadastrar despesa
       </AppButton>
 
-      <AppButton
-        v-if="$helpers.canView(roles.GERENCIA)"
-        class="flex-grow-1 flex-sm-grow-0 ms-1 ms-sm-0"
-        outlined
-        :icon="icons.faList"
-        @click="onExpensesTypesClick"
-      >
-        Tipos de despesas
-      </AppButton>
+      <div>
+        <AppButton
+          v-if="$helpers.canView(roles.GERENCIA)"
+          class="me-2"
+          outlined
+          :icon="icons.faList"
+          @click="onProductTypesClick"
+        >
+          Tipos de produtos
+        </AppButton>
+
+        <AppButton
+          v-if="$helpers.canView(roles.GERENCIA)"
+          class="flex-grow-1 flex-sm-grow-0 ms-1 ms-sm-0"
+          outlined
+          :icon="icons.faList"
+          @click="onExpensesTypesClick"
+        >
+          Tipos de despesas
+        </AppButton>
+      </div>
     </div>
 
     <div class="col col-sm-4 ms-auto">

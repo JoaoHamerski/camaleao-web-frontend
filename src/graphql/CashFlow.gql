@@ -12,6 +12,10 @@ fragment CashFlowEntryParts on CashFlowEntry {
   confirmed_at
   created_at
   employee_name
+  product_type {
+    id
+    name
+  }
 }
 
 fragment CashFlowEntryViaParts on CashFlowEntry {

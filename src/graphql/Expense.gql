@@ -8,6 +8,10 @@ fragment ExpenseParts on Expense {
   receipt_path
   is_confirmed
   confirmed_at
+  product_type {
+    id
+    name
+  }
 }
 
 fragment ExpenseUserSimpleParts on Expense {
@@ -58,6 +62,13 @@ query GetExpenses (
 
 query GetExpensesReportUrl ($start_date: String! $final_date: String) {
   expensesReport(start_date: $start_date final_date: $final_date)
+}
+
+query GetProductTypeExpensesByMonth {
+  productTypesExpensesByMonth {
+    name
+    expense
+  }
 }
 
 mutation CreateExpense ($input: ExpenseInput!) {

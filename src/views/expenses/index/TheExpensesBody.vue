@@ -28,6 +28,7 @@ export default {
     ModalExpensesDelete,
     ModalExpensesEdit,
     ExpenseState,
+    ExpensesProductType: () => import('./ExpensesProductType.vue'),
     ViewerFileModal: () => import('@/components/AppViewer/ViewerFileModal'),
   },
   props: {
@@ -79,8 +80,9 @@ export default {
       return [
         { text: 'DESCRIÇÃO', value: 'description', wrap: true },
         { text: 'TIPO', value: 'type' },
+        { text: 'PRODUTO', value: 'product_type.name' },
         { text: 'VIA', value: 'via' },
-        { text: 'VALOR', value: 'value', format: 'currencyBRL', nowrap: true },
+        { text: 'VALOR', value: 'value', format: 'currencyBRL' },
         { text: 'DATA', value: 'date', format: 'datetime' },
         { text: 'COMPROVANTE', value: 'receipt', align: 'center' },
         { text: 'STATUS', value: 'status', align: 'center' },
@@ -193,6 +195,11 @@ export default {
       @hidden="onViewerFileModalHidden"
     />
 
+    <ExpensesProductType
+      v-if="$helpers.canView(roles.GERENCIA)"
+      class="my-3"
+    />
+
     <div class="text-secondary small">
       <FontAwesomeIcon
         :icon="icons.faExclamationCircle"
@@ -205,6 +212,7 @@ export default {
         Exibindo apenas despesas registradas por você.
       </span>
     </div>
+
 
     <AppCard
       color="primary"
