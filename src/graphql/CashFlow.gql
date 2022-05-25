@@ -1,6 +1,6 @@
 #import "./_PaginatorFragment.gql"
 
-fragment CashFlowEntryParts on CashFlowEntry {
+fragment CashFlowEntryParts on PaymentExpense {
   id
   description
   date
@@ -18,21 +18,21 @@ fragment CashFlowEntryParts on CashFlowEntry {
   }
 }
 
-fragment CashFlowEntryViaParts on CashFlowEntry {
+fragment CashFlowEntryViaParts on PaymentExpense {
   via {
     id
     name
   }
 }
 
-fragment CashFlowEntryTypeParts on CashFlowEntry {
+fragment CashFlowEntryTypeParts on PaymentExpense {
   type {
     id
     name
   }
 }
 
-fragment CashFlowEntryOrderParts on CashFlowEntry {
+fragment CashFlowEntryOrderParts on PaymentExpense {
   order {
     id
     code
@@ -44,7 +44,7 @@ fragment CashFlowEntryOrderParts on CashFlowEntry {
   }
 }
 
-fragment CashFlowEntryUserParts on CashFlowEntry {
+fragment CashFlowEntryUserParts on PaymentExpense {
   user {
     id
     name
