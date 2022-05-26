@@ -71,3 +71,9 @@
 .pagination li {
   box-shadow: $box-shadow;
 }
+
+.input-group {
+  .form-select {
+    flex-grow: 1 !important;
+  }
+}

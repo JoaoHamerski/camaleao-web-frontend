@@ -12,6 +12,7 @@ import { GetExpenseTypes } from '@/graphql/ExpenseType.gql'
 import { GetDailyCash, GetDailyCashBalance } from '@/graphql/DailyCash.gql'
 import { vias } from '@/graphql/Via.gql'
 import { GetProductTypes } from '@/graphql/ProductType.gql'
+import { GetConfig } from '@/graphql/Config.gql'
 import ViewerItemsCardFile from '@/components/AppViewer/ViewerItemsCardFile.vue'
 
 export default {
@@ -28,6 +29,18 @@ export default {
     },
     productTypes: {
       query: GetProductTypes
+    },
+    productTypeExpense: {
+      query: GetConfig,
+      variables: {
+        name: 'app',
+        key: 'product_types_expense',
+        encoded: false
+      },
+      update ({configGet}) {
+        return configGet
+      },
+      fetchPolicy: 'network-only'
     }
   },
   props: {
@@ -46,6 +59,7 @@ export default {
       maskCurrencyBRL,
       isLoading: false,
       vias: [],
+      productTypeExpense: null,
       expenseTypes: [],
       productTypes: [],
       form: new Form({
@@ -63,6 +77,9 @@ export default {
     isQueryLoading () {
       return !!this.$apollo.queries.vias.loading
         || !!this.$apollo.queries.expenseTypes.loading
+    },
+    expenseSelected () {
+      return this.expenseTypes.find((type) => type.id === this.form.expense_type_id)
     }
   },
   watch: {
@@ -238,6 +255,7 @@ export default {
     </AppSimpleSelect>
 
     <AppSimpleSelect
+      v-show="productTypeExpense === form.expense_type_id"
       id="product_type_id"
       v-model="form.product_type_id"
       name="product_type_id"
@@ -247,6 +265,12 @@ export default {
       :error="form.errors.get('product_type_id')"
     >
       Produto
+      <template
+        v-if="expenseSelected"
+        #hint
+      >
+        O campo produto é obrigatório quando a despesa é <b>{{ expenseSelected.name }}</b>
+      </template>
     </AppSimpleSelect>
 
     <div class="row">

@@ -2,8 +2,11 @@
 import {
   GetProductTypes,
   CreateProductType,
-  UpdateProductType
+  UpdateProductType,
+  ChangeProductTypesExpenseField
 } from '@/graphql/ProductType.gql'
+import { GetExpenseTypes } from '@/graphql/ExpenseType.gql'
+
 import Form from '@/utils/Form'
 import { faEdit } from '@fortawesome/free-solid-svg-icons'
 import { handleSuccess, handleError } from '@/utils/forms'
@@ -12,13 +15,27 @@ export default {
   apollo: {
     productTypes: {
       query: GetProductTypes
+    },
+    expenseTypes: {
+      query: GetExpenseTypes,
+      async result ({loading}) {
+        if (!loading) {
+          const expense_type = await this.$helpers.getConfig('app', 'product_types_expense')
+
+          this.$nextTick(() => {
+            this.formExpense.id = expense_type
+          })
+        }
+      }
     }
   },
   data () {
     return {
       isLoading: false,
       isEditLoading: false,
+      isProductTypeExpenseLoading: false,
       productTypes: [],
+      expenseTypes: [],
       icons: {
         faEdit
       },
@@ -28,10 +45,31 @@ export default {
       }),
       formEdit: new Form({
         name: ''
+      }),
+      formExpense: new Form({
+        id: ''
       })
     }
   },
   methods: {
+    async submitExpenseOfProduct () {
+      const { id } = this.formExpense.data()
+
+      this.isProductTypeExpenseLoading = true
+
+      try {
+        await this.$apollo.mutate({
+          mutation: ChangeProductTypesExpenseField,
+          variables: { id }
+        })
+
+        handleSuccess(this, {message: 'Alterado!'})
+      } catch (error) {
+        handleError(this, error)
+      }
+
+      this.isProductTypeExpenseLoading = false
+    },
     async create () {
       const input = this.form.data()
 
@@ -84,6 +122,30 @@ export default {
 
 <template>
   <div>
+    <AppForm
+      :form="formExpense"
+      :on-submit="submitExpenseOfProduct"
+    >
+      <AppSimpleSelect
+        id="expenses"
+        v-model="formExpense.id"
+        name="expenses"
+        label-prop="name"
+        :options="expenseTypes"
+        hint="O campo produto é exibido no formulário de despesas"
+      >
+        Mostrar o campo produto quando o tipo de despesa selecionada for:
+        <template #append>
+          <AppButton
+            outlined
+            :loading="isProductTypeExpenseLoading"
+          >
+            Aplicar
+          </AppButton>
+        </template>
+      </AppSimpleSelect>
+    </AppForm>
+
     <AppForm
       :form="form"
       :on-submit="create"

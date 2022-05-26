@@ -18,3 +18,10 @@ mutation UpdateProductType ($id: ID! $input: ProductTypeInput) {
     name
   }
 }
+
+mutation ChangeProductTypesExpenseField ($id: ID!) {
+  changeProductTypesExpenseField (id: $id) {
+    id
+    name
+  }
+}

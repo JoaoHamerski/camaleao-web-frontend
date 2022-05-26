@@ -55,11 +55,18 @@ export default {
     selectClass: {
       type: String,
       default: ''
+    },
+    hint: {
+      type: String,
+      default: ''
     }
   },
   computed: {
     hasLabel () {
       return !!this.$slots.default || !isEmpty(this.label)
+    },
+    hasInputGroup () {
+      return !!this.$slots.append
     }
   },
   methods: {
@@ -81,7 +88,9 @@ export default {
 <template>
   <div
     class="form-select-wrapper"
-    :class="!removeDefaultMargin && 'mb-3'"
+    :class="{
+      'mb-3': !removeDefaultMargin,
+    }"
   >
     <label
       v-if="hasLabel"
@@ -102,34 +111,51 @@ export default {
       >(opcional)</span>
     </label>
 
-    <select
-      :id="id"
-      :value="value"
-      :name="name"
-      :multiple="multiple"
-      class="form-select"
-      :class="[error && 'is-invalid', selectClass]"
-      @change="$emit('input', $event.target.value)"
+    <div
+      :class="{
+        'input-group': hasInputGroup
+      }"
     >
-      <option
-        v-if="!hideDefaultOption && !multiple"
-        value=""
+      <select
+        :id="id"
+        :value="value"
+        :name="name"
+        :multiple="multiple"
+        class="form-select"
+        :class="[error && 'is-invalid', selectClass]"
+        @change="$emit('input', $event.target.value)"
       >
-        {{ placeholder }}
-      </option>
-      <option
-        v-for="(option, index) in options"
-        :key="index"
-        :value="option[valueProp]"
-      >
-        {{ renderLabel(option) }}
-      </option>
-    </select>
+        <option
+          v-if="!hideDefaultOption && !multiple"
+          value=""
+        >
+          {{ placeholder }}
+        </option>
+        <option
+          v-for="(option, index) in options"
+          :key="index"
+          :value="option[valueProp]"
+        >
+          {{ renderLabel(option) }}
+        </option>
+      </select>
+      <slot name="append" />
+    </div>
     <div
       v-if="error"
       class="small text-danger mb-1"
     >
       {{ error }}
     </div>
+    <small
+      v-if="hint"
+      class="text-secondary"
+    >{{ hint }}</small>
+    <small
+      v-else-if="$slots.hint"
+      class="text-secondary"
+    >
+      <slot name="hint" />
+    </small>
   </div>
 </template>
