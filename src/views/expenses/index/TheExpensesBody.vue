@@ -17,7 +17,6 @@ import { GetConfig } from '@/graphql/Config.gql'
 
 import Vue from 'vue'
 import VueViewer from 'v-viewer'
-import ModalExpensesDelete from './modals/ModalExpensesDelete.vue'
 import ModalExpensesEdit from './modals/ModalExpensesEdit.vue'
 import ExpenseState from './ExpenseState.vue'
 
@@ -49,7 +48,6 @@ export default {
     }
   },
   components: {
-    ModalExpensesDelete,
     ModalExpensesEdit,
     ExpenseState,
     TheExpensesTypesOverview: () => import('./TheExpensesTypesOverview.vue'),
@@ -206,13 +204,6 @@ export default {
       v-model="modalExpensesEdit.modal"
       :expense="modalExpensesEdit.expense"
       @success="onSuccessEdit"
-    />
-
-    <ModalExpensesDelete
-      v-model="modalExpensesDelete.modal"
-      :expense="modalExpensesDelete.expense"
-      @show-receipt="showReceipt"
-      @success="onSuccessDelete"
     />
 
     <ViewerFileModal
