@@ -1,5 +1,5 @@
 <script>
-import { users } from '@/graphql/User.gql'
+import { GetUsers } from '@/graphql/User.gql'
 import { roles } from '@/graphql/Role.gql'
 import { faUserPlus } from '@fortawesome/free-solid-svg-icons'
 
@@ -18,7 +18,7 @@ export default {
   },
   apollo: {
     users: {
-      query: users
+      query: GetUsers
     },
     roles: {
       query: roles
