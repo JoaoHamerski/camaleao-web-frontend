@@ -1,24 +1,11 @@
 <script>
-import { isEmpty } from 'lodash-es'
+import { isEmpty, get } from 'lodash-es'
 import { faTrashAlt } from '@fortawesome/free-solid-svg-icons'
 import { formatCurrencyBRL, formatDatetime } from '@/utils/formatters'
 
 import ViewerItemsCardFile from '@/components/AppViewer/ViewerItemsCardFile.vue'
 
 export default {
-  chimera: {
-    _deleteExpense () {
-      return {
-        method: 'DELETE',
-        url: `api/expenses/${this.expense.id}`,
-        on: {
-          success () {
-            this.$emit('success')
-          }
-        }
-      }
-    }
-  },
   components: {
     ViewerItemsCardFile
   },
@@ -44,6 +31,7 @@ export default {
     formatCurrencyBRL,
     formatDatetime,
     isEmpty,
+    get,
     async destroy () {
       this.isLoading = true
 
@@ -97,10 +85,10 @@ export default {
           <b>Descrição: </b>{{ expense.description }}
         </li>
         <li class="list-group-item">
-          <b>Tipo: </b>{{ expense.type.name }}
+          <b>Tipo: </b>{{ get(expense, 'type.name', 'N/A') }}
         </li>
         <li class="list-group-item">
-          <b>Via: </b>{{ expense.via.name }}
+          <b>Via: </b>{{ get(expense, 'via.name', 'N/A') }}
         </li>
         <li class="list-group-item">
           <b>Valor: </b>{{ formatCurrencyBRL(expense.value) }}
