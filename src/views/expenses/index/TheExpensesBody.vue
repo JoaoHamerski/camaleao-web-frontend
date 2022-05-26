@@ -13,7 +13,7 @@ import {
   faMinus
 } from '@fortawesome/free-solid-svg-icons'
 import { config as viewerConfig } from '@/components/AppViewer/AppViewer'
-
+import { GetConfig } from '@/graphql/Config.gql'
 
 import Vue from 'vue'
 import VueViewer from 'v-viewer'
@@ -24,11 +24,35 @@ import ExpenseState from './ExpenseState.vue'
 Vue.use(VueViewer)
 
 export default {
+  apollo: {
+    expenseEmployee: {
+      query: GetConfig,
+      variables: {
+        name: 'app',
+        key: 'employee_expense',
+        encoded: false
+      },
+      update ({ configGet }) {
+        return configGet
+      }
+    },
+    expenseProductType: {
+      query: GetConfig,
+      variables: {
+        name: 'app',
+        key: 'product_types_expense',
+        encoded: false
+      },
+      update ({ configGet }) {
+        return configGet
+      }
+    }
+  },
   components: {
     ModalExpensesDelete,
     ModalExpensesEdit,
     ExpenseState,
-    ExpensesProductType: () => import('./ExpensesProductType.vue'),
+    TheExpensesTypesOverview: () => import('./TheExpensesTypesOverview.vue'),
     ViewerFileModal: () => import('@/components/AppViewer/ViewerFileModal'),
   },
   props: {
@@ -52,6 +76,9 @@ export default {
   data () {
     return {
       roles,
+      expenseEmployee: null,
+      expenseProductType: null,
+      expenseTypes: [],
       modalFileViewer: {
         src: '',
         modal: false
@@ -79,9 +106,8 @@ export default {
     headers () {
       return [
         { text: 'DESCRIÇÃO', value: 'description', wrap: true },
-        { text: 'TIPO', value: 'type' },
-        { text: 'PRODUTO', value: 'product_type.name' },
-        { text: 'VIA', value: 'via' },
+        { text: 'TIPO', value: 'type.name' },
+        { text: 'VIA', value: 'via.name' },
         { text: 'VALOR', value: 'value', format: 'currencyBRL' },
         { text: 'DATA', value: 'date', format: 'datetime' },
         { text: 'COMPROVANTE', value: 'receipt', align: 'center' },
@@ -145,6 +171,7 @@ export default {
       if (expense.is_confirmed === false) {
         return 'danger'
       }
+
       return 'warning'
     },
     getStatusIcon(expense) {
@@ -195,7 +222,7 @@ export default {
       @hidden="onViewerFileModalHidden"
     />
 
-    <ExpensesProductType
+    <TheExpensesTypesOverview
       v-if="$helpers.canView(roles.GERENCIA)"
       class="my-3"
     />
@@ -233,11 +260,17 @@ export default {
           :headers="headers"
           :items="expenses"
         >
-          <template #[`items.type`]="{ item }">
-            {{ item.type.name }}
-          </template>
-          <template #[`items.via`]="{ item }">
-            {{ item.via.name }}
+          <template #[`table-row.item`]="{ item }">
+            <tr class="small">
+              <td :colspan="headers.length">
+                <template v-if="item.type.id === expenseProductType">
+                  <b>Produto relacionado ao tipo:</b> {{ item.product_type.name }}
+                </template>
+                <template v-if="item.type.id === expenseEmployee">
+                  <b>Funcionário relacionado ao tipo:</b> {{ item.employee.name }}
+                </template>
+              </td>
+            </tr>
           </template>
           <template #[`items.receipt`]="{ item }">
             <AppButton

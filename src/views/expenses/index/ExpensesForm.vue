@@ -7,12 +7,19 @@ import fileMixin from '@/mixins/filesMixin'
 import pasteFilesMixin from '@/mixins/pasteFilesMixin'
 import Form from '@/utils/Form'
 
-import { CreateExpense, UpdateExpense, GetProductTypeExpensesByMonth } from '@/graphql/Expense.gql'
+import {
+  CreateExpense,
+  UpdateExpense,
+  GetProductTypeExpensesByMonth,
+  GetEmployeeExpensesByMonth
+} from '@/graphql/Expense.gql'
+
 import { GetExpenseTypes } from '@/graphql/ExpenseType.gql'
 import { GetDailyCash, GetDailyCashBalance } from '@/graphql/DailyCash.gql'
 import { vias } from '@/graphql/Via.gql'
 import { GetProductTypes } from '@/graphql/ProductType.gql'
 import { GetConfig } from '@/graphql/Config.gql'
+import { GetUsers } from '@/graphql/User.gql'
 import ViewerItemsCardFile from '@/components/AppViewer/ViewerItemsCardFile.vue'
 
 export default {
@@ -30,6 +37,9 @@ export default {
     productTypes: {
       query: GetProductTypes
     },
+    users: {
+      query: GetUsers
+    },
     productTypeExpense: {
       query: GetConfig,
       variables: {
@@ -38,6 +48,18 @@ export default {
         encoded: false
       },
       update ({configGet}) {
+        return configGet
+      },
+      fetchPolicy: 'network-only'
+    },
+    employeeExpense: {
+      query: GetConfig,
+      variables: {
+        name: 'app',
+        key: 'employee_expense',
+        encoded: false
+      },
+      update({configGet}) {
         return configGet
       },
       fetchPolicy: 'network-only'
@@ -60,12 +82,15 @@ export default {
       isLoading: false,
       vias: [],
       productTypeExpense: null,
+      employeeExpense: null,
       expenseTypes: [],
       productTypes: [],
+      users: [],
       form: new Form({
         description: '',
         expense_type_id: '',
         product_type_id: '',
+        employee_id: '',
         value: 'R$ ',
         expense_via_id: '',
         receipt_path: '',
@@ -77,6 +102,8 @@ export default {
     isQueryLoading () {
       return !!this.$apollo.queries.vias.loading
         || !!this.$apollo.queries.expenseTypes.loading
+        || !!this.$apollo.queries.productTypes.loading
+        || !!this.$apollo.queries.users.loading
     },
     expenseSelected () {
       return this.expenseTypes.find((type) => type.id === this.form.expense_type_id)
@@ -101,6 +128,13 @@ export default {
       if (this.isEdit && !this.$apollo.queries.productTypes.loading) {
         this.$nextTick(() => {
           this.form.product_type_id = this.expense.product_type_id
+        })
+      }
+    },
+    users () {
+      if (this.isEdit && !this.$apollo.queries.users.loading) {
+        this.$nextTick(() => {
+          this.form.employee_id = this.expense.employee_id
         })
       }
     },
@@ -130,7 +164,8 @@ export default {
           date: formatDatetime(this.expense.date),
           expense_type_id: '',
           expense_via_id: '',
-          product_type_id: ''
+          product_type_id: '',
+          employee_id: ''
         }
       })
     },
@@ -184,7 +219,11 @@ export default {
             id: this.expense.id,
             input
           },
-          refetchQueries: [GetDailyCash, GetProductTypeExpensesByMonth],
+          refetchQueries: [
+            GetDailyCash,
+            GetProductTypeExpensesByMonth,
+            GetEmployeeExpensesByMonth
+          ],
           awaitRefetchQueries: true
         })
 
@@ -205,7 +244,8 @@ export default {
           refetchQueries: [
             GetDailyCash,
             GetDailyCashBalance,
-            GetProductTypeExpensesByMonth
+            GetProductTypeExpensesByMonth,
+            GetEmployeeExpensesByMonth
           ],
           awaitRefetchQueries: true
         })
@@ -252,6 +292,25 @@ export default {
       :error="form.errors.get('expense_type_id')"
     >
       Tipo de despesa
+    </AppSimpleSelect>
+
+    <AppSimpleSelect
+      v-show="employeeExpense === form.expense_type_id"
+      id="employee_id"
+      v-model="form.employee_id"
+      :options="users"
+      name="employee_id"
+      label-prop="name"
+      placeholder="Selecione um funcionário"
+      :error="form.errors.get('employee_id')"
+    >
+      Funcionário
+      <template
+        v-if="expenseSelected"
+        #hint
+      >
+        O campo produto é obrigatório quando a despesa é <b>{{ expenseSelected.name }}</b>
+      </template>
     </AppSimpleSelect>
 
     <AppSimpleSelect

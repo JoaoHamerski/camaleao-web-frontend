@@ -47,6 +47,7 @@ export default {
         value: formatCurrencyBRL(expense.value),
         expense_via_id: expense.via.id,
         product_type_id: expense?.product_type?.id || '',
+        employee_id: expense?.employee?.id || '',
         receipt_path: expense.receipt_path,
         date: expense.date
       }

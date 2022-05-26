@@ -1,55 +1,5 @@
 #import "./_PaginatorFragment.gql"
-
-fragment CashFlowEntryParts on PaymentExpense {
-  id
-  description
-  date
-  value
-  is_expense
-  receipt_path
-  note
-  is_confirmed
-  confirmed_at
-  created_at
-  employee_name
-  product_type {
-    id
-    name
-  }
-}
-
-fragment CashFlowEntryViaParts on PaymentExpense {
-  via {
-    id
-    name
-  }
-}
-
-fragment CashFlowEntryTypeParts on PaymentExpense {
-  type {
-    id
-    name
-  }
-}
-
-fragment CashFlowEntryOrderParts on PaymentExpense {
-  order {
-    id
-    code
-    payment_voucher_paths
-    client {
-      id
-      name
-    }
-  }
-}
-
-fragment CashFlowEntryUserParts on PaymentExpense {
-  user {
-    id
-    name
-  }
-}
+#import "./PaymentExpense.gql"
 
 query GetCashFlowEntries (
   $first: Int = 10
@@ -68,11 +18,13 @@ query GetCashFlowEntries (
     }
 
     data {
-      ...CashFlowEntryParts
-      ...CashFlowEntryViaParts
-      ...CashFlowEntryTypeParts
-      ...CashFlowEntryOrderParts
-      ...CashFlowEntryUserParts
+      ...PaymentExpenseBasicParts
+      ...PaymentExpenseProductTypeParts
+      ...PaymentExpenseEmployeeParts
+      ...PaymentExpenseViaParts
+      ...PaymentExpenseTypeParts
+      ...PaymentExpenseOrderParts
+      ...PaymentExpenseUserParts
     }
   }
 }

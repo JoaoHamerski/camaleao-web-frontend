@@ -1,4 +1,5 @@
 #import "./_PaginatorFragment.gql"
+#import "./PaymentExpense.gql"
 
 query GetDailyCash (
   $first: Int!
@@ -19,45 +20,13 @@ query GetDailyCash (
     }
 
     data {
-      id
-      value
-      description
-      note
-      confirmed_at
-      is_confirmed
-      created_at
-      is_expense
-      receipt_path
-      date
-
-      product_type {
-        id
-        name
-      }
-
-      user {
-        id
-        name
-      }
-
-      via {
-        id
-        name
-      }
-      type {
-        id
-        name
-      }
-      order {
-        id
-        code
-        payment_voucher_paths
-        total_owing
-        client {
-          id
-          name
-        }
-      }
+      ...PaymentExpenseBasicParts
+      ...PaymentExpenseProductTypeParts
+      ...PaymentExpenseEmployeeParts
+      ...PaymentExpenseViaParts
+      ...PaymentExpenseTypeParts
+      ...PaymentExpenseOrderParts
+      ...PaymentExpenseUserParts
     }
   }
 }

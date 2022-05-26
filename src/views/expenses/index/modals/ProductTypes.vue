@@ -2,10 +2,14 @@
 import {
   GetProductTypes,
   CreateProductType,
-  UpdateProductType,
-  ChangeProductTypesExpenseField
+  UpdateProductType
 } from '@/graphql/ProductType.gql'
 import { GetExpenseTypes } from '@/graphql/ExpenseType.gql'
+import {
+  ChangeProductTypesExpenseField,
+  ChangeEmployeeExpenseField
+} from '@/graphql/Expense.gql'
+import { GetConfig } from '@/graphql/Config.gql'
 
 import Form from '@/utils/Form'
 import { faEdit } from '@fortawesome/free-solid-svg-icons'
@@ -20,10 +24,12 @@ export default {
       query: GetExpenseTypes,
       async result ({loading}) {
         if (!loading) {
-          const expense_type = await this.$helpers.getConfig('app', 'product_types_expense')
+          const product_type = await this.$helpers.getConfig('app', 'product_types_expense')
+          const employee = await this.$helpers.getConfig('app', 'employee_expense')
 
           this.$nextTick(() => {
-            this.formExpense.id = expense_type
+            this.formExpense.id = product_type
+            this.formEmployee.id = employee
           })
         }
       }
@@ -34,6 +40,7 @@ export default {
       isLoading: false,
       isEditLoading: false,
       isProductTypeExpenseLoading: false,
+      isEmployeeExpenseLoading: false,
       productTypes: [],
       expenseTypes: [],
       icons: {
@@ -48,10 +55,40 @@ export default {
       }),
       formExpense: new Form({
         id: ''
+      }),
+      formEmployee: new Form({
+        id: ''
       })
     }
   },
   methods: {
+    async submitExpenseEmployee () {
+      const { id } = this.formEmployee.data()
+
+      this.isEmployeeExpenseLoading = true
+
+      try {
+        await this.$apollo.mutate({
+          mutation: ChangeEmployeeExpenseField,
+          variables: { id },
+          refetchQueries: [{
+            query: GetConfig,
+            variables: {
+              name: 'app',
+              key: 'employee_expense',
+              encoded: false
+            }
+          }],
+          awaitRefetchQueries: true
+        })
+
+        handleSuccess(this, { message: 'Alterado!' })
+      } catch (error) {
+        handleError(this, error)
+      }
+
+      this.isEmployeeExpenseLoading = false
+    },
     async submitExpenseOfProduct () {
       const { id } = this.formExpense.data()
 
@@ -60,7 +97,16 @@ export default {
       try {
         await this.$apollo.mutate({
           mutation: ChangeProductTypesExpenseField,
-          variables: { id }
+          variables: { id },
+          refetchQueries: [{
+            query: GetConfig,
+            variables: {
+              name: 'app',
+              key: 'product_types_expense',
+              encoded: false
+            }
+          }],
+          awaitRefetchQueries: true
         })
 
         handleSuccess(this, {message: 'Alterado!'})
@@ -127,18 +173,42 @@ export default {
       :on-submit="submitExpenseOfProduct"
     >
       <AppSimpleSelect
-        id="expenses"
+        id="expenses_product_type"
         v-model="formExpense.id"
-        name="expenses"
+        name="expenses_product_type"
         label-prop="name"
         :options="expenseTypes"
-        hint="O campo produto é exibido no formulário de despesas"
+        hint="Este campo é exibido no cadastro de despesas"
       >
-        Mostrar o campo produto quando o tipo de despesa selecionada for:
+        Exibir o campo Produto quando o tipo de despesa selecionada for:
         <template #append>
           <AppButton
             outlined
             :loading="isProductTypeExpenseLoading"
+          >
+            Aplicar
+          </AppButton>
+        </template>
+      </AppSimpleSelect>
+    </AppForm>
+
+    <AppForm
+      :form="formEmployee"
+      :on-submit="submitExpenseEmployee"
+    >
+      <AppSimpleSelect
+        id="expenses_employee"
+        v-model="formEmployee.id"
+        name="expenses_employee"
+        :options="expenseTypes"
+        label-prop="name"
+        hint="Este campo é exibido no cadastro de despesas"
+      >
+        Exibir o campo Funcionário quando despesa selecionada for:
+        <template #append>
+          <AppButton
+            outlined
+            :loading="isEmployeeExpenseLoading"
           >
             Aplicar
           </AppButton>

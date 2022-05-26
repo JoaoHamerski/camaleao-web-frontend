@@ -1,0 +1,60 @@
+fragment PaymentExpenseBasicParts on PaymentExpense {
+  id
+  value
+  description
+  note
+  confirmed_at
+  is_confirmed
+  created_at
+  is_expense
+  receipt_path
+  date
+  employee_name
+}
+
+fragment PaymentExpenseProductTypeParts on PaymentExpense {
+  product_type {
+    id
+    name
+  }
+}
+
+fragment PaymentExpenseEmployeeParts on PaymentExpense {
+  employee {
+    id
+    name
+  }
+}
+
+fragment PaymentExpenseViaParts on PaymentExpense {
+  via {
+    id
+    name
+  }
+}
+
+fragment PaymentExpenseTypeParts on PaymentExpense {
+  type {
+    id
+    name
+  }
+}
+
+fragment PaymentExpenseOrderParts on PaymentExpense {
+  order {
+    id
+    code
+    payment_voucher_paths
+    client {
+      id
+      name
+    }
+  }
+}
+
+fragment PaymentExpenseUserParts on PaymentExpense {
+  user {
+    id
+    name
+  }
+}
