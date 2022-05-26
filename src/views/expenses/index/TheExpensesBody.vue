@@ -115,6 +115,9 @@ export default {
     }
   },
   methods: {
+    hasRelationType (expense) {
+      return expense.product_type || expense.employee
+    },
     getReceiptIcon (expense) {
       if (this.$helpers.strContainsAny(expense.receipt_path, '.pdf')) {
         return this.icons.faFilePdf
@@ -159,7 +162,6 @@ export default {
     onSuccessDelete () {
       this.modalExpensesDelete.modal = false
       this.$toast.success('Despesa deletada com sucesso!')
-      this.$emit('refresh-expenses')
     },
     getStatusColor (expense) {
       if (expense.is_confirmed === true) {
@@ -251,8 +253,13 @@ export default {
           :headers="headers"
           :items="expenses"
         >
-          <template #[`table-row.item`]="{ item }">
-            <tr class="small">
+          <template
+            #[`table-row.item`]="{ item }"
+          >
+            <tr
+              v-if="hasRelationType(item)"
+              class="small"
+            >
               <td :colspan="headers.length">
                 <template v-if="item.type.id === expenseProductType">
                   <b>Produto relacionado ao tipo:</b> {{ item.product_type.name }}
