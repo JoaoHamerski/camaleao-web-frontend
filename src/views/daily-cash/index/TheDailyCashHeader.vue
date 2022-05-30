@@ -78,7 +78,7 @@ export default {
     />
 
     <div class="d-flex flex-column flex-sm-row justify-content-between align-items-sm-center">
-      <div>
+      <div class="mb-2 mb-sm-0">
         <AppButton
           class="fw-bold mb-2 mb-sm-0 "
           :block="$isMobile"
@@ -108,10 +108,10 @@ export default {
           Agendar
         </AppButton>
       </div>
-      <div class="d-flex">
+      <div class="d-flex flex-sm-row flex-column">
         <AppButton
           color="warning"
-          class="flex-grow-1 fw-bold me-0 me-sm-1"
+          class="flex-grow-1 fw-bold me-0 me-sm-1 mb-1 mb-sm-0"
           @click="onRemindersClick"
         >
           Agendados
@@ -119,7 +119,7 @@ export default {
         </AppButton>
         <AppButton
           color="warning"
-          class="flex-grow-1 fw-bold"
+          class="flex-grow-1 fw-bold mb-1 mb-sm-0"
           @click="onPendenciesClick"
         >
           Pendências <span class="badge rounded-pill bg-light text-dark">{{ totalPendencies }}</span>
@@ -127,7 +127,7 @@ export default {
         <AppButton
           :icon="icons.faSyncAlt"
           outlined
-          class="ms-1"
+          class="ms-sm-1"
           @click="onResetPaymentsClick"
         />
       </div>

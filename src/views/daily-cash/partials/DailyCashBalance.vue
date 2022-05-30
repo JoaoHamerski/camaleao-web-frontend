@@ -3,7 +3,8 @@ import {
   faCalendarDay,
   faCalendarWeek,
   faCalendarAlt,
-  faBalanceScale
+  faBalanceScale,
+  faExclamationCircle
 } from '@fortawesome/free-solid-svg-icons'
 
 import { isEmpty } from 'lodash-es'
@@ -26,7 +27,8 @@ export default {
         faBalanceScale,
         faCalendarDay,
         faCalendarWeek,
-        faCalendarAlt
+        faCalendarAlt,
+        faExclamationCircle
       }
     }
   },
@@ -41,9 +43,10 @@ export default {
 }
 </script>
 <template>
+  <!-- eslint-disable vue/no-v-html -->
   <AppContainer
     collapsible
-    :value="true"
+    :value="!$isMobile"
   >
     <template #title>
       <FontAwesomeIcon :icon="icons.faBalanceScale" />
@@ -63,6 +66,7 @@ export default {
           />
           <span class="text-black-50">DIA</span>
         </DailyCashBalanceItem>
+
         <DailyCashBalanceItem
           :balance="dailyCashBalance.balance_of_week"
           class="my-3 my-sm-0"
@@ -74,6 +78,7 @@ export default {
           />
           <span class="text-black-50">SEMANA</span>
         </DailyCashBalanceItem>
+
         <DailyCashBalanceItem :balance="dailyCashBalance.balance_of_month">
           <FontAwesomeIcon
             class="text-primary me-1"
@@ -82,6 +87,60 @@ export default {
           />
           <span class="text-black-50">MÊS</span>
         </DailyCashBalanceItem>
+
+        <div class="mt-2 mt-sm-0">
+          <div class="fw-bold text-black-50">
+            PENDÊNCIA NO MÊS
+            <FontAwesomeIcon
+              v-tippy
+              :icon="icons.faExclamationCircle"
+              class="text-primary"
+              fixed-width
+              content="Total que falta pagar no mês atual do pedidos, baseado na data de estampa cadastrada"
+            />
+          </div>
+          <h4
+            class="fw-bold text-success"
+            v-html="$helpers.toBRL(dailyCashBalance.pendency.total_owing_on_month)"
+          />
+          <div class="small">
+            <div>
+              <span>
+                MÊS ATUAL <b>
+                  {{
+                    $helpers.plural(
+                      dailyCashBalance.pendency.total_shirts_on_month,
+                      'F',
+                      'CAMISA',
+                      null,
+                      true
+                    )
+                  }}
+                </b>
+                <FontAwesomeIcon
+                  v-tippy
+                  :icon="icons.faExclamationCircle"
+                  content="Total de camisas cadastradas"
+                  class="text-primary"
+                  fixed-width
+                />
+              </span>
+            </div>
+            <div>
+              <span>MÊS ANTERIOR <b>
+                {{
+                  $helpers.plural(
+                    dailyCashBalance.pendency.total_shirts_last_month,
+                    'F',
+                    'CAMISA',
+                    null,
+                    true
+                  )
+                }}
+              </b></span>
+            </div>
+          </div>
+        </div>
       </div>
     </template>
   </AppContainer>

@@ -49,7 +49,7 @@ export default {
           class="text-success me-1"
           fixed-width
         />
-        <span class="text-secondary">{{ $helpers.toBRL(balance.entry) }}</span>
+        <span class="text-dark">{{ $helpers.toBRL(balance.entry) }}</span>
       </div>
       <div>
         <FontAwesomeIcon
@@ -57,7 +57,7 @@ export default {
           class="text-danger me-1"
           fixed-width
         />
-        <span class="text-secondary">{{ $helpers.toBRL(-balance.out) }}</span>
+        <span class="text-dark">{{ $helpers.toBRL(-balance.out) }}</span>
       </div>
     </div>
   </div>

@@ -229,18 +229,26 @@ export const clearCacheFrom = (payload) => {
   apolloClient.cache.gc()
 }
 
-export const plural = (value, gender = 'M', word, wordPlural = null) => {
+export const plural = (value, gender = 'M', word, wordPlural = null, upperCase = false) => {
   const pronoun = gender.toLocaleLowerCase() === 'm'
     ? 'nenhum'
     : 'nenhuma'
 
   if (value === null || value === 0) {
-    return `${pronoun} ${word}`
+    const str = `${pronoun} ${word}`
+
+    return upperCase
+      ? str.toUpperCase()
+      : str
   }
 
-  return value !== 1
+  const str = value !== 1
     ? `${value} ${wordPlural || word + 's'}`
     : `${value} ${word}`
+
+  return upperCase
+    ? str.toUpperCase()
+    : str
 }
 
 export const openInNewTab = (href) => {

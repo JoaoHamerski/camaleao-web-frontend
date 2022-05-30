@@ -57,5 +57,11 @@ query GetDailyCashBalance {
     balance_of_month {
       ...BalanceParts
     }
+
+    pendency {
+      total_owing_on_month
+      total_shirts_on_month
+      total_shirts_last_month
+    }
   }
 }
