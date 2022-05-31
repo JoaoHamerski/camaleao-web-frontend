@@ -109,7 +109,7 @@ export default {
           </div>
           <div class="d-flex align-items-baseline">
             <h4
-              class="fw-bold text-success"
+              class="fw-bold text-danger"
               v-html="$helpers.toBRL(dailyCashBalance.pendency.total_owing_on_month)"
             />
             <span class="small fw-bold ms-1">
@@ -130,7 +130,7 @@ export default {
                 class="fw-bold link-primary clickable small"
                 @click="onMonthPendencyClick('last')"
               >MÊS ANTERIOR</div>
-              <b class="text-success">
+              <b class="text-danger">
                 {{ $helpers.toBRL(dailyCashBalance.pendency.total_owing_last_month) }}
               </b>
               <span class="small fw-bold">
