@@ -4,7 +4,8 @@ import {
   faCalendarWeek,
   faCalendarAlt,
   faBalanceScale,
-  faExclamationCircle
+  faExclamationCircle,
+  faBoxes
 } from '@fortawesome/free-solid-svg-icons'
 
 import { isEmpty } from 'lodash-es'
@@ -28,7 +29,8 @@ export default {
         faCalendarDay,
         faCalendarWeek,
         faCalendarAlt,
-        faExclamationCircle
+        faExclamationCircle,
+        faBoxes
       }
     }
   },
@@ -38,7 +40,10 @@ export default {
     }
   },
   methods: {
-    isEmpty
+    isEmpty,
+    onMonthPendencyClick (month) {
+      this.$emit('open-pendency-orders', { month })
+    }
   }
 }
 </script>
@@ -90,7 +95,10 @@ export default {
 
         <div class="mt-2 mt-sm-0">
           <div class="fw-bold text-black-50">
-            PENDÊNCIA NO MÊS
+            <span
+              class="link-primary clickable me-1"
+              @click.prevent="onMonthPendencyClick('current')"
+            >PENDÊNCIA NO MÊS</span>
             <FontAwesomeIcon
               v-tippy
               :icon="icons.faExclamationCircle"
@@ -99,36 +107,34 @@ export default {
               content="Total que falta pagar no mês atual do pedidos, baseado na data de estampa cadastrada"
             />
           </div>
-          <h4
-            class="fw-bold text-success"
-            v-html="$helpers.toBRL(dailyCashBalance.pendency.total_owing_on_month)"
-          />
-          <div class="small">
-            <div>
-              <span>
-                MÊS ATUAL <b>
-                  {{
-                    $helpers.plural(
-                      dailyCashBalance.pendency.total_shirts_on_month,
-                      'F',
-                      'CAMISA',
-                      null,
-                      true
-                    )
-                  }}
-                </b>
-                <FontAwesomeIcon
-                  v-tippy
-                  :icon="icons.faExclamationCircle"
-                  content="Total de camisas cadastradas"
-                  class="text-primary"
-                  fixed-width
-                />
-              </span>
-            </div>
-            <div>
-              <span>MÊS ANTERIOR <b>
-                {{
+          <div class="d-flex align-items-baseline">
+            <h4
+              class="fw-bold text-success"
+              v-html="$helpers.toBRL(dailyCashBalance.pendency.total_owing_on_month)"
+            />
+            <span class="small fw-bold ms-1">
+              ({{
+                $helpers.plural(
+                  dailyCashBalance.pendency.total_shirts_on_month,
+                  'F',
+                  'CAMISA',
+                  null,
+                  true
+                )
+              }})
+            </span>
+          </div>
+          <div>
+            <span>
+              <div
+                class="fw-bold link-primary clickable small"
+                @click="onMonthPendencyClick('last')"
+              >MÊS ANTERIOR</div>
+              <b class="text-success">
+                {{ $helpers.toBRL(dailyCashBalance.pendency.total_owing_last_month) }}
+              </b>
+              <span class="small fw-bold">
+                ({{
                   $helpers.plural(
                     dailyCashBalance.pendency.total_shirts_last_month,
                     'F',
@@ -136,13 +142,9 @@ export default {
                     null,
                     true
                   )
-                }}
-              </b>
-                <b class="text-success">
-                  ({{ $helpers.toBRL(dailyCashBalance.pendency.total_owing_last_month) }})
-                </b>
+                }})
               </span>
-            </div>
+            </span>
           </div>
         </div>
       </div>

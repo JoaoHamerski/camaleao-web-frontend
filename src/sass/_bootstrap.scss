@@ -77,3 +77,12 @@
     flex-grow: 1 !important;
   }
 }
+
+.card {
+  &.card-sm {
+    .card-header {
+      padding: .25rem .5rem;
+      font-size: .9rem;
+    }
+  }
+}

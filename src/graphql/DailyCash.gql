@@ -66,3 +66,42 @@ query GetDailyCashBalance {
     }
   }
 }
+
+query GetDailyCashBalancePendenciesOrders (
+  $first: Int!
+  $page: Int
+  $month: DailyCashBalanceMonthsEnum!
+) {
+  dailyCashBalancePendenciesOrders (
+    first: $first
+    page: $page
+    month: $month
+  ) {
+    paginatorInfo {
+      ...PaginatorSimpleParts
+    }
+
+    data {
+      id
+      code
+      quantity
+      price
+      total_owing
+      print_date
+      delivery_date
+      art_paths
+      states
+
+      client {
+        id
+        name
+      }
+
+      status {
+        id
+        text
+        is_available
+      }
+    }
+  }
+}

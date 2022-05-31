@@ -115,61 +115,60 @@ export default {
 </script>
 
 <template>
-  <div class="table-responsive">
-    <nav
-      v-if="hasPagination"
-      aria-label="Paginação"
-    >
-      <ul class="pagination">
-        <li
-          class="page-item"
-          :class="(isFirstPageActive || isLoading) && 'disabled'"
+  <nav
+    v-if="hasPagination"
+    class="d-inline-block"
+    aria-label="Paginação"
+  >
+    <ul class="pagination">
+      <li
+        class="page-item"
+        :class="(isFirstPageActive || isLoading) && 'disabled'"
+      >
+        <a
+          class="page-link clickable px-3"
+          @click="paginate(null, false)"
         >
-          <a
-            class="page-link clickable px-3"
-            @click="paginate(null, false)"
-          >
-            <FontAwesomeIcon
-              class="d-inline-block d-sm-none"
-              :icon="icons.faArrowLeft"
-            />
-            <span class="d-none d-sm-block">Anterior</span>
-          </a>
-        </li>
+          <FontAwesomeIcon
+            class="d-inline-block d-sm-none"
+            :icon="icons.faArrowLeft"
+          />
+          <span class="d-none d-sm-block">Anterior</span>
+        </a>
+      </li>
 
-        <li
-          v-for="(pageNumber, index) in pageList"
-          :key="index"
-          class="page-item"
-          :class="{
-            'active': pageNumber === pagination.currentPage,
-            'disabled': isLoading || pageNumber === 0
-          }"
+      <li
+        v-for="(pageNumber, index) in pageList"
+        :key="index"
+        class="page-item"
+        :class="{
+          'active': pageNumber === pagination.currentPage,
+          'disabled': isLoading || pageNumber === 0
+        }"
+      >
+        <a
+          class="page-link clickable"
+          @click="paginate(pageNumber)"
         >
-          <a
-            class="page-link clickable"
-            @click="paginate(pageNumber)"
-          >
-            {{ pageNumber === 0 ? '...' : pageNumber }}
-          </a>
-        </li>
+          {{ pageNumber === 0 ? '...' : pageNumber }}
+        </a>
+      </li>
 
-        <li
-          class="page-item"
-          :class="(isLastPageActive || isLoading) && 'disabled'"
+      <li
+        class="page-item"
+        :class="(isLastPageActive || isLoading) && 'disabled'"
+      >
+        <a
+          class="page-link clickable px-3"
+          @click="paginate(null, true)"
         >
-          <a
-            class="page-link clickable px-3"
-            @click="paginate(null, true)"
-          >
-            <FontAwesomeIcon
-              class="d-inline-block d-sm-none"
-              :icon="icons.faArrowRight"
-            />
-            <span class="d-none d-sm-block">Próximo</span>
-          </a>
-        </li>
-      </ul>
-    </nav>
-  </div>
+          <FontAwesomeIcon
+            class="d-inline-block d-sm-none"
+            :icon="icons.faArrowRight"
+          />
+          <span class="d-none d-sm-block">Próximo</span>
+        </a>
+      </li>
+    </ul>
+  </nav>
 </template>

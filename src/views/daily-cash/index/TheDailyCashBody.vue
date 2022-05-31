@@ -12,6 +12,7 @@ export default {
     TheDailyCashBodyDate,
     PaymentConfirmErrorModal,
     DailyCashBalance: () => import('../partials/DailyCashBalance.vue'),
+    PendenciesOnMonthOrdersModal: () => import('../partials/PendenciesOnMonthOrdersModal.vue')
   },
   props: {
     entries: {
@@ -38,6 +39,10 @@ export default {
       modalPaymentVouchers: {
         value: false,
         payment: null
+      },
+      modalPendencyOrders: {
+        value: false,
+        month: 'current'
       }
     }
   },
@@ -45,6 +50,10 @@ export default {
     onDailyPaymentError (payment) {
       this.modalError.payment = payment
       this.modalError.value = true
+    },
+    onOpenPendencyOrders ({ month }) {
+      this.modalPendencyOrders.value = true
+      this.modalPendencyOrders.month = month
     }
   }
 }
@@ -57,9 +66,15 @@ export default {
       :payment="modalError.payment"
     />
 
+    <PendenciesOnMonthOrdersModal
+      v-model="modalPendencyOrders.value"
+      :month="modalPendencyOrders.month"
+    />
+
     <DailyCashBalance
       v-if="$helpers.canView(roles.GERENCIA)"
       class="mt-3 mb-5"
+      @open-pendency-orders="onOpenPendencyOrders"
     />
 
     <TheDailyCashBodyDate :date="date" />
