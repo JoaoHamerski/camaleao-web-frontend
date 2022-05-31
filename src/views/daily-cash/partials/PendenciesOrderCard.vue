@@ -54,7 +54,7 @@ export default {
     },
     orderUrl () {
       if (this.isPreRegistered) {
-        return this.$helpers.getUrl('orders.showPreRegistered', {
+        return this.$helpers.getUrl('orders.show.pre-registered', {
           order: this.order.id
         })
       }

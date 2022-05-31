@@ -75,7 +75,11 @@ query GetDailyCashBalancePendenciesOrders (
   dailyCashBalancePendenciesOrders (
     first: $first
     page: $page
-    month: $month
+    month: $month,
+    orderBy: {
+      column: PRINT_DATE,
+      order: DESC
+    }
   ) {
     paginatorInfo {
       ...PaginatorSimpleParts
