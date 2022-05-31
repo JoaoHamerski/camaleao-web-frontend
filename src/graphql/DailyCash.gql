@@ -60,6 +60,7 @@ query GetDailyCashBalance {
 
     pendency {
       total_owing_on_month
+      total_owing_last_month
       total_shirts_on_month
       total_shirts_last_month
     }

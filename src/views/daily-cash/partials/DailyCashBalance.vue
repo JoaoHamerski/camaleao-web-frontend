@@ -137,7 +137,11 @@ export default {
                     true
                   )
                 }}
-              </b></span>
+              </b>
+                <b class="text-success">
+                  ({{ $helpers.toBRL(dailyCashBalance.pendency.total_owing_last_month) }})
+                </b>
+              </span>
             </div>
           </div>
         </div>
