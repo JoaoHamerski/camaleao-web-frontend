@@ -67,6 +67,7 @@ export default {
     />
 
     <PendenciesOnMonthOrdersModal
+      v-if="$helpers.canView(roles.GERENCIA)"
       v-model="modalPendencyOrders.value"
       :month="modalPendencyOrders.month"
     />
