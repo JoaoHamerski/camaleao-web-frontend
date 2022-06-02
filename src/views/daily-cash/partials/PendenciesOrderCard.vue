@@ -81,7 +81,12 @@ export default {
         :href="orderUrl"
         class="stretched-link"
       />
-      {{ order.code }}
+      <template v-if="order.code">
+        {{ order.code }}
+      </template>
+      <template v-else>
+        PRE-REGISTRO
+      </template>
     </div>
     <div class="card-body p-0">
       <VueLoadImage v-if="orderImage">

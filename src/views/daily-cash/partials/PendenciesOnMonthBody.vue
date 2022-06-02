@@ -45,16 +45,6 @@ export default {
     }
   },
   computed: {
-    totalPrice () {
-      return this.dailyCashBalancePendenciesOrders.data.reduce(
-        (total, item) => total + +item.price, 0
-      )
-    },
-    totalShirts () {
-      return this.dailyCashBalancePendenciesOrders.data.reduce(
-        (total, item) => total + +item.quantity, 0
-      )
-    },
     totalOwing () {
       return this.dailyCashBalancePendenciesOrders.data.reduce(
         (total, item) => total + item.total_owing, 0
@@ -69,61 +59,39 @@ export default {
 
 <template>
   <div class="position-relative">
-    <AppLoading v-show="isQueryLoading" />
     <div class="text-center">
       <AppPaginator
         v-model="page"
         :pagination="dailyCashBalancePendenciesOrders.paginatorInfo"
       />
     </div>
-    <div
-      v-if="dailyCashBalancePendenciesOrders.data.length"
-      class="mb-2 fw-bold"
-    >
-      Nesta página:
-      <span>
-        <FontAwesomeIcon
-          :icon="icons.faTshirt"
-          fixed-width
-        />
-        {{ $helpers.plural(totalShirts, 'f', 'CAMISA', null, true) }}
-
-      </span>
-
-      &bull;
-
-      <span class="text-danger">
-        <FontAwesomeIcon
-          :icon="icons.faHandHoldingUsd"
-          fixed-width
-        />
-        {{ $helpers.toBRL(totalOwing) }}
-      </span>
-
-      &bull;
-
-      <span class="text-success">
-        <FontAwesomeIcon
-          :icon="icons.faDollarSign"
-          fixed-width
-        />
-        {{ $helpers.toBRL(totalPrice) }}
-      </span>
-    </div>
-    <div
-      v-if="dailyCashBalancePendenciesOrders.data.length"
-      class="row"
-    >
-      <div
-        v-for="order in dailyCashBalancePendenciesOrders.data"
-        :key="order.key"
-        class="col-sm-2 col"
-      >
-        <PendenciesOrderCard
-          :order="order"
-        />
+    <AppLoading
+      v-if="isQueryLoading"
+      class="py-5 my-5"
+    />
+    <template v-else-if="dailyCashBalancePendenciesOrders.data.length">
+      <div class="mb-2 fw-bold">
+        Nesta página:
+        <span class="text-danger">
+          <FontAwesomeIcon
+            :icon="icons.faHandHoldingUsd"
+            fixed-width
+          />
+          {{ $helpers.toBRL(totalOwing) }}
+        </span>
       </div>
-    </div>
+      <div class="row">
+        <div
+          v-for="order in dailyCashBalancePendenciesOrders.data"
+          :key="order.key"
+          class="col-sm-2 col"
+        >
+          <PendenciesOrderCard
+            :order="order"
+          />
+        </div>
+      </div>
+    </template>
     <div
       v-else
       class="text-center text-secondary mt-5 pt-5"
