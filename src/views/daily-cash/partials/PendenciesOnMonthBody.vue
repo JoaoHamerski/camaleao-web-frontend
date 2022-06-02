@@ -62,6 +62,7 @@ export default {
     <div class="text-center">
       <AppPaginator
         v-model="page"
+        :is-loading="isQueryLoading"
         :pagination="dailyCashBalancePendenciesOrders.paginatorInfo"
       />
     </div>
