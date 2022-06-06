@@ -12,7 +12,8 @@ export default {
     TheDailyCashBodyDate,
     PaymentConfirmErrorModal,
     DailyCashBalance: () => import('../partials/DailyCashBalance.vue'),
-    PendenciesOnMonthOrdersModal: () => import('../partials/PendenciesOnMonthOrdersModal.vue')
+    PendenciesOnMonthOrdersModal: () => import('../partials/PendenciesOnMonthOrdersModal.vue'),
+    DailyCashDetailedFlow: () => import('../partials/DailyCashDetailedFlow.vue')
   },
   props: {
     entries: {
@@ -77,6 +78,8 @@ export default {
       class="mt-3 mb-5"
       @open-pendency-orders="onOpenPendencyOrders"
     />
+
+    <DailyCashDetailedFlow v-if="$helpers.canView(roles.GERENCIA)" />
 
     <TheDailyCashBodyDate :date="date" />
 
