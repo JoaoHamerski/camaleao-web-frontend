@@ -7,6 +7,7 @@ import {
   faExclamationCircle,
   faBoxes
 } from '@fortawesome/free-solid-svg-icons'
+import { DateTime } from 'luxon'
 
 import { isEmpty } from 'lodash-es'
 import { GetDailyCashBalance } from '@/graphql/DailyCash.gql'
@@ -41,8 +42,22 @@ export default {
   },
   methods: {
     isEmpty,
-    onMonthPendencyClick (month) {
-      this.$emit('open-pendency-orders', { month })
+    onPendencyOfMonthClick (month) {
+      if (month === 'current') {
+        this.$emit(
+          'open-pendency-orders',
+          DateTime.now().toISODate()
+        )
+
+        return
+      }
+
+      this.$emit(
+        'open-pendency-orders',
+        DateTime.now()
+          .minus({months: 1})
+          .toISODate()
+      )
     }
   }
 }
@@ -97,7 +112,7 @@ export default {
           <div class="fw-bold text-black-50">
             <span
               class="link-primary clickable me-1"
-              @click.prevent="onMonthPendencyClick('current')"
+              @click.prevent="onPendencyOfMonthClick('current')"
             >PENDÊNCIA NO MÊS</span>
             <FontAwesomeIcon
               v-tippy
@@ -128,11 +143,15 @@ export default {
             <span>
               <div
                 class="fw-bold link-primary clickable small"
-                @click="onMonthPendencyClick('last')"
-              >MÊS ANTERIOR</div>
+                @click="onPendencyOfMonthClick('last')"
+              >
+                MÊS ANTERIOR
+              </div>
+
               <b class="text-danger">
                 {{ $helpers.toBRL(dailyCashBalance.pendency.total_owing_last_month) }}
               </b>
+
               <span class="small fw-bold">
                 ({{
                   $helpers.plural(

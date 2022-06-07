@@ -35,3 +35,12 @@ $default-color: $secondary;
 input.is-invalid+.mx-icon-calendar {
   display: none;
 }
+
+.input-group.datepicker {
+  display: flex;
+  white-space: nowrap;
+
+  .mx-datepicker {
+    width: fit-content
+  }
+}

@@ -13,7 +13,7 @@ export default {
     PendenciesOrderCard
   },
   props: {
-    month: {
+    date: {
       type: String,
       required: true
     }
@@ -23,7 +23,7 @@ export default {
       query: GetDailyCashBalancePendenciesOrders,
       variables () {
         return {
-          month: this.month.toUpperCase(),
+          date: this.date,
           first: 12,
           page: this.page
         }

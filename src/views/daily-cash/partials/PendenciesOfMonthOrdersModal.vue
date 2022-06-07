@@ -1,17 +1,18 @@
 <script>
-import PendenciesOnMonthBody from '../partials/PendenciesOnMonthBody.vue'
+import PendenciesOfMonthBody from './PendenciesOfMonthBody.vue'
 import { faBoxes } from '@fortawesome/free-solid-svg-icons'
+import { DateTime } from 'luxon'
 
 export default {
   components: {
-    PendenciesOnMonthBody
+    PendenciesOfMonthBody
   },
   props: {
     value: {
       type: Boolean,
       default: false
     },
-    month: {
+    date: {
       type: String,
       required: true
     }
@@ -21,6 +22,14 @@ export default {
       icons: {
         faBoxes
       }
+    }
+  },
+  computed: {
+    getDateName () {
+      return DateTime
+        .fromISO(this.date)
+        .setLocale('pt-br')
+        .toFormat("LLLL 'de' y")
     }
   }
 }
@@ -38,13 +47,13 @@ export default {
         :icon="icons.faBoxes"
         fixed-width
       />
-      Pedidos contabilizados nas pendências do mês {{ month === 'current' ? 'atual' : 'anterior' }}
+      Pedidos contabilizados nas pendências de <span class="text-uppercase">{{ getDateName }}</span>
     </template>
 
     <template #body>
-      <PendenciesOnMonthBody
+      <PendenciesOfMonthBody
         v-if="value"
-        :month="month"
+        :date="date"
       />
     </template>
     <template #footer>

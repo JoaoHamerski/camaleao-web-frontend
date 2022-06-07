@@ -70,12 +70,12 @@ query GetDailyCashBalance {
 query GetDailyCashBalancePendenciesOrders (
   $first: Int!
   $page: Int
-  $month: DailyCashBalanceMonthsEnum!
+  $date: String!
 ) {
   dailyCashBalancePendenciesOrders (
     first: $first
     page: $page
-    month: $month,
+    date: $date,
     orderBy: {
       column: PRINT_DATE,
       order: DESC
@@ -107,5 +107,27 @@ query GetDailyCashBalancePendenciesOrders (
         is_available
       }
     }
+  }
+}
+
+query GetDailyCashDetailedFlow ($page: Int! $date: String) {
+  dailyCashDetailedFlow (page: $page date: $date) {
+    date
+    shirts_quantity
+    entry {
+      total
+      orders_price_avg
+      unities_avg
+    }
+
+    out {
+      total
+      expense_types {
+        name
+        total
+      }
+    }
+
+    pendency
   }
 }

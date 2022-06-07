@@ -4,6 +4,7 @@ import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 import DatePicker from 'vue2-datepicker'
 import { DateTime } from 'luxon'
 import 'vue2-datepicker/locale/pt-br'
+import classNames from 'classnames'
 
 import MaskedInputElement from './MaskedInput'
 import {
@@ -81,7 +82,11 @@ export const MaskedInputTodayBtn = function (h, context, element) {
 
 export const MaskedInputGroup = function (h, context, element) {
   return (
-    <div class="input-group">
+    <div class={classNames(
+        'input-group',
+        context.dateRelated.includes(context.inputType) && 'datepicker'
+      )}
+    >
       { context.$slots.prepend }
       { element }
       { context.$slots.append }

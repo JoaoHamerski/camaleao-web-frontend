@@ -12,7 +12,7 @@ export default {
     TheDailyCashBodyDate,
     PaymentConfirmErrorModal,
     DailyCashBalance: () => import('../partials/DailyCashBalance.vue'),
-    PendenciesOnMonthOrdersModal: () => import('../partials/PendenciesOnMonthOrdersModal.vue'),
+    PendenciesOfMonthOrdersModal: () => import('../partials/PendenciesOfMonthOrdersModal.vue'),
     DailyCashDetailedFlow: () => import('../partials/DailyCashDetailedFlow.vue')
   },
   props: {
@@ -43,7 +43,7 @@ export default {
       },
       modalPendencyOrders: {
         value: false,
-        month: 'current'
+        date: ''
       }
     }
   },
@@ -52,9 +52,9 @@ export default {
       this.modalError.payment = payment
       this.modalError.value = true
     },
-    onOpenPendencyOrders ({ month }) {
+    onOpenPendencyOrders (date) {
       this.modalPendencyOrders.value = true
-      this.modalPendencyOrders.month = month
+      this.modalPendencyOrders.date = date
     }
   }
 }
@@ -67,10 +67,10 @@ export default {
       :payment="modalError.payment"
     />
 
-    <PendenciesOnMonthOrdersModal
+    <PendenciesOfMonthOrdersModal
       v-if="$helpers.canView(roles.GERENCIA)"
       v-model="modalPendencyOrders.value"
-      :month="modalPendencyOrders.month"
+      :date="modalPendencyOrders.date"
     />
 
     <DailyCashBalance
@@ -79,7 +79,10 @@ export default {
       @open-pendency-orders="onOpenPendencyOrders"
     />
 
-    <DailyCashDetailedFlow v-if="$helpers.canView(roles.GERENCIA)" />
+    <DailyCashDetailedFlow
+      v-if="$helpers.canView(roles.GERENCIA)"
+      @open-pendency-orders="onOpenPendencyOrders"
+    />
 
     <TheDailyCashBodyDate :date="date" />
 
