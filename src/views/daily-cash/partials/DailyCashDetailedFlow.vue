@@ -2,6 +2,8 @@
 import { faReceipt, faSearch } from '@fortawesome/free-solid-svg-icons'
 import { GetDailyCashDetailedFlow } from '@/graphql/DailyCash.gql'
 import DailyCashDetailedFlowItems from './DailyCashDetailedFlowItems.vue'
+import { last, first } from 'lodash-es'
+import { formatDatetime } from '@/utils/formatters'
 
 export default {
   components: {
@@ -24,6 +26,7 @@ export default {
   data () {
     return {
       collapse: false,
+      dailyCashDetailedFlow: [],
       page: 1,
       date: '',
       icons: {
@@ -35,6 +38,20 @@ export default {
   computed: {
     isQueryLoading () {
       return !!this.$apollo.queries.dailyCashDetailedFlow.loading
+    },
+    getDatePaginationInterval () {
+      if (!this.dailyCashDetailedFlow.length) {
+        return
+      }
+
+      const firstDate = first(this.dailyCashDetailedFlow)
+      const lastDate = last(this.dailyCashDetailedFlow)
+
+      const interval = formatDatetime(firstDate.date, "LLLL 'de' y")
+        + ' - '
+        + formatDatetime(lastDate.date, "LLLL 'de' y")
+
+      return interval.toUpperCase()
     }
   },
   methods: {
@@ -75,9 +92,10 @@ export default {
     <template #body>
       <div class="position-relative">
         <AppLoading v-show="isQueryLoading" />
+
         <div class="d-flex justify-content-between">
           <div class="mb-3">
-            <div class="btn-group">
+            <div class="btn-group mb-2">
               <button
                 class="btn btn-outline-primary"
                 :class="date !== '' && 'disabled'"
@@ -93,7 +111,11 @@ export default {
                 Próximo
               </button>
             </div>
+            <div class="fw-bold small">
+              {{ getDatePaginationInterval }}
+            </div>
           </div>
+
           <div>
             <AppInput
               id="month"
