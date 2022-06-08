@@ -5,8 +5,13 @@ import {
 } from '@fortawesome/free-solid-svg-icons'
 
 import { GetCashFlowEntries, GetCashFlowBalance } from '@/graphql/CashFlow.gql'
-import { GetDailyCash, GetDailyCashBalance } from '@/graphql/DailyCash.gql'
+import {
+  GetDailyCash,
+  GetDailyCashBalance,
+  GetDailyCashDetailedFlow
+} from '@/graphql/DailyCash.gql'
 import { AssignPaymentConfirmation } from '@/graphql/Payment.gql'
+
 import {
   AssignExpenseConfirmation,
   GetProductTypeExpensesByMonth
@@ -51,7 +56,8 @@ export default {
             GetDailyCash,
             GetDailyCashBalance,
             GetCashFlowEntries,
-            GetCashFlowBalance
+            GetCashFlowBalance,
+            GetDailyCashDetailedFlow
           ],
           awaitRefetchQueries: true
         })
@@ -78,7 +84,8 @@ export default {
             GetDailyCashBalance,
             GetCashFlowEntries,
             GetCashFlowBalance,
-            GetProductTypeExpensesByMonth
+            GetProductTypeExpensesByMonth,
+            GetDailyCashDetailedFlow
           ],
           awaitRefetchQueries: true
         })

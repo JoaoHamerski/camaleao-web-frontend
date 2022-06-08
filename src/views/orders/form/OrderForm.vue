@@ -5,6 +5,7 @@ import { formatDatetime } from '@/utils/formatters'
 import { map, pick } from 'lodash-es'
 import { CreateOrder, UpdateOrder } from '@/graphql/Order.gql'
 import { handleError } from '@/utils/forms'
+import { GetDailyCashDetailedFlow, GetDailyCashBalance } from '@/graphql/DailyCash.gql'
 
 import OrderFormClient from './OrderFormClient.vue'
 import OrderFormBasicInfo from './OrderFormBasicInfo.vue'
@@ -82,7 +83,8 @@ export default {
           variables: {
             id: this.order.id,
             input: { ...data }
-          }
+          },
+          refetchQueries: [GetDailyCashDetailedFlow, GetDailyCashBalance]
         })
 
         this.$helpers.clearCacheFrom({ fieldName: 'weeklyProduction' })
@@ -101,7 +103,8 @@ export default {
           variables: {
             client_id: clientKey,
             input: { ...data }
-          }
+          },
+          refetchQueries: [GetDailyCashDetailedFlow, GetDailyCashBalance]
         })
 
         this.$helpers.clearCacheFrom([
