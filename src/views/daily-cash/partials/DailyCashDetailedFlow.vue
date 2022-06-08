@@ -93,8 +93,8 @@ export default {
       <div class="position-relative">
         <AppLoading v-show="isQueryLoading" />
 
-        <div class="d-flex justify-content-between">
-          <div class="mb-3">
+        <div class="d-flex flex-column flex-sm-row justify-content-between">
+          <div class="mb-3 text-center text-sm-start">
             <div class="btn-group mb-2">
               <button
                 class="btn btn-outline-primary"

@@ -27,14 +27,17 @@ export default {
 </script>
 
 <template>
-  <AppContainer>
+  <AppContainer
+    collapsible
+    :value="!$isMobile"
+  >
     <template #title>
       <span class="text-uppercase small me-2">{{ formatDatetime(item.date, "LLLL 'de' y") }}</span>
     </template>
 
     <template #body>
-      <div class="row">
-        <div class="col">
+      <div class="row row-cols-1 row-cols-sm-4">
+        <div class="col mb-2 mb-sm-0">
           <div class="fw-bold">
             CAMISAS PRODUZIDAS
           </div>
@@ -43,7 +46,7 @@ export default {
           </h1>
         </div>
 
-        <div class="col">
+        <div class="col mb-2 mb-sm-0">
           <div class="fw-bold">
             ENTRADAS
           </div>
@@ -74,7 +77,7 @@ export default {
           </div>
         </div>
 
-        <div class="col">
+        <div class="col mb-2 mb-sm-0">
           <div class="fw-bold">
             SAÍDAS
           </div>
