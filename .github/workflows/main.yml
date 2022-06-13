@@ -27,9 +27,6 @@ jobs:
 
       # Runs a set of commands using the runners shell
       - name: Setup node
-        uses: actions/setup-node@v3
-        with:
-          node-version: 16
       - run: |
           npm ci
           npm run build --legacy-peer-deps
