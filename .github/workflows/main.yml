@@ -27,13 +27,12 @@ jobs:
 
       # Runs a set of commands using the runners shell
       - uses: actions/checkout@v3
-      - uses: actions/setup-node@v3
-      - name: Install and build
+      - name: Setup node
+        uses: actions/setup-node@v3
         with:
           node-version: 16
-      - run: |
-          npm ci
-          npm run build
+      - run: npm ci
+      - run: npm run build
 
       - name: Git config
         run: |
