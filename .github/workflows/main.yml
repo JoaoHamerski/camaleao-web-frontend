@@ -27,9 +27,10 @@ jobs:
           echo VUE_APP_GRAPHQL_HTTP=https://web-api.camaleaocamisas.com.br/graphql-api >> .env
 
       # Runs a set of commands using the runners shell
-      - uses: actions/setup-node@v3
+      
       - name: Install and build
-      - with:
+        uses: actions/setup-node@v3
+        with:
           node-version: 16
       - run: |
           npm ci
@@ -51,7 +52,7 @@ jobs:
           git push -f https://${{ secrets.ACCESS_TOKEN }}@github.com/JoaoHamerski/camaleao-web-frontend.git master:deploy
           
       - name: Deploy to server
-        uses: appleboy/ssh-action@master
+      - uses: appleboy/ssh-action@master
         with: 
           host: ${{ secrets.HOST }}
           username: ${{ secrets.USERNAME }}
