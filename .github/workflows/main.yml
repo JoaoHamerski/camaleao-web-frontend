@@ -28,7 +28,6 @@ jobs:
 
       # Runs a set of commands using the runners shell
       - name: Install and build
-      - uses: actions/checkout@v3
       - uses: actions/setup-node@v3
         with:
           node-version: 16
