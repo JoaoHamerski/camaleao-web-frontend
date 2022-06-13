@@ -44,6 +44,9 @@ export default {
           <h1 class="fw-bold">
             {{ item.shirts_quantity }}
           </h1>
+          <div>
+            Valor total: <b>{{ $helpers.toBRL(item.total_price) }}</b>
+          </div>
         </div>
 
         <div class="col mb-2 mb-sm-0">

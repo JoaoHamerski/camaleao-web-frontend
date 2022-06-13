@@ -113,6 +113,7 @@ query GetDailyCashBalancePendenciesOrders (
 query GetDailyCashDetailedFlow ($page: Int! $date: String) {
   dailyCashDetailedFlow (page: $page date: $date) {
     date
+    total_price
     shirts_quantity
     entry {
       total
