@@ -26,7 +26,6 @@ jobs:
           echo VUE_APP_GRAPHQL_HTTP=https://web-api.camaleaocamisas.com.br/graphql-api >> .env
 
       # Runs a set of commands using the runners shell
-      - uses: actions/checkout@v3
       - name: Setup node
         uses: actions/setup-node@v3
         with:
