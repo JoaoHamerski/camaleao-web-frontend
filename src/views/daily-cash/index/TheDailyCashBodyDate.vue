@@ -33,7 +33,7 @@ export default {
 
 <template>
   <div>
-    <h5 class="horizontal-line text-center fw-bold mt-3">
+    <h5 class="horizontal-line text-center fw-bold">
       <span
         v-tippy
         :content="selectedDateExtended"

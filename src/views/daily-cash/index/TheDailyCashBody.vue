@@ -84,7 +84,10 @@ export default {
       @open-pendency-orders="onOpenPendencyOrders"
     />
 
-    <TheDailyCashBodyDate :date="date" />
+    <TheDailyCashBodyDate
+      :date="date"
+      class="pt-5"
+    />
 
     <hr class="bg-secondary">
 
