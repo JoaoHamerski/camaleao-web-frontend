@@ -7,6 +7,14 @@ export default {
     OrderCreateCard: () => import('./OrderCreateCard.vue')
   },
   props: {
+    isOrderable: {
+      type: Boolean,
+      default: false
+    },
+    index: {
+      type: Number,
+      default: 0
+    },
     isCompact: {
       type: Boolean,
       default: false
@@ -22,18 +30,10 @@ export default {
     field: {
       type: String,
       required: true
-    }
-  },
-  computed: {
-    isOrderExtended () {
-      return !this.order.isPreCreated && this.isActive
     },
-    getOrderCardComponent () {
-      if (this.isOrderExtended) {
-        return OrderExtended
-      }
-
-      return OrderSimplified
+    orders: {
+      type: Array,
+      default: () => []
     }
   }
 }
@@ -64,6 +64,19 @@ export default {
 @import "@/sass/bootstrap-utilities";
 
 ::v-deep {
+  .orderable-overflow {
+    position: absolute;
+    top: 0;
+    right: 0;
+    background-color: rgba(0, 0, 0, .5);
+    color: white;
+    font-weight: bold;
+    font-size: 2rem;
+    line-height: 1;
+    padding: 1rem;
+    border-bottom-left-radius: 50%;
+  }
+
   &.card-production-wrapper {
     &, .list-group-item, .card-header {
       transition: width .05s, font-size .05s;
@@ -83,7 +96,12 @@ export default {
   &.card-production-wrapper.card-compact {
     &.active {
       width: 20%;
+
+      @include media-breakpoint-down (sm) {
+        width: 100%;
+      }
     }
+
 
     .card {
       .card-header {

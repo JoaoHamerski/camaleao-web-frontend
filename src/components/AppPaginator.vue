@@ -142,12 +142,15 @@ export default {
         :key="index"
         class="page-item"
         :class="{
-          'active': pageNumber === pagination.currentPage,
+          'active': pageNumber === pagination.currentPage & !isLoading,
           'disabled': isLoading || pageNumber === 0
         }"
       >
         <a
           class="page-link clickable"
+          :class="{
+            'bg-secondary text-white': pageNumber === pagination.currentPage && isLoading
+          }"
           @click="paginate(pageNumber)"
         >
           {{ pageNumber === 0 ? '...' : pageNumber }}

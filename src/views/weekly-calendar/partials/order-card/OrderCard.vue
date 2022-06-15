@@ -6,6 +6,7 @@ import orderStatesMixin from '../../../orders/orderStatesMixin'
 import OrderCardHeader from './OrderCardHeader.vue'
 import OrderCardBodyImage from './OrderCardBodyImage.vue'
 import OrderCardItems from './OrderCardItems.vue'
+
 export default {
   components: {
     OrderCardHeader,
@@ -14,6 +15,14 @@ export default {
   },
   mixins: [orderStatesMixin],
   props: {
+    isOrderable: {
+      type: Boolean,
+      default: false
+    },
+    index: {
+      type: Number,
+      default: 0
+    },
     isCompact: {
       type: Boolean,
       default: false
@@ -49,7 +58,7 @@ export default {
         return 'warning'
       }
 
-      if(this.order.is_concluded) {
+      if (this.order.is_concluded) {
         return 'secondary'
       }
 
@@ -92,7 +101,7 @@ export default {
 
 <template>
   <div
-    class="card"
+    class="card position-relative"
     :class="!isOrderExpanded && 'card-shrink'"
   >
     <OrderCardHeader
@@ -109,10 +118,17 @@ export default {
         @conclude-status="onConcludeStatus"
       />
     </div>
+    <div
+      v-show="isOrderable"
+      class="orderable-overflow"
+    >
+      <div>{{ index + 1 }}</div>
+    </div>
   </div>
 </template>
 
 <style lang="scss" scoped>
+
 ::v-deep {
   &.card.card-shrink {
     .card-header {

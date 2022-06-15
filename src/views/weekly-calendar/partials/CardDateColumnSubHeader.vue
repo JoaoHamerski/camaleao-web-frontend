@@ -3,6 +3,7 @@ import { faFilePdf } from '@fortawesome/free-solid-svg-icons'
 import roles from '@/constants/roles'
 import { GetOrdersWeeklyCalendarReport } from '@/graphql/Order.gql'
 import { GetStatus } from '@/graphql/Status.gql'
+import { ReorderWeeklyCalendar } from '@/graphql/WeeklyCalendar.gql'
 
 export default {
   apollo: {
@@ -17,7 +18,11 @@ export default {
     },
     isCompact: {
       type: Boolean,
-      required: true
+      default: false
+    },
+    isOrderable: {
+      type: Boolean,
+      default: false
     },
     date: {
       type: Object,
@@ -30,12 +35,34 @@ export default {
       selectedStatus: '',
       roles,
       isReportLoading: false,
+      isLoading: false,
       icons: {
         faFilePdf
       }
     }
   },
   methods: {
+    onCancelReorderClick () {
+      this.onOrderableModeChange(false)
+      this.$emit('orderable-mode-canceled')
+    },
+    async onSaveReorderClick () {
+      const input = this.date.orders.map(({id}, index) => ({id, order: index}))
+
+      this.isLoading = true
+
+      await this.$apollo.mutate({
+        mutation: ReorderWeeklyCalendar,
+        variables: { input }
+      })
+
+      this.isLoading = false
+
+      this.onCancelReorderClick()
+    },
+    onOrderableModeChange (value) {
+      this.$emit('orderable-mode-changed', value)
+    },
     onCompactModeChange (value) {
       this.$emit('compact-mode-changed', value)
     },
@@ -64,7 +91,6 @@ export default {
 
         this.$helpers.openInNewTab(src)
       } catch (error) {
-        console.log(error)
         this.$toast.error('Ops! Algo deu errado, tente novamente!')
       }
 
@@ -76,9 +102,9 @@ export default {
 
 <template>
   <div>
-    <div class="d-flex justify-content-between mb-2">
-      <div class="d-flex flex-column flex-sm-row mx-auto mx-sm-0 col">
-        <div class="col col-sm-2 text-center">
+    <div class="d-flex flex-column flex-sm-row mb-2">
+      <div class="d-flex flex-column flex-sm-row col">
+        <div class="col text-center text-sm-start col-sm-3">
           <AppInputFile
             v-if="$helpers.canView(
               roles.GERENCIA,
@@ -93,7 +119,7 @@ export default {
             @input="onImageInput"
           />
         </div>
-        <div class="col col-sm-5">
+        <div class="col col-sm-6">
           <div class="app-input-group">
             <AppButton
               v-if="$helpers.canView(
@@ -116,7 +142,7 @@ export default {
               v-model="selectedStatus"
               remove-default-margin
               name="status"
-              class="col-5 flex-grow-1"
+              class="col flex-grow-1"
               value-prop="id"
               label-prop="text"
               placeholder="Todos"
@@ -125,10 +151,46 @@ export default {
           </div>
         </div>
       </div>
-      <div
-        v-if="!$isMobile"
-        class="col-2"
-      >
+      <div class="d-flex flex-column-reverse flex-sm-row">
+        <div
+          v-if="isOrderable"
+          class="me-2"
+        >
+          <AppButton
+            color="success"
+            class="me-2"
+            btn-class="btn-sm"
+            outlined
+            :loading="isLoading"
+            @click.prevent="onSaveReorderClick"
+          >
+            Salvar
+          </AppButton>
+          <AppButton
+            color="secondary"
+            btn-class="btn-sm"
+            outlined
+            :disabled="isLoading"
+            @click.prevent="onCancelReorderClick"
+          >
+            Cancelar
+          </AppButton>
+        </div>
+        <div
+          v-if="$helpers.canView(roles.GERENCIA) && field === 'PRINT_DATE'"
+          class="mt-2 mt-sm-0"
+        >
+          <AppCheckboxSwitch
+            id="orderable_mode"
+            :value="isOrderable"
+            class="me-2"
+            @input="onOrderableModeChange"
+          >
+            Reordenar
+          </AppCheckboxSwitch>
+        </div>
+      </div>
+      <div v-if="!$isMobile">
         <AppCheckboxSwitch
           id="compact_mode"
           :value="isCompact"
