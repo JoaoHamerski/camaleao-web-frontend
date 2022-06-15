@@ -191,6 +191,10 @@ export default {
     isOrderable: {
       type: Boolean,
       default: false
+    },
+    isLoading: {
+      type: Boolean,
+      default: false
     }
   },
   data () {
@@ -270,7 +274,9 @@ export default {
           'col card-column', this.active && 'active'
         ])}
       >
-        <div class="card">
+        <div class="card position-relative">
+          <AppLoading v-show={this.isLoading && this.active} />
+
           { renderCardDateColumnHeader(h, this) }
           { renderCardDateColumnBody(h, this) }
         </div>

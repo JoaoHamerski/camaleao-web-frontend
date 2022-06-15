@@ -34,6 +34,7 @@ export const renderCardDateColumn = (h, context, date) => {
       active={context.isColumnActive(date)}
       is-compact={context.isCompact}
       is-orderable={context.isOrderable}
+      is-loading={context.isLoading}
       field={context.field}
       {...{on: listeners}}
     />
@@ -171,7 +172,7 @@ export default {
         'py-5': !this.dates.length
       }])}
       >
-        { this.isLoading && <AppLoading class="py-5" /> }
+        <AppLoading  v-show={this.isLoading && this.activeDate === ""}/>
 
         {
           this.$isMobile
