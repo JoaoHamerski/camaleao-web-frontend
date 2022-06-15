@@ -111,11 +111,11 @@ export default {
 
       this.isLoading = false
     },
-    submit () {
+    async submit () {
       if (this.isOrderable) {
-        this.onSubmitAndReorder()
+        await this.onSubmitAndReorder()
       } else {
-        this.onSubmit()
+        await this.onSubmit()
       }
 
       this.$helpers.clearCacheFrom({ fieldName: 'orders' })
