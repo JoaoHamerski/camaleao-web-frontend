@@ -41,6 +41,12 @@ export default {
       }
     }
   },
+  computed: {
+    renderReorderOption () {
+      return this.$helpers.canView(roles.GERENCIA, roles.ATENDIMENTO, roles.ESTAMPA)
+        && this.field === 'PRINT_DATE'
+    }
+  },
   methods: {
     onCancelReorderClick () {
       this.onOrderableModeChange(false)
@@ -179,7 +185,7 @@ export default {
           </AppButton>
         </div>
         <div
-          v-if="$helpers.canView(roles.GERENCIA) && field === 'PRINT_DATE'"
+          v-if="renderReorderOption"
           class="mt-2 mt-sm-0"
         >
           <AppCheckboxSwitch
