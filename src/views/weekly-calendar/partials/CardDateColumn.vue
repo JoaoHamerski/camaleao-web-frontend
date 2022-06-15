@@ -53,7 +53,7 @@ const renderCardDateColumnOrder = (h, context, order, index) => {
       index={index}
       is-active={context.active}
       is-compact={context.isCompact}
-      is-orderable={context.isOrderable}
+      is-orderable={context.isOrderable && context.active}
       field={context.field}
       orders={context.date.orders}
       {...{on: { ...events }}}
@@ -80,7 +80,7 @@ const renderCardDateColumnOrders = (h, context) => {
     ghostClass: "ghost"
   }
 
-  if (context.hasOrders && context.isOrderable) {
+  if (context.hasOrders && context.isOrderable && context.active) {
     return (
       <Draggable
         tag="div"
