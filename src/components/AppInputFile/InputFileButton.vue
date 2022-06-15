@@ -35,7 +35,7 @@ export default {
   >
     <label
       :for="id"
-      class="btn"
+      class="btn text-nowrap"
       :class="{
         'btn-outline-primary': !error,
         'btn-outline-danger': error,

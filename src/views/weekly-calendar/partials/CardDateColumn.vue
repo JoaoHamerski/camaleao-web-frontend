@@ -1,23 +1,171 @@
 <script>
 import roles from '@/constants/roles'
 import filesMixin from '@/mixins/filesMixin'
+import classNames from 'classnames'
 
 import CardDateColumnOrder from './CardDateColumnOrder.vue'
 import CardDateColumnHeader from './CardDateColumHeader.vue'
 import CardDateColumnSubHeader from './CardDateColumnSubHeader.vue'
+const CardDateColumnDragged = () => import('./CardDateColumnDragged.vue')
+import Draggable from 'vuedraggable'
 
 export const DRAG_STATES = {
   DRAG_LEAVE: 0,
   DRAG_ENTER: 1
 }
 
+const renderCardDateColumnHeader = (h, context) => {
+  const events = {
+    'header-clicked': context.onHeaderClicked
+  }
+
+  return (
+    <CardDateColumnHeader
+      {...{
+        attrs: {date: context.date, active: context.active},
+        on: {...events}
+      }}
+    />
+  )
+}
+
+const renderCardDateColumnDragged = (h, context) => {
+  const events = {
+    'drag-state-changed': context.onDragStateChanged,
+    'file-drop': context.onFileDrop
+  }
+
+  return (
+    <CardDateColumnDragged {...{on: {...events}}} />
+  )
+}
+
+const renderCardDateColumnOrder = (h, context, order, index) => {
+  const events = {
+    'cancel-create': context.onCancelCreate,
+    'order-created': context.onOrderCreated,
+  }
+
+  return (
+    <CardDateColumnOrder
+      key={`order__${order.id}`}
+      order={order}
+      index={index}
+      is-active={context.active}
+      is-compact={context.isCompact}
+      is-orderable={context.isOrderable && context.active}
+      field={context.field}
+      orders={context.date.orders}
+      {...{on: { ...events }}}
+    />
+  )
+}
+
+const renderOrders = (h, context) => {
+  return context.date.orders.map(
+    (order, index) => renderCardDateColumnOrder(h, context, order, index)
+  )
+}
+
+const renderCardDateColumnOrders = (h, context) => {
+  const events = {
+    start: () => { context.drag = true },
+    end: () => { context.drag = false }
+  }
+
+  const attrs = {
+    animation: 200,
+    group: "description",
+    disabled: false,
+    ghostClass: "ghost"
+  }
+
+  if (context.hasOrders && context.isOrderable && context.active) {
+    return (
+      <Draggable
+        tag="div"
+        list={context.date.orders}
+        {...{
+          on: {...events },
+          attrs: {...attrs}
+        }}
+      >
+        <TransitionGroup
+          class={classNames(context.active && 'row gx-2')}
+          tag="div"
+          type="transition"
+          name={!context.drag ? 'flip-list' : null}
+        >
+          { renderOrders(h, context) }
+        </TransitionGroup>
+      </Draggable>
+    )
+  }
+
+  if (context.hasOrders) {
+    return (
+      <div class={classNames(context.active && 'row gx-2')}>
+        { renderOrders(h, context) }
+      </div>
+    )
+  }
+
+  return (
+    <span
+      class={classNames([
+        'd-block text-center text-secondary py-3',
+        {
+          'py-5 my-5 h6': context.active,
+          'small': !context.active
+        }
+      ])}
+    >
+      SEM PEDIDOS
+    </span>
+  )
+}
+
+const renderCardDateSubHeader = (h, context) => {
+  const events = {
+    'orderable-mode-changed': context.onOrderableModeChanged,
+    'orderable-mode-canceled': context.onOrderableModeCanceled,
+    'compact-mode-changed': context.onCompactModeChange,
+    'input-image': context.onImageUploaded,
+  }
+
+  const { date, isCompact, isOrderable, field } = context
+
+  if (!context.active) {
+    return
+  }
+
+  return (
+    <CardDateColumnSubHeader
+      {...{
+        attrs: {date, isCompact, isOrderable, field },
+        on: {...events}
+      }}
+    />
+  )
+}
+
+const renderCardDateColumnBody = (h, context) => {
+  if (context.dragState === DRAG_STATES.DRAG_ENTER) {
+    return renderCardDateColumnDragged(h, context)
+  }
+
+  return (
+    <div
+      class={classNames(['card-body px-2'])}
+      vOn:dragenter_stop_prevent={context.onDragOverCard}
+    >
+      { renderCardDateSubHeader(h, context) }
+      { renderCardDateColumnOrders(h, context) }
+    </div>
+  )
+}
+
 export default {
-  components: {
-    CardDateColumnOrder,
-    CardDateColumnHeader,
-    CardDateColumnDragged: () => import('./CardDateColumnDragged.vue'),
-    CardDateColumnSubHeader
-  },
   mixins: [filesMixin],
   props: {
     field: {
@@ -39,12 +187,21 @@ export default {
     isCompact: {
       type: Boolean,
       default: false
+    },
+    isOrderable: {
+      type: Boolean,
+      default: false
+    },
+    isLoading: {
+      type: Boolean,
+      default: false
     }
   },
   data () {
     return {
       DRAG_STATES,
-      dragState: DRAG_STATES.DRAG_LEAVE
+      dragState: DRAG_STATES.DRAG_LEAVE,
+      drag: false
     }
   },
   computed: {
@@ -53,6 +210,12 @@ export default {
     }
   },
   methods: {
+    onOrderableModeCanceled () {
+      this.$emit('orderable-mode-canceled')
+    },
+    onOrderableModeChanged (value) {
+      this.$emit('orderable-mode-changed', value)
+    },
     onCompactModeChange (value) {
       this.$emit('is-compact:update', value)
     },
@@ -95,75 +258,44 @@ export default {
       this.onImageUploaded(files)
     },
     onDragOverCard (event) {
+      if (this.isOrderable) {
+        return
+      }
+
       if (this.$helpers.canView(roles.GERENCIA, roles.ATENDIMENTO, roles.DESIGN)) {
         this.dragState = DRAG_STATES.DRAG_ENTER
       }
     }
+  },
+  render (h) {
+    return (
+      <div
+        class={classNames([
+          'col card-column', this.active && 'active'
+        ])}
+      >
+        <div class="card position-relative">
+          <AppLoading v-show={this.isLoading && this.active} />
+
+          { renderCardDateColumnHeader(h, this) }
+          { renderCardDateColumnBody(h, this) }
+        </div>
+      </div>
+    )
   }
 }
 </script>
 
-<template>
-  <div
-    class="col card-column"
-    :class="active && 'active'"
-  >
-    <div
-      class="card"
-    >
-      <CardDateColumnHeader
-        v-bind="{ date, active }"
-        @header-clicked="onHeaderClicked"
-      />
-
-      <CardDateColumnDragged
-        v-if="dragState === DRAG_STATES.DRAG_ENTER"
-        @drag-state-changed="onDragStateChanged"
-        @file-drop="onFileDrop"
-      />
-
-      <div
-        v-else
-        class="card-body px-2"
-        :class="active && 'row gx-2'"
-        @dragenter.prevent.stop="onDragOverCard"
-      >
-        <CardDateColumnSubHeader
-          v-show="active"
-          v-bind="{ date, isCompact, field }"
-          @compact-mode-changed="onCompactModeChange"
-          @input-image="onImageUploaded"
-        />
-
-        <template v-if="hasOrders">
-          <CardDateColumnOrder
-            v-for="order in date.orders"
-            :key="`order__${order.id}`"
-            :order="order"
-            :is-active="active"
-            :is-compact="isCompact"
-            :field="field"
-            @cancel-create="onCancelCreate"
-            @order-created="onOrderCreated"
-          />
-        </template>
-        <span
-          v-else
-          class="d-block text-center text-secondary py-3"
-          :class="{
-            'py-5 my-5 h6': active,
-            'small': !active
-          }"
-        >
-          SEM PEDIDOS
-        </span>
-      </div>
-    </div>
-  </div>
-</template>
-
 <style lang="scss" scoped>
 @import "@/sass/bootstrap-utilities";
+
+.flip-list {
+  transition: transform 0.5s;
+}
+
+.no-move {
+  transition: transform 0s;
+}
 
 .drag-enter-overlap {
   z-index: 20;

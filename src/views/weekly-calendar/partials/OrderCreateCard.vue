@@ -3,19 +3,31 @@ import { faBoxOpen, faQuestionCircle } from '@fortawesome/free-solid-svg-icons'
 import Form from '@/utils/Form'
 import { handleError } from '@/utils/forms'
 import { formatDatetime } from '@/utils/formatters'
-import { filter } from 'lodash-es'
 
 import {
   CreatePreRegisteredOrder,
-  GetWeeklyCalendarOrders
+  GetWeeklyCalendarOrders,
+  ReorderWeeklyCalendar
 } from '@/graphql/WeeklyCalendar.gql'
 import { GetStatus } from '@/graphql/Status.gql'
 
 export default {
   props: {
+    isOrderable: {
+      type: Boolean,
+      default: false
+    },
+    index: {
+      type: Number,
+      default: 0
+    },
     order: {
       type: Object,
       default: () => ({})
+    },
+    orders: {
+      type: Array,
+      default: () => []
     }
   },
   apollo: {
@@ -50,6 +62,36 @@ export default {
         art_paths: [this.order.image.base64]
       }
     },
+    async onSubmitAndReorder () {
+      const input = this.getFormattedForm()
+
+      this.isLoading = true
+
+      try {
+        const {data: { orderCreatePreRegistered: { id: preCreatedOrderId }}} = await this.$apollo.mutate({
+          mutation: CreatePreRegisteredOrder,
+          variables: { input },
+        })
+
+        const orderedOrders = this.orders.map(({id}, index) => ({id, order: index}))
+        const preCreatedIndex = orderedOrders.findIndex(order => order.id.match(/^pre-created/))
+
+        orderedOrders.splice(preCreatedIndex, 1, {id: preCreatedOrderId, order: preCreatedIndex, })
+
+        await this.$apollo.mutate({
+          mutation: ReorderWeeklyCalendar,
+          variables: {
+            input: orderedOrders
+          },
+          awaitRefetchQueries: true,
+          refetchQueries: [GetWeeklyCalendarOrders]
+        })
+      } catch (error) {
+        handleError(this, error)
+      }
+
+      this.isLoading = false
+    },
     async onSubmit () {
       const input = this.getFormattedForm()
 
@@ -63,13 +105,21 @@ export default {
           refetchQueries: [GetWeeklyCalendarOrders]
         })
 
-        this.$helpers.clearCacheFrom({ fieldName: 'orders' })
-        this.$toast.success('Pedido registrado!')
       } catch (error) {
         handleError(this, error)
       }
 
       this.isLoading = false
+    },
+    submit () {
+      if (this.isOrderable) {
+        this.onSubmitAndReorder()
+      } else {
+        this.onSubmit()
+      }
+
+      this.$helpers.clearCacheFrom({ fieldName: 'orders' })
+      this.$toast.success('Pedido registrado!')
     },
     onCancel () {
       this.$emit('cancel-create', this.order)
@@ -97,7 +147,7 @@ export default {
         </AppViewer>
         <AppForm
           :form="form"
-          :on-submit="onSubmit"
+          :on-submit="submit"
           class="mx-2 mt-2"
         >
           <AppTextarea
@@ -139,7 +189,7 @@ export default {
           color="success"
           class="flex-fill"
           :loading="isLoading"
-          @click.prevent="onSubmit"
+          @click.prevent="submit"
         >
           Cadastrar
         </AppButton>
@@ -152,6 +202,12 @@ export default {
         >
           Cancelar
         </AppButton>
+      </div>
+      <div
+        v-show="isOrderable"
+        class="orderable-overflow"
+      >
+        <div>{{ index + 1 }}</div>
       </div>
     </div>
   </div>

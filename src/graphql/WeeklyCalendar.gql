@@ -15,6 +15,7 @@ query GetWeeklyCalendarOrders ($date: String! $field: QueryFromDateColumns!) {
       reminder
       is_concluded
       can_be_concluded
+      order
 
       status {
         id
@@ -55,4 +56,10 @@ mutation UpdateConcludeStatusFromWeeklyCalendar ($input: OrderDatesFieldsConclud
 
 mutation UpdateUpdatableStatusFromWeeklyCalendar ($input: OrderDatesFieldsUpdatableStatus!) {
   statusUpdateUpdatableWeeklyCalendar (input: $input)
+}
+
+mutation ReorderWeeklyCalendar ($input: [ReorderWeeklyCalendarOrdersInput]) {
+  weeklyCalendarReorder (input: $input) {
+    id
+  }
 }

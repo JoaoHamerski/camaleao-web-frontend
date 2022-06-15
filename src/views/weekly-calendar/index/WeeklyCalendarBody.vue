@@ -22,6 +22,8 @@ export const renderCardDateColumn = (h, context, date) => {
     'change-state': context.onStateChanged,
     'uploaded-file': context.onFileUploaded,
     'cancel-create': context.onCancelCreate,
+    'orderable-mode-canceled': context.onOrderableModeCanceled,
+    'orderable-mode-changed': context.onOrderableModeChanged
   }
 
   return (
@@ -31,6 +33,8 @@ export const renderCardDateColumn = (h, context, date) => {
       date={date}
       active={context.isColumnActive(date)}
       is-compact={context.isCompact}
+      is-orderable={context.isOrderable}
+      is-loading={context.isLoading}
       field={context.field}
       {...{on: listeners}}
     />
@@ -78,6 +82,7 @@ export default {
     return {
       activeDate: '',
       isCompact: false,
+      isOrderable: false,
       modalReport: {
         value: false,
         src: ''
@@ -94,6 +99,13 @@ export default {
     window.removeEventListener('paste', this.onPasteEvent)
   },
   methods: {
+    onOrderableModeChanged (value) {
+      this.isOrderable = value
+    },
+    onOrderableModeCanceled () {
+      this.isOrderable = false
+      this.$emit('orderable-mode-canceled')
+    },
     isColumnActive (date) {
       return this.activeDate === date.date
         || this.$isMobile
@@ -124,6 +136,10 @@ export default {
       }
 
       this.activeDate = ''
+
+      if (this.isOrderable) {
+        this.onOrderableModeCanceled()
+      }
     },
     disableActiveCard ({ key }) {
       if (key === 'Escape') {
@@ -152,11 +168,11 @@ export default {
   },
   render (h) {
     return (
-      <div class={classNames(['position-relative row gx-1', {
+      <div class={classNames(['position-relative h-100 row gx-1', {
         'py-5': !this.dates.length
       }])}
       >
-        { this.isLoading && <AppLoading /> }
+        <AppLoading  v-show={this.isLoading && this.activeDate === ""}/>
 
         {
           this.$isMobile

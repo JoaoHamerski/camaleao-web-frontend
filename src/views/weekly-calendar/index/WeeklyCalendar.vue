@@ -85,6 +85,12 @@ export default {
       )
 
       weeklyDate.orders.splice(indexToDelete, 1)
+    },
+    onOrderableModeCanceled () {
+      // this.$helpers.clearCacheFrom({
+
+      // })
+      this.refresh()
     }
   }
 }
@@ -106,6 +112,7 @@ export default {
       :is-loading="isLoading"
       @uploaded-file="onFileUploaded"
       @cancel-create="onCancelOrder"
+      @orderable-mode-canceled="onOrderableModeCanceled"
     />
   </div>
 </template>
