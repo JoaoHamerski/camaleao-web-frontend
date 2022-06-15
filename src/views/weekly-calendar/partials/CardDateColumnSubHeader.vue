@@ -58,6 +58,8 @@ export default {
 
       this.isLoading = false
 
+      this.$toast.success('Pedidos reordenados!')
+
       this.onCancelReorderClick()
     },
     onOrderableModeChange (value) {

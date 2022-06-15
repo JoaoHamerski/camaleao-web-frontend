@@ -71,9 +71,9 @@ export default {
     background-color: rgba(0, 0, 0, .5);
     color: white;
     font-weight: bold;
-    font-size: 2rem;
+    font-size: 1.5rem;
     line-height: 1;
-    padding: 1rem;
+    padding: .7rem;
     border-bottom-left-radius: 50%;
   }
 
