@@ -114,7 +114,7 @@ query GetDailyCashDetailedFlow ($page: Int! $date: String) {
   dailyCashDetailedFlow (page: $page date: $date) {
     date
     total_price
-    shirts_quantity
+    shirts_total
     entry {
       total
       orders_price_avg
@@ -127,6 +127,12 @@ query GetDailyCashDetailedFlow ($page: Int! $date: String) {
         name
         total
       }
+    }
+
+    shirts_quantity {
+      less_than_five
+      between_five_and_ten
+      more_than_ten
     }
 
     pendency

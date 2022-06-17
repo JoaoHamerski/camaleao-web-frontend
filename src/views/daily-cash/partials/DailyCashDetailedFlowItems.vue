@@ -42,10 +42,44 @@ export default {
             CAMISAS PRODUZIDAS
           </div>
           <h1 class="fw-bold">
-            {{ item.shirts_quantity }}
+            {{ item.shirts_total }}
           </h1>
           <div>
-            Valor total: <b>{{ $helpers.toBRL(item.total_price) }}</b>
+            Valor total: <b class="text-info">{{ $helpers.toBRL(item.total_price) }}</b>
+          </div>
+          <div class="small">
+            <div class="text-nowrap">
+              <FontAwesomeIcon
+                :icon="icons.faBox"
+                fixed-width
+              />
+              Média <b>por pedido</b>:
+              <span class="text-info fw-bold">
+                {{ $helpers.toBRL(item.entry.orders_price_avg) }}
+              </span>
+            </div>
+            <div class="text-nowrap">
+              <FontAwesomeIcon
+                :icon="icons.faTshirt"
+                fixed-width
+              />
+              Média <b>por camisa</b>:
+              <span class="text-info fw-bold">
+                {{ $helpers.toBRL(item.entry.unities_avg) }}
+              </span>
+            </div>
+            <div class="text-nowrap">
+              <FontAwesomeIcon
+                :icon="icons.faTshirt"
+                fixed-width
+              />
+              Pedidos com:
+              <b>-5 <span class="text-info">({{ item.shirts_quantity.less_than_five }})</span></b>
+              |
+              <b>5-10 <span class="text-info"> ({{ item.shirts_quantity.between_five_and_ten }})</span></b>
+              |
+              <b>+10 <span class="text-info">({{ item.shirts_quantity.more_than_ten }})</span></b>
+            </div>
           </div>
         </div>
 
@@ -56,28 +90,6 @@ export default {
           <h2 class="fw-bold text-success mb-0">
             {{ $helpers.toBRL(item.entry.total) }}
           </h2>
-          <div class="small">
-            <div class="text-nowrap">
-              <FontAwesomeIcon
-                :icon="icons.faBox"
-                fixed-width
-              />
-              Média <b>por pedido</b>:
-              <span class="text-success fw-bold">
-                {{ $helpers.toBRL(item.entry.orders_price_avg) }}
-              </span>
-            </div>
-            <div class="text-nowrap">
-              <FontAwesomeIcon
-                :icon="icons.faTshirt"
-                fixed-width
-              />
-              Média <b>por camisa</b>:
-              <span class="text-success fw-bold">
-                {{ $helpers.toBRL(item.entry.unities_avg) }}
-              </span>
-            </div>
-          </div>
         </div>
 
         <div class="col mb-2 mb-sm-0">
