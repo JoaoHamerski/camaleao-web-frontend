@@ -133,16 +133,19 @@ query GetDailyCashDetailedFlow ($page: Int! $date: String) {
       less_than_five {
         value
         quantity
+        count
       }
 
       between_five_and_ten {
         value
         quantity
+        count
       }
 
       more_than_ten {
         value
         quantity
+        count
       }
     }
 
