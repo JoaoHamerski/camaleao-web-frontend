@@ -129,10 +129,21 @@ query GetDailyCashDetailedFlow ($page: Int! $date: String) {
       }
     }
 
-    shirts_quantity {
-      less_than_five
-      between_five_and_ten
-      more_than_ten
+    shirts_details {
+      less_than_five {
+        value
+        quantity
+      }
+
+      between_five_and_ten {
+        value
+        quantity
+      }
+
+      more_than_ten {
+        value
+        quantity
+      }
     }
 
     pendency

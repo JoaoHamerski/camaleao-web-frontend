@@ -47,6 +47,15 @@ export default {
           <div>
             Valor total: <b class="text-info">{{ $helpers.toBRL(item.total_price) }}</b>
           </div>
+        </div>
+
+        <div class="col mb-2 mb-sm-0">
+          <div class="fw-bold">
+            ENTRADAS
+          </div>
+          <h2 class="fw-bold text-success mb-0">
+            {{ $helpers.toBRL(item.entry.total) }}
+          </h2>
           <div class="small">
             <div class="text-nowrap">
               <FontAwesomeIcon
@@ -68,28 +77,52 @@ export default {
                 {{ $helpers.toBRL(item.entry.unities_avg) }}
               </span>
             </div>
-            <div class="text-nowrap">
-              <FontAwesomeIcon
-                :icon="icons.faTshirt"
-                fixed-width
-              />
-              Pedidos com:
-              <b>-5 <span class="text-info">({{ item.shirts_quantity.less_than_five }})</span></b>
-              |
-              <b>5-10 <span class="text-info"> ({{ item.shirts_quantity.between_five_and_ten }})</span></b>
-              |
-              <b>+10 <span class="text-info">({{ item.shirts_quantity.more_than_ten }})</span></b>
+            <div>
+              <div>
+                <FontAwesomeIcon
+                  :icon="icons.faTshirt"
+                  fixed-width
+                />
+                Pedidos com peças:
+              </div>
+              <div class="ms-4 fw-bold">
+                <div class="row gx-0">
+                  <div class="col-2">
+                    &lt; 5
+                  </div>
+                  <div class="col-3 text-success">
+                    ({{ item.shirts_details.less_than_five.quantity }}):
+                  </div>
+                  <div class="col text-info">
+                    {{ $helpers.toBRL(item.shirts_details.less_than_five.value) }}
+                  </div>
+                </div>
+                <div class="row gx-0">
+                  <div class="col-2">
+                    5~10
+                  </div>
+                  <div class="col-3 text-success">
+                    ({{ item.shirts_details.between_five_and_ten.quantity }}):
+                  </div>
+                  <div class="col text-info">
+                    {{ $helpers.toBRL(item.shirts_details.between_five_and_ten.value) }}
+                  </div>
+                </div>
+
+                <div class="row gx-0">
+                  <div class="col-2">
+                    &gt; 10
+                  </div>
+                  <div class="col-3 text-success">
+                    ({{ item.shirts_details.more_than_ten.quantity }}):
+                  </div>
+                  <div class="col text-info">
+                    {{ $helpers.toBRL(item.shirts_details.more_than_ten.value) }}
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
-        </div>
-
-        <div class="col mb-2 mb-sm-0">
-          <div class="fw-bold">
-            ENTRADAS
-          </div>
-          <h2 class="fw-bold text-success mb-0">
-            {{ $helpers.toBRL(item.entry.total) }}
-          </h2>
         </div>
 
         <div class="col mb-2 mb-sm-0">
