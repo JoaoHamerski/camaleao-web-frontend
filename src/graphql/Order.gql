@@ -9,7 +9,10 @@ fragment OrderParts on Order {
   states
   discount
   quantity
+  has_sponsor
   total_paid
+  total_paid_sponsor
+  total_paid_non_sponsor
   total_owing
   total_clothings_value
   print_date
@@ -111,9 +114,17 @@ fragment PaymentsPart on Order {
     confirmed_at
     is_confirmed
     created_at
+    is_sponsor
+
+    sponsorship_client {
+      id
+      name
+    }
+
     order {
       total_owing
     }
+
     via {
       id
       name

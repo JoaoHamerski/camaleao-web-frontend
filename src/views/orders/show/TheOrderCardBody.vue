@@ -171,6 +171,11 @@ export default {
               }"
               v-html="$helpers.toBRL(order.total_paid, true)"
             />
+            <template v-if="order.has_sponsor">
+              <div class="small">
+                <span class="text-secondary">PATROCÍNIO:</span> <b class="text-success">{{ $helpers.toBRL(order.total_paid_sponsor) }}</b>
+              </div>
+            </template>
           </div>
           <div>
             <div>

@@ -121,6 +121,16 @@ export default {
                   </span>
                 </div>
                 <div
+                  v-if="payment.is_sponsor"
+                  class="small text-secondary"
+                >
+                  PATROCINADOR: <a
+                    :href="$helpers.getUrl('clients.show', {client: payment.sponsorship_client.id})"
+                    target="blank"
+                    class="fw-bold text-decoration-none"
+                  >{{ payment.sponsorship_client.name }}</a>
+                </div>
+                <div
                   v-if="payment.note"
                   class="small text-secondary"
                 >

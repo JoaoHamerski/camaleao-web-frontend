@@ -68,7 +68,8 @@ export default {
         phone: '',
         city_id: '',
         branch_id: '',
-        shipping_company_id: ''
+        shipping_company_id: '',
+        is_sponsor: false
       })
     }
   },
@@ -92,10 +93,18 @@ export default {
   },
   methods: {
     populateForm () {
-      const { name, phone, city, branch, shipping_company } = this.client
+      const {
+        name,
+        phone,
+        city,
+        branch,
+        shipping_company,
+        is_sponsor
+      } = this.client
 
       this.form.name = name
       this.form.phone = phone
+      this.form.is_sponsor = !!is_sponsor
 
       if (city) {
         this.form.city_id = this.cities.find(({ id }) => city.id === id)
@@ -225,6 +234,17 @@ export default {
     >
       Telefone
     </AppInput>
+
+    <AppCheckbox
+      id="is_sponsor"
+      v-model="form.is_sponsor"
+      name="is_sponsor"
+    >
+      Patrocinador
+      <template #hint>
+        Um cliente <b>patrocinador</b> pode efetuar pagamentos em outros pedidos
+      </template>
+    </AppCheckbox>
 
     <AppSelect
       v-model="form.city_id"

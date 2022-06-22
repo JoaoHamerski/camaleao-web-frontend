@@ -3,7 +3,6 @@ import { isEmpty, isObject, omit, cloneDeep } from 'lodash-es'
 import { formatCurrencyBRL } from '@/utils/formatters'
 import { maskCurrencyBRL, maskDate } from '@/utils/masks'
 import Form from '@/utils/Form'
-import { DateTime } from 'luxon'
 import { handleSuccess, handleError } from '@/utils/forms'
 
 import { vias } from '@/graphql/Via.gql'
@@ -42,7 +41,9 @@ export default {
         },
         date: '',
         value: 'R$ ',
-        via_id: ''
+        via_id: '',
+        is_sponsor: false,
+        sponsorship_client_id: ''
       })
     }
   },
@@ -110,6 +111,9 @@ export default {
     :form="form"
     :on-submit="onSubmit"
   >
+    <h6 class="horizontal-line text-center mb-4">
+      <span class="fw-bold">PARA</span>
+    </h6>
     <DailyPaymentFormClient
       :form="form"
     />
@@ -178,6 +182,16 @@ export default {
       >
         Data
       </AppInput>
+    </div>
+
+    <div>
+      <AppCheckbox
+        id="is_sponsor"
+        v-model="form.is_sponsor"
+        name="is_sponsor"
+      >
+        Patrocínio
+      </AppCheckbox>
     </div>
 
     <div class="row">

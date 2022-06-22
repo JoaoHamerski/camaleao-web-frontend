@@ -16,6 +16,10 @@ export default {
     lg: {
       type: Boolean,
       default: false
+    },
+    hint: {
+      type: String,
+      default: ''
     }
   }
 }
@@ -42,5 +46,20 @@ export default {
     >
       <slot />
     </label>
+    <div>
+      <small
+        v-if="hint !== ''"
+        slot="hint"
+        class="form-text"
+      >{{ hint }}</small>
+      <small
+        v-else-if="$slots.hint"
+        class="form-text"
+      >
+        <slot
+          name="hint"
+        />
+      </small>
+    </div>
   </div>
 </template>

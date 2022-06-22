@@ -4,10 +4,7 @@ import { formatCurrencyBRL, formatDatetime } from '@/utils/formatters'
 
 export default {
   components: {
-    PaymentForm:  () => import (
-      /* webpackPrefetch: true */
-      './PaymentForm.vue'
-    )
+    PaymentForm:  () => import('./PaymentForm.vue')
   },
   props: {
     value: {
