@@ -1,57 +1,19 @@
 <script>
 import roles from '@/constants/roles'
 import {
-  faFunnelDollar,
-  faFilePdf,
-  faFileImage,
-  faFile,
-  faEdit,
-  faTrashAlt,
-  faExclamationCircle,
-  faTimes,
-  faCheck,
-  faMinus
+  faExclamationCircle
 } from '@fortawesome/free-solid-svg-icons'
-import { config as viewerConfig } from '@/components/AppViewer/AppViewer'
-import { GetConfig } from '@/graphql/Config.gql'
 
-import Vue from 'vue'
-import VueViewer from 'v-viewer'
 import ModalExpensesEdit from './modals/ModalExpensesEdit.vue'
-import ExpenseState from './ExpenseState.vue'
-
-Vue.use(VueViewer)
+import TheExpensesBodyCardTable from './TheExpensesBodyCardTable.vue'
 
 export default {
-  apollo: {
-    expenseEmployee: {
-      query: GetConfig,
-      variables: {
-        name: 'app',
-        key: 'employee_expense',
-        encoded: false
-      },
-      update ({ configGet }) {
-        return configGet
-      }
-    },
-    expenseProductType: {
-      query: GetConfig,
-      variables: {
-        name: 'app',
-        key: 'product_types_expense',
-        encoded: false
-      },
-      update ({ configGet }) {
-        return configGet
-      }
-    }
-  },
   components: {
     ModalExpensesEdit,
-    ExpenseState,
+    TheExpensesBodyCardTable,
     TheExpensesTypesOverview: () => import('./TheExpensesTypesOverview.vue'),
     ViewerFileModal: () => import('@/components/AppViewer/ViewerFileModal'),
+    PaymentExpenseDeleteModal: () => import('@/views/resources/payments-expenses/PaymentExpenseDeleteModal.vue')
   },
   props: {
     expenses: {
@@ -74,8 +36,9 @@ export default {
   data () {
     return {
       roles,
-      expenseEmployee: null,
-      expenseProductType: null,
+      icons: {
+        faExclamationCircle
+      },
       expenseTypes: [],
       modalFileViewer: {
         src: '',
@@ -88,57 +51,11 @@ export default {
       modalExpensesEdit: {
         expense: {},
         modal: false
-      },
-      icons: {
-        faFunnelDollar,
-        faFilePdf,
-        faFile,
-        faFileImage,
-        faEdit,
-        faTrashAlt,
-        faExclamationCircle
       }
-    }
-  },
-  computed: {
-    headers () {
-      return [
-        { text: 'DESCRIÇÃO', value: 'description', wrap: true },
-        { text: 'TIPO', value: 'type.name' },
-        { text: 'VIA', value: 'via.name' },
-        { text: 'VALOR', value: 'value', format: 'currencyBRL' },
-        { text: 'DATA', value: 'date', format: 'datetime' },
-        { text: 'COMPROVANTE', value: 'receipt', align: 'center' },
-        { text: 'STATUS', value: 'status', align: 'center' },
-        { text: 'EDITAR', value: 'editar', align: 'center' },
-      ]
     }
   },
   methods: {
-    hasRelationType (expense) {
-      return expense.type.id === this.expenseEmployee
-        || expense.type.id === this.expenseProductType
-    },
-    getReceiptIcon (expense) {
-      if (this.$helpers.strContainsAny(expense.receipt_path, '.pdf')) {
-        return this.icons.faFilePdf
-      }
-
-      if (!expense.receipt_path) {
-        return this.icons.faFile
-      }
-
-      return this.icons.faFileImage
-    },
-    onDeleteButtonClick (expense) {
-      this.modalExpensesDelete.expense = expense
-      this.modalExpensesDelete.modal = true
-    },
-    onEditButtonClick (expense) {
-      this.modalExpensesEdit.expense = expense
-      this.modalExpensesEdit.modal = true
-    },
-    showReceipt (expense) {
+    onViewReceipt (expense) {
       const url = expense.receipt_path
 
       if (this.$helpers.strContainsAny(url, '.pdf')) {
@@ -153,6 +70,14 @@ export default {
         options: viewerConfig
       })
     },
+    onEdit(expense) {
+      this.modalExpensesEdit.expense = expense
+      this.modalExpensesEdit.modal = true
+    },
+    onDelete (expense) {
+      this.modalExpensesDelete.expense = expense
+      this.modalExpensesDelete.modal = true
+    },
     onViewerFileModalHidden () {
       this.modalFileViewer.src = ''
     },
@@ -162,40 +87,6 @@ export default {
     },
     onSuccessDelete () {
       this.modalExpensesDelete.modal = false
-      this.$toast.success('Despesa deletada com sucesso!')
-    },
-    getStatusColor (expense) {
-      if (expense.is_confirmed === true) {
-        return 'success'
-      }
-
-      if (expense.is_confirmed === false) {
-        return 'danger'
-      }
-
-      return 'warning'
-    },
-    getStatusIcon(expense) {
-      if (expense.is_confirmed === true) {
-        return faCheck
-      }
-
-      if (expense.is_confirmed === false) {
-        return faTimes
-      }
-
-      return faMinus
-    },
-    isEditEnabled (expense) {
-      if (expense.is_confirmed === null) {
-        return true
-      }
-
-      if (expense.is_confirmed === true && this.$helpers.canView(roles.GERENCIA)) {
-        return true
-      }
-
-      return false
     }
   }
 }
@@ -207,6 +98,13 @@ export default {
       v-model="modalExpensesEdit.modal"
       :expense="modalExpensesEdit.expense"
       @success="onSuccessEdit"
+    />
+
+    <PaymentExpenseDeleteModal
+      v-model="modalExpensesDelete.modal"
+      :entry="modalExpensesDelete.expense"
+      is-expense
+      @success="onSuccessDelete"
     />
 
     <ViewerFileModal
@@ -234,75 +132,13 @@ export default {
       </span>
     </div>
 
-
-    <AppCard
-      color="primary"
-      class="mb-2"
-    >
-      <template #header>
-        <h6 class="fw-bold mb-0">
-          <FontAwesomeIcon
-            :icon="icons.faFunnelDollar"
-            fixed-width
-          />
-          Despesas
-        </h6>
-      </template>
-      <template #body>
-        <AppLoading v-show="isLoading" />
-        <AppTable
-          :headers="headers"
-          :items="expenses"
-        >
-          <template
-            #[`table-row.item`]="{ item }"
-          >
-            <tr
-              v-if="hasRelationType(item)"
-              class="small border-bottom-2"
-            >
-              <td
-                :colspan="headers.length"
-                class="py-0"
-              >
-                <template v-if="item.type.id === expenseProductType">
-                  <b>Produto relacionado ao tipo:</b> {{ item.product_type.name }}
-                </template>
-                <template v-if="item.type.id === expenseEmployee">
-                  <b>Funcionário relacionado ao tipo:</b> {{ item.employee.name }}
-                </template>
-              </td>
-            </tr>
-          </template>
-          <template #[`items.receipt`]="{ item }">
-            <AppButton
-              :color="item.receipt_path ? 'primary' : 'secondary'"
-              btn-class="btn-sm px-3"
-              :icon="getReceiptIcon(item)"
-              outlined
-              :tooltip="item.receipt_path ? 'Ver' : 'Sem comprovante'"
-              :disabled="!item.receipt_path"
-              @click="showReceipt(item)"
-            />
-          </template>
-          <template #[`items.editar`]="{ item }">
-            <AppButton
-              :disabled="!isEditEnabled(item)"
-              :color="isEditEnabled(item) ? 'primary' : 'secondary'"
-              class="me-2"
-              :tooltip="isEditEnabled(item) ? 'Editar' : 'Não é possível editar'"
-              btn-class="btn-sm px-3"
-              :icon="icons.faEdit"
-              outlined
-              @click.prevent="onEditButtonClick(item)"
-            />
-          </template>
-          <template #[`items.status`]="{ item }">
-            <ExpenseState :expense="item" />
-          </template>
-        </AppTable>
-      </template>
-    </AppCard>
+    <TheExpensesBodyCardTable
+      :items="expenses"
+      :is-loading="isLoading"
+      @edit="onEdit"
+      @delete="onDelete"
+      @view-receipt="onViewReceipt"
+    />
 
     <AppPaginator
       :is-loading="isLoading"

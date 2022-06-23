@@ -8,6 +8,8 @@ fragment ExpenseParts on Expense {
   receipt_path
   is_confirmed
   confirmed_at
+  created_at
+
   employee {
     id
     name
@@ -103,6 +105,12 @@ mutation UpdateExpense ($id: ID! $input: ExpenseInput!) {
     ...ExpenseUserSimpleParts
     ...ExpenseTypeSimpleParts
     ...ExpenseViaSimpleParts
+  }
+}
+
+mutation DeleteExpense ($id: ID! $password: String!) {
+  expenseDelete (id: $id password: $password) {
+    id
   }
 }
 

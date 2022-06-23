@@ -22,7 +22,8 @@ export default {
   components: {
     ModalPaymentForm,
     OrderPaymentState,
-    PaymentConfirmErrorModal
+    PaymentConfirmErrorModal,
+    PaymentExpenseDeleteModal: () => import('@/views/resources/payments-expenses/PaymentExpenseDeleteModal.vue')
   },
   props: {
     payments: {
@@ -66,6 +67,10 @@ export default {
       this.modalPaymentDelete.payment = payment
       this.modalPaymentDelete.value = true
     },
+    onDeletePaymentSuccess () {
+      this.modalPaymentDelete.value = false
+      this.modalPaymentDelete.payment = {}
+    },
     onPaymentError(payment) {
       this.modalPaymentError.payment =  payment
       this.modalPaymentError.value = true
@@ -98,6 +103,14 @@ export default {
           :is-edit="true"
           :payment="selectedPayment"
           @refresh="$emit('refresh')"
+        />
+
+        <PaymentExpenseDeleteModal
+          v-if="$helpers.canView(roles.GERENCIA)"
+          v-model="modalPaymentDelete.value"
+          :entry="modalPaymentDelete.payment"
+          :is-expense="false"
+          @success="onDeletePaymentSuccess"
         />
 
         <PaymentConfirmErrorModal

@@ -109,6 +109,12 @@ mutation UpdatePayment ($id: ID! $input: PaymentInput!) {
   }
 }
 
+mutation DeletePayment ($id: ID! $password: String!) {
+  paymentDelete (id: $id password: $password) {
+    id
+  }
+}
+
 mutation AssignPaymentConfirmation ($id: ID! $confirmation: Boolean!) {
   paymentAssignConfirmation (id: $id confirmation: $confirmation) {
     id
