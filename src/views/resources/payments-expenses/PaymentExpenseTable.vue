@@ -107,7 +107,7 @@ export default {
     },
     entryRowClass (entry) {
       return [
-        'align-middle border-bottom-2',
+        'align-middle',
         entry.is_expense ? 'table-danger' : 'table-success'
       ]
     },
@@ -180,7 +180,7 @@ export default {
       >
         <tr
           v-if="showTableRowAppend(item)"
-          class="text-secondary small"
+          class="text-secondary small border-bottom-2"
           :class="entryRowClass(item)"
         >
           <template v-if="item.is_expense && $helpers.canView(roles.GERENCIA)">
@@ -204,7 +204,7 @@ export default {
                 <a
                   class="fw-bold text-decoration-none"
                   target="_blank"
-                  :href="$helpers.getUrl('clients.index', {client: item.sponsorship_client.id })"
+                  :href="$helpers.getUrl('clients.show', {client: item.sponsorship_client.id })"
                 >{{ item.sponsorship_client.name }}</a>
               </div>
             </td>
@@ -304,9 +304,3 @@ export default {
     </AppTable>
   </div>
 </template>
-
-<style scoped>
-.border-bottom-2 {
-  border-bottom-width: 2px;
-}
-</style>

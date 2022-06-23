@@ -1,6 +1,6 @@
 <script>
 import PaymentExpenseStatus from '@/views/resources/payments-expenses/PaymentExpenseStatus.vue'
-import { faEdit } from '@fortawesome/free-solid-svg-icons'
+import { faEdit, faTrashAlt } from '@fortawesome/free-solid-svg-icons'
 import roles from '@/constants/roles'
 
 export default {
@@ -15,8 +15,10 @@ export default {
   },
   data () {
     return {
+      roles,
       icons: {
-        faEdit
+        faEdit,
+        faTrashAlt
       }
     }
   },
@@ -51,6 +53,15 @@ export default {
       btn-class="btn-sm px-3"
       outlined
       @click.prevent="$emit('edit', payment)"
+    />
+
+    <AppButton
+      v-if="$helpers.canView(roles.GERENCIA)"
+      :icon="icons.faTrashAlt"
+      color="danger"
+      outlined
+      btn-class="btn-sm ms-1 px-3"
+      @click.prevent="$emit('delete', payment)"
     />
   </div>
 </template>

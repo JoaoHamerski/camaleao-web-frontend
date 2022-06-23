@@ -44,6 +44,10 @@ export default {
       modalPaymentError: {
         value: false,
         payment: {}
+      },
+      modalPaymentDelete: {
+        value: false,
+        payment: {}
       }
     }
   },
@@ -57,6 +61,10 @@ export default {
         modal: 'payment',
         payload: { payment, isEdit: true }
       })
+    },
+    onDeletePayment(payment) {
+      this.modalPaymentDelete.payment = payment
+      this.modalPaymentDelete.value = true
     },
     onPaymentError(payment) {
       this.modalPaymentError.payment =  payment
@@ -142,6 +150,7 @@ export default {
                   :payment="payment"
                   @error="onPaymentError"
                   @edit="onEditPayment"
+                  @delete="onDeletePayment"
                 />
               </div>
             </div>

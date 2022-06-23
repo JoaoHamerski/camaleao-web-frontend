@@ -23,38 +23,12 @@ fragment PaymentsOrderParts on Order {
   total_paid
   states
   payment_voucher_paths
+  total_paid_sponsor
 
   client {
     id
     name
     total_owing
-  }
-}
-
-query GetPayments (
-  $created_at: Date
-  $pendencies: Boolean
-) {
-  payments (
-    created_at: $created_at
-    orderBy: [{column: CREATED_AT order: DESC}]
-    pendencies: $pendencies
-  ) {
-    paginatorInfo {
-      ...PaginatorSimpleParts
-    }
-
-    data {
-      ...PaymentsParts
-
-      order {
-        ...PaymentsOrderParts
-      }
-
-      via {
-        ...PaymentsViaParts
-      }
-    }
   }
 }
 

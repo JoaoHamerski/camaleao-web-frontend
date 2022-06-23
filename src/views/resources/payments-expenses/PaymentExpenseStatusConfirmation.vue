@@ -57,10 +57,13 @@ export default {
             GetDailyCashBalance,
             GetCashFlowEntries,
             GetCashFlowBalance,
-            GetDailyCashDetailedFlow
+            GetDailyCashDetailedFlow,
+
           ],
           awaitRefetchQueries: true
         })
+
+        this.$helpers.clearCacheFrom({fieldName: 'payments'})
 
         this.$toast.success(
           confirmation

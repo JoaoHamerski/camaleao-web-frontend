@@ -63,11 +63,13 @@ export default {
 
 <template>
   <div>
-    <AppPaginator
-      v-model="page"
-      :pagination="payments.paginatorInfo"
-      :loading="isQueryLoading"
-    />
+    <div class="text-center">
+      <AppPaginator
+        v-model="page"
+        :pagination="payments.paginatorInfo"
+        :loading="isQueryLoading"
+      />
+    </div>
 
     <AppLoading v-show="isQueryLoading" />
     <AppTable

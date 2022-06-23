@@ -65,6 +65,7 @@ export default {
     async submitExpenseEmployee () {
       const { id } = this.formEmployee.data()
 
+      console.log(id)
       this.isEmployeeExpenseLoading = true
 
       try {

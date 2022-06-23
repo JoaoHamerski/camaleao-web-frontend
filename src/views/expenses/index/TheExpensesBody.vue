@@ -116,7 +116,8 @@ export default {
   },
   methods: {
     hasRelationType (expense) {
-      return expense.product_type || expense.employee
+      return expense.type.id === this.expenseEmployee
+        || expense.type.id === this.expenseProductType
     },
     getReceiptIcon (expense) {
       if (this.$helpers.strContainsAny(expense.receipt_path, '.pdf')) {
@@ -258,9 +259,12 @@ export default {
           >
             <tr
               v-if="hasRelationType(item)"
-              class="small"
+              class="small border-bottom-2"
             >
-              <td :colspan="headers.length">
+              <td
+                :colspan="headers.length"
+                class="py-0"
+              >
                 <template v-if="item.type.id === expenseProductType">
                   <b>Produto relacionado ao tipo:</b> {{ item.product_type.name }}
                 </template>
