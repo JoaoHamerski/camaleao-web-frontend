@@ -12,6 +12,13 @@ fragment PaymentExpenseBasicParts on PaymentExpense {
   employee_name
 }
 
+fragment PaymentExpenseSponsorshipClientParts on PaymentExpense {
+  sponsorship_client {
+    id
+    name
+  }
+}
+
 fragment PaymentExpenseProductTypeParts on PaymentExpense {
   product_type {
     id

@@ -1,15 +1,18 @@
 <script>
 import { isEmpty, isObject, omit, cloneDeep } from 'lodash-es'
+import { faExclamationCircle } from '@fortawesome/free-solid-svg-icons'
+import { vias } from '@/graphql/Via.gql'
+import { CreateDailyPayment } from '@/graphql/Payment.gql'
+import { GetDailyCash, GetDailyCashBalance } from '@/graphql/DailyCash.gql'
+
 import { formatCurrencyBRL } from '@/utils/formatters'
 import { maskCurrencyBRL, maskDate } from '@/utils/masks'
 import Form from '@/utils/Form'
 import { handleSuccess, handleError } from '@/utils/forms'
 
-import { vias } from '@/graphql/Via.gql'
-import { CreateDailyPayment } from '@/graphql/Payment.gql'
-import { GetDailyCash, GetDailyCashBalance } from '@/graphql/DailyCash.gql'
 import DailyPaymentFormClient from './DailyPaymentFormClient.vue'
 import DailyPaymentFormOrder from './DailyPaymentFormOrder.vue'
+import SelectClientsFind from '@/views/resources/SelectClientsFind.vue'
 
 export default {
   apollo: {
@@ -19,13 +22,17 @@ export default {
   },
   components: {
     DailyPaymentFormClient,
-    DailyPaymentFormOrder
+    DailyPaymentFormOrder,
+    SelectClientsFind
   },
   data () {
     return {
       maskCurrencyBRL: maskCurrencyBRL(),
       maskDate,
       isLoading: false,
+      icons: {
+        faExclamationCircle
+      },
       form: new Form({
         client: {
           id: '',
@@ -74,6 +81,7 @@ export default {
 
       data.client = omit(data.client, 'isNew')
       data.order = omit(data.order, 'isNew')
+      data.sponsorship_client_id = data.sponsorship_client_id?.id || ''
 
       return data
     },
@@ -191,7 +199,22 @@ export default {
         name="is_sponsor"
       >
         Patrocínio
+        <FontAwesomeIcon
+          v-tippy
+          :icon="icons.faExclamationCircle"
+          class="text-primary"
+          fixed-width
+          content="Caso o pagamento seja efetuado por outro cliente que não é dono do pedido"
+        />
       </AppCheckbox>
+    </div>
+
+    <div v-show="form.is_sponsor">
+      <SelectClientsFind
+        id="sponsorship_client_id"
+        v-model="form.sponsorship_client_id"
+        :error="form.errors.get('sponsorship_client_id')"
+      />
     </div>
 
     <div class="row">

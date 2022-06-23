@@ -25,6 +25,7 @@ query GetCashFlowEntries (
       ...PaymentExpenseTypeParts
       ...PaymentExpenseOrderParts
       ...PaymentExpenseUserParts
+      ...PaymentExpenseSponsorshipClientParts
     }
   }
 }

@@ -27,6 +27,7 @@ query GetDailyCash (
       ...PaymentExpenseTypeParts
       ...PaymentExpenseOrderParts
       ...PaymentExpenseUserParts
+      ...PaymentExpenseSponsorshipClientParts
     }
   }
 }

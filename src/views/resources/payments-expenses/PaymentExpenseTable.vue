@@ -105,11 +105,10 @@ export default {
       this.modalPaymentVouchers.value = true
       this.modalPaymentVouchers.payment = item
     },
-    entryRowClass (entry, isNote) {
+    entryRowClass (entry) {
       return [
-        'align-middle ',
-        entry.is_expense ? 'table-danger' : 'table-success',
-        isNote ? 'border-bottom-2' : ''
+        'align-middle border-bottom-2',
+        entry.is_expense ? 'table-danger' : 'table-success'
       ]
     },
     onEditClick (entry) {
@@ -133,12 +132,12 @@ export default {
 
       return 'Não é possível editar'
     },
-    showLineAppend(entry) {
+    showTableRowAppend(entry) {
       if (entry.is_expense) {
         return !!entry.user
       }
 
-      return !!entry.note
+      return !!entry.note || !!entry.sponsorship_client
     },
     onViewerFileModalHidden () {
       this.modalFileViewer.src = ''
@@ -180,18 +179,34 @@ export default {
         #[`table-row.item`]="{ item }"
       >
         <tr
-          v-if="showLineAppend(item)"
+          v-if="showTableRowAppend(item)"
           class="text-secondary small"
-          :class="entryRowClass(item, true)"
+          :class="entryRowClass(item)"
         >
           <template v-if="item.is_expense && $helpers.canView(roles.GERENCIA)">
-            <td colspan="10">
+            <td
+              colspan="10"
+              class="py-0"
+            >
               <strong>Registrado por: </strong>{{ item.user.name }}
             </td>
           </template>
-          <template v-else-if="item.note">
-            <td colspan="10">
-              <strong>Nota:</strong> {{ item.note }}
+          <template v-else>
+            <td
+              colspan="10"
+              class="py-0"
+            >
+              <div v-if="item.note">
+                <strong>Nota:</strong> {{ item.note }}
+              </div>
+              <div v-if="item.sponsorship_client">
+                <b>Patrocínio por: </b>
+                <a
+                  class="fw-bold text-decoration-none"
+                  target="_blank"
+                  :href="$helpers.getUrl('clients.index', {client: item.sponsorship_client.id })"
+                >{{ item.sponsorship_client.name }}</a>
+              </div>
             </td>
           </template>
         </tr>

@@ -1,33 +1,10 @@
 <script>
-import { formatPhone } from '@/utils/formatters'
-import { GetClientsForForm } from '@/graphql/Resources.gql'
-import { stripNonDigits, isNumeric } from '@/utils/helpers'
-
-const whereClientsClause = (query) => {
-  if (query.startsWith('(')) {
-    return {
-      column: 'PHONE',
-      operator: 'LIKE',
-      value: `${stripNonDigits(query)}%`
-    }
-  }
-
-  if (isNumeric(query)) {
-    return {
-      column: 'PHONE',
-      operator: 'LIKE',
-      value: `%${query}%`
-    }
-  }
-
-  return {
-    column: 'NAME',
-    operator: 'LIKE',
-    value: `%${query}%`
-  }
-}
+import SelectClientsFind from '@/views/resources/SelectClientsFind.vue'
 
 export default {
+  components: {
+    SelectClientsFind
+  },
   props: {
     form: {
       type: Object,
@@ -57,28 +34,6 @@ export default {
 
       this.form.set({'client.isNew': !this.form.client.isNew})
       this.form.set({'order.isNew': this.form.client.isNew})
-    },
-    customLabelClients ({ name, phone }) {
-      return `${name} ${phone ? ' - ' + formatPhone(phone) : ''}`
-    },
-    async asyncFindClients (query) {
-      if (!query.length) {
-        this.clients.items = []
-        return
-      }
-
-      this.clients.isLoading = true
-
-      const { data: { clients: { data } } } = await this.$apollo.query({
-        query: GetClientsForForm,
-        variables: {
-          where: whereClientsClause(query),
-          page: 1
-        }
-      })
-
-      this.clients.isLoading = false
-      this.clients.items = data
     }
   }
 }
@@ -103,21 +58,11 @@ export default {
         Cadastrar novo
       </AppButton>
     </div>
-    <AppSelect
+    <SelectClientsFind
+      id="client"
       :value="form.client.id"
-      name="client"
-      placeholder="Procure por nome ou telefone"
       :error="form.errors.get('client.id')"
-      :custom-label="customLabelClients"
-      :searchable="true"
-      :internal-search="false"
-      :options="clients.items"
-      :loading="clients.isLoading"
       @input="form.set({'client.id': $event})"
-      @open="form.errors.clear('client.id')"
-      @search-change="asyncFindClients"
-      @remove="removeCurrentOrder"
-      @select="removeCurrentOrder"
     >
       <template #noOptions>
         Faça uma busca para exibir resultados
@@ -129,7 +74,7 @@ export default {
           @click.prevent="toggleClientState"
         >cadastrar novo</a>
       </template>
-    </AppSelect>
+    </SelectClientsFind>
   </div>
   <div
     v-else

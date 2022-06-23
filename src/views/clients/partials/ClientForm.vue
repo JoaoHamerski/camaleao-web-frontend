@@ -68,8 +68,6 @@ export default {
         phone: '',
         city_id: '',
         branch_id: '',
-        shipping_company_id: '',
-        is_sponsor: false
       })
     }
   },
@@ -234,17 +232,6 @@ export default {
     >
       Telefone
     </AppInput>
-
-    <AppCheckbox
-      id="is_sponsor"
-      v-model="form.is_sponsor"
-      name="is_sponsor"
-    >
-      Patrocinador
-      <template #hint>
-        Um cliente <b>patrocinador</b> pode efetuar pagamentos em outros pedidos
-      </template>
-    </AppCheckbox>
 
     <AppSelect
       v-model="form.city_id"
