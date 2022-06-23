@@ -67,6 +67,7 @@ query GetSponsoredPayments (
     sponsorship_client_id: $sponsorship_client_id
     first: $first
     page: $page
+    orderBy: [{column: CREATED_AT order: DESC}]
   ) {
     paginatorInfo {
       ...PaginatorSimpleParts
@@ -76,6 +77,7 @@ query GetSponsoredPayments (
       id
       value
       is_confirmed
+      created_at
 
       order {
         id

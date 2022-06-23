@@ -62,64 +62,62 @@ export default {
         art_paths: [this.order.image.base64]
       }
     },
-    async onSubmitAndReorder () {
-      const input = this.getFormattedForm()
+    async onSubmitAndReorder (input) {
+      const {data: { orderCreatePreRegistered: { id: preCreatedOrderId }}} = await this.$apollo.mutate({
+        mutation: CreatePreRegisteredOrder,
+        variables: { input },
+      })
 
-      this.isLoading = true
+      const orderedOrders = this.orders.map(({id}, index) => ({id, order: index}))
+      const preCreatedIndex = orderedOrders.findIndex(order => order.id.match(/^pre-created/))
 
-      try {
-        const {data: { orderCreatePreRegistered: { id: preCreatedOrderId }}} = await this.$apollo.mutate({
-          mutation: CreatePreRegisteredOrder,
-          variables: { input },
-        })
+      orderedOrders.splice(preCreatedIndex, 1, {id: preCreatedOrderId, order: preCreatedIndex, })
 
-        const orderedOrders = this.orders.map(({id}, index) => ({id, order: index}))
-        const preCreatedIndex = orderedOrders.findIndex(order => order.id.match(/^pre-created/))
-
-        orderedOrders.splice(preCreatedIndex, 1, {id: preCreatedOrderId, order: preCreatedIndex, })
-
-        await this.$apollo.mutate({
-          mutation: ReorderWeeklyCalendar,
-          variables: {
-            input: orderedOrders
-          },
-          awaitRefetchQueries: true,
-          refetchQueries: [GetWeeklyCalendarOrders]
-        })
-      } catch (error) {
-        handleError(this, error)
-      }
-
-      this.isLoading = false
+      await this.$apollo.mutate({
+        mutation: ReorderWeeklyCalendar,
+        variables: {
+          input: orderedOrders
+        },
+        awaitRefetchQueries: true,
+        refetchQueries: [GetWeeklyCalendarOrders]
+      })
     },
-    async onSubmit () {
-      const input = this.getFormattedForm()
+    isImageError(error) {
+      const { graphQLErrors: {0: {extensions: { validation}}} } = error
 
-      this.isLoading = true
-
-      try {
-        await this.$apollo.mutate({
-          mutation: CreatePreRegisteredOrder,
-          variables: { input },
-          awaitRefetchQueries: true,
-          refetchQueries: [GetWeeklyCalendarOrders]
-        })
-
-      } catch (error) {
-        handleError(this, error)
-      }
-
-      this.isLoading = false
+      return 'art_paths.0' in validation
+    },
+    async onSubmit (input) {
+      await this.$apollo.mutate({
+        mutation: CreatePreRegisteredOrder,
+        variables: { input },
+        awaitRefetchQueries: true,
+        refetchQueries: [GetWeeklyCalendarOrders]
+      })
     },
     async submit () {
-      if (this.isOrderable) {
-        await this.onSubmitAndReorder()
-      } else {
-        await this.onSubmit()
+      const input = this.getFormattedForm()
+
+      this.isLoading = true
+
+      try {
+        if (this.isOrderable) {
+          await this.onSubmitAndReorder(input)
+        } else {
+          await this.onSubmit(input)
+        }
+
+        this.$helpers.clearCacheFrom({ fieldName: 'orders' })
+        this.$toast.success('Pedido registrado!')
+      } catch (error) {
+        if (this.isImageError(error)) {
+          this.$toast.error('Imagem muito grande, por favor, escolha outra.')
+        } else {
+          handleError(this, error)
+        }
       }
 
-      this.$helpers.clearCacheFrom({ fieldName: 'orders' })
-      this.$toast.success('Pedido registrado!')
+      this.isLoading = false
     },
     onCancel () {
       this.$emit('cancel-create', this.order)
