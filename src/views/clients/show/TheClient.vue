@@ -6,6 +6,7 @@ import { GetClientWithOrders } from '@/graphql/Client.gql'
 import ClientCard from '../partials/ClientCard.vue'
 import ClientOrdersCard from './ClientOrdersCard.vue'
 import ClientOrdersHeader from './ClientOrdersHeader.vue'
+import ClientSponsorOrdersModal from '../partials/ClientSponsorOrdersModal.vue'
 
 export default {
   metaInfo () {
@@ -22,7 +23,8 @@ export default {
   components: {
     ClientCard,
     ClientOrdersCard,
-    ClientOrdersHeader
+    ClientOrdersHeader,
+    ClientSponsorOrdersModal
   },
   apollo: {
     client: {
@@ -43,6 +45,7 @@ export default {
   },
   data () {
     return {
+      clientSponsorOrdersModal: false,
       ordersQuery: {
         where: {},
         page: 1
@@ -75,6 +78,9 @@ export default {
     onSearchClear () {
       this.ordersQuery.page = 1
       this.ordersQuery.where = {}
+    },
+    onSponsorsClick () {
+      this.clientSponsorOrdersModal = true
     }
   }
 }
@@ -82,11 +88,18 @@ export default {
 
 <template>
   <div class="py-5 mx-auto">
+    <ClientSponsorOrdersModal
+      v-model="clientSponsorOrdersModal"
+      :client="client"
+    />
+
     <div>
       <ClientOrdersHeader
         class="mb-3 mb-sm-0"
+        :client="client"
         @search="handleSearch"
         @clear-search="onSearchClear"
+        @client-sponsors-click="onSponsorsClick"
       />
     </div>
 

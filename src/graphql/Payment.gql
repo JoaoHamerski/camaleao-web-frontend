@@ -1,3 +1,5 @@
+#import "./_PaginatorFragment.gql"
+
 fragment PaymentsParts on Payment {
   id
   value
@@ -21,6 +23,7 @@ fragment PaymentsOrderParts on Order {
   total_paid
   states
   payment_voucher_paths
+
   client {
     id
     name
@@ -37,14 +40,56 @@ query GetPayments (
     orderBy: [{column: CREATED_AT order: DESC}]
     pendencies: $pendencies
   ) {
-    ...PaymentsParts
-
-    order {
-      ...PaymentsOrderParts
+    paginatorInfo {
+      ...PaginatorSimpleParts
     }
 
-    via {
-      ...PaymentsViaParts
+    data {
+      ...PaymentsParts
+
+      order {
+        ...PaymentsOrderParts
+      }
+
+      via {
+        ...PaymentsViaParts
+      }
+    }
+  }
+}
+
+query GetSponsoredPayments (
+  $sponsorship_client_id: ID!
+  $first: Int!
+  $page: Int
+) {
+  payments (
+    sponsorship_client_id: $sponsorship_client_id
+    first: $first
+    page: $page
+  ) {
+    paginatorInfo {
+      ...PaginatorSimpleParts
+    }
+
+    data {
+      id
+      value
+      is_confirmed
+
+      order {
+        id
+        code
+        price
+        total_paid
+        total_owing
+
+        client {
+          id
+          name
+        }
+      }
+
     }
   }
 }
@@ -59,10 +104,13 @@ query GetPaymentsPendencies {
 mutation CreatePayment ($input: PaymentInput!) {
   paymentCreate (input: $input) {
     id
+
     order {
       ...PaymentsOrderParts
+
       payments {
         ...PaymentsParts
+
         via {
           ...PaymentsViaParts
         }
@@ -74,9 +122,11 @@ mutation CreatePayment ($input: PaymentInput!) {
 mutation UpdatePayment ($id: ID! $input: PaymentInput!) {
   paymentUpdate (id: $id input: $input) {
     ...PaymentsParts
+
     order {
       ...PaymentsOrderParts
     }
+
     via {
       ...PaymentsViaParts
     }
@@ -88,8 +138,10 @@ mutation AssignPaymentConfirmation ($id: ID! $confirmation: Boolean!) {
     id
     order {
       ...PaymentsOrderParts
+
       payments {
         ...PaymentsParts
+
         via {
           ...PaymentsViaParts
         }
@@ -101,15 +153,19 @@ mutation AssignPaymentConfirmation ($id: ID! $confirmation: Boolean!) {
 mutation CreateDailyPayment ($input: DailyCashInput! ) {
   dailyCashEntry (input: $input) {
     ...PaymentsParts
+
     order {
       ...PaymentsOrderParts
+
       payments {
         ...PaymentsParts
+
         via {
           ...PaymentsViaParts
         }
       }
     }
+
     via {
       ...PaymentsViaParts
     }

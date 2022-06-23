@@ -1,8 +1,20 @@
 <script>
-import { faPlus, faSearch, faArrowAltCircleLeft } from '@fortawesome/free-solid-svg-icons'
+import {
+  faPlus,
+  faSearch,
+  faArrowAltCircleLeft,
+  faHandHoldingUsd
+} from '@fortawesome/free-solid-svg-icons'
 import { orders } from '@/constants/route-names'
 
+
 export default {
+  props: {
+    client: {
+      type: Object,
+      default: () => ({})
+    }
+  },
   data () {
     return {
       orders,
@@ -10,11 +22,15 @@ export default {
       icons: {
         faPlus,
         faSearch,
-        faArrowAltCircleLeft
+        faArrowAltCircleLeft,
+        faHandHoldingUsd
       }
     }
   },
   methods: {
+    onSponsorsClick () {
+      this.$emit('client-sponsors-click')
+    },
     onSearch () {
       this.$emit('search', this.search)
     },
@@ -54,23 +70,38 @@ export default {
             Novo pedido
           </AppButton>
         </div>
-        <div class="col col-sm-4">
-          <AppInput
-            v-model="search"
-            :default-margin="false"
-            name="code"
-            placeholder="Buscar por código..."
-            @keypress.enter="onSearch"
+        <div class="col d-flex justify-content-end">
+          <div
+            v-if="client && client.is_sponsor"
+            class="me-2"
           >
-            <template #append>
-              <AppButton
-                color="primary"
-                outlined
-                :icon="icons.faSearch"
-                @click="onSearch"
-              />
-            </template>
-          </AppInput>
+            <AppButton
+              color="success"
+              outlined
+              :icon="icons.faHandHoldingUsd"
+              @click.prevent="onSponsorsClick"
+            >
+              Patrocínios
+            </AppButton>
+          </div>
+          <div>
+            <AppInput
+              v-model="search"
+              :default-margin="false"
+              name="code"
+              placeholder="Buscar por código..."
+              @keypress.enter="onSearch"
+            >
+              <template #append>
+                <AppButton
+                  color="primary"
+                  outlined
+                  :icon="icons.faSearch"
+                  @click="onSearch"
+                />
+              </template>
+            </AppInput>
+          </div>
         </div>
       </div>
     </div>

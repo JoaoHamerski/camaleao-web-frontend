@@ -179,6 +179,7 @@ query GetOrder ($id: ID! $client_id: ID) {
     ...OrderType
   }
 }
+
 query GetOrderReport ($id: ID!) {
   orderReport (id: $id)
 }
