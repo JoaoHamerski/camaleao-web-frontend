@@ -175,6 +175,9 @@ export default {
               <div class="small">
                 <span class="text-secondary">PATROCÍNIO:</span> <b class="text-success">{{ $helpers.toBRL(order.total_paid_sponsor) }}</b>
               </div>
+              <div class="small">
+                <span class="text-secondary">CLIENTE: <b class="text-success">{{ $helpers.toBRL(order.total_paid_non_sponsor) }}</b></span>
+              </div>
             </template>
           </div>
           <div>
