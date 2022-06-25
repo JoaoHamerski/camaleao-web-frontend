@@ -40,6 +40,7 @@ export default {
 }
 </script>
 <template>
+  <!-- eslint-disable vue/no-v-html -->
   <div>
     <ClientCardItem
       label="Nome"
@@ -71,9 +72,20 @@ export default {
       label="Total devendo"
     >
       <template #text>
-        <!-- eslint-disable-next-line vue/no-v-html -->
         <span v-html="$helpers.toBRL(client.total_owing, true)" />
       </template>
     </ClientCardItem>
+
+    <template v-if="client.is_sponsor">
+      <hr>
+      <ClientCardItem
+        :color="client.total_owing_as_sponsorship > 0 ? 'danger' : 'success'"
+        label="Total devendo como patrocínio"
+      >
+        <template #text>
+          <span v-html="$helpers.toBRL(client.total_owing_as_sponsorship, true)" />
+        </template>
+      </ClientCardItem>
+    </template>
   </div>
 </template>

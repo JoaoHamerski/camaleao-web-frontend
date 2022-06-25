@@ -34,6 +34,7 @@ fragment ClientSimpleParts on Client {
   name
   phone
   total_owing
+  total_owing_as_sponsorship
   is_sponsor
 }
 
@@ -46,7 +47,8 @@ fragment ClientParts on Client {
 
 fragment ClientOrdersSimplePart on Order {
   client {
-      id
+    id
+
   }
 
   id
