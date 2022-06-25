@@ -216,6 +216,7 @@ export default {
       today-button
       :mask="maskDate"
       :error="form.errors.get('date')"
+      :disabled-message="form.is_sponsor ? 'Não é necessário informar a data em patrocínios' : false"
     >
       Data de pagamento
     </AppInput>

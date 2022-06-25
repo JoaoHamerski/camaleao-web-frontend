@@ -63,7 +63,7 @@ export default {
       default: false
     },
     disabledMessage: {
-      type: String,
+      type: [String, Boolean],
       default: ''
     },
     error: {

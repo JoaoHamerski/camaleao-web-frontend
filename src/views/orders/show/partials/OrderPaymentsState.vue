@@ -60,6 +60,7 @@ export default {
       :icon="icons.faTrashAlt"
       color="danger"
       outlined
+      tooltip="Excluir"
       btn-class="btn-sm ms-1 px-3"
       @click.prevent="$emit('delete', payment)"
     />

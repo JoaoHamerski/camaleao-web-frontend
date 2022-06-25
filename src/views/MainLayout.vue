@@ -1,7 +1,6 @@
 <script>
 import TheHeaderbar from '@/components/Headerbar/TheHeaderbar.vue'
 import TheSidebar from '@/components/Sidebar/TheSidebar.vue'
-import TheUpdateReportModal from '@/components/TheUpdateReportModal.vue'
 
 export default {
   metaInfo: {
@@ -12,8 +11,7 @@ export default {
   },
   components: {
     TheHeaderbar,
-    TheSidebar,
-    TheUpdateReportModal
+    TheSidebar
   },
   props: {
     error: {
@@ -69,9 +67,5 @@ export default {
         </AppTransition>
       </div>
     </div>
-
-    <template v-if="authUser && !hasError">
-      <TheUpdateReportModal :auth-user="authUser" />
-    </template>
   </div>
 </template>

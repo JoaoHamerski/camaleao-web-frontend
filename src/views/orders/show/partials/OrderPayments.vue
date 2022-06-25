@@ -130,8 +130,10 @@ export default {
               <div class="mb-3 mb-sm-0">
                 <div>
                   <b>{{ $helpers.toBRL(payment.value) }}</b>
-                  em
-                  <b>{{ formatDatetime(payment.date) }}</b>
+                  <template v-if="payment.date">
+                    em
+                    <b>{{ formatDatetime(payment.date) }}</b>
+                  </template>
                   via
                   <b>{{ $helpers.fallback(payment.via, 'name') }}</b>
                   <span

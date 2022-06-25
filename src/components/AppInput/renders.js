@@ -73,6 +73,7 @@ export const MaskedInputTodayBtn = function (h, context, element) {
     <div class="input-group">
       { element }
       <button
+        disabled={context.isDisabled}
         class="btn btn-outline-primary"
         vOn:click_prevent={ context.emitTodayDate }
       >Hoje</button>
@@ -124,6 +125,7 @@ export const MaskedInputDate = function (h, context) {
 
   return (
     <DatePicker
+      disabled={context.isDisabled}
       class={[context.todayButton && 'today-btn', 'custom-date-picker'] }
       format={formats[context.type]}
       value-type="format"

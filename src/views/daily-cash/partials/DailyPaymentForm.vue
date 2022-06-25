@@ -177,22 +177,6 @@ export default {
     </div>
 
     <div>
-      <AppInput
-        id="date"
-        v-model="form.date"
-        name="date"
-        :error="form.errors.get('date')"
-        placeholder="Data do pagamento"
-        :mask="maskDate"
-        today-button
-        type="date"
-        numeric
-      >
-        Data
-      </AppInput>
-    </div>
-
-    <div>
       <AppCheckbox
         id="is_sponsor"
         v-model="form.is_sponsor"
@@ -215,6 +199,23 @@ export default {
         v-model="form.sponsorship_client_id"
         :error="form.errors.get('sponsorship_client_id')"
       />
+    </div>
+
+    <div>
+      <AppInput
+        id="date"
+        v-model="form.date"
+        name="date"
+        :error="form.errors.get('date')"
+        placeholder="Data do pagamento"
+        :mask="maskDate"
+        today-button
+        type="date"
+        numeric
+        :disabled-message="form.is_sponsor ? 'Não é necessário informar a data em patrocínios' : false"
+      >
+        Data
+      </AppInput>
     </div>
 
     <div class="row">

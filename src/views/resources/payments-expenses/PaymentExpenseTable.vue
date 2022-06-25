@@ -108,7 +108,11 @@ export default {
     entryRowClass (entry) {
       return [
         'align-middle',
-        entry.is_expense ? 'table-danger' : 'table-success'
+        {
+          'table-success': entry.is_confirmed === true,
+          'table-warning': entry.is_confirmed === null,
+          'table-danger': entry.is_confirmed === false
+        }
       ]
     },
     onEditClick (entry) {
@@ -216,11 +220,13 @@ export default {
           v-show="item.is_expense"
           :icon="icons.faFunnelDollar"
           class="text-danger"
+          size="lg"
         />
         <FontAwesomeIcon
           v-show="!item.is_expense"
           :icon="icons.faHandHoldingUsd"
           class="text-success"
+          size="lg"
         />
       </template>
       <template #[`items.order`]="{ item }">
