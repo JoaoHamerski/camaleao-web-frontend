@@ -25,7 +25,7 @@ export default {
       required: true
     }
   },
-  data () {
+  data() {
     return {
       roles,
       headers,
@@ -33,7 +33,7 @@ export default {
         value: false,
         payment: {}
       },
-      modalEdit:  {
+      modalEdit: {
         value: false,
         item: null
       },
@@ -48,11 +48,11 @@ export default {
     }
   },
   methods: {
-    onDailyPaymentError (payment) {
+    onDailyPaymentError(payment) {
       this.modalError.payment = payment
       this.modalError.value = true
     },
-    onOpenPendencyOrders (date) {
+    onOpenPendencyOrders(date) {
       this.modalPendencyOrders.value = true
       this.modalPendencyOrders.date = date
     }
@@ -68,7 +68,6 @@ export default {
     />
 
     <PendenciesOfMonthOrdersModal
-      v-if="$helpers.canView(roles.GERENCIA)"
       v-model="modalPendencyOrders.value"
       :date="modalPendencyOrders.date"
     />
@@ -79,10 +78,7 @@ export default {
       @open-pendency-orders="onOpenPendencyOrders"
     />
 
-    <DailyCashDetailedFlow
-      v-if="$helpers.canView(roles.GERENCIA)"
-      @open-pendency-orders="onOpenPendencyOrders"
-    />
+    <DailyCashDetailedFlow @open-pendency-orders="onOpenPendencyOrders" />
 
     <TheDailyCashBodyDate
       :date="date"
