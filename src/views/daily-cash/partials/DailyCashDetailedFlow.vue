@@ -2,18 +2,19 @@
 import { faReceipt, faSearch } from '@fortawesome/free-solid-svg-icons'
 import { GetDailyCashDetailedFlow } from '@/graphql/DailyCash.gql'
 import DailyCashDetailedFlowItems from './DailyCashDetailedFlowItems.vue'
-import { last, first } from 'lodash-es'
+import { last, first, isEmpty } from 'lodash-es'
 import { formatDatetime } from '@/utils/formatters'
+import { DateTime } from 'luxon'
 
 export default {
   components: {
     DailyCashDetailedFlowItems
   },
   apollo: {
-    dailyCashDetailedFlow () {
+    dailyCashDetailedFlow() {
       return {
         query: GetDailyCashDetailedFlow,
-        variables () {
+        variables() {
           return {
             page: this.page,
             date: this.date
@@ -23,7 +24,7 @@ export default {
       }
     }
   },
-  data () {
+  data() {
     return {
       collapse: false,
       dailyCashDetailedFlow: [],
@@ -36,10 +37,10 @@ export default {
     }
   },
   computed: {
-    isQueryLoading () {
+    isQueryLoading() {
       return !!this.$apollo.queries.dailyCashDetailedFlow.loading
     },
-    getDatePaginationInterval () {
+    getDatePaginationInterval() {
       if (!this.dailyCashDetailedFlow.length) {
         return
       }
@@ -51,6 +52,13 @@ export default {
         + ' - '
         + formatDatetime(lastDate.date, "LLLL 'de' y")
 
+      if (!isEmpty(this.date)) {
+        return DateTime
+          .fromFormat(`01/${this.date}`, 'dd/MM/y', { locale: 'pt-br' })
+          .toFormat("LLLL 'de' y")
+          .toUpperCase()
+      }
+
       return interval.toUpperCase()
     }
   },
@@ -60,7 +68,7 @@ export default {
         this.$apollo.queries.dailyCashDetailedFlow.skip = false
       }
     },
-    paginate (to) {
+    paginate(to) {
       if (to === 'next') {
         this.page--
         return

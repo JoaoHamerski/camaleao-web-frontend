@@ -1,6 +1,7 @@
 <script>
 import { formatDatetime } from '@/utils/formatters'
 import { faTshirt, faBox } from '@fortawesome/free-solid-svg-icons'
+import roles from '@/constants/roles'
 
 export default {
   props: {
@@ -9,8 +10,9 @@ export default {
       required: true
     }
   },
-  data () {
+  data() {
     return {
+      roles,
       icons: {
         faTshirt,
         faBox
@@ -19,7 +21,7 @@ export default {
   },
   methods: {
     formatDatetime,
-    onPendencyOfMonthClick (date) {
+    onPendencyOfMonthClick(date) {
       this.$emit('open-pendency-orders', date)
     }
   }
@@ -37,140 +39,144 @@ export default {
 
     <template #body>
       <div class="row row-cols-1 row-cols-sm-4">
-        <div class="col mb-2 mb-sm-0">
-          <div class="fw-bold">
-            CAMISAS PRODUZIDAS
-          </div>
-          <h1 class="fw-bold">
-            {{ item.shirts_total }}
-          </h1>
-          <div>
-            Valor total: <b class="text-info">{{ $helpers.toBRL(item.total_price) }}</b>
-          </div>
-        </div>
-
-        <div class="col mb-2 mb-sm-0">
-          <div class="fw-bold">
-            ENTRADAS
-          </div>
-          <h2 class="fw-bold text-success mb-0">
-            {{ $helpers.toBRL(item.entry.total) }}
-          </h2>
-          <div class="small">
-            <div class="text-nowrap">
-              <FontAwesomeIcon
-                :icon="icons.faBox"
-                fixed-width
-              />
-              Média <b>por pedido</b>:
-              <span class="text-info fw-bold">
-                {{ $helpers.toBRL(item.entry.orders_price_avg) }}
-              </span>
+        <template v-if="$helpers.canView(roles.GERENCIA)">
+          <div class="col mb-2 mb-sm-0">
+            <div class="fw-bold">
+              CAMISAS PRODUZIDAS
             </div>
-            <div class="text-nowrap">
-              <FontAwesomeIcon
-                :icon="icons.faTshirt"
-                fixed-width
-              />
-              Média <b>por camisa</b>:
-              <span class="text-info fw-bold">
-                {{ $helpers.toBRL(item.entry.unities_avg) }}
-              </span>
-            </div>
+            <h1 class="fw-bold">
+              {{ item.shirts_total }}
+            </h1>
             <div>
+              Valor total: <b class="text-info">{{ $helpers.toBRL(item.total_price) }}</b>
+            </div>
+          </div>
+          <div class="col mb-2 mb-sm-0">
+            <div class="fw-bold">
+              ENTRADAS
+            </div>
+            <h2 class="fw-bold text-success mb-0">
+              {{ $helpers.toBRL(item.entry.total) }}
+            </h2>
+            <div class="small">
+              <div class="text-nowrap">
+                <FontAwesomeIcon
+                  :icon="icons.faBox"
+                  fixed-width
+                />
+                Média <b>por pedido</b>:
+                <span class="text-info fw-bold">
+                  {{ $helpers.toBRL(item.entry.orders_price_avg) }}
+                </span>
+              </div>
+              <div class="text-nowrap">
+                <FontAwesomeIcon
+                  :icon="icons.faTshirt"
+                  fixed-width
+                />
+                Média <b>por camisa</b>:
+                <span class="text-info fw-bold">
+                  {{ $helpers.toBRL(item.entry.unities_avg) }}
+                </span>
+              </div>
               <div>
-                <table class="table table-sm">
-                  <thead>
-                    <tr
-                      class="small"
-                    >
-                      <th colspan="4">
-                        <FontAwesomeIcon
-                          :icon="icons.faTshirt"
-                          fixed-width
-                        />
-                        Pedidos com peças:
-                      </th>
-                    </tr>
-                    <tr class="small">
-                      <th class="table-primary">
-                        Intervalo
-                      </th>
-                      <th>
-                        <span
-                          v-tippy
-                          content="Quantidade de PEDIDOS que estão no INTERVALO de peças"
-                        >Qtd.</span>
-                      </th>
-                      <th>Total</th>
-                      <th>Peças</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <tr class="small">
-                      <td class="fw-bold table-primary">
-                        &lt; 5
-                      </td>
-                      <td>{{ item.shirts_details.less_than_five.count }}</td>
-                      <td nowrap>
-                        {{ $helpers.toBRL(item.shirts_details.less_than_five.value) }}
-                      </td>
-                      <td>{{ item.shirts_details.less_than_five.quantity }}</td>
-                    </tr>
-                    <tr class="small">
-                      <td class="fw-bold table-primary">
-                        5 ~ 10
-                      </td>
-                      <td>{{ item.shirts_details.between_five_and_ten.count }}</td>
-                      <td nowrap>
-                        {{ $helpers.toBRL(item.shirts_details.between_five_and_ten.value) }}
-                      </td>
-                      <td>{{ item.shirts_details.between_five_and_ten.quantity }}</td>
-                    </tr>
-                    <tr class="small">
-                      <td class="fw-bold table-primary">
-                        &gt; 10
-                      </td>
-                      <td>{{ item.shirts_details.more_than_ten.count }}</td>
-                      <td nowrap>
-                        {{ $helpers.toBRL(item.shirts_details.more_than_ten.value) }}
-                      </td>
-                      <td>{{ item.shirts_details.more_than_ten.quantity }}</td>
-                    </tr>
-                  </tbody>
-                </table>
+                <div>
+                  <table class="table table-sm">
+                    <thead>
+                      <tr class="small">
+                        <th colspan="4">
+                          <FontAwesomeIcon
+                            :icon="icons.faTshirt"
+                            fixed-width
+                          />
+                          Pedidos com peças:
+                        </th>
+                      </tr>
+                      <tr class="small">
+                        <th class="table-primary">
+                          Intervalo
+                        </th>
+                        <th>
+                          <span
+                            v-tippy
+                            content="Quantidade de PEDIDOS que estão no INTERVALO de peças"
+                          >Qtd.</span>
+                        </th>
+                        <th>Total</th>
+                        <th>Peças</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr class="small">
+                        <td class="fw-bold table-primary">
+                          &lt; 5
+                        </td>
+                        <td>{{ item.shirts_details.less_than_five.count }}</td>
+                        <td nowrap>
+                          {{ $helpers.toBRL(item.shirts_details.less_than_five.value) }}
+                        </td>
+                        <td>{{ item.shirts_details.less_than_five.quantity }}</td>
+                      </tr>
+                      <tr class="small">
+                        <td class="fw-bold table-primary">
+                          5 ~ 10
+                        </td>
+                        <td>{{ item.shirts_details.between_five_and_ten.count }}</td>
+                        <td nowrap>
+                          {{ $helpers.toBRL(item.shirts_details.between_five_and_ten.value) }}
+                        </td>
+                        <td>{{ item.shirts_details.between_five_and_ten.quantity }}</td>
+                      </tr>
+                      <tr class="small">
+                        <td class="fw-bold table-primary">
+                          &gt; 10
+                        </td>
+                        <td>{{ item.shirts_details.more_than_ten.count }}</td>
+                        <td nowrap>
+                          {{ $helpers.toBRL(item.shirts_details.more_than_ten.value) }}
+                        </td>
+                        <td>{{ item.shirts_details.more_than_ten.quantity }}</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
               </div>
             </div>
           </div>
-        </div>
-
-        <div class="col mb-2 mb-sm-0">
-          <div class="fw-bold">
-            SAÍDAS
-          </div>
-          <h2 class="fw-bold text-danger mb-0">
-            {{ $helpers.toBRL(item.out.total) }}
-          </h2>
-
-          <div>
-            <div
-              v-for="expenseType in item.out.expense_types"
-              :key="expenseType.name"
-              class="small"
-            >
-              {{ expenseType.name }}: <b class="text-danger">{{ $helpers.toBRL(expenseType.total) }}</b>
+          <div class="col mb-2 mb-sm-0">
+            <div class="fw-bold">
+              SAÍDAS
+            </div>
+            <h2 class="fw-bold text-danger mb-0">
+              {{ $helpers.toBRL(item.out.total) }}
+            </h2>
+            <div>
+              <div
+                v-for="expenseType in item.out.expense_types"
+                :key="expenseType.name"
+                class="small"
+              >
+                {{ expenseType.name }}: <b class="text-danger">{{ $helpers.toBRL(expenseType.total) }}</b>
+              </div>
             </div>
           </div>
-        </div>
+        </template>
 
         <div class="col">
           <div
             class="fw-bold link-primary clickable"
             @click.prevent="onPendencyOfMonthClick(item.date)"
           >
-            PENDÊNCIA NO MÊS
+            {{
+                $helpers.canView(roles.GERENCIA)
+                  ? 'PENDÊNCIA NO MÊS'
+                  : 'VER PENDÊNCIAS DESSE MÊS'
+            }}
           </div>
-          <h2 class="fw-bold text-danger">
+          <h2
+            v-if="$helpers.canView(roles.GERENCIA)"
+            class="fw-bold text-danger"
+          >
             {{ $helpers.toBRL(item.pendency) }}
           </h2>
         </div>

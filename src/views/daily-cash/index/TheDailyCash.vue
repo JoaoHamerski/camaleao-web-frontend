@@ -13,7 +13,7 @@ import ModalExpensesNew from '@/views/expenses/index/modals/ModalExpensesNew.vue
 import DailyCashReminderFormModal from '../partials/DailyCashReminderFormModal.vue'
 
 export default {
-  metaInfo () {
+  metaInfo() {
     return {
       title: 'Caixa Diário'
     }
@@ -31,12 +31,12 @@ export default {
     },
     dailyCash: {
       query: GetDailyCash,
-      variables () {
+      variables() {
         return { ...this.paymentsParams }
       }
     }
   },
-  data () {
+  data() {
     return {
       dailyCashPendencies: [],
       dailyCash: {
@@ -50,7 +50,7 @@ export default {
         first: 100,
         created_at: DateTime.now().toISODate(),
         where: {},
-        orderBy: [{column: 'CREATED_AT', order: 'DESC'}]
+        orderBy: [{ column: 'CREATED_AT', order: 'DESC' }]
       },
       icons: {
         faCashRegister
@@ -58,13 +58,13 @@ export default {
     }
   },
   computed: {
-    isLoading () {
+    isLoading() {
       return !!this.$apollo.queries.dailyCash.loading
     }
   },
   methods: {
     formatDatetime,
-    onLoadPendenciesFromDate (date) {
+    onLoadPendenciesFromDate(date) {
       this.paymentsParams.where = {
         column: 'IS_CONFIRMED',
         operator: 'IS_NULL'
@@ -72,25 +72,25 @@ export default {
 
       this.paymentsParams.created_at = date
     },
-    onReminderClick () {
+    onReminderClick() {
       this.modalReminder = true
     },
-    onReminderSuccess () {
+    onReminderSuccess() {
       this.modalReminder = false
     },
-    onNewEntryClick () {
+    onNewEntryClick() {
       this.modalPayment = true
     },
-    onNewExpenseClick () {
+    onNewExpenseClick() {
       this.modalExpense = true
     },
-    onNewExpenseSuccess () {
+    onNewExpenseSuccess() {
       this.modalExpense = false
     },
-    onPaymentSuccess () {
+    onPaymentSuccess() {
       this.modalPayment = false
     },
-    resetPayments () {
+    resetPayments() {
       this.paymentsParams.where = {}
       this.paymentsParams.created_at = DateTime.now().toISODate()
 
