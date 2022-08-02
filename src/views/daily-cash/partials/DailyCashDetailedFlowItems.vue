@@ -38,7 +38,13 @@ export default {
     </template>
 
     <template #body>
-      <div class="row row-cols-1 row-cols-sm-4">
+      <div
+        class="row"
+        :class="{
+          'row-cols-1 row-cols-sm-4': $helpers.canView(roles.GERENCIA),
+          'row-cols-12': $helpers.canView(roles.ATENDIMENTO)
+        }"
+      >
         <template v-if="$helpers.canView(roles.GERENCIA)">
           <div class="col mb-2 mb-sm-0">
             <div class="fw-bold">
