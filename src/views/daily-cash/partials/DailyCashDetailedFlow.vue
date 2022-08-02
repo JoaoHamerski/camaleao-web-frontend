@@ -5,6 +5,7 @@ import DailyCashDetailedFlowItems from './DailyCashDetailedFlowItems.vue'
 import { last, first, isEmpty } from 'lodash-es'
 import { formatDatetime } from '@/utils/formatters'
 import { DateTime } from 'luxon'
+import roles from '@/constants/roles'
 
 export default {
   components: {
@@ -30,6 +31,7 @@ export default {
       dailyCashDetailedFlow: [],
       page: 1,
       date: '',
+      roles,
       icons: {
         faReceipt,
         faSearch
@@ -94,7 +96,11 @@ export default {
         :icon="icons.faReceipt"
         fixed-width
       />
-      Fluxo detalhado
+      {{
+          $helpers.canView(roles.GERENCIA)
+            ? 'Fluxo detalhado'
+            : 'Pendências'
+      }}
     </template>
 
     <template #body>
