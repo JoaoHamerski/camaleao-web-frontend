@@ -174,9 +174,9 @@ export default {
             @click.prevent="onPendencyOfMonthClick(item.date)"
           >
             {{
-                $helpers.canView(roles.GERENCIA)
-                  ? 'PENDÊNCIA NO MÊS'
-                  : 'VER PENDÊNCIAS DESSE MÊS'
+              $helpers.canView(roles.GERENCIA)
+                ? 'PENDÊNCIA NO MÊS'
+                : 'VER PENDÊNCIAS DESSE MÊS'
             }}
           </div>
           <h2

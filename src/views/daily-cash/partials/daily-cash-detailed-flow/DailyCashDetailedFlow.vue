@@ -1,11 +1,12 @@
 <script>
 import { faReceipt, faSearch } from '@fortawesome/free-solid-svg-icons'
 import { GetDailyCashDetailedFlow } from '@/graphql/DailyCash.gql'
-import DailyCashDetailedFlowItems from './DailyCashDetailedFlowItems.vue'
 import { last, first, isEmpty } from 'lodash-es'
 import { formatDatetime } from '@/utils/formatters'
 import { DateTime } from 'luxon'
 import roles from '@/constants/roles'
+
+import DailyCashDetailedFlowItems from './DailyCashDetailedFlowItems.vue'
 
 export default {
   components: {
@@ -96,10 +97,11 @@ export default {
         :icon="icons.faReceipt"
         fixed-width
       />
+
       {{
-          $helpers.canView(roles.GERENCIA)
-            ? 'Fluxo detalhado'
-            : 'Pendências'
+        $helpers.canView(roles.GERENCIA)
+          ? 'Fluxo detalhado'
+          : 'Pendências'
       }}
     </template>
 

@@ -5,8 +5,8 @@ import {
 } from '@fortawesome/free-solid-svg-icons'
 import { isEmpty } from 'lodash-es'
 
-import PendenciesModal from '../partials/PendenciesModal.vue'
-import DailyCashReminderModal from '../partials/DailyCashReminderModal.vue'
+import PendenciesModal from '../partials/daily-cash-pendencies/PendenciesModal.vue'
+import DailyCashReminderModal from '../partials/daily-cash-reminder/DailyCashReminderModal.vue'
 
 export default {
   components: {
