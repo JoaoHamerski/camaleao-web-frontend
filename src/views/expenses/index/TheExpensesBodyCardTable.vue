@@ -9,10 +9,10 @@ import {
   faCheck,
   faTimes,
   faMinus,
-  faTrashAlt
+  faTrashAlt,
+  faUserTie,
+  faBox
 } from '@fortawesome/free-solid-svg-icons'
-import { GetConfig } from '@/graphql/Config.gql'
-import { config as viewerConfig } from '@/components/AppViewer/AppViewer'
 
 import Vue from 'vue'
 import VueViewer from 'v-viewer'
@@ -23,30 +23,6 @@ import ExpenseState from './ExpenseState.vue'
 export default {
   components: {
     ExpenseState
-  },
-  apollo: {
-    expenseEmployee: {
-      query: GetConfig,
-      variables: {
-        name: 'app',
-        key: 'employee_expense',
-        encoded: false
-      },
-      update ({ configGet }) {
-        return configGet
-      }
-    },
-    expenseProductType: {
-      query: GetConfig,
-      variables: {
-        name: 'app',
-        key: 'product_types_expense',
-        encoded: false
-      },
-      update ({ configGet }) {
-        return configGet
-      }
-    }
   },
   props: {
     isLoading: {
@@ -72,7 +48,9 @@ export default {
         faCheck,
         faTimes,
         faMinus,
-        faTrashAlt
+        faTrashAlt,
+        faUserTie,
+        faBox
       }
     }
   },
@@ -122,10 +100,6 @@ export default {
 
       return this.icons.faFileImage
     },
-    hasRelationType (expense) {
-      return expense.type.id === this.expenseEmployee
-        || expense.type.id === this.expenseProductType
-    },
     isEditEnabled (expense) {
       if (expense.is_confirmed === null) {
         return true
@@ -136,6 +110,9 @@ export default {
       }
 
       return false
+    },
+    hasRelatedType(expense) {
+      return !!expense.product_type || !!expense.employee
     }
   }
 }
@@ -161,23 +138,27 @@ export default {
         :headers="headers"
         :items="items"
       >
-        <template
-          #[`table-row.item`]="{ item }"
-        >
+        <template #[`table-row.item`]="{ item }">
           <tr
-            v-if="hasRelationType(item)"
+            v-if="hasRelatedType(item)"
             class="small border-bottom-2"
           >
             <td
               :colspan="headers.length"
               class="py-0"
             >
-              <template v-if="item.type.id === expenseProductType">
-                <b>Produto relacionado ao tipo:</b> {{ item.product_type.name }}
-              </template>
-              <template v-if="item.type.id === expenseEmployee">
-                <b>Funcionário relacionado ao tipo:</b> {{ item.employee.name }}
-              </template>
+              <b v-if="item.product_type">
+                <FontAwesomeIcon
+                  :icon="icons.faBox"
+                  fixed-width
+                /> {{ item.product_type.name }}
+              </b>
+              <b v-if="item.employee">
+                <FontAwesomeIcon
+                  :icon="icons.faUserTie"
+                  fixed-width
+                /> {{ item.employee.name }}
+              </b>
             </td>
           </tr>
         </template>
