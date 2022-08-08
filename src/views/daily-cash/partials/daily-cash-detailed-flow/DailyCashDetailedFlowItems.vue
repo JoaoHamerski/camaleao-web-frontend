@@ -69,6 +69,7 @@ export default {
         />
 
         <AppButton
+          v-if="$helpers.canView(roles.GERENCIA)"
           class="expenses-button"
           color="danger"
           btn-class="fw-bold w-fit-content"
