@@ -1,7 +1,9 @@
 <script>
+import { GetDailyCashRemindersInfo } from '@/graphql/DailyCashReminder.gql'
 import {
   faPlus,
-  faSyncAlt
+  faSyncAlt,
+  faClock
 } from '@fortawesome/free-solid-svg-icons'
 import { isEmpty } from 'lodash-es'
 
@@ -12,6 +14,11 @@ export default {
   components: {
     PendenciesModal,
     DailyCashReminderModal
+  },
+  apollo: {
+    dailyCashRemindersInfo: {
+      query: GetDailyCashRemindersInfo
+    }
   },
   props: {
     pendencies: {
@@ -25,12 +32,14 @@ export default {
   },
   data () {
     return {
+      dailyCashRemindersInfo: {},
       pendenciesModal: false,
       remindersModal: false,
       totalReminders: 0,
       icons: {
         faPlus,
-        faSyncAlt
+        faSyncAlt,
+        faClock
       }
     }
   },
@@ -111,11 +120,36 @@ export default {
       <div class="d-flex flex-sm-row flex-column">
         <AppButton
           color="warning"
-          class="flex-grow-1 fw-bold me-0 me-sm-1 mb-1 mb-sm-0"
+          class="flex-grow-1 fw-bold me-0 me-sm-1 mb-1 mb-sm-0 position-relative"
           @click="onRemindersClick"
         >
           Agendados
           <span class="badge rounded-pill bg-light text-dark">{{ totalReminders }}</span>
+          <span
+            v-if="dailyCashRemindersInfo.has_expired_reminder"
+            v-tippy
+            class="position-absolute top-0 start-0 translate-middle badge rounded-pill bg-danger border border-light"
+            content="Há agendamentos expirados"
+          >
+            <FontAwesomeIcon
+              :icon="icons.faClock"
+              size="lg"
+            />
+          </span>
+          <span
+            v-if="dailyCashRemindersInfo.has_near_reminder"
+            v-tippy
+            class="position-absolute start-0 translate-middle badge rounded-pill bg-warning border border-light"
+            content="Há agendamentos para os próximos 5 dias"
+            :class="{
+              'ms-4': dailyCashRemindersInfo.has_expired_reminder
+            }"
+          >
+            <FontAwesomeIcon
+              :icon="icons.faClock"
+              size="lg"
+            />
+          </span>
         </AppButton>
         <AppButton
           color="warning"

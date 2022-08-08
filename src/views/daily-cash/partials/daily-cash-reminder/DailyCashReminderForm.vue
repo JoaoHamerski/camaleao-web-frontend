@@ -5,7 +5,8 @@ import { maskCurrencyBRL, maskDate } from '@/utils/masks'
 import {
   CreateDailyCashReminder,
   UpdateDailyCashReminder,
-  GetDailyCashReminderDates
+  GetDailyCashReminderDates,
+  GetDailyCashRemindersInfo
 } from '@/graphql/DailyCashReminder.gql'
 import { handleSuccess, handleError } from '@/utils/forms'
 
@@ -60,7 +61,11 @@ export default {
           variables: {
             id: this.reminder.id,
             input
-          }
+          },
+          refetchQueries: [
+            GetDailyCashReminderDates,
+            GetDailyCashRemindersInfo
+          ]
         })
 
         handleSuccess(this, {message: 'Atualiado com sucesso!'})
@@ -73,7 +78,10 @@ export default {
         await this.$apollo.mutate({
           mutation: CreateDailyCashReminder,
           variables: { input },
-          refetchQueries: [GetDailyCashReminderDates],
+          refetchQueries: [
+            GetDailyCashReminderDates,
+            GetDailyCashRemindersInfo
+          ],
           awaitRefetchQueries: true
         })
 
