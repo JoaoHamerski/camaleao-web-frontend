@@ -227,12 +227,12 @@ $container-border-radius: .25rem;
       transform: rotate(-90deg);
     }
 
-    .container-title > span {
+    > .container-title > span {
       box-shadow: 0 0 5px transparent !important;
     }
   }
 
-  .container-title {
+  > .container-title {
     & > span {
       transition: background-color $transition-time, box-shadow $transition-time;
       padding-right: .15rem;

@@ -8,6 +8,7 @@ import pasteFilesMixin from '@/mixins/pasteFilesMixin'
 import Form from '@/utils/Form'
 
 import {
+  GetExpenses,
   CreateExpense,
   UpdateExpense,
   GetProductTypeExpensesByMonth,
@@ -242,6 +243,7 @@ export default {
           mutation: CreateExpense,
           variables: { input },
           refetchQueries: [
+            GetExpenses,
             GetDailyCash,
             GetDailyCashBalance,
             GetProductTypeExpensesByMonth,

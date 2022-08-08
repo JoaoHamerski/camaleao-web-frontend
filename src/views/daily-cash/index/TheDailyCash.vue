@@ -6,11 +6,11 @@ import { formatDatetime } from '@/utils/formatters'
 import { DateTime } from 'luxon'
 import { GetDailyCash, GetDailyCashPendencies } from '@/graphql/DailyCash.gql'
 
-import DailyPaymentModal from '../partials/DailyPaymentModal.vue'
+import DailyPaymentModal from '../partials/daily-cash-payment/DailyPaymentModal.vue'
 import TheDailyCashHeader from './TheDailyCashHeader.vue'
 import TheDailyCashBody from './TheDailyCashBody.vue'
 import ModalExpensesNew from '@/views/expenses/index/modals/ModalExpensesNew.vue'
-import DailyCashReminderFormModal from '../partials/DailyCashReminderFormModal.vue'
+import DailyCashReminderFormModal from '../partials/daily-cash-reminder/DailyCashReminderFormModal.vue'
 
 export default {
   metaInfo() {

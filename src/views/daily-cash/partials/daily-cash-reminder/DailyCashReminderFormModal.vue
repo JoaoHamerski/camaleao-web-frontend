@@ -1,7 +1,9 @@
 <script>
+import { faPlus } from '@fortawesome/free-solid-svg-icons'
 import DailyCashReminderForm from './DailyCashReminderForm.vue'
 
 export default {
+
   components: {
     DailyCashReminderForm
   },
@@ -9,6 +11,13 @@ export default {
     value: {
       type: Boolean,
       default: false
+    }
+  },
+  data () {
+    return {
+      icons: {
+        faPlus
+      }
     }
   },
   methods: {
@@ -26,6 +35,10 @@ export default {
     v-on="$listeners"
   >
     <template #title>
+      <FontAwesomeIcon
+        :icon="icons.faPlus"
+        fixed-width
+      />
       Agendar nova entrada ou saída
     </template>
     <template #body>

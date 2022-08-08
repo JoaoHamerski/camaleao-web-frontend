@@ -1,5 +1,7 @@
 <script>
 import { faCalendarAlt, faFunnelDollar } from '@fortawesome/free-solid-svg-icons'
+import { DateTime } from 'luxon'
+
 import {
   GetProductTypeExpensesByMonth,
   GetEmployeeExpensesByMonth
@@ -14,10 +16,20 @@ export default {
   },
   apollo: {
     productTypesExpensesByMonth: {
-      query: GetProductTypeExpensesByMonth
+      query: GetProductTypeExpensesByMonth,
+      variables () {
+        return {
+          date: this.date
+        }
+      }
     },
     employeeExpensesByMonth: {
-      query: GetEmployeeExpensesByMonth
+      query: GetEmployeeExpensesByMonth,
+      variables () {
+        return {
+          date: this.date
+        }
+      }
     },
     expenseTypes: {
       query: GetExpenseTypes
@@ -43,6 +55,12 @@ export default {
       update ({ configGet }) {
         return configGet
       }
+    }
+  },
+  props: {
+    date: {
+      type: String,
+      default: DateTime.now().toISODate()
     }
   },
   data () {

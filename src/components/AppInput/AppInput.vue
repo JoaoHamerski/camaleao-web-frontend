@@ -23,6 +23,10 @@ export default {
       update: (el, binding, vnode) => {
         const event = new Event('input', { bubbles: true })
 
+        if (vnode.context.mask !== undefined) {
+          el.cleave = new Cleave(el, binding.value || {})
+        }
+
         setTimeout(() => { el.dispatchEvent(event) }, 100)
       }
     }

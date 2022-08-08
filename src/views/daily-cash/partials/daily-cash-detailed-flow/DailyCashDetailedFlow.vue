@@ -1,15 +1,20 @@
 <script>
 import { faReceipt, faSearch } from '@fortawesome/free-solid-svg-icons'
 import { GetDailyCashDetailedFlow } from '@/graphql/DailyCash.gql'
-import DailyCashDetailedFlowItems from './DailyCashDetailedFlowItems.vue'
 import { last, first, isEmpty } from 'lodash-es'
 import { formatDatetime } from '@/utils/formatters'
 import { DateTime } from 'luxon'
 import roles from '@/constants/roles'
 
+import DailyCashDetailedFlowItems from './DailyCashDetailedFlowItems.vue'
+import DailyCashDetailedFlowPaginate from './DailyCashDetailedFlowPaginate.vue'
+import DailyCashExpensesModal from '../DailyCashExpensesModal.vue'
+
 export default {
   components: {
-    DailyCashDetailedFlowItems
+    DailyCashDetailedFlowItems,
+    DailyCashDetailedFlowPaginate,
+    DailyCashExpensesModal
   },
   apollo: {
     dailyCashDetailedFlow() {
@@ -29,6 +34,10 @@ export default {
     return {
       collapse: false,
       dailyCashDetailedFlow: [],
+      expensesModal: {
+        value: false,
+        date: ''
+      },
       page: 1,
       date: '',
       roles,
@@ -42,7 +51,7 @@ export default {
     isQueryLoading() {
       return !!this.$apollo.queries.dailyCashDetailedFlow.loading
     },
-    getDatePaginationInterval() {
+    datePaginationInterval() {
       if (!this.dailyCashDetailedFlow.length) {
         return
       }
@@ -80,6 +89,14 @@ export default {
         this.page++
         return
       }
+    },
+    openExpensesModal(date) {
+      this.expensesModal.date = date
+      this.expensesModal.value = true
+    },
+    onModalClose() {
+      this.expensesModal.value = false
+      this.expensesModal.date = ''
     }
   }
 }
@@ -96,10 +113,11 @@ export default {
         :icon="icons.faReceipt"
         fixed-width
       />
+
       {{
-          $helpers.canView(roles.GERENCIA)
-            ? 'Fluxo detalhado'
-            : 'Pendências'
+        $helpers.canView(roles.GERENCIA)
+          ? 'Fluxo detalhado'
+          : 'Pendências'
       }}
     </template>
 
@@ -107,47 +125,29 @@ export default {
       <div class="position-relative">
         <AppLoading v-show="isQueryLoading" />
 
-        <div class="d-flex flex-column flex-sm-row justify-content-between">
-          <div class="mb-3 text-center text-sm-start">
-            <div class="btn-group mb-2">
-              <button
-                class="btn btn-outline-primary"
-                :class="date !== '' && 'disabled'"
-                @click="paginate('previous')"
-              >
-                Anterior
-              </button>
-              <button
-                class="btn btn-outline-primary"
-                :class="(page === 1 || date !== '') && 'disabled'"
-                @click="paginate('next')"
-              >
-                Próximo
-              </button>
-            </div>
-            <div class="fw-bold small">
-              {{ getDatePaginationInterval }}
-            </div>
-          </div>
+        <DailyCashExpensesModal
+          v-model="expensesModal.value"
+          :date="expensesModal.date"
+          @hidden="onModalClose"
+        />
 
-          <div>
-            <AppInput
-              id="month"
-              v-model="date"
-              name="month"
-              type="month"
-              placeholder="mm/aaaa"
-            >
-              Mês específico:
-            </AppInput>
-          </div>
-        </div>
+        <DailyCashDetailedFlowPaginate
+          v-model="date"
+          v-bind="{
+            page,
+            date,
+            datePaginationInterval
+          }"
+          @paginate="paginate"
+        />
+
         <DailyCashDetailedFlowItems
           v-for="item in dailyCashDetailedFlow"
           :key="item.date"
           :item="item"
           class="mb-3"
           @open-pendency-orders="$emit('open-pendency-orders', $event)"
+          @open-expenses-modal="openExpensesModal"
         />
       </div>
     </template>

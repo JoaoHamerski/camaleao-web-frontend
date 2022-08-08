@@ -11,9 +11,9 @@ export default {
     PaymentExpenseTable,
     TheDailyCashBodyDate,
     PaymentConfirmErrorModal,
-    DailyCashBalance: () => import('../partials/DailyCashBalance.vue'),
-    PendenciesOfMonthOrdersModal: () => import('../partials/PendenciesOfMonthOrdersModal.vue'),
-    DailyCashDetailedFlow: () => import('../partials/DailyCashDetailedFlow.vue')
+    DailyCashBalance: () => import('../partials/daily-cash-balance/DailyCashBalance.vue'),
+    PendenciesOfMonthOrdersModal: () => import('../partials/daily-cash-pendencies/PendenciesOfMonthOrdersModal.vue'),
+    DailyCashDetailedFlow: () => import('../partials/daily-cash-detailed-flow/DailyCashDetailedFlow.vue')
   },
   props: {
     entries: {

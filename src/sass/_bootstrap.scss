@@ -66,6 +66,10 @@
 
 .btn {
   box-shadow: $card-box-shadow;
+
+  &.btn-rounded {
+    border-radius: 2.5rem;
+  }
 }
 
 .pagination li {

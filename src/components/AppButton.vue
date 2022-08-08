@@ -3,6 +3,12 @@ import { isEmpty } from 'lodash-es'
 import classNames from 'classnames'
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 
+const tippy = {
+  duration: 150,
+  arrow: true,
+  placement: 'top'
+}
+
 function renderIsLoadingIcon (h, context) {
   return (
     <span>
@@ -58,8 +64,13 @@ function renderMessageBtn (h, context) {
   return (
     <span
       tabindex="0"
-      class={context.block ? 'd-grid' : 'd-inline-block'}
-      vTippy={context.tippyConfig}
+      class={[
+        context.block
+          ? 'd-grid'
+          : 'd-inline-block',
+        'w-fit-content'
+      ]}
+      vTippy={{...tippy, ...context.tippySettings }}
       content={context.tooltipMessage}
     >
       { renderBtn(h, context) }
@@ -69,6 +80,14 @@ function renderMessageBtn (h, context) {
 
 export default {
   props: {
+    tippySettings: {
+      type: Object,
+      default: () => {}
+    },
+    rounded: {
+      type: Boolean,
+      default: false
+    },
     block: {
       type: Boolean,
       default: false
@@ -132,6 +151,7 @@ export default {
           [`btn-${this.color}`]: !this.outlined,
           [`btn-outline-${this.color}`]: this.outlined,
           'd-block w-100': this.block,
+          'btn-rounded': this.rounded
         },
         isButtonAppended && { ...appendClasses },
         this.btnClass
@@ -142,13 +162,6 @@ export default {
     },
     isDisabled () {
       return this.loading || this.disabled || !!this.disabledMessage
-    },
-    tippyConfig () {
-      return {
-        duration: 150,
-        arrow: true,
-        placement: 'top'
-      }
     }
   },
   render: function (h) {
