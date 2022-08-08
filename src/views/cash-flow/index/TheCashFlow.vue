@@ -6,9 +6,13 @@ import {
   GetCashFlowEntries,
   GetCashFlowBalance
 } from '@/graphql/CashFlow.gql'
-
 import TheCashFlowFilter from './TheCashFlowFilter.vue'
 import TheCashFlowBody from './TheCashFlowBody.vue'
+
+const SEARCH_OPTIONS = {
+  DESCRIPTION: 'DESCRIPTION',
+  VALUE: 'VALUE'
+}
 
 export default {
   metaInfo () {
@@ -64,6 +68,7 @@ export default {
       },
       page: 1,
       search: '',
+      searchOption: SEARCH_OPTIONS.DESCRIPTION,
       where: {},
       orderBy: [{column: 'CREATED_AT', order: 'DESC'}],
       icons: {
@@ -74,6 +79,17 @@ export default {
   computed: {
     isLoading () {
       return !!this.$apollo.queries.cashFlowEntries.loading
+    },
+    searchOptions () {
+      return [
+        {
+        id: SEARCH_OPTIONS.DESCRIPTION,
+        label: 'Descrição'
+      },
+      {
+        id: SEARCH_OPTIONS.VALUE,
+        label: 'Valor'
+      }]
     }
   },
   methods: {
@@ -82,8 +98,18 @@ export default {
 
       this.orderBy = [{column: 'DATE', order: 'DESC'}]
 
+      if (this.searchOption === SEARCH_OPTIONS.VALUE) {
+        this.where = {
+          column: this.searchOption.replace(',', '.'),
+          operator: 'EQ',
+          value: this.search.replace(',', '.')
+        }
+
+        return
+      }
+
       this.where = {
-        column: 'DESCRIPTION',
+        column: this.searchOption,
         operator: 'LIKE',
         value: `%${search}%`
       }
@@ -171,10 +197,20 @@ export default {
         <AppInput
           v-model="search"
           name="search"
-          placeholder="Buscar por descrição..."
+          placeholder="Digite a busca..."
           :default-margin="false"
           @keypress.prevent.enter="onSearch"
         >
+          <template #prepend>
+            <AppSimpleSelect
+              v-model="searchOption"
+              remove-default-margin
+              name="search-options"
+              :options="searchOptions"
+              label-prop="label"
+              placeholder="Selecione..."
+            />
+          </template>
           <template #append>
             <AppButton
               outlined
