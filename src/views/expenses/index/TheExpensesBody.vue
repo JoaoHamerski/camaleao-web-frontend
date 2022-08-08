@@ -1,7 +1,8 @@
 <script>
 import roles from '@/constants/roles'
 import {
-  faExclamationCircle
+  faExclamationCircle,
+  faFunnelDollar
 } from '@fortawesome/free-solid-svg-icons'
 
 import ModalExpensesEdit from './modals/ModalExpensesEdit.vue'
@@ -11,7 +12,7 @@ export default {
   components: {
     ModalExpensesEdit,
     TheExpensesBodyCardTable,
-    TheExpensesTypesOverview: () => import('./TheExpensesTypesOverview.vue'),
+    ExpensesTypesOverview: () => import('./ExpensesTypesOverview.vue'),
     ViewerFileModal: () => import('@/components/AppViewer/ViewerFileModal'),
     PaymentExpenseDeleteModal: () => import('@/views/resources/payments-expenses/PaymentExpenseDeleteModal.vue')
   },
@@ -37,7 +38,8 @@ export default {
     return {
       roles,
       icons: {
-        faExclamationCircle
+        faExclamationCircle,
+        faFunnelDollar
       },
       expenseTypes: [],
       modalFileViewer: {
@@ -114,10 +116,25 @@ export default {
       @hidden="onViewerFileModalHidden"
     />
 
-    <TheExpensesTypesOverview
-      v-if="$helpers.canView(roles.GERENCIA)"
-      class="my-3"
-    />
+    <AppContainer
+      class="mb-3"
+      collapsible
+      color="danger"
+    >
+      <template #title>
+        <FontAwesomeIcon
+          :icon="icons.faFunnelDollar"
+          fixed-width
+        />
+        Despesas por categoria
+      </template>
+      <template #body>
+        <ExpensesTypesOverview
+          v-if="$helpers.canView(roles.GERENCIA)"
+          class="my-3"
+        />
+      </template>
+    </AppContainer>
 
     <div class="text-secondary small">
       <FontAwesomeIcon

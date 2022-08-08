@@ -70,8 +70,8 @@ query GetExpensesReportUrl ($start_date: String! $final_date: String) {
   expensesReport(start_date: $start_date final_date: $final_date)
 }
 
-query GetProductTypeExpensesByMonth {
-  productTypesExpensesByMonth {
+query GetProductTypeExpensesByMonth ($date: String!) {
+  productTypesExpensesByMonth (date: $date) {
     total
     subtypes {
       name
@@ -80,8 +80,8 @@ query GetProductTypeExpensesByMonth {
   }
 }
 
-query GetEmployeeExpensesByMonth {
-  employeeExpensesByMonth {
+query GetEmployeeExpensesByMonth ($date: String!) {
+  employeeExpensesByMonth (date: $date) {
     total
     subtypes {
       name
