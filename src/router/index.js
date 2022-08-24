@@ -52,16 +52,16 @@ const routes = [
       const authUser = store.getters['auth/authUser']
 
       if (isUserFromProduction(authUser)) {
-        next({name: production.index})
+        next({name: 'production.index'})
         return
       }
 
       if (isUserFromDesign(authUser)) {
-        next({name: weeklyProduction.index})
+        next({name: 'weekly-calendar.print.index'})
         return
       }
 
-      next({name: clients.index})
+      next({name: 'clients.index'})
     }
   },
   ...activitiesRoutes,
