@@ -74,7 +74,7 @@ function renderSidebar (h, context) {
   return (
     <nav
       id="sidebar"
-      class={classNames(['sidebar-scrollbar', {
+      class={classNames(['custom-scrollbar sidebar-scrollbar', {
         active: context.isSidebarActive
       }])}
     >

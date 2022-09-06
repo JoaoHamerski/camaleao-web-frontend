@@ -79,3 +79,22 @@ $color in $theme-colors {
 .w-fit-content {
   width: fit-content;
 }
+
+// Draggable helpers class
+.flip-list {
+  transition: transform 0.5s
+}
+
+.no-move {
+  transition: transform 0s
+}
+
+.draggable-handler {
+  cursor: grab;
+  transition: color .2s;
+  color: $secondary;
+
+  &:hover {
+    color: $primary  !important;
+  }
+}

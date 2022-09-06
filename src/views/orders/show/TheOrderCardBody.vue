@@ -1,11 +1,12 @@
 <script>
 import { formatDatetime } from '@/utils/formatters'
 
-import OrderReminder from './partials/OrderReminder'
-import OrderClothingTypes from './partials/OrderClothingTypes'
-import OrderNotes from './partials/OrderNotes'
-import OrderPayments from './partials/OrderPayments'
-import OrderFiles from './partials/OrderFiles'
+import OrderReminder from './partials/OrderReminder.vue'
+import OrderClothingTypes from './partials/OrderClothingTypes.vue'
+import OrderNotes from './partials/OrderNotes.vue'
+import OrderPayments from './partials/OrderPayments.vue'
+import OrderFiles from './partials/OrderFiles.vue'
+import OrderStatusProgress from './partials/OrderStatusProgress.vue'
 
 export default {
   components: {
@@ -13,7 +14,8 @@ export default {
     OrderNotes,
     OrderPayments,
     OrderFiles,
-    OrderReminder
+    OrderReminder,
+    OrderStatusProgress
   },
   props: {
     order: {
@@ -195,6 +197,12 @@ export default {
         </div>
       </template>
     </AppContainer>
+
+    <OrderStatusProgress
+      v-if="order.has_order_control"
+      class="mt-3"
+      :order="order"
+    />
 
     <OrderNotes
       class="mt-3"

@@ -1,0 +1,48 @@
+fragment SectorParts on Sector {
+  id
+  name
+}
+
+fragment SectorStatusParts on Sector {
+  status {
+    id
+    text
+  }
+}
+
+fragment SectorUserParts on Sector {
+  users {
+    id
+    name
+    sectors {
+      id
+      name
+    }
+  }
+}
+
+query GetSectors {
+  sectors {
+    ...SectorParts
+    ...SectorStatusParts
+    ...SectorUserParts
+  }
+}
+
+mutation CreateSector ($input: SectorInput!) {
+  sectorCreate(input: $input) {
+    id
+  }
+}
+
+mutation UpdateSector ($id: ID! $input: SectorInput!) {
+  sectorUpdate (id: $id input: $input) {
+    id
+  }
+}
+
+mutation DeleteSector ($id: ID!) {
+  sectorDelete(id: $id) {
+    id
+  }
+}

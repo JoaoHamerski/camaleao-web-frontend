@@ -21,8 +21,8 @@ mutation userCreate($input: UserInput!) {
   }
 }
 
-mutation userChangeRole ($id: ID! $new_role_id: Int) {
-  userChangeRole(id: $id new_role_id: $new_role_id){
+mutation EditUser ($id: ID! $input: UserEditInput!) {
+  userEdit(id: $id input: $input) {
     ...User
   }
 }

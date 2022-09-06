@@ -25,20 +25,20 @@ export default {
         { text: 'Nome', value: 'name' },
         { text: 'E-mail', value: 'email' },
         { text: 'Nível de usuário', value: 'role.name' },
-        { text: 'Alterar nível', value: 'change_role', align: 'center' },
+        { text: 'Editar', value: 'change_role', align: 'center' },
         { text: 'Deletar', value: 'delete', align: 'center' }
       ]
     },
-    cantChangeOwnLevelMessage () {
-      return 'Não é possível alterar o próprio nível de usuário'
+    cantEditOwnAccountMessage () {
+      return 'Use o menu Minha conta para alterar os próprios dados'
     },
     cantDeleteOwnAccountMessage () {
       return 'Use o menu Minha conta para deletar a própria conta'
     }
   },
   methods: {
-    onChangeUserRoleClick (user) {
-      this.$emit('action-button-clicked', { user, action: 'change_role' })
+    onEditUserClick (user) {
+      this.$emit('action-button-clicked', { user, action: 'edit_user' })
     },
     onDeleteUserClick (user) {
       this.$emit('action-button-clicked', { user, action: 'delete_user' })
@@ -57,11 +57,11 @@ export default {
   >
     <template #[`items.change_role`]="{ item }">
       <AppButton
-        :disabled-message="isAuthUser(item) && cantChangeOwnLevelMessage"
+        :disabled-message="isAuthUser(item) && cantEditOwnAccountMessage"
         btn-class="btn-sm"
         :icon="icons.faUserEdit"
         outlined
-        @click.prevent="onChangeUserRoleClick(item)"
+        @click.prevent="onEditUserClick(item)"
       />
     </template>
 

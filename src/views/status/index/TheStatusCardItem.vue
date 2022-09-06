@@ -1,8 +1,12 @@
 <script>
-import { faEdit, faTrashAlt } from '@fortawesome/free-solid-svg-icons'
+import { faEdit, faTrashAlt, faBars } from '@fortawesome/free-solid-svg-icons'
 
 export default {
   props: {
+    reorder: {
+      type: Boolean,
+      default: false
+    },
     status: {
       type: Object,
       required: true
@@ -12,7 +16,8 @@ export default {
     return {
       icons: {
         faEdit,
-        faTrashAlt
+        faTrashAlt,
+        faBars
       }
     }
   },
@@ -29,11 +34,21 @@ export default {
 
 <template>
   <li class="list-group-item d-flex justify-content-between align-items-center">
-    <span
-      :class="{
-        'fw-bold text-success': status.is_available
-      }"
-    >{{ status.text }}</span>
+    <div class="d-flex">
+      <div class="draggable-handler">
+        <FontAwesomeIcon
+          v-if="reorder"
+          class="me-2"
+          :icon="icons.faBars"
+          fixed-width
+        />
+      </div>
+      <span
+        :class="{
+          'fw-bold text-success': status.is_available
+        }"
+      >{{ status.text }}</span>
+    </div>
     <div class="d-flex flex-column flex-sm-row ">
       <AppButton
         outlined

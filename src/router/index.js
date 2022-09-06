@@ -4,11 +4,6 @@ import auth from '@/middleware/auth'
 import middlewarePipeline from '@/router/middlewarePipeline'
 import store from '@/store'
 import roles from '@/constants/roles'
-import {
-  clients,
-  production,
-  weeklyProduction
-} from '@/constants/route-names'
 
 import authRoutes from '@/views/auth/routes'
 import clientsRoutes from '@/views/clients/routes'
@@ -27,6 +22,8 @@ import weeklyProductionRoutes from '@/views/weekly-calendar/routes'
 import activitiesRoutes from '@/views/activities/routes'
 import statusRoutes from '@/views/status/routes'
 import developerRoutes from '@/views/developer/routes'
+import orderControlRoutes from '@/views/order-control/routes'
+import sectoresRoutes from '@/views/sectors/routes'
 
 import ErrorNotFound from '@/views/_errors/ErrorNotFound.vue'
 
@@ -80,7 +77,8 @@ const routes = [
   ...usersRoutes,
   ...weeklyProductionRoutes,
   ...statusRoutes,
-  ...developerRoutes
+  ...orderControlRoutes,
+  ...sectoresRoutes,
 ]
 
 if (process.env.NODE_ENV === 'development') {

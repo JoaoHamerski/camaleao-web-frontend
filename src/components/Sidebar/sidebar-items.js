@@ -18,7 +18,9 @@ import {
   faSignOutAlt,
   faCheckCircle,
   faCut,
-  faTruck
+  faTruck,
+  faTasks,
+  faUserTag
 } from '@fortawesome/free-solid-svg-icons'
 
 const ITEMS = {
@@ -79,6 +81,18 @@ const ITEMS = {
       route: { name: 'weekly-calendar.delivery.index' }
     }
   },
+  CONTROLE_DE_PEDIDOS: {
+    title: 'Controle de Pedidos',
+    icon: faTasks,
+    condition: () => canView(
+      ROLES.GERENCIA,
+      ROLES.ATENDIMENTO,
+      ROLES.DESIGN,
+      ROLES.COSTURA,
+      ROLES.ESTAMPA
+    ),
+    route: { name: 'order-control.index' }
+  },
   FINANCEIRO: {
     title: 'Financeiro',
     icon: faDollarSign,
@@ -112,7 +126,8 @@ const ITEMS = {
         this.CIDADES,
         this.FILIAIS,
         this.TIPOS_DE_ROUPAS,
-        this.STATUS
+        this.STATUS,
+        this.SETORES
       ]
     },
     USUARIOS: {
@@ -143,6 +158,12 @@ const ITEMS = {
       title: 'Status',
       icon: faCheckCircle,
       route: { name: 'status.index' },
+      condition: () => canView(ROLES.GERENCIA)
+    },
+    SETORES: {
+      title: 'Setores',
+      icon: faUserTag,
+      route: { name: 'sectors.index' },
       condition: () => canView(ROLES.GERENCIA)
     }
   },
@@ -176,6 +197,7 @@ export default [
   ITEMS.PEDIDOS,
   ITEMS.CAIXA_DIARIO,
   ITEMS.CALENDARIO_SEMANAL,
+  ITEMS.CONTROLE_DE_PEDIDOS,
   ITEMS.FINANCEIRO,
   ITEMS.PRODUCAO_USUARIOS,
   ITEMS.MINHA_CONTA,

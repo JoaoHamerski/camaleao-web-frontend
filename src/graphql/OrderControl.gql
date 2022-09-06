@@ -1,0 +1,76 @@
+#import "./_PaginatorFragment.gql"
+
+
+fragment OrdersBySectorParts on Order {
+  id
+  code
+  name
+  price
+  art_paths
+  created_at
+  concluded_status {
+    id
+    text
+    pivot {
+      user {
+        id
+        name
+      }
+
+      is_auto_concluded
+      created_at
+    }
+  }
+
+  status {
+    id
+    text
+  }
+
+  client {
+    id
+    name
+  }
+}
+
+query GetAuthUserSectors {
+  authUserSectors {
+    orders_count
+    sector {
+      id
+      name
+      status {
+        id
+        text
+      }
+    }
+  }
+}
+
+query GetOrdersBySector (
+  $sectorId: ID!
+  $first: Int!
+  $page: Int
+  $order_by: [QueryOrdersBySectorOrderByOrderByClause!]
+) {
+  ordersBySector (
+    sector_id: $sectorId
+    first: $first
+    page: $page
+    order_by: $order_by
+  ) {
+    paginatorInfo {
+      ...PaginatorSimpleParts
+    }
+
+    data {
+      ...OrdersBySectorParts
+    }
+  }
+}
+
+mutation StepToStatus ($orderId: ID! $statusId: ID!) {
+  stepToStatus (order_id: $orderId status_id: $statusId) {
+    ...OrdersBySectorParts
+  }
+}

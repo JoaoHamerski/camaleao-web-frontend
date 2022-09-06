@@ -101,7 +101,7 @@ export default {
           {{ user.role.name }}
         </li>
         <li class="list-group-item">
-          <b>Criado em:</b>
+          <b>Cadastrado em:</b>
           {{ formatDatetime(user.created_at) }}
         </li>
       </ul>

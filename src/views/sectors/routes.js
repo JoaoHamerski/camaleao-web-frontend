@@ -1,29 +1,29 @@
 import Layout from '@/views/MainLayout.vue'
 
-import role from '@/middleware/role'
 import roles from '@/constants/roles'
+import role from '@/middleware/role'
 
-const TheStatus = () => import(
-  /* webpackChunkName: "status" */
+const TheSectors = () => import(
+  /* webpackChunkName: "sectors" */
   /* webpackPrefetch: true */
-  './index/TheStatus'
+  './index/TheSectors.vue'
 )
 
 const children = [
   {
-    name: 'status.index',
-    path: '/gerenciamento/status',
-    component: TheStatus,
+    name: 'sectors.index',
+    path: '/setores',
+    component: TheSectors,
     meta: {
       middleware: [role],
       roles: [roles.GERENCIA]
-    }
+    },
   }
 ]
 
 export default [
   {
-    name: 'status',
+    name: 'sectors',
     path: '/',
     component: Layout,
     children

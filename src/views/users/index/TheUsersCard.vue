@@ -2,13 +2,13 @@
 import { faUsers } from '@fortawesome/free-solid-svg-icons'
 
 import TheUsersCardTable from './TheUsersCardTable.vue'
-import ChangeUserRoleModal from '../partials/ChangeUserRoleModal.vue'
+import EditUserModal from '../partials/EditUserModal.vue'
 import DeleteUserModal from '../partials/DeleteUserModal.vue'
 
 export default {
   components: {
     TheUsersCardTable,
-    ChangeUserRoleModal,
+    EditUserModal,
     DeleteUserModal
   },
   props: {
@@ -27,7 +27,7 @@ export default {
   },
   data () {
     return {
-      changeUserRole: {
+      editUserModal: {
         modal: false,
         user: {}
       },
@@ -48,17 +48,17 @@ export default {
     onDeleteUserModalHidden () {
       this.deleteUser.user = {}
     },
-    onChangeUserRoleSuccess () {
-      this.changeUserRole.modal = false
-      this.changeUserRole.user = {}
+    onEditSuccess () {
+      this.editUserModal.modal = false
+      this.editUserModal.user = {}
     },
-    onChangeUserModalHidden () {
-      this.changeUserRole.user = {}
+    onEditModalHidden () {
+      this.editUserModal.user = {}
     },
     onActionButtonClicked ({ user, action }) {
-      if (action === 'change_role') {
-        this.changeUserRole.user = user
-        this.changeUserRole.modal = true
+      if (action === 'edit_user') {
+        this.editUserModal.user = user
+        this.editUserModal.modal = true
 
         return
       }
@@ -87,12 +87,12 @@ export default {
       </h6>
     </template>
     <template #body>
-      <ChangeUserRoleModal
-        v-model="changeUserRole.modal"
-        :user="changeUserRole.user"
+      <EditUserModal
+        v-model="editUserModal.modal"
+        :user="editUserModal.user"
         :roles="roles"
-        @hidden="onChangeUserModalHidden"
-        @success="onChangeUserRoleSuccess"
+        @hidden="onEditModalHidden"
+        @success="onEditSuccess"
       />
 
       <DeleteUserModal

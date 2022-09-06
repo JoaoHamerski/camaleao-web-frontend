@@ -1,5 +1,7 @@
 <script>
-import { faPlus } from '@fortawesome/free-solid-svg-icons'
+import { faPlus, faSync} from '@fortawesome/free-solid-svg-icons'
+import { GetStatus, SyncStatus } from '@/graphql/Status.gql'
+import { GetAuthUserSectors, GetOrdersBySector} from '@/graphql/OrderControl.gql'
 
 import ModalStatusNew from '../partials/ModalStatusNew.vue'
 import ModalStatusAvailable from '../partials/ModalStatusAvailable.vue'
@@ -11,10 +13,9 @@ export default {
     ModalStatusAvailable,
     ModalWeeklyCalendarStatus
   },
-  props: {
-    statusList: {
-      type: Array,
-      default: () => []
+  apollo: {
+    status: {
+      query: GetStatus
     }
   },
   data () {
@@ -22,9 +23,19 @@ export default {
       modalNew: false,
       modalAvailableStatus: false,
       modalWeeklyCalendarStatus: false,
+      isSyncLoading: false,
       icons: {
-        faPlus
+        faPlus,
+        faSync
       }
+    }
+  },
+  computed: {
+    isQueryLoading () {
+      return !!this.$apollo.queries.status.loading
+    },
+    syncMessage () {
+      return 'Sincronize o Controle de Pedidos com as alterações feitas nos status'
     }
   },
   methods: {
@@ -42,6 +53,26 @@ export default {
     },
     onWeeklyCalendarStatusClick () {
       this.modalWeeklyCalendarStatus = true
+    },
+    async onSyncClick () {
+      this.isSyncLoading = true
+
+      try {
+        await this.$apollo.mutate({
+          mutation: SyncStatus,
+          refetchQueries: [
+            GetAuthUserSectors,
+            GetOrdersBySector
+          ],
+          awaitRefetchQueries: true
+        })
+
+        this.$toast.success('Sincronizado!')
+      } catch (error) {
+        this.$toast.error('Ops! Algo deu errado!')
+      }
+
+      this.isSyncLoading = false
     }
   }
 }
@@ -56,19 +87,20 @@ export default {
 
     <ModalStatusAvailable
       v-model="modalAvailableStatus"
-      :status-list="statusList"
+      :status-list="status"
       @success="onAvailableStatusSuccess"
     />
 
     <ModalWeeklyCalendarStatus
       v-model="modalWeeklyCalendarStatus"
-      :status-list="statusList"
+      :status-list="status"
     />
 
     <AppButton
       :icon="icons.faPlus"
       color="success"
       btn-class="fw-bold"
+      :disabled="isQueryLoading"
       @click.prevent="onNewStatusClick"
     >
       Novo status
@@ -76,9 +108,25 @@ export default {
 
     <div class="mt-2 mt-sm-0">
       <AppButton
+        v-tippy="{
+          placement: 'bottom'
+        }"
+        class="me-2"
+        :block="$isMobile"
+        btn-class="fw-bold"
+        :icon="icons.faSync"
+        :loading="isSyncLoading"
+        :content="syncMessage"
+        @click="onSyncClick"
+      >
+        Sincronizar
+      </AppButton>
+
+      <AppButton
         btn-class="fw-bold"
         class="me-2"
         :block="$isMobile"
+        :disabled="isQueryLoading"
         @click.prevent="onWeeklyCalendarStatusClick"
       >
         Status do calendário semanal
@@ -88,6 +136,7 @@ export default {
         class="mt-1 mt-sm-0"
         btn-class="fw-bold"
         :block="$isMobile"
+        :disabled="isQueryLoading"
         @click.prevent="onAvailableStatusClick"
       >
         Status disponíveis

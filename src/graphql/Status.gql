@@ -3,6 +3,10 @@ query GetStatus {
     id
     text
     is_available
+    order
+    sector {
+      name
+    }
   }
 }
 
@@ -32,4 +36,14 @@ mutation SetAvailableStatus ($ids: [ID]) {
     text
     is_available
   }
+}
+
+mutation ReorderStatus ($input: [StatusReorderInput]) {
+  statusReorder (input: $input) {
+    id
+  }
+}
+
+mutation SyncStatus {
+  statusSync
 }

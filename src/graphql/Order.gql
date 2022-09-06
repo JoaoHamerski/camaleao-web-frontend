@@ -23,6 +23,8 @@ fragment OrderParts on Order {
   art_paths
   size_paths
   payment_voucher_paths
+  has_order_control
+  final_status
   reminder
 }
 
@@ -83,6 +85,25 @@ fragment OrderClientParts on Order {
     ...OrderClientBranchParts
     ...OrderClientCityParts
     ...OrderClientShippingCompanyParts
+  }
+}
+
+fragment OrderConcludedStatusParts on Order {
+  concluded_status {
+    id
+    text
+    sector {
+      id
+      name
+    }
+
+    pivot {
+      user {
+        id
+        name
+      }
+      created_at
+    }
   }
 }
 
@@ -149,6 +170,7 @@ fragment OrderType on Order {
   ...ClothingTypesParts
   ...PaymentsPart
   ...NotesParts
+  ...OrderConcludedStatusParts
 }
 
 query GetOrdersSimplified (

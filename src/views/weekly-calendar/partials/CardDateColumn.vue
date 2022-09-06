@@ -289,14 +289,6 @@ export default {
 <style lang="scss" scoped>
 @import "@/sass/bootstrap-utilities";
 
-.flip-list {
-  transition: transform 0.5s;
-}
-
-.no-move {
-  transition: transform 0s;
-}
-
 .drag-enter-overlap {
   z-index: 20;
   color: $success;

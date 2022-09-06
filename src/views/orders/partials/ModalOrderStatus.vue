@@ -115,7 +115,7 @@ export default {
             class="form-check-label"
             :for="`radio__${option.id}__id`"
           >
-            {{ option.id }}. {{ option.text }}
+            {{ option.order + 1 }}. {{ option.text }}
           </label>
         </div>
       </div>
