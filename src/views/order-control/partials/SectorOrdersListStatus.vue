@@ -1,5 +1,5 @@
 <script>
-import { StepToStatus } from '@/graphql/OrderControl.gql'
+import { GetOrdersBySector, GetAuthUserSectors, StepToStatus } from '@/graphql/OrderControl.gql'
 
 import { faCheck, faClock, faUser } from '@fortawesome/free-solid-svg-icons'
 import { first, last, get, map } from 'lodash-es'
@@ -87,8 +87,15 @@ export default {
           variables: {
             orderId: order.id,
             statusId: status.id
-          }
+          },
+          refetchQueries: [
+            GetOrdersBySector,
+            GetAuthUserSectors
+          ],
+          awaitRefetchQueries: true
         })
+
+        this.$helpers.clearCacheFrom({fieldName: 'ordersBySector'})
 
         this.$toast.success('Status atualizado!')
       } catch (error) {
@@ -217,6 +224,7 @@ export default {
 
       &.step-confirmed {
         .step-label {
+          margin-right: .25rem;
           color: $success;
         }
 
@@ -290,6 +298,18 @@ export default {
           background: lighten($secondary, 30%);
         }
       }
+    }
+  }
+
+  @include media-breakpoint-down(sm) {
+    .step-number {
+      width: 2rem !important;
+      height: 2rem !important;
+    }
+
+    .step-label,
+    .step-info {
+      font-size: .7rem !important;
     }
   }
 </style>

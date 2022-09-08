@@ -1,4 +1,7 @@
 <script>
+import { faCheck } from '@fortawesome/free-solid-svg-icons'
+import { ToggleOrder } from '@/graphql/Order.gql'
+
 import SectorOrdersListImage from './SectorOrdersListImage.vue'
 import SectorOrdersListInfo from './SectorOrdersListInfo.vue'
 import SectorOrdersListStatus from './SectorOrdersListStatus.vue'
@@ -10,6 +13,10 @@ export default {
     SectorOrdersListStatus
   },
   props: {
+    canCloseOrders: {
+      type: Boolean,
+      default: false
+    },
     status: {
       type: Array,
       default: () => ([])
@@ -17,6 +24,48 @@ export default {
     orders: {
       type: Array,
       default: () => ([])
+    }
+  },
+  data () {
+    return {
+      isLoading: {
+        id: '',
+        value: false
+      },
+      icons: {
+        faCheck
+      }
+    }
+  },
+  methods: {
+    orderHasPendencies (order) {
+      return order.total_owing > 0
+    },
+    async onCloseOrderClick ({id}) {
+      this.isLoading = {
+        id,
+        value: true
+      }
+
+      try {
+        await this.$apollo.mutate({
+          mutation: ToggleOrder,
+          variables: {
+            id
+          }
+        })
+
+        this.$toast.success('Pedido fechado!')
+      } catch (error) {
+        const message = error.graphQLErrors[0].extensions.reason
+
+        this.$toast.error(message)
+      }
+
+      this.isLoading = {
+        id: '',
+        value: false
+      }
     }
   }
 }
@@ -29,8 +78,8 @@ export default {
       :key="order.id"
       class="card mb-1"
     >
-      <div class="card-body card-sector-body p-1 row gx-2">
-        <div class="col-3">
+      <div class="card-body card-sector-body p-1 row flex-column flex-sm-row gx-2">
+        <div class="col col-sm-3">
           <SectorOrdersListImage :image="order.art_paths" />
         </div>
         <div class="col">
@@ -39,6 +88,21 @@ export default {
             :order="order"
             :status="status"
             :concluded-status="order.concluded_status"
+          />
+        </div>
+        <div
+          v-if="canCloseOrders"
+          class="text-end"
+        >
+          <AppButton
+            rounded
+            :loading="isLoading.id === order.id && isLoading.value"
+            :color="orderHasPendencies(order) ? 'secondary' : 'success'"
+            outlined
+            btn-class="btn-sm"
+            :icon="icons.faCheck"
+            :disabled-message="orderHasPendencies(order) && 'Não é possível fechar pedido com pendência financeira'"
+            @click.prevent="onCloseOrderClick(order)"
           />
         </div>
       </div>

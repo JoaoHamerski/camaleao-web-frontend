@@ -8,6 +8,8 @@ fragment OrdersBySectorParts on Order {
   price
   art_paths
   created_at
+  states
+  total_owing
   concluded_status {
     id
     text
@@ -39,6 +41,7 @@ query GetAuthUserSectors {
     sector {
       id
       name
+      can_close_sector_orders
       status {
         id
         text

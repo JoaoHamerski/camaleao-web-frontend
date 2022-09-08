@@ -12,7 +12,7 @@ export default {
           return {
             first: 10,
             page: this.page,
-            sectorId: this.sectorId,
+            sectorId: this.sector.id,
             order_by: [{
               column: 'CREATED_AT',
               order: 'DESC'
@@ -36,13 +36,13 @@ export default {
       },
       page: 1,
       sectors: [],
+      sector: {},
       skip: true,
-      sectorId: ''
     }
   },
   computed: {
     getSectorStatus () {
-      const sector = this.sectors.filter(sector => sector.id === this.sectorId)
+      const sector = this.sectors.filter(sector => sector.id === this.sector.id)
 
       return sector[0].status
     },
@@ -50,9 +50,14 @@ export default {
       return !!this.$apollo.queries.ordersBySector.loading
     }
   },
+  watch: {
+    page () {
+      this.$refs.scrollableDiv.scrollTop = 0
+    }
+  },
   methods: {
     onSectorChange (sector) {
-      this.sectorId = sector.id
+      this.sector = sector
       this.skip = false
       this.page = 1
     },
@@ -71,7 +76,10 @@ export default {
         @sectors-loaded="onSectorsLoaded"
       />
     </div>
-    <div class="card-body position-relative card-sector-body custom-scrollbar">
+    <div
+      ref="scrollableDiv"
+      class="card-body position-relative card-sector-body custom-scrollbar smooth-scroll"
+    >
       <AppLoading v-show="isLoading" />
       <div
         v-if="!ordersBySector.data.length"
@@ -81,6 +89,7 @@ export default {
       </div>
       <SectorOrdersList
         v-else
+        :can-close-orders="sector.can_close_sector_orders"
         :status="getSectorStatus"
         :orders="ordersBySector.data"
       />

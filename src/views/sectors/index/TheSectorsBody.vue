@@ -35,6 +35,9 @@ export default {
     }
   },
   computed: {
+    isQueryLoading () {
+      return !!this.$apollo.queries.sectors.loading
+    },
     headers () {
       return [
         { text: 'Setor', value: 'name' },
@@ -81,6 +84,8 @@ export default {
     </template>
 
     <template #body>
+      <AppLoading v-show="isQueryLoading" />
+
       <SectorEditModal
         v-model="sectorEditModal.value"
         :sector="sectorEditModal.sector"

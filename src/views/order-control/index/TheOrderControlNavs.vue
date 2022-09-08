@@ -44,7 +44,10 @@ export default {
     <div>
       <ul
         v-if="authUserSectors.length"
-        class="nav nav-pills nav-fill"
+        class="nav nav-pills nav-fill flex-nowrap"
+        :class="{
+          'table-responsive': $isMobile
+        }"
       >
         <li
           v-for="sector in authUserSectors"
@@ -55,7 +58,8 @@ export default {
             class="nav-link"
             :class="{
               'active fw-bold': isSectorActive(sector.sector),
-              'bg-white': !isSectorActive(sector.sector)
+              'bg-white': !isSectorActive(sector.sector),
+              'text-nowrap': $isMobile
             }"
             href="#"
             @click.prevent="onSectorClick(sector.sector)"

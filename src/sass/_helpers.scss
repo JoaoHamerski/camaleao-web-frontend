@@ -98,3 +98,7 @@ $color in $theme-colors {
     color: $primary  !important;
   }
 }
+
+.smooth-scroll {
+  scroll-behavior: smooth;
+}
