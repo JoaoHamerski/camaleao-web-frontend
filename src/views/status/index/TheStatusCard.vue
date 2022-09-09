@@ -99,6 +99,11 @@ export default {
     onStatusDeleteSuccess () {
       this.modalDelete.value = false
       this.modalDelete.status = null
+    },
+    onReorder(value) {
+      if (!value) {
+        this.$apollo.queries.status.refetch()
+      }
     }
   }
 }
@@ -143,6 +148,7 @@ export default {
               id="reorder"
               v-model="reorder"
               class="me-2"
+              @input="onReorder"
             >
               <span class="fw-bold">Reordenar</span>
             </AppCheckboxSwitch>
