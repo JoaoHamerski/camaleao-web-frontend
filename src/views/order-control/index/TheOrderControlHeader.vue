@@ -1,12 +1,18 @@
 <script>
-import { faTasks } from '@fortawesome/free-solid-svg-icons'
+import { faTasks, faSyncAlt } from '@fortawesome/free-solid-svg-icons'
 
 export default {
   data () {
     return {
       icons: {
-        faTasks
+        faTasks,
+        faSyncAlt
       }
+    }
+  },
+  methods: {
+    onRefreshClick () {
+      this.$emit('refresh')
     }
   }
 }
@@ -14,12 +20,20 @@ export default {
 
 <template>
   <div class="card mb-2">
-    <div class="card-header bg-primary text-white fw-bold">
-      <FontAwesomeIcon
-        :icon="icons.faTasks"
-        fixed-width
+    <div class="card-header d-flex justify-content-between bg-primary text-white fw-bold">
+      <div>
+        <FontAwesomeIcon
+          :icon="icons.faTasks"
+          fixed-width
+        />
+        Controle de Pedidos
+      </div>
+      <AppButton
+        :icon="icons.faSyncAlt"
+        color="light"
+        btn-class="text-primary btn-sm"
+        @click="onRefreshClick"
       />
-      Controle de Pedidos
     </div>
   </div>
 </template>

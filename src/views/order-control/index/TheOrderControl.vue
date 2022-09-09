@@ -11,12 +11,17 @@ export default {
   components: {
     TheOrderControlHeader,
     TheOrderControlBody
+  },
+  methods: {
+    refresh () {
+      this.$refs.orderControlBody.refresh()
+    }
   }
 }
 </script>
 <template>
   <div class="py-2">
-    <TheOrderControlHeader />
-    <TheOrderControlBody />
+    <TheOrderControlHeader @refresh="refresh" />
+    <TheOrderControlBody ref="orderControlBody" />
   </div>
 </template>

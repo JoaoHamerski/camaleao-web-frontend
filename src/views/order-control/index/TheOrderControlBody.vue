@@ -56,6 +56,9 @@ export default {
     }
   },
   methods: {
+    refresh () {
+      this.$apollo.queries.ordersBySector.refetch()
+    },
     onSectorChange (sector) {
       this.sector = sector
       this.skip = false

@@ -1,10 +1,11 @@
 <script>
 import { faUserTag, faEdit, faTrashAlt } from '@fortawesome/free-solid-svg-icons'
-
+import { TippyComponent } from 'vue-tippy'
 import { GetSectors } from '@/graphql/Sector.gql'
 
 import SectorEditModal from '../partials/SectorEditModal.vue'
 import SectorDeleteModal from '../partials/SectorDeleteModal.vue'
+import SectorListUserTippy from '../partials/SectorListUserTippy.vue'
 
 export default {
   apollo: {
@@ -13,8 +14,10 @@ export default {
     }
   },
   components: {
+    Tippy: TippyComponent,
     SectorEditModal,
-    SectorDeleteModal
+    SectorDeleteModal,
+    SectorListUserTippy
   },
   data () {
     return {
@@ -120,18 +123,14 @@ export default {
               :key="user.id"
               class="list-group-item"
             >
-              <div>{{ user.name }}</div>
-              <div class="small text-secondary">
-                <span
-                  v-for="sector in user.sectors"
-                  :key="sector.id"
-                  class="badge bg-primary mx-1"
-                >
-                  <template v-if="item.id !== sector.id">
-                    {{ sector.name }}
-                  </template>
-                </span>
-              </div>
+              <Tippy>
+                <template #trigger>
+                  <div>
+                    {{ user.name }}
+                  </div>
+                </template>
+                <SectorListUserTippy v-bind="{user, item}" />
+              </Tippy>
             </li>
           </ul>
         </template>
