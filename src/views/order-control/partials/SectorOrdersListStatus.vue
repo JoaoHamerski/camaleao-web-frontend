@@ -121,7 +121,7 @@ export default {
         }"
       />
       <div class="step-progress-bar-placeholder" />
-      <ul class="step-progress">
+      <ul class="step-progress w-100 table-responsive">
         <li
           v-for="_status in status"
           :key="_status.id"
