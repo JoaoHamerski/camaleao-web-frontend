@@ -18,7 +18,10 @@ export default {
     <div class="fw-bold small mb-2">
       OUTROS SETORES DO USUÁRIO:
     </div>
-    <div class="small text-secondary">
+    <div
+      v-if="user.sectors.length > 1"
+      class="small text-secondary"
+    >
       <template v-for="sector in user.sectors">
         <span
           v-if="item.id !== sector.id"
@@ -28,6 +31,12 @@ export default {
           {{ sector.name }}
         </span>
       </template>
+    </div>
+    <div
+      v-else
+      class="small"
+    >
+      Nenhum setor relacionado
     </div>
   </div>
 </template>

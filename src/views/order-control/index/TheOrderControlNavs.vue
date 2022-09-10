@@ -23,6 +23,11 @@ export default {
       selectedSector: {}
     }
   },
+  computed: {
+    isLoading () {
+      return !!this.$apollo.queries.authUserSectors.loading
+    }
+  },
   watch: {
     selectedSector (value) {
       this.$emit('sector-change', value)
@@ -41,6 +46,7 @@ export default {
 
 <template>
   <div>
+    <AppLoading v-show="isLoading" />
     <div>
       <ul
         v-if="authUserSectors.length"

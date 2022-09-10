@@ -129,7 +129,9 @@ export default {
                     {{ user.name }}
                   </div>
                 </template>
-                <SectorListUserTippy v-bind="{user, item}" />
+                <SectorListUserTippy
+                  v-bind="{user, item}"
+                />
               </Tippy>
             </li>
           </ul>
