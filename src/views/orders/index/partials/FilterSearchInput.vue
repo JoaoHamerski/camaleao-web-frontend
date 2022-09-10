@@ -35,6 +35,7 @@ export default {
       placeholder="Por código..."
       :default-margin="false"
       @input="$emit('input', $event)"
+      @keypress.enter="onSearchClick"
     >
       <template #append>
         <AppButton
