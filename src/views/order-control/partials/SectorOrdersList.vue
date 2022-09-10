@@ -28,6 +28,10 @@ export default {
   },
   data () {
     return {
+      isStatusLoading: {
+        id: '',
+        value: false
+      },
       isLoading: {
         id: '',
         value: false
@@ -66,6 +70,9 @@ export default {
         id: '',
         value: false
       }
+    },
+    onStatusLoading (loading) {
+      this.isStatusLoading = loading
     }
   }
 }
@@ -78,7 +85,8 @@ export default {
       :key="order.id"
       class="card mb-1"
     >
-      <div class="card-body card-sector-body p-1 row flex-column flex-sm-row gx-2">
+      <div class="card-body position-relative card-sector-body p-1 row flex-column flex-sm-row gx-2">
+        <AppLoading v-show="isStatusLoading.id === order.id && isStatusLoading.value" />
         <div class="col col-sm-3">
           <SectorOrdersListImage :image="order.art_paths" />
         </div>
@@ -88,6 +96,7 @@ export default {
             :order="order"
             :status="status"
             :concluded-status="order.concluded_status"
+            @loading="onStatusLoading"
           />
         </div>
         <div

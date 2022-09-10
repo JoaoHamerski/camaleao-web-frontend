@@ -22,7 +22,6 @@ export default {
   },
   data () {
     return {
-      isLoading : false,
       icons: {
         faCheck,
         faClock,
@@ -56,16 +55,14 @@ export default {
       return concludedStatus
     },
     isStepConfirmable(status) {
-      const firstStatus = first(this.status)
-      const lastConfirmedStatus = last(this.concludedStatus)
-      const index = this.status.findIndex((_status) => _status.id === lastConfirmedStatus?.id)
-      const nextStatus = get(this.status, index + 1)
+      const statusId = status.id
+      const concludedStatusIds = map(this.concludedStatus, 'id')
 
-      if (index === -1 && (status.id === firstStatus.id)) {
-        return true
+      if (concludedStatusIds.includes(statusId)) {
+        return false
       }
 
-      return nextStatus?.id === status.id
+      return true
     },
     isStepConfirmed(status) {
       return this.concludedStatus.some(concluded => {
@@ -79,7 +76,10 @@ export default {
         return
       }
 
-      this.isLoading = true
+      this.$emit('loading', {
+        id: this.order.id,
+        value: true
+      })
 
       try {
         await this.$apollo.mutate({
@@ -102,7 +102,10 @@ export default {
         this.$toast.error('Ops! Algo deu errado')
       }
 
-      this.isLoading = false
+      this.$emit('loading', {
+        id: '',
+        value: false
+      })
     }
   }
 }
@@ -110,7 +113,7 @@ export default {
 
 <template>
   <div>
-    <div class="step-container mt-3">
+    <div class="step-container position-relative mt-3">
       <div
         class="step-progress-bar"
         :style="{
@@ -132,16 +135,7 @@ export default {
             class="step-number"
             @click.prevent="onStepClick(_status)"
           >
-            <div v-if="isLoading && isStepConfirmable(_status)">
-              <div
-                class="spinner-border"
-                role="status"
-              >
-                <span class="visually-hidden">Loading...</span>
-              </div>
-            </div>
             <FontAwesomeIcon
-              v-else
               :icon="icons.faCheck"
             />
           </div>
