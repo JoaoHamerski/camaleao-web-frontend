@@ -36,7 +36,7 @@ fetch(process.env.VUE_APP_GRAPHQL_HTTP, {
 
     fs.writeFile(FILE_PATH, JSON.stringify(possibleTypes), err => {
       if (err) {
-        console.error('Error writing possibleTypes.json', err)
+        console.error('Error writing fragmentTypes.json', err)
       } else {
         console.log('Fragment types successfully extracted!')
       }
