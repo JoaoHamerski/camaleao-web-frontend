@@ -20,7 +20,8 @@ import {
   faCut,
   faTruck,
   faTasks,
-  faUserTag
+  faUserTag,
+  faHandHoldingUsd
 } from '@fortawesome/free-solid-svg-icons'
 
 const ITEMS = {
@@ -127,7 +128,8 @@ const ITEMS = {
         this.FILIAIS,
         this.TIPOS_DE_ROUPAS,
         this.STATUS,
-        this.SETORES
+        this.SETORES,
+        this.ENTRADAS_BANCARIAS
       ]
     },
     USUARIOS: {
@@ -165,6 +167,12 @@ const ITEMS = {
       icon: faUserTag,
       route: { name: 'sectors.index' },
       condition: () => canView(ROLES.GERENCIA)
+    },
+    ENTRADAS_BANCARIAS: {
+      title: 'Entradas bancárias',
+      icon: faHandHoldingUsd,
+      route: { name: 'bank-entries.index' },
+      condition:() => canView(ROLES.GERENCIA)
     }
   },
   PRODUCAO_USUARIOS: {

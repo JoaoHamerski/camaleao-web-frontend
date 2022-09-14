@@ -24,6 +24,10 @@ function collapsibleCardBody (h, context) {
 }
 
 function renderCardBody (h, context) {
+  if (!context.$slots.body) {
+    return
+  }
+
   if (context.collapsible) {
     return collapsibleCardBody(h, context)
   }

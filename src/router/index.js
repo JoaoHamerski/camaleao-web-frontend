@@ -21,9 +21,9 @@ import myAccountRoutes from '@/views/my-account/routes'
 import weeklyProductionRoutes from '@/views/weekly-calendar/routes'
 import activitiesRoutes from '@/views/activities/routes'
 import statusRoutes from '@/views/status/routes'
-import developerRoutes from '@/views/developer/routes'
 import orderControlRoutes from '@/views/order-control/routes'
 import sectoresRoutes from '@/views/sectors/routes'
+import bankEntriesRoutes from '@/views/bank-entries/routes'
 
 import ErrorNotFound from '@/views/_errors/ErrorNotFound.vue'
 
@@ -79,6 +79,7 @@ const routes = [
   ...statusRoutes,
   ...orderControlRoutes,
   ...sectoresRoutes,
+  ...bankEntriesRoutes
 ]
 
 if (process.env.NODE_ENV === 'development') {
