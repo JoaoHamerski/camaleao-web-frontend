@@ -1,5 +1,5 @@
 <script>
-import { isEmpty, isNil } from 'lodash-es'
+import { isEmpty, isNil, isPlainObject, first } from 'lodash-es'
 
 export default {
   props: {
@@ -70,6 +70,13 @@ export default {
     }
   },
   methods: {
+    getValue (option) {
+      if (isPlainObject(first(this.options))) {
+        return option[this.valueProp]
+      }
+
+      return option
+    },
     renderLabel (option) {
       if (typeof this.labelProp === 'function') {
         return this.labelProp(option)
@@ -134,7 +141,7 @@ export default {
         <option
           v-for="(option, index) in options"
           :key="index"
-          :value="option[valueProp]"
+          :value="getValue(option)"
         >
           {{ renderLabel(option) }}
         </option>

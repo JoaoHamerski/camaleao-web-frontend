@@ -1,6 +1,6 @@
 /**
  * @file Arquivo para o plugin de helpers do vue disponível
- * através de $helpers variavel
+ * através de $helpers variável
  */
 import { apolloClientInstance } from '@/vue-apollo'
 import { GetConfig } from '@/graphql/Config.gql'

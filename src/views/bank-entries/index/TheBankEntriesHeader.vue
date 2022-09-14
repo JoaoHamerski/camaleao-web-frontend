@@ -11,13 +11,16 @@ export default {
     }
   },
   methods: {
-    handleFileLoad(event) {
-      console.log(event.target.result)
+    isValid(file) {
+      return file.type.includes('csv')
     },
     onImport(event) {
-      const reader = new FileReader()
-      reader.onload = this.handleFileLoad
-      reader.readAsText(event.target.files[0])
+      if (!event.target.files.length) {
+        return
+      }
+
+      this.$emit('files-imported', Array.from(event.target.files))
+      this.$refs.fileInput.value = ''
     }
   }
 }
@@ -27,9 +30,11 @@ export default {
   <div>
     <input
       id="inputImportFile"
+      ref="fileInput"
       hidden
       type="file"
       accept=".csv"
+      multiple
       @change="onImport"
     >
 
