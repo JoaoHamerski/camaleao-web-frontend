@@ -2,7 +2,7 @@
 import { truncate, isEmpty, omit } from 'lodash-es'
 import { maskDate, maskCurrencyBRL } from '@/utils/masks'
 import { handleError, handleSuccess } from '@/utils/forms'
-import { formatBytes, formatDatetime } from '@/utils/formatters'
+import { formatBytes, formatDatetime, formatCurrencyBRL } from '@/utils/formatters'
 import fileMixin from '@/mixins/filesMixin'
 import pasteFilesMixin from '@/mixins/pasteFilesMixin'
 import Form from '@/utils/Form'
@@ -23,6 +23,8 @@ import { GetConfig } from '@/graphql/Config.gql'
 import { GetUsers } from '@/graphql/User.gql'
 import ViewerItemsCardFile from '@/components/AppViewer/ViewerItemsCardFile.vue'
 
+const NUMBER_OF_QUERIES = 6
+
 export default {
   components: {
     ViewerItemsCardFile
@@ -30,16 +32,28 @@ export default {
   mixins: [fileMixin, pasteFilesMixin],
   apollo: {
     vias: {
-      query: vias
+      query: vias,
+      result () {
+        this.loadingQueries--
+      }
     },
     expenseTypes: {
-      query: GetExpenseTypes
+      query: GetExpenseTypes,
+      result () {
+        this.loadingQueries--
+      }
     },
     productTypes: {
-      query: GetProductTypes
+      query: GetProductTypes,
+      result () {
+        this.loadingQueries--
+      }
     },
     users: {
-      query: GetUsers
+      query: GetUsers,
+      result () {
+        this.loadingQueries--
+      }
     },
     productTypeExpense: {
       query: GetConfig,
@@ -51,7 +65,9 @@ export default {
       update ({configGet}) {
         return configGet
       },
-      fetchPolicy: 'network-only'
+      result () {
+        this.loadingQueries--
+      }
     },
     employeeExpense: {
       query: GetConfig,
@@ -63,7 +79,9 @@ export default {
       update({configGet}) {
         return configGet
       },
-      fetchPolicy: 'network-only'
+      result () {
+        this.loadingQueries--
+      }
     }
   },
   props: {
@@ -87,56 +105,35 @@ export default {
       expenseTypes: [],
       productTypes: [],
       users: [],
+      loadingQueries: NUMBER_OF_QUERIES,
       form: new Form({
         description: '',
+        value: 'R$ ',
+        date: '',
+        bank_uid: '',
+        receipt_path: '',
         expense_type_id: '',
         product_type_id: '',
         employee_id: '',
-        value: 'R$ ',
         expense_via_id: '',
-        receipt_path: '',
-        date: ''
       })
     }
   },
   computed: {
     isQueryLoading () {
-      return !!this.$apollo.queries.vias.loading
-        || !!this.$apollo.queries.expenseTypes.loading
-        || !!this.$apollo.queries.productTypes.loading
-        || !!this.$apollo.queries.users.loading
+      return this.loadingQueries > 0
     },
     expenseSelected () {
       return this.expenseTypes.find((type) => type.id === this.form.expense_type_id)
     }
   },
   watch: {
-    vias () {
-      if (this.isEdit && !this.$apollo.queries.vias.loading) {
-        this.$nextTick(() => {
-          this.form.expense_via_id = this.expense.expense_via_id
-        })
-      }
-    },
-    expenseTypes () {
-      if (this.isEdit && !this.$apollo.queries.expenseTypes.loading) {
-        this.$nextTick(() => {
-          this.form.expense_type_id = this.expense.expense_type_id
-        })
-      }
-    },
-    productTypes () {
-      if (this.isEdit && !this.$apollo.queries.productTypes.loading) {
-        this.$nextTick(() => {
-          this.form.product_type_id = this.expense.product_type_id
-        })
-      }
-    },
-    users () {
-      if (this.isEdit && !this.$apollo.queries.users.loading) {
-        this.$nextTick(() => {
-          this.form.employee_id = this.expense.employee_id
-        })
+    loadingQueries: {
+      immediate: true,
+      handler (value) {
+        if (!this.isQueryLoading && (this.isEdit || !isEmpty(this.expense))) {
+          this.populateForm()
+        }
       }
     },
     'form.receipt_path' () {
@@ -150,23 +147,21 @@ export default {
   },
   mounted () {
     this.attachEventListener()
-
-    if (this.isEdit) {
-      this.populateForm()
-    }
   },
   methods: {
     formatBytes,
     truncate,
     populateForm () {
+      // console.log(formatCurrencyBRL(this.expense.value))
       this.form = new Form({
-        ...omit(this.expense, ['id', 'date']),
+        ...omit(this.expense, ['id', 'value', 'date']),
         ...{
           date: formatDatetime(this.expense.date),
+          value: formatCurrencyBRL(this.expense.value),
           expense_type_id: '',
-          expense_via_id: '',
           product_type_id: '',
-          employee_id: ''
+          employee_id: '',
+          expense_via_id: '',
         }
       })
     },

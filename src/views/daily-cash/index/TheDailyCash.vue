@@ -130,7 +130,7 @@ export default {
 
         <DailyPaymentModal
           v-model="modalPayment"
-          @on-payment-success="onPaymentSuccess"
+          @success="onPaymentSuccess"
         />
 
         <ModalExpensesNew

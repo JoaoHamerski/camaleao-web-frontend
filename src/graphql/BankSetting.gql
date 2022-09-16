@@ -5,3 +5,10 @@ query GetBankSettings {
     settings
   }
 }
+
+mutation CreateBankSetting ($input: BankSettingsInput!) {
+  bankSettingsCreate (input: $input) {
+    id
+    settings
+  }
+}

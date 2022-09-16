@@ -25,6 +25,12 @@ export default {
     DailyPaymentFormOrder,
     SelectClientsFind
   },
+  props: {
+    payment: {
+      type: Object,
+      default: () => ({})
+    }
+  },
   data () {
     return {
       maskCurrencyBRL: maskCurrencyBRL(),
@@ -48,6 +54,8 @@ export default {
         },
         date: '',
         value: 'R$ ',
+        bank_uid: '',
+        note: '',
         via_id: '',
         is_sponsor: false,
         sponsorship_client_id: ''
@@ -59,9 +67,20 @@ export default {
       return !isEmpty(this.form.order.id) && !this.form.order.isNew
     }
   },
+  mounted () {
+    if (!isEmpty(this.payment)) {
+      this.populateForm()
+    }
+  },
   methods: {
     isEmpty,
     formatCurrencyBRL,
+    populateForm() {
+      this.form.bank_uid = this.payment.bank_uid
+      this.form.date = this.payment.date
+      this.form.value = formatCurrencyBRL(this.payment.value)
+      this.form.note = this.payment.note
+    },
     customLabelVias ({ name }) {
       return name
     },
@@ -119,104 +138,132 @@ export default {
     :form="form"
     :on-submit="onSubmit"
   >
-    <h6 class="horizontal-line text-center mb-4">
-      <span class="fw-bold">PARA</span>
-    </h6>
-    <DailyPaymentFormClient
-      :form="form"
-    />
-
-    <DailyPaymentFormOrder
-      :form="form"
-    />
-
-    <h6 class="horizontal-line text-center mt-5 mb-4">
-      <span class="fw-bold">PAGAMENTO</span>
-    </h6>
-
-    <div class="row justify-content-between mb-2">
-      <div class="col-7">
-        <AppInput
-          id="value"
-          v-model="form.value"
-          name="value"
-          value="R$ "
-          numeric
-          :error="form.errors.get('value')"
-          :mask="maskCurrencyBRL"
-        >
-          Valor
-          <template
-            #append
-          >
-            <AppButton
-              v-if="hasOrder"
-              :tooltip="formatCurrencyBRL(form.order.id.total_owing)"
-              outlined
-              @click.prevent="onRestValueClick"
-            >
-              Restante
-            </AppButton>
-          </template>
-        </AppInput>
-      </div>
-      <div class="col-5">
-        <AppSimpleSelect
-          id="via_id"
-          v-model="form.via_id"
-          :error="form.errors.get('via_id')"
-          name="via_id"
-          placeholder="Selecione uma via"
-          value-prop="id"
-          label-prop="name"
-          :options="vias"
-        >
-          Via
-        </AppSimpleSelect>
-      </div>
-    </div>
-
-    <div>
-      <AppCheckbox
-        id="is_sponsor"
-        v-model="form.is_sponsor"
-        name="is_sponsor"
-      >
-        Patrocínio
-        <FontAwesomeIcon
-          v-tippy
-          :icon="icons.faExclamationCircle"
-          class="text-primary"
-          fixed-width
-          content="Caso o pagamento seja efetuado por outro cliente que não é dono do pedido"
+    <AppContainer class="mb-3">
+      <template #title>
+        CLIENTE & PEDIDO
+      </template>
+      <template #body>
+        <DailyPaymentFormClient
+          :form="form"
         />
-      </AppCheckbox>
-    </div>
 
-    <div v-show="form.is_sponsor">
-      <SelectClientsFind
-        id="sponsorship_client_id"
-        v-model="form.sponsorship_client_id"
-        :error="form.errors.get('sponsorship_client_id')"
-      />
-    </div>
+        <DailyPaymentFormOrder
+          :form="form"
+        />
+      </template>
+    </AppContainer>
 
-    <div>
-      <AppInput
-        id="date"
-        v-model="form.date"
-        name="date"
-        :error="form.errors.get('date')"
-        placeholder="Data do pagamento"
-        :mask="maskDate"
-        today-button
-        type="date"
-        numeric
-        :disabled-message="form.is_sponsor ? 'Não é necessário informar a data em patrocínios' : false"
-      >
-        Data
-      </AppInput>
-    </div>
+    <AppContainer class="mb-3">
+      <template #title>
+        PAGAMENTO
+      </template>
+
+      <template #body>
+        <AppAlert
+          v-if="form.errors.get('bank_uid')"
+          color="danger"
+          small
+          @dismiss="form.errors.clear('bank_uid')"
+        >
+          {{ form.errors.get('bank_uid') }}
+        </AppAlert>
+
+        <div class="row justify-content-between mb-2">
+          <div class="col-7">
+            <AppInput
+              id="value"
+              v-model="form.value"
+              name="value"
+              value="R$ "
+              numeric
+              :error="form.errors.get('value')"
+              :mask="maskCurrencyBRL"
+            >
+              Valor
+              <template
+                #append
+              >
+                <AppButton
+                  v-if="hasOrder"
+                  :tooltip="formatCurrencyBRL(form.order.id.total_owing)"
+                  outlined
+                  @click.prevent="onRestValueClick"
+                >
+                  Restante
+                </AppButton>
+              </template>
+            </AppInput>
+          </div>
+          <div class="col-5">
+            <AppSimpleSelect
+              id="via_id"
+              v-model="form.via_id"
+              :error="form.errors.get('via_id')"
+              name="via_id"
+              placeholder="Selecione uma via"
+              value-prop="id"
+              label-prop="name"
+              :options="vias"
+            >
+              Via
+            </AppSimpleSelect>
+          </div>
+        </div>
+
+        <div>
+          <AppCheckbox
+            id="is_sponsor"
+            v-model="form.is_sponsor"
+            name="is_sponsor"
+          >
+            Patrocínio
+            <FontAwesomeIcon
+              v-tippy
+              :icon="icons.faExclamationCircle"
+              class="text-primary"
+              fixed-width
+              content="Caso o pagamento seja efetuado por outro cliente que não é dono do pedido"
+            />
+          </AppCheckbox>
+        </div>
+
+        <div v-show="form.is_sponsor">
+          <SelectClientsFind
+            id="sponsorship_client_id"
+            v-model="form.sponsorship_client_id"
+            :error="form.errors.get('sponsorship_client_id')"
+          />
+        </div>
+
+        <div>
+          <AppInput
+            id="date"
+            v-model="form.date"
+            name="date"
+            :error="form.errors.get('date')"
+            placeholder="Data do pagamento"
+            :mask="maskDate"
+            today-button
+            type="date"
+            numeric
+            :disabled-message="form.is_sponsor ? 'Não é necessário informar a data em patrocínios' : false"
+          >
+            Data
+          </AppInput>
+
+          <AppInput
+            id="note"
+            v-model="form.note"
+            name="note"
+            :error="form.errors.get('note')"
+            optional
+          >
+            Nota
+          </AppInput>
+        </div>
+      </template>
+    </AppContainer>
+
 
     <div class="row">
       <div class="col">

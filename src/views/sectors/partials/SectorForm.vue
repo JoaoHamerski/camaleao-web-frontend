@@ -15,19 +15,19 @@ export default {
     sectors: {
       query: GetSectors,
       result () {
-        this.isDataLoading--
+        this.loadingQueries--
       }
     },
     status: {
       query: GetStatus,
       result () {
-        this.isDataLoading--
+        this.loadingQueries--
       }
     },
     users: {
       query: GetUsers,
       result () {
-        this.isDataLoading--
+        this.loadingQueries--
       }
     }
   },
@@ -46,7 +46,7 @@ export default {
       status: [],
       users: [],
       sectors: [],
-      isDataLoading: NUMBER_OF_QUERIES,
+      loadingQueries: NUMBER_OF_QUERIES,
       isLoading: false,
       form: new Form({
         name: '',
@@ -56,7 +56,7 @@ export default {
     }
   },
   watch: {
-    isDataLoading: {
+    loadingQueries: {
       immediate: true,
       handler (value) {
         if (!value && this.isEdit) {
@@ -152,7 +152,7 @@ export default {
     :on-submit="submit"
     :form="form"
   >
-    <AppLoading v-show="isDataLoading" />
+    <AppLoading v-show="loadingQueries" />
     <AppInput
       id="name"
       v-model="form.name"

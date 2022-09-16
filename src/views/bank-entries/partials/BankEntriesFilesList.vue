@@ -31,18 +31,14 @@ export default {
 
 <template>
   <div>
-    <ul class="list-group list-group-horizontal">
+    <ul class="list-group">
       <button
         v-for="(file, index) in fileList"
         :key="`${index}${file.name}`"
         class="list-group-item list-group-item-action d-flex justify-content-between p-0 small"
         @click.prevent="onFileClick(file)"
       >
-        <div
-          v-tippy
-          class="d-flex align-items-center p-2 h-100 w-100"
-          :content="file.name"
-        >
+        <div class="d-flex align-items-center p-2 h-100 w-100">
           <span class="text-primary fw-bold">
             <FontAwesomeIcon
               :icon="icons.faArrowCircleDown"

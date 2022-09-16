@@ -1,14 +1,11 @@
 <script>
 import { faCog } from '@fortawesome/free-solid-svg-icons'
-import Form from '@/utils/Form'
-
-const SYSTEM_FIELDS = [
-  { key: 'value', text: 'Valor' },
-  { key: 'date', text: 'Data' },
-  { key: 'description', text: 'Descrição' },
-]
+import BankSettingsForm from './BankSettingsForm.vue'
 
 export default {
+  components: {
+    BankSettingsForm
+  },
   props: {
     sampleRow: {
       type: Object,
@@ -25,36 +22,14 @@ export default {
   },
   data () {
     return {
-      SYSTEM_FIELDS,
-      form: new Form({
-        name: '',
-        fields: {
-          value: '',
-          date: '',
-          description: ''
-        }
-      }),
       icons: {
         faCog
       }
     }
   },
   methods: {
-    getHintMessage(key) {
-      if (key === 'value') {
-        return 'Valor monetário da entrada.'
-      }
-
-      if (key === 'date') {
-        return 'Data que foi dada a entrada.'
-      }
-
-      if (key === 'description') {
-        return 'Campo usado como descrição da entrada.'
-      }
-    },
-    onSubmit () {
-      //
+    onSuccess () {
+      this.$emit('success')
     }
   }
 }
@@ -90,7 +65,7 @@ export default {
       </div>
 
       <AppContainer
-        class="mt-2"
+        class="my-2"
         collapsible
         :value="true"
       >
@@ -108,62 +83,11 @@ export default {
         </template>
       </AppContainer>
 
-      <div class="mt-2">
-        <AppForm
-          v-if="value"
-          :form="form"
-          :on-submit="onSubmit"
-        >
-          <template
-            v-for="field in SYSTEM_FIELDS"
-          >
-            <AppSimpleSelect
-              :key="field.key"
-              v-model="form.fields[field.key]"
-              placeholder="Selecione uma opção do arquivo"
-              :name="field.key"
-              :options="fields"
-            >
-              {{ field.text }}
-
-              <template #hint>
-                {{ getHintMessage(field.key) }}
-              </template>
-            </AppSimpleSelect>
-          </template>
-
-          <AppInput
-            id="name"
-            v-model="form.name"
-            name="name"
-            placeholder="Digite um nome para a configuração..."
-          >
-            Nome da configuração
-          </AppInput>
-
-          <div class="row mt-4">
-            <div class="col">
-              <AppButton
-                block
-                color="success"
-                btn-class="fw-bold"
-              >
-                Salvar
-              </AppButton>
-            </div>
-            <div class="col">
-              <AppButton
-                type="button"
-                block
-                color="light"
-                data-bs-dismiss="modal"
-              >
-                Fechar
-              </AppButton>
-            </div>
-          </div>
-        </AppForm>
-      </div>
+      <BankSettingsForm
+        v-if="value"
+        :fields="fields"
+        @success="onSuccess"
+      />
     </template>
   </AppModal>
 </template>

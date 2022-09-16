@@ -7,17 +7,24 @@ import { GetBankSettings } from '@/graphql/BankSetting.gql'
 import BankEntriesFilesList from '../partials/BankEntriesFilesList.vue'
 import BankEntriesTables from '../partials/BankEntriesTables.vue'
 import BankSettingsHandleModal from '../partials/BankSettingsHandleModal.vue'
+import BankModalEntry from '../partials/BankModalEntry.vue'
 
 export default {
   apollo: {
     bankSettings: {
-      query: GetBankSettings
+      query: GetBankSettings,
+      update ({ bankSettings }) {
+        return bankSettings.map((item) => {
+          return {...item, settings: JSON.parse(item.settings)}
+        })
+      }
     }
   },
   components: {
     BankEntriesFilesList,
     BankEntriesTables,
     BankSettingsHandleModal,
+    BankModalEntry
   },
   props: {
     fileList: {
@@ -30,7 +37,13 @@ export default {
       fileToLoad: null,
       entries: [],
       bankSettings: [],
-      bankSettingsModal: {
+      modalEntry: {
+        value: false,
+        item: {},
+        fields: {},
+        isExpense: false,
+      },
+      modalBankSettings: {
         value: false,
         fields: [],
         sampleRow: {}
@@ -41,12 +54,17 @@ export default {
     }
   },
   methods: {
-    hasBankSettings(fields) {
-      if (!this.bankSettings.length) {
-        return false
-      }
-
-      // More...
+    fieldsMatch (fields, bankFields) {
+      return fields.every(
+        (field, index) => bankFields[index] === field
+      )
+    },
+    getBankSettings (fields) {
+      return this.bankSettings.find(bank => {
+        if (this.fieldsMatch(fields, bank.settings.bank_fields)) {
+          return bank
+        }
+      })
     },
     handleFile(file) {
       const csv = file.target.result
@@ -54,21 +72,21 @@ export default {
         header: true,
         transformHeader: (field) => deburr(field).toLowerCase()
       })
+      const bankSettings = this.getBankSettings(parsed.meta.fields)
 
-      console.log(parsed.data)
-      if (!this.hasBankSettings(parsed.meta.fields)) {
-        this.bankSettingsModal.fields = parsed.meta.fields
-        this.bankSettingsModal.sampleRow = first(parsed.data)
-        this.bankSettingsModal.value = true
+      if (!bankSettings) {
+        this.modalBankSettings.fields = parsed.meta.fields
+        this.modalBankSettings.sampleRow = first(parsed.data)
+        this.modalBankSettings.value = true
         return
       }
 
-      // this.entries.push({
-      //   id: +new Date(),
-      //   file: this.fileToLoad,
-      //   data: parsed.data,
-      //   fields: parsed.meta.fields
-      // })
+      this.entries.push({
+        id: +new Date(),
+        file: this.fileToLoad,
+        data: parsed.data,
+        settings: bankSettings.settings
+      })
     },
     onFileLoad(file) {
       const reader = new FileReader()
@@ -78,6 +96,40 @@ export default {
     },
     onFileRemove({file, index}) {
       this.$emit('file-remove', {file, index})
+    },
+    onAddEntry ({item, fields, isExpense}) {
+      Object.assign(
+        this.modalEntry,
+        {
+          item,
+          fields,
+          isExpense,
+          value: true
+        }
+      )
+    },
+    onModalEntryHidden () {
+      Object.assign(
+        this.modalEntry,
+        {
+          item: {},
+          fields: {},
+          isExpense: false,
+          value: false
+        }
+      )
+    },
+    onBankSettingsSuccess () {
+      Object.assign(
+        this.modalBankSettings,
+        {
+          value: false,
+          fields: [],
+          sampleRow: {}
+        }
+      )
+
+      this.$apollo.queries.bankSettings.refetch()
     }
   }
 }
@@ -85,10 +137,19 @@ export default {
 
 <template>
   <div>
+    <BankModalEntry
+      v-model="modalEntry.value"
+      :item="modalEntry.item"
+      :fields="modalEntry.fields"
+      :is-expense="modalEntry.isExpense"
+      @hidden="onModalEntryHidden"
+    />
+
     <BankSettingsHandleModal
-      v-model="bankSettingsModal.value"
-      :sample-row="bankSettingsModal.sampleRow"
-      :fields="bankSettingsModal.fields"
+      v-model="modalBankSettings.value"
+      :sample-row="modalBankSettings.sampleRow"
+      :fields="modalBankSettings.fields"
+      @success="onBankSettingsSuccess"
     />
 
     <AppCard class="mt-3">
@@ -117,6 +178,7 @@ export default {
           <BankEntriesTables
             class="mt-3"
             :entries="entries"
+            @add-entry="onAddEntry"
           />
         </div>
       </template>

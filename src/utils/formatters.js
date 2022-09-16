@@ -1,4 +1,4 @@
-import { isNil } from 'lodash-es'
+import { isNil, startsWith } from 'lodash-es'
 import { DateTime } from 'luxon'
 import accounting from 'accounting-js'
 
@@ -41,6 +41,10 @@ export const formatCurrencyBRL = (str, highlightNumerator = false) => {
     format: '%s %v'
   })
 
+  if (startsWith(str, 'R$')) {
+    return str
+  }
+
   if (highlightNumerator) {
     const numerator = formatted.split(',')[0]
     const denominator = formatted.split(',')[1]
@@ -54,6 +58,12 @@ export const formatCurrencyBRL = (str, highlightNumerator = false) => {
 
 export const formatDatetime = (str, format = 'dd/MM/y') => {
   if (isNil(str)) {
+    return str
+  }
+
+  const formatted = DateTime.fromFormat(str, format)
+
+  if (formatted.isValid) {
     return str
   }
 

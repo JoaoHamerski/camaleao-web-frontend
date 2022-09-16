@@ -12,13 +12,9 @@ export default {
       type: Boolean,
       default: false
     },
-    expenseTypes: {
-      type: Array,
-      default: () => ([])
-    },
-    vias: {
-      type: Array,
-      default: () => ([])
+    expense: {
+      type: Object,
+      default: () => ({})
     }
   },
   data () {
@@ -55,8 +51,7 @@ export default {
       <ExpensesForm
         v-if="value"
         key="registerForm"
-        :vias="vias"
-        :expense-types="expenseTypes"
+        :expense="expense"
         @success="onSuccess"
       />
     </template>

@@ -1,23 +1,7 @@
 <script>
 import { faPlus } from '@fortawesome/free-solid-svg-icons'
 import { formatCurrencyBRL } from '@/utils/formatters'
-
-const HEADERS = {
-  'data': {
-    value: 'data',
-    text: 'Data',
-  },
-  'valor': {
-    value: 'valor',
-    text: 'Valor',
-    format: 'currencyBRL'
-  },
-  'descricao': {
-    value: 'descricao',
-    text: 'Descrição',
-    wrap: true
-  }
-}
+import { DateTime } from 'luxon'
 
 export default {
   props: {
@@ -35,17 +19,36 @@ export default {
   },
   methods: {
     formatCurrencyBRL,
-    addItemToEntry(item) {
-      console.log(item)
-    },
-    getHeaders(fields) {
-      const headers = fields.map((field) => HEADERS[field])
-      headers.unshift({
-        value: 'entry',
-        text: 'Ação'
-      })
+    getDate(item, { settings }) {
+      const dateFormat = settings.date_format.replace('mm', 'MM')
+      const date = DateTime.fromFormat(
+        item[settings.fields.date],
+        dateFormat
+      )
 
-      return headers.filter(header => !!header)
+      return date.toFormat('dd/MM/yyyy')
+    },
+    tableRowClass(item, {settings: { fields }}) {
+      if (item[fields.value] > 0) {
+        return 'table-success'
+      }
+
+      return 'table-danger'
+    },
+    addItemToEntry(item, { settings: { fields }}) {
+      this.$emit('add-entry', {
+        item,
+        fields,
+        isExpense: item[fields.value] < 0,
+      })
+    },
+    getHeaders({ settings: { fields } }) {
+      return [
+        { value: 'action', text: ''},
+        { value: fields.value, text: 'Valor', format: 'currencyBRL' },
+        { value: fields.date, text: 'Data' },
+        { value: fields.description, text: 'Descrição', wrap: true }
+      ]
     }
   }
 }
@@ -65,21 +68,26 @@ export default {
       </template>
       <template #body>
         <AppTable
-          :headers="getHeaders(entry.fields)"
+          :headers="getHeaders(entry)"
           :items="entry.data"
+          :row-class="(item) => tableRowClass(item, entry)"
         >
-          <template #[`items.entry`]="{ item }">
+          <template #[`items.action`]="{ item }">
             <AppButton
               v-tippy
               :content="item.valor > 0 ? 'Entrada' : 'Saída'"
               btn-class="btn-sm"
               :color="item.valor > 0 ? 'success' : 'danger'"
               :icon="icons.faPlus"
-              @click.prevent="addItemToEntry(item)"
+              @click.prevent="addItemToEntry(item, entry)"
             />
           </template>
 
-          <template #[`items.valor`]="{ item }">
+          <template #[`items.${entry.settings.fields.date}`]="{ item }">
+            {{ getDate(item, entry) }}
+          </template>
+
+          <template #[`items.${entry.settings.fields.value}`]="{ item }">
             <span
               class="fw-bold"
               :class="{

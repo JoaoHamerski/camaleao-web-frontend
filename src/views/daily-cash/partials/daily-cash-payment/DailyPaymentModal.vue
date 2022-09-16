@@ -7,6 +7,10 @@ export default {
     DailyPaymentForm
   },
   props: {
+    payment: {
+      type: Object,
+      default: () => ({})
+    },
     value: {
       type: Boolean,
       default: false
@@ -21,7 +25,7 @@ export default {
   },
   methods: {
     onSuccess () {
-      this.$emit('on-payment-success')
+      this.$emit('success')
     }
   }
 }
@@ -45,7 +49,10 @@ export default {
     </template>
 
     <template #body>
-      <DailyPaymentForm @success="onSuccess" />
+      <DailyPaymentForm
+        :payment="payment"
+        @success="onSuccess"
+      />
     </template>
   </AppModal>
 </template>
