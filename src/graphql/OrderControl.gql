@@ -77,3 +77,7 @@ mutation StepToStatus ($orderId: ID! $statusId: ID!) {
     ...OrdersBySectorParts
   }
 }
+
+mutation GetDuplicatedEntries ($bank_uids: [String!]!) {
+  bankCheckDuplicatedEntries (bank_uid: $bank_uids)
+}

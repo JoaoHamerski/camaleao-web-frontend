@@ -44,3 +44,15 @@ $vt-color-error: $danger;
     }
   }
 }
+
+.Vue-Toastification__toast--warning {
+  color: lighten($dark, 5%);
+
+  .Vue-Toastification__close-button {
+    color: $dark
+  }
+}
+
+.Vue-Toastification__toast--info {
+  background-color: $primary;
+}

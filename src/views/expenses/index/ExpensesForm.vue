@@ -269,6 +269,14 @@ export default {
   >
     <AppLoading v-show="isQueryLoading" />
 
+    <AppAlert
+      v-if="form.errors.get('bank_uid')"
+      color="warning"
+      small
+    >
+      {{ form.errors.get('bank_uid') }}
+    </AppAlert>
+
     <AppInput
       id="description"
       v-model="form.description"

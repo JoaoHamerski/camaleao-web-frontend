@@ -1,5 +1,6 @@
 <script>
-import { faCog } from '@fortawesome/free-solid-svg-icons'
+import { random } from 'lodash-es'
+import { faCog, faSyncAlt} from '@fortawesome/free-solid-svg-icons'
 import BankSettingsForm from './BankSettingsForm.vue'
 
 export default {
@@ -7,9 +8,9 @@ export default {
     BankSettingsForm
   },
   props: {
-    sampleRow: {
-      type: Object,
-      default: () => ({})
+    samples: {
+      type: Array,
+      default: () => []
     },
     fields: {
       type: Array,
@@ -23,11 +24,28 @@ export default {
   data () {
     return {
       icons: {
-        faCog
-      }
+        faCog,
+        faSyncAlt
+      },
+      sampleItem: 0,
+    }
+  },
+  computed: {
+    sample() {
+      return this.samples[this.sampleItem]
     }
   },
   methods: {
+    regenerateSampleItem () {
+      const sampleItem = random(0, this.samples.length - 1)
+
+      if (sampleItem === this.sampleItem) {
+        this.regenerateSampleItem()
+        return
+      }
+
+      this.sampleItem = sampleItem
+    },
     onSuccess () {
       this.$emit('success')
     }
@@ -65,6 +83,7 @@ export default {
       </div>
 
       <AppContainer
+        v-if="value"
         class="my-2"
         collapsible
         :value="true"
@@ -73,8 +92,21 @@ export default {
           Exemplo de dados no arquivo
         </template>
         <template #body>
+          <div class="mb-2">
+            <span
+              class="clickable link-primary small"
+              @click.prevent="regenerateSampleItem"
+            >
+              <FontAwesomeIcon
+                :icon="icons.faSyncAlt"
+                fixed-width
+              />
+              Carregar outro exemplo
+            </span>
+          </div>
+
           <div
-            v-for="(field, key) in sampleRow"
+            v-for="(field, key) in sample"
             :key="field"
             class="small"
           >

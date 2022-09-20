@@ -34,18 +34,21 @@ export const handleError = (context, error, extraOptions = {}) => {
   })
 }
 
+const emitSuccess = (context, options) => {
+  context.$toast.success(options.message)
+
+  if ('payload' in options) {
+    context.$emit('success', options.payload)
+    return
+  }
+
+  context.$emit('success')
+}
+
 export const handleSuccess = (context, options = {}) => {
   if ('resetForm' in options) {
     context.form.reset()
   }
 
-  if ('message' in options) {
-    context.$toast.success(options.message)
-  }
-
-  if ('payload' in options) {
-    context.$emit('success', options.payload)
-  } else {
-    context.$emit('success')
-  }
+  emitSuccess(context, options)
 }

@@ -21,6 +21,12 @@ export default {
 
       this.$emit('files-imported', Array.from(event.target.files))
       this.$refs.fileInput.value = ''
+    },
+    onPaymentClick() {
+      this.$emit('open-payment-modal')
+    },
+    onExpenseClick() {
+      this.$emit('open-expense-modal')
     }
   }
 }
@@ -51,6 +57,7 @@ export default {
       btn-class="btn-lg fw-bold"
       color="success"
       :icon="icons.faPlus"
+      @click.prevent="onPaymentClick"
     >
       Entrada
     </AppButton>
@@ -58,6 +65,7 @@ export default {
       btn-class="btn-lg fw-bold"
       color="danger"
       :icon="icons.faPlus"
+      @click.prevent="onExpenseClick"
     >
       Saída
     </AppButton>

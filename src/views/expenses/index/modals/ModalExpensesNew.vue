@@ -26,7 +26,7 @@ export default {
   },
   methods: {
     onSuccess () {
-      this.$emit('success')
+      this.$emit('success', this.expense)
     }
   }
 }

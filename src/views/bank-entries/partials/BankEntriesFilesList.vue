@@ -4,6 +4,10 @@ import { formatBytes } from '@/utils/formatters'
 
 export default {
   props: {
+    isLoading: {
+      type: Boolean,
+      default: false
+    },
     fileList: {
       type: Array,
       required: true
@@ -36,10 +40,17 @@ export default {
         v-for="(file, index) in fileList"
         :key="`${index}${file.name}`"
         class="list-group-item list-group-item-action d-flex justify-content-between p-0 small"
+        :class="isLoading && 'disabled'"
         @click.prevent="onFileClick(file)"
       >
         <div class="d-flex align-items-center p-2 h-100 w-100">
-          <span class="text-primary fw-bold">
+          <span
+            class="fw-bold"
+            :class="{
+              'text-primary': !isLoading,
+              'text-secondary': isLoading
+            }"
+          >
             <FontAwesomeIcon
               :icon="icons.faArrowCircleDown"
             />

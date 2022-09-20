@@ -101,6 +101,7 @@ export default {
         placeholder="Selecione uma opção do arquivo"
         :name="field.key"
         :options="fields"
+        :error="form.errors.get(`fields.${field.key}`)"
       >
         {{ field.text }}
 
@@ -116,6 +117,7 @@ export default {
           class="small"
           name="dateFormat"
           :options="datesRadioOptions"
+          :error="form.errors.get('date_format')"
         >
           Formato da data:
           <template #hint>

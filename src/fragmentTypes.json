@@ -1,1 +1,1 @@
-{"Subject":["Order","Client","Payment","Note","Expense","User","City","ShippingCompany","Branch","ClothingType","CommissionUser","AppConfig"],"Causer":["User"]}
+{"Subject":["Order","Client","Payment","Note","Expense","User","City","ShippingCompany","Branch","ClothingType","CommissionUser","AppConfig"],"Causer":["User"],"Entry":["Payment","Expense"]}
