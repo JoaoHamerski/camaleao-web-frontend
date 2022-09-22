@@ -60,11 +60,11 @@ function renderBody (h, context) {
   return (
     <div
       ref="body"
-      class={classNames('container-body position-relative', {
+      class={classNames('container-body', {
         collapse: context.collapsible
       })}
     >
-      <div class={classNames(['py-3', {
+      <div class={classNames(['py-3 position-relative', {
         'px-3': context.bodyPadding
       }])}
       >

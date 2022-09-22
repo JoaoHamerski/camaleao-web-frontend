@@ -82,6 +82,7 @@ export default {
 
 <template>
   <div>
+    <span class="badge bg-primary mb-2">{{ fileEntry.entries.length }} entradas carregadas</span>
     <AppCheckboxSwitch
       id="hideDuplicatesCheckbox"
       v-model="hideDuplicates"

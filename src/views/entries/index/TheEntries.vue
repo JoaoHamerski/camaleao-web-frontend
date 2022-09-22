@@ -41,8 +41,11 @@ export default {
           }
         })
 
+        const parsedData = JSON.parse(entries)
+        const formattedEntries = Object.entries(parsedData).map(([prop, obj]) => ({...obj}))
+
         this.entry = {
-          entries: JSON.parse(entries),
+          entries: formattedEntries,
           filename: entry.filename,
           created_at: entry.created_at
         }
