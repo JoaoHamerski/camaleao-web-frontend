@@ -4,10 +4,9 @@ import { take, deburr, isEmpty } from 'lodash'
 import csvParser from 'papaparse'
 import { GetBankSettings } from '@/graphql/BankSetting.gql'
 
-import BankEntriesFilesList from '../partials/BankEntriesFilesList.vue'
-import BankEntriesTables from '../partials/BankEntriesTables.vue'
+import BankEntryTable from '../partials/BankEntryTable.vue'
 import BankSettingsHandleModal from '../partials/BankSettingsHandleModal.vue'
-import BankModalEntry from '../partials/BankModalEntry.vue'
+import BankEntryUploadModal from '../partials/BankEntryUploadModal.vue'
 
 export default {
   apollo: {
@@ -21,28 +20,20 @@ export default {
     }
   },
   components: {
-    BankEntriesFilesList,
-    BankEntriesTables,
+    BankEntryTable,
     BankSettingsHandleModal,
-    BankModalEntry
+    BankEntryUploadModal
   },
   props: {
-    fileList: {
-      type: Array,
-      required: true
-    }
+    fileImported: undefined
   },
   data () {
     return {
-      fileToLoad: null,
-      entries: [],
+      entry: {},
       bankSettings: [],
-      isLoadingFile: false,
-      modalEntry: {
+      uploadEntryModal: {
         value: false,
-        item: {},
-        fields: {},
-        isExpense: false,
+        entry: {}
       },
       modalBankSettings: {
         value: false,
@@ -50,7 +41,7 @@ export default {
         samples: []
       },
       icons: {
-        faHandHoldingUsd
+        faHandHoldingUsd,
       }
     }
   },
@@ -60,6 +51,7 @@ export default {
     }
   },
   methods: {
+    isEmpty,
     fieldsMatch (fields, bankFields) {
       return fields.every(
         (field, index) => bankFields[index] === field
@@ -75,20 +67,23 @@ export default {
     isFirstPropEmpty(item) {
       return isEmpty(item[Object.keys(item)[0]])
     },
-    getFormattedData (data) {
+    getFormattedData (data, {fields}) {
       const filtered = data.filter(item => !this.isFirstPropEmpty(item))
-
-      return filtered.map(item => ({...item, isDuplicated: false}))
-    },
-    isAlreadyLoaded() {
-      return this.entries.some(entry => entry.file.name === this.fileToLoad.name)
-    },
-    handleFile(file) {
-      if (this.isAlreadyLoaded()) {
-        this.$toast.warning('Este arquivo já está carregado')
-        return
+      const additionalOptions = {
+        isDuplicated: false,
+        isVisible: true,
+        display: true,
       }
 
+      return filtered.map(item => ({
+        bank_uid: item[fields.bank_uid],
+        date: item[fields.date],
+        description: item[fields.description],
+        value: item[fields.value],
+        ...additionalOptions
+      }))
+    },
+    handleFile(file) {
       const csv = file.target.result
       const parsed = csvParser.parse(csv, {
         header: true,
@@ -103,64 +98,17 @@ export default {
         return
       }
 
-      const entry = {
+      this.entry = {
         id: +new Date(),
-        file: this.fileToLoad,
-        data: this.getFormattedData(parsed.data),
+        file: this.fileImported,
+        data: this.getFormattedData(parsed.data, bankSettings.settings),
         settings: bankSettings.settings
       }
-
-      this.entries.push(entry)
     },
-    onFileLoad(file) {
+    loadFile(file) {
       const reader = new FileReader()
-      this.fileToLoad = file
       reader.onload = this.handleFile
       reader.readAsText(file)
-    },
-    onFileRemove({file, index}) {
-      const entryIndex = this.entries.findIndex(entry => {
-        return entry.file.name === file.name
-      })
-
-      if (entryIndex !== -1) {
-        this.entries.splice(entryIndex, 1)
-      }
-
-      this.$emit('file-remove', {file, index})
-    },
-    onAddEntry ({item, fields, isExpense}) {
-      Object.assign(
-        this.modalEntry,
-        {
-          item,
-          fields,
-          isExpense,
-          value: true
-        }
-      )
-    },
-    onModalEntryHidden () {
-      Object.assign(
-        this.modalEntry,
-        {
-          item: {},
-          fields: {},
-          isExpense: false,
-          value: false
-        }
-      )
-    },
-    onModalEntrySuccess (item) {
-      this.entries.forEach(entry => {
-        const index = entry.data.findIndex(
-          _item => _item[entry.settings.fields.bank_uid] === item.bank_uid
-        )
-
-        if (index !== -1) {
-          entry.data.splice(index, 1)
-        }
-      })
     },
     onBankSettingsSuccess () {
       Object.assign(
@@ -174,27 +122,37 @@ export default {
 
       this.$apollo.queries.bankSettings.refetch()
     },
-    onDuplicatedEntries({id: entryId, duplicates}) {
-      const entry = this.entries.find(entry => entry.id === entryId)
-
-      entry.data.forEach(item => {
-        if (duplicates.includes(item[entry.settings.fields.bank_uid])) {
+    onDuplicatedEntries(duplicates) {
+      this.entry.data.forEach(item => {
+        if (duplicates.includes(item.bank_uid)) {
           item.isDuplicated = true
         }
       })
     },
-    onRemoveDuplicates({id: entryId }) {
-      const entry = this.entries.find(entry => entry.id === entryId)
-
-      entry.data.forEach(item => {
-        const index = entry.data.findIndex(
+    onRemoveDuplicates() {
+      this.entry.data.forEach(item => {
+        const index = this.entry.data.findIndex(
           _item => _item.isDuplicated
         )
 
         if (index !== -1) {
-          entry.data.splice(index, 1)
+          this.entry.data.splice(index, 1)
         }
       })
+    },
+    onUploadFileClick() {
+      this.uploadEntryModal.value = true
+      this.uploadEntryModal.entry = this.entry
+    },
+    onSuccessUploadEntry() {
+      this.uploadEntryModal.value = false
+      this.uploadEntryModal.entry = {}
+
+      this.onClearFile()
+    },
+    onClearFile () {
+      this.entry = {}
+      this.$emit('clear-file')
     }
   }
 }
@@ -202,20 +160,17 @@ export default {
 
 <template>
   <div>
-    <BankModalEntry
-      v-model="modalEntry.value"
-      :item="modalEntry.item"
-      :fields="modalEntry.fields"
-      :is-expense="modalEntry.isExpense"
-      @success="onModalEntrySuccess"
-      @hidden="onModalEntryHidden"
-    />
-
     <BankSettingsHandleModal
       v-model="modalBankSettings.value"
       :samples="modalBankSettings.samples"
       :fields="modalBankSettings.fields"
       @success="onBankSettingsSuccess"
+    />
+
+    <BankEntryUploadModal
+      v-model="uploadEntryModal.value"
+      :entry="uploadEntryModal.entry"
+      @success="onSuccessUploadEntry"
     />
 
     <AppCard class="mt-3">
@@ -231,22 +186,24 @@ export default {
       <template #body>
         <AppLoading v-show="isBankSettingsLoading" />
         <div
-          v-if="!fileList.length"
+          v-if="isEmpty(entry)"
           class="text-secondary text-center py-5"
         >
-          Nenhuma entrada inserida
+          Nenhum arquivo carregado
         </div>
         <div v-else>
-          <BankEntriesFilesList
-            :is-loading="isLoadingFile"
-            :file-list="fileList"
-            @file-load="onFileLoad"
-            @file-remove="onFileRemove"
-          />
-          <BankEntriesTables
+          <div class="d-flex justify-content-between mb-2">
+            <AppButton
+              :icon="icons.faUpload"
+              btn-class="fw-bold"
+              @click.prevent="onUploadFileClick"
+            >
+              Enviar arquivo
+            </AppButton>
+          </div>
+          <BankEntryTable
             class="mt-3"
-            :entries="entries"
-            @add-entry="onAddEntry"
+            :entry="entry"
             @duplicated-entries="onDuplicatedEntries"
             @remove-duplicates="onRemoveDuplicates"
           />

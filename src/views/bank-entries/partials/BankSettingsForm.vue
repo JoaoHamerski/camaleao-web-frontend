@@ -75,7 +75,7 @@ export default {
           variables: { input }
         })
 
-        handleSuccess(this, { message: 'Configuração registrada!'})
+        handleSuccess(this, { message: 'Configuração registrada! Importe o arquivo novamente, por favor.'})
       } catch (error) {
         handleError(this, error)
       }

@@ -1,6 +1,7 @@
 <script>
 import TheBankEntriesHeader from './TheBankEntriesHeader.vue'
 import TheBankEntriesBody from './TheBankEntriesBody.vue'
+import BankSettingsModal from '../partials/BankSettingsModal.vue'
 
 export default {
   metaInfo: {
@@ -8,55 +9,27 @@ export default {
   },
   components: {
     TheBankEntriesHeader,
-    TheBankEntriesBody
+    TheBankEntriesBody,
+    BankSettingsModal
   },
   data () {
     return {
-      fileList: []
+      bankSettingsModal: {
+        value: false
+      },
+      fileImported: {}
     }
   },
   methods: {
-    showDuplicatedFileWarning(filesImportedLength, duplicatesLength) {
-      if (filesImportedLength === 1) {
-        this.$toast.warning('Arquivo já carregado')
-        return
-      }
-
-      if (duplicatesLength > 1 && filesImportedLength === duplicatesLength) {
-        this.$toast.warning('Os arquivos selecionados já foram importados')
-        return
-      }
-
-      this.$toast.warning('Alguns arquivos selecionados já foram importados')
+    onFileImport(file) {
+      this.fileImported = file
+      this.$refs.bankEntriesBody.loadFile(file)
     },
-    onFilesImport(files) {
-      const filesImportedName = this.fileList.map(file => file.name)
-      const duplicatedFiles = []
-
-      files.forEach(file => {
-        if (filesImportedName.includes(file.name)) {
-          duplicatedFiles.push(file.name)
-          return
-        }
-
-        this.fileList.push(file)
-      })
-
-      if (duplicatedFiles.length) {
-        this.showDuplicatedFileWarning(files.length, duplicatedFiles.length)
-      }
+    onClearFile() {
+      this.fileImported = {}
     },
-    onFileRemove({index}) {
-      this.fileList.splice(index, 1)
-    },
-    openModalEntry(entryType) {
-      if (entryType === 'payment') {
-        this.$refs.entriesBody.modalEntry.isExpense = false
-      } else {
-        this.$refs.entriesBody.modalEntry.isExpense = true
-      }
-
-      this.$refs.entriesBody.modalEntry.value = true
+    onOpenBankSettings() {
+      this.bankSettingsModal.value = true
     }
   }
 }
@@ -65,14 +38,16 @@ export default {
 <template>
   <div class="pt-2 pb-5">
     <TheBankEntriesHeader
-      @files-imported="onFilesImport"
-      @open-payment-modal="openModalEntry('payment')"
-      @open-expense-modal="openModalEntry('expense')"
+      @file-imported="onFileImport"
+      @open-bank-settings="onOpenBankSettings"
     />
+
+    <BankSettingsModal v-model="bankSettingsModal.value" />
+
     <TheBankEntriesBody
-      ref="entriesBody"
-      :file-list="fileList"
-      @file-remove="onFileRemove"
+      ref="bankEntriesBody"
+      :file-imported="fileImported"
+      @clear-file="onClearFile"
     />
   </div>
 </template>

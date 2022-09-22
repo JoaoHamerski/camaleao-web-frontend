@@ -58,7 +58,8 @@ export default {
         note: '',
         via_id: '',
         is_sponsor: false,
-        sponsorship_client_id: ''
+        sponsorship_client_id: '',
+        filename_entry_from: ''
       })
     }
   },
@@ -80,6 +81,7 @@ export default {
       this.form.date = this.payment.date
       this.form.value = formatCurrencyBRL(this.payment.value)
       this.form.note = this.payment.note
+      this.form.filename_entry_from = this.payment.filename_entry_from
     },
     customLabelVias ({ name }) {
       return name
@@ -107,6 +109,7 @@ export default {
     async onSubmit () {
       const input = this.getFormattedData()
 
+      console.log(input)
       this.isLoading = true
 
       try {

@@ -24,6 +24,7 @@ import statusRoutes from '@/views/status/routes'
 import orderControlRoutes from '@/views/order-control/routes'
 import sectoresRoutes from '@/views/sectors/routes'
 import bankEntriesRoutes from '@/views/bank-entries/routes'
+import entriesRoutes from '@/views/entries/routes'
 
 import ErrorNotFound from '@/views/_errors/ErrorNotFound.vue'
 
@@ -79,7 +80,8 @@ const routes = [
   ...statusRoutes,
   ...orderControlRoutes,
   ...sectoresRoutes,
-  ...bankEntriesRoutes
+  ...bankEntriesRoutes,
+  ...entriesRoutes
 ]
 
 if (process.env.NODE_ENV === 'development') {

@@ -85,6 +85,10 @@ const renderTableBody = (h, context) => {
     <tbody class="position-relative">
       {
         map(context.items, (item, index) => {
+          if (item.hidden === true || item.show === true || item.display === false) {
+            return
+          }
+
           return renderTableRow(h, context, item, index)
         })
       }

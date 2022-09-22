@@ -1,8 +1,15 @@
 <script>
-import { faPlus, faSyncAlt, faTrashAlt } from '@fortawesome/free-solid-svg-icons'
+import {
+  faEye,
+  faEyeSlash,
+  faSyncAlt,
+  faTrashAlt,
+  faUpload
+} from '@fortawesome/free-solid-svg-icons'
 import { DateTime } from 'luxon'
 import { formatCurrencyBRL } from '@/utils/formatters'
 import { GetDuplicatedEntries } from '@/graphql/OrderControl.gql'
+
 
 export default {
   props: {
@@ -14,10 +21,16 @@ export default {
   data () {
     return {
       isLoading: false,
+      uploadEntryModal: {
+        value: false,
+        entry: {}
+      },
       icons: {
-        faPlus,
+        faEye,
+        faEyeSlash,
         faSyncAlt,
-        faTrashAlt
+        faTrashAlt,
+        faUpload
       }
     }
   },
@@ -26,13 +39,11 @@ export default {
       return this.entry.data.some(item => item.isDuplicated)
     },
     headers () {
-      const fields = this.entry.settings.fields
-
       return [
         { value: 'action', text: '' },
-        { value: fields.value, text: 'Valor', format: 'currencyBRL'},
-        { value: fields.date, text: 'Data' },
-        { value: fields.description, text: 'Descrição', wrap: true}
+        { value: 'value', text: 'Valor', format: 'currencyBRL'},
+        { value: 'date', text: 'Data' },
+        { value: 'description', text: 'Descrição', wrap: true}
       ]
     },
     fields () {
@@ -42,10 +53,10 @@ export default {
   methods: {
     formatCurrencyBRL,
     onRemoveDuplicatesClick () {
-      this.$emit('remove-duplicates', { id: this.entry.id })
+      this.$emit('remove-duplicates')
     },
     async onCheckDuplicatesClick () {
-      const bank_uids = this.entry.data.map(item => item[this.fields.bank_uid])
+      const bank_uids = this.entry.data.map(item => item.bank_uid)
       this.isLoading = true
 
       try {
@@ -68,7 +79,7 @@ export default {
           this.$toast.info('Nenhum item duplicado encontrado')
         }
 
-        this.$emit('duplicated-entries', {id: this.entry.id, duplicates})
+        this.$emit('duplicated-entries', duplicates)
       } catch (error) {
         this.$toast.error('Ops! Algo deu errado.')
       }
@@ -79,35 +90,24 @@ export default {
       const settings = this.entry.settings
       const dateFormat = settings.date_format.replace('mm', 'MM')
       const date = DateTime.fromFormat(
-        item[this.fields.date],
+        item.date,
         dateFormat
       )
 
       return date.toFormat('dd/MM/yyyy')
     },
-    onAddClick(item) {
-      this.$emit('register-entry', {
-        item,
-        fields: this.fields,
-        isExpense: item[this.fields.value] < 0,
-      })
-    },
     tableRowClass(item) {
-      if (item.isDuplicated) {
-        return 'table-secondary'
-      }
-      if (item[this.fields.value] > 0) {
-        return 'table-success'
-      }
-
-      return 'table-danger'
+      return 'table-' + this.getItemColor(item)
     },
     getItemColor(item) {
-      if (item.isDuplicated) {
+      if (item.isDuplicated || !item.isVisible) {
         return 'secondary'
       }
 
-      return item[this.fields.value] > 0 ? 'success' : 'danger'
+      return item.value > 0 ? 'success' : 'danger'
+    },
+    toggleVisibility(item) {
+      item.isVisible = !item.isVisible
     }
   }
 }
@@ -115,7 +115,7 @@ export default {
 
 <template>
   <div>
-    <div class="mb-2">
+    <div class="my-2">
       <AppButton
         color="success"
         btn-class="fw-bold"
@@ -137,6 +137,9 @@ export default {
         Remover duplicatas
       </AppButton>
     </div>
+    <div class="small text-secondary">
+      Ao esconder uma entrada, ela não será exibida quando o arquivo for carregado na página de entradas.
+    </div>
     <AppTable
       :headers="headers"
       :items="entry.data"
@@ -145,23 +148,22 @@ export default {
       <template #[`items.action`]="{ item }">
         <AppButton
           v-tippy
-          :disabled="item.isDuplicated"
-          :content="item.valor > 0 ? 'Entrada' : 'Saída'"
           btn-class="btn-sm"
-          :color="getItemColor(item)"
-          :icon="icons.faPlus"
-          @click.prevent="onAddClick(item)"
+          outlined
+          :content="item.isVisible ? 'Esconder entrada' : 'Exibir entrada'"
+          :icon="item.isVisible ? icons.faEye : icons.faEyeSlash"
+          @click.prevent="toggleVisibility(item)"
         />
       </template>
-      <template #[`items.${entry.settings.fields.date}`]="{ item }">
+      <template #[`items.date`]="{ item }">
         {{ getDate(item) }}
       </template>
-      <template #[`items.${entry.settings.fields.value}`]="{ item }">
+      <template #[`items.value`]="{ item }">
         <span
           class="fw-bold"
           :class="`text-${getItemColor(item)}`"
         >
-          {{ formatCurrencyBRL(item.valor) }}
+          {{ formatCurrencyBRL(item.value) }}
         </span>
       </template>
     </AppTable>

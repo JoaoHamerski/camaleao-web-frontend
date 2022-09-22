@@ -21,7 +21,8 @@ import {
   faTruck,
   faTasks,
   faUserTag,
-  faHandHoldingUsd
+  faHandHoldingUsd,
+  faListUl
 } from '@fortawesome/free-solid-svg-icons'
 
 const ITEMS = {
@@ -100,9 +101,16 @@ const ITEMS = {
     condition: () => canView(ROLES.GERENCIA, ROLES.ATENDIMENTO),
     get items () {
       return [
+        this.ENTRADAS,
         this.DESPESAS,
         this.FLUXO_DE_CAIXA
       ]
+    },
+    ENTRADAS: {
+      title: 'Entradas',
+      icon: faListUl,
+      route: { name: 'entries.index' },
+      condition: () => canView(ROLES.GERENCIA, ROLES.ATENDIMENTO)
     },
     DESPESAS: {
       title: 'Despesas',

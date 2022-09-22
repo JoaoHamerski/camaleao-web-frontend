@@ -12,3 +12,10 @@ mutation CreateBankSetting ($input: BankSettingsInput!) {
     settings
   }
 }
+
+mutation DeleteBankSetting ($id: ID!) {
+  bankSettingDelete (id: $id) {
+    id
+    settings
+  }
+}

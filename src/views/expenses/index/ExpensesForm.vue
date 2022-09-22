@@ -116,6 +116,7 @@ export default {
         product_type_id: '',
         employee_id: '',
         expense_via_id: '',
+        filename_entry_from: '',
       })
     }
   },
@@ -130,7 +131,7 @@ export default {
   watch: {
     loadingQueries: {
       immediate: true,
-      handler (value) {
+      handler () {
         if (!this.isQueryLoading && (this.isEdit || !isEmpty(this.expense))) {
           this.populateForm()
         }
@@ -152,7 +153,6 @@ export default {
     formatBytes,
     truncate,
     populateForm () {
-      // console.log(formatCurrencyBRL(this.expense.value))
       this.form = new Form({
         ...omit(this.expense, ['id', 'value', 'date']),
         ...{

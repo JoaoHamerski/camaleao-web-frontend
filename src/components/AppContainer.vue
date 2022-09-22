@@ -60,7 +60,7 @@ function renderBody (h, context) {
   return (
     <div
       ref="body"
-      class={classNames('container-body', {
+      class={classNames('container-body position-relative', {
         collapse: context.collapsible
       })}
     >

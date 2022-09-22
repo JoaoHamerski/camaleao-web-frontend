@@ -1,46 +1,39 @@
 <script>
-import { faPlus, faFileImport } from '@fortawesome/free-solid-svg-icons'
+import { faFileImport, faCog } from '@fortawesome/free-solid-svg-icons'
 
 export default {
   data () {
     return {
       icons: {
-        faPlus,
-        faFileImport
+        faFileImport,
+        faCog
       }
     }
   },
   methods: {
-    isValid(file) {
-      return file.type.includes('csv')
-    },
     onImport(event) {
       if (!event.target.files.length) {
         return
       }
 
-      this.$emit('files-imported', Array.from(event.target.files))
+      this.$emit('file-imported', event.target.files[0])
       this.$refs.fileInput.value = ''
     },
-    onPaymentClick() {
-      this.$emit('open-payment-modal')
-    },
-    onExpenseClick() {
-      this.$emit('open-expense-modal')
+    openBankSettingsClick() {
+      this.$emit('open-bank-settings')
     }
   }
 }
 </script>
 
 <template>
-  <div>
+  <div class="d-flex justify-content-between">
     <input
       id="inputImportFile"
       ref="fileInput"
       hidden
       type="file"
       accept=".csv"
-      multiple
       @change="onImport"
     >
 
@@ -53,21 +46,11 @@ export default {
     </label>
 
     <AppButton
-      class="me-2"
-      btn-class="btn-lg fw-bold"
-      color="success"
-      :icon="icons.faPlus"
-      @click.prevent="onPaymentClick"
+      outlined
+      :icon="icons.faCog"
+      @click.prevent="openBankSettingsClick"
     >
-      Entrada
-    </AppButton>
-    <AppButton
-      btn-class="btn-lg fw-bold"
-      color="danger"
-      :icon="icons.faPlus"
-      @click.prevent="onExpenseClick"
-    >
-      Saída
+      Configurações
     </AppButton>
   </div>
 </template>
