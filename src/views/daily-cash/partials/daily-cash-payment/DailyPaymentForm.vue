@@ -64,6 +64,10 @@ export default {
     }
   },
   computed: {
+    isFromBankEntry () {
+      return !isEmpty(this.payment.bank_uid)
+        || !isEmpty(this.form.bank_uid)
+    },
     hasOrder () {
       return !isEmpty(this.form.order.id) && !this.form.order.isNew
     }
@@ -181,6 +185,7 @@ export default {
               numeric
               :error="form.errors.get('value')"
               :mask="maskCurrencyBRL"
+              :disabled="isFromBankEntry"
             >
               Valor
               <template
@@ -190,6 +195,7 @@ export default {
                   v-if="hasOrder"
                   :tooltip="formatCurrencyBRL(form.order.id.total_owing)"
                   outlined
+                  :disabled="isFromBankEntry"
                   @click.prevent="onRestValueClick"
                 >
                   Restante
@@ -250,6 +256,7 @@ export default {
             type="date"
             numeric
             :disabled-message="form.is_sponsor ? 'Não é necessário informar a data em patrocínios' : false"
+            :disabled="isFromBankEntry"
           >
             Data
           </AppInput>

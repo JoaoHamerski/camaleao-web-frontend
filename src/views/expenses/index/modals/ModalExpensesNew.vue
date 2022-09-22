@@ -8,6 +8,10 @@ export default {
     ExpensesForm
   },
   props: {
+    hideBankEntries: {
+      type: Boolean,
+      default: false
+    },
     value: {
       type: Boolean,
       default: false
@@ -52,6 +56,7 @@ export default {
         v-if="value"
         key="registerForm"
         :expense="expense"
+        :hide-bank-entries="hideBankEntries"
         @success="onSuccess"
       />
     </template>

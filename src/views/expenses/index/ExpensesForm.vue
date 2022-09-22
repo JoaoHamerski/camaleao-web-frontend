@@ -21,13 +21,16 @@ import { vias } from '@/graphql/Via.gql'
 import { GetProductTypes } from '@/graphql/ProductType.gql'
 import { GetConfig } from '@/graphql/Config.gql'
 import { GetUsers } from '@/graphql/User.gql'
+
 import ViewerItemsCardFile from '@/components/AppViewer/ViewerItemsCardFile.vue'
+import SelectEntriesFind from '@/views/resources/SelectEntriesFind.vue'
 
 const NUMBER_OF_QUERIES = 6
 
 export default {
   components: {
-    ViewerItemsCardFile
+    ViewerItemsCardFile,
+    SelectEntriesFind
   },
   mixins: [fileMixin, pasteFilesMixin],
   apollo: {
@@ -85,6 +88,10 @@ export default {
     }
   },
   props: {
+    hideBankEntries: {
+      type: Boolean,
+      default: false
+    },
     expense: {
       type: Object,
       default: () => ({})
@@ -106,6 +113,7 @@ export default {
       productTypes: [],
       users: [],
       loadingQueries: NUMBER_OF_QUERIES,
+      bank_entry: '',
       form: new Form({
         description: '',
         value: 'R$ ',
@@ -121,6 +129,11 @@ export default {
     }
   },
   computed: {
+    isFromBankEntry () {
+      return !isEmpty(this.form.bank_uid)
+        || !isEmpty(this.expense.bank_uid)
+        || !isEmpty(this.bank_entry)
+    },
     isQueryLoading () {
       return this.loadingQueries > 0
     },
@@ -257,6 +270,14 @@ export default {
       } catch (error) {
         handleError(this, error)
       }
+    },
+    onSelectEntry (entry) {
+      this.form.set({
+        bank_uid: entry.bank_uid,
+        value: formatCurrencyBRL(Math.abs(entry.value)),
+        date: entry.date,
+        description: entry.description,
+      })
     }
   }
 }
@@ -276,6 +297,13 @@ export default {
     >
       {{ form.errors.get('bank_uid') }}
     </AppAlert>
+
+    <SelectEntriesFind
+      v-if="!hideBankEntries"
+      v-model="bank_entry"
+      is-expense
+      @select="onSelectEntry"
+    />
 
     <AppInput
       id="description"
@@ -346,6 +374,7 @@ export default {
           :mask="maskCurrencyBRL()"
           :error="form.errors.get('value')"
           numeric
+          :disabled="isFromBankEntry"
         >
           Valor
         </AppInput>
@@ -410,6 +439,7 @@ export default {
       placeholder="dd/mm/aaaa"
       :error="form.errors.get('date')"
       today-button
+      :disabled="isFromBankEntry"
     >
       Data
     </AppInput>

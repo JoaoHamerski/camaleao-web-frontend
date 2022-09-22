@@ -61,6 +61,9 @@ export default {
     },
     hasNoResultSlot () {
       return !!this.$slots.noResult
+    },
+    hasOptionSlot () {
+      return !!this.$slots.option || !!this.$scopedSlots.option
     }
   },
   methods: {
@@ -125,6 +128,27 @@ export default {
           <template v-else>
             <slot name="noResult" />
           </template>
+        </template>
+
+        <template
+          slot="singleLabel"
+          slot-scope="props"
+        >
+          <slot
+            name="option"
+            :props="props"
+          />
+        </template>
+
+        <template
+          v-if="hasOptionSlot"
+          slot="option"
+          slot-scope="props"
+        >
+          <slot
+            name="option"
+            :props="props"
+          />
         </template>
       </Multiselect>
     </span>

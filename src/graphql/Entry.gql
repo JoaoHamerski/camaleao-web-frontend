@@ -1,0 +1,19 @@
+query GetEntries (
+  $first: Int!
+  $page: Int
+  $where: QueryEntriesWhereWhereConditions
+) {
+  entries (
+    first: $first
+    page: $page
+    where: $where
+  ) {
+    data {
+      id
+      bank_uid
+      value
+      date
+      description
+    }
+  }
+}

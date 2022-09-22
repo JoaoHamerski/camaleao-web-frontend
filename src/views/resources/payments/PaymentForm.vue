@@ -1,17 +1,21 @@
 <script>
 import { vias } from '@/graphql/Via.gql'
 import { CreatePayment, UpdatePayment } from '@/graphql/Payment.gql'
+import { GetEntries } from '@/graphql/Entry.gql'
 
+import { isEmpty } from 'lodash-es'
 import Form from '@/utils/Form'
-import { formatDatetime } from '@/utils/formatters'
+import { formatDatetime, formatCurrencyBRL } from '@/utils/formatters'
 import { maskCurrencyBRL, maskDate } from '@/utils/masks'
 import { handleError, handleSuccess } from '@/utils/forms'
 
 import SelectClientsFind from '@/views/resources/SelectClientsFind.vue'
+import SelectEntriesFind from '@/views/resources/SelectEntriesFind.vue'
 
 export default {
   components: {
-    SelectClientsFind
+    SelectClientsFind,
+    SelectEntriesFind
   },
   apollo: {
     vias: {
@@ -39,7 +43,9 @@ export default {
         items: [],
         isLoading: false
       },
+      bank_entry: '',
       form: new Form({
+        bank_uid: '',
         value: 'R$ ',
         date: '',
         payment_via_id: '',
@@ -55,6 +61,9 @@ export default {
   computed: {
     isLoadingQuery () {
       return !!this.$apollo.queries.vias.loading
+    },
+    isFromBankEntry () {
+      return !isEmpty(this.bank_entry)
     }
   },
   watch: {
@@ -75,6 +84,7 @@ export default {
     }
   },
   methods: {
+    formatCurrencyBRL,
     populateForm () {
       if (!this.payment) {
         this.form.payment_via_id = ''
@@ -110,10 +120,15 @@ export default {
               order_id: this.order.id,
               ...data
             }
-          }
+          },
+          refetchQueries: [GetEntries],
+          awaitRefetchQueries: true
         })
 
+        this.bank_entry = ''
+
         this.$helpers.clearCacheFrom([
+          { fieldName: 'entries' },
           { fieldName: 'payments' },
           { fieldName: 'cashFlowEntries' }
         ])
@@ -155,6 +170,14 @@ export default {
       }
 
       this.isLoading = false
+    },
+    onSelectEntry (entry) {
+      this.form.set({
+        bank_uid: entry.bank_uid,
+        value: formatCurrencyBRL(entry.value),
+        date: entry.date,
+        note: entry.description
+      })
     }
   }
 }
@@ -168,6 +191,20 @@ export default {
   >
     <AppLoading v-show="isLoadingQuery" />
 
+    <AppAlert
+      v-if="form.errors.get('bank_uid')"
+      color="warning"
+      small
+    >
+      {{ form.errors.get('bank_uid') }}
+    </AppAlert>
+
+    <SelectEntriesFind
+      v-if="!isEdit"
+      v-model="bank_entry"
+      @select="onSelectEntry"
+    />
+
     <template v-if="!isEdit">
       <AppInput
         id="value"
@@ -176,11 +213,13 @@ export default {
         :error="form.errors.get('value')"
         :mask="maskCurrencyBRL"
         numeric
+        :disabled="isFromBankEntry"
       >
         Valor
 
         <template #append>
           <AppButton
+            :disabled="isFromBankEntry"
             outlined
             :tooltip="$helpers.toBRL(order.total_owing)"
             @click.prevent="onPayRestClick"
@@ -217,6 +256,7 @@ export default {
       :mask="maskDate"
       :error="form.errors.get('date')"
       :disabled-message="form.is_sponsor ? 'Não é necessário informar a data em patrocínios' : false"
+      :disabled="isFromBankEntry"
     >
       Data de pagamento
     </AppInput>

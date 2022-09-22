@@ -91,6 +91,7 @@ export default {
     v-if="value"
     :value="modal"
     v-bind="getAttrs"
+    hide-bank-entries
     v-on="$listeners"
     @hook:created="componentCreated"
     @hidden="onModalHidden"
