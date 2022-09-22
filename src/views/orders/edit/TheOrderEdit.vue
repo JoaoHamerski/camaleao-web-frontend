@@ -1,5 +1,5 @@
 <script>
-import { isEmpty, cloneDeep } from 'lodash-es'
+import { isEmpty } from 'lodash-es'
 import { orders } from '@/constants/route-names'
 import {
   faBoxOpen,
@@ -45,16 +45,6 @@ export default {
           id: orderKey,
           client_id: clientKey
         }
-      },
-      result ({ data: { order }, loading }) {
-        if (!loading) {
-          this.$nextTick(() => {
-            this.$refs.orderForm.$emit(
-              'order-loaded',
-              { order: cloneDeep(order) }
-            )
-          })
-        }
       }
     }
   },
@@ -62,7 +52,6 @@ export default {
     return {
       orders,
       order: {},
-      clothingTypesLoaded: false,
       icons: {
         faBoxOpen,
         faArrowCircleLeft
@@ -70,9 +59,6 @@ export default {
     }
   },
   computed: {
-    loaded () {
-      return this.clothingTypesLoaded && !isEmpty(this.order)
-    },
     showReminder () {
       return this.isOrderPreRegistered && this.order.reminder
     }
@@ -81,13 +67,11 @@ export default {
     isEmpty,
     onSuccess ({ clientId, orderId }) {
       this.$toast.success('Pedido atualizado!')
+
       this.$helpers.redirectTo(orders.show, {
         client: clientId,
         order: orderId
       })
-    },
-    onClothingTypesLoaded () {
-      this.clothingTypesLoaded = true
     },
     redirectBackToOrder () {
       if (!this.order.client) {
@@ -144,13 +128,21 @@ export default {
         </OrderReminder>
 
         <OrderForm
-          ref="orderForm"
+          v-if="!isEmpty(order)"
           v-bind="{isEdit: true, order, isOrderPreRegistered}"
           @success="onSuccess"
-          @clothing-types-loaded="onClothingTypesLoaded"
         />
-
-        <AppLoading v-show="!loaded" />
+        <div
+          v-else
+          class="text-center my-5"
+        >
+          <div
+            class="spinner-grow text-primary"
+            role="status"
+          >
+            <span class="visually-hidden">Loading...</span>
+          </div>
+        </div>
       </template>
     </AppCard>
   </div>

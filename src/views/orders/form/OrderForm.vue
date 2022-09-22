@@ -6,12 +6,15 @@ import { map, pick } from 'lodash-es'
 import { CreateOrder, UpdateOrder } from '@/graphql/Order.gql'
 import { handleError } from '@/utils/forms'
 import { GetDailyCashDetailedFlow, GetDailyCashBalance } from '@/graphql/DailyCash.gql'
+import { GetClothingTypes } from '@/graphql/ClothingType.gql'
 
 import OrderFormClient from './OrderFormClient.vue'
 import OrderFormBasicInfo from './OrderFormBasicInfo.vue'
 import OrderFormValues from './OrderFormValues.vue'
 import OrderFormDates from './OrderFormDates.vue'
 import OrderFormFiles from './OrderFormFiles.vue'
+
+const NUMBER_OF_QUERIES = 1
 
 export default {
   components: {
@@ -20,6 +23,25 @@ export default {
     OrderFormValues,
     OrderFormDates,
     OrderFormFiles
+  },
+  apollo: {
+    clothingTypes: {
+      query: GetClothingTypes,
+      variables: {
+        is_hidden: false
+      },
+      result ({data: { clothingTypes }}) {
+        for (const type of clothingTypes) {
+          this.form.clothing_types.push({
+            key: type.key,
+            value: 'R$ ',
+            quantity: ''
+          })
+        }
+
+        this.queriesLoading--
+      }
+    }
   },
   props: {
     isEdit: {
@@ -38,6 +60,8 @@ export default {
   data () {
     return {
       isLoading: false,
+      queriesLoading: NUMBER_OF_QUERIES,
+      clothingTypes: [],
       form: new Form({
         name: '',
         code: '',
@@ -55,10 +79,12 @@ export default {
       })
     }
   },
-  mounted () {
-    this.$on('order-loaded', ({ order }) => {
-      this.populateForm(order)
-    })
+  watch: {
+    queriesLoading (value) {
+      if (!value && this.isEdit) {
+        this.populateForm()
+      }
+    }
   },
   methods: {
     getFile (item) {
@@ -117,7 +143,8 @@ export default {
         handleError(this, error)
       }
     },
-    populateForm (order) {
+    populateForm () {
+      const order = this.order
       const fields = pick(order, [
         'client',
         'name',
@@ -146,9 +173,7 @@ export default {
         this.form[field] = fields[field]
       }
 
-      this.$on('clothing-types-loaded', () => {
-        this.populateClothingTypes(order.clothing_types)
-      })
+      this.populateClothingTypes(order.clothing_types)
     },
     async onSubmit () {
       this.isLoading = true
@@ -160,19 +185,6 @@ export default {
       }
 
       this.isLoading = false
-    },
-    onClothingTypesLoaded (clothingTypes) {
-      for (const type of clothingTypes) {
-        this.form.clothing_types.push({
-          key: type.key,
-          value: 'R$ ',
-          quantity: ''
-        })
-      }
-
-      this.$nextTick(() => {
-        this.$emit('clothing-types-loaded')
-      })
     },
     populateClothingTypes (clothingTypes) {
       this.form.clothing_types.forEach((type, index) => {
@@ -216,9 +228,8 @@ export default {
     />
 
     <OrderFormValues
-      v-bind="{order, form, isEdit, isOrderPreRegistered}"
+      v-bind="{order, form, isEdit, isOrderPreRegistered, clothingTypes}"
       class="mb-3"
-      @clothing-types-loaded="onClothingTypesLoaded"
     />
 
     <OrderFormDates

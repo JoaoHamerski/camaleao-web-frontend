@@ -3,7 +3,6 @@ import accounting from 'accounting-js'
 import { isEmpty } from 'lodash-es'
 import { formatCurrencyBRL } from '@/utils/formatters'
 import { maskCurrencyBRL, maskInteger } from '@/utils/masks'
-import { GetClothingTypes } from '@/graphql/ClothingType.gql'
 
 import OrderFormValuesFinal from './OrderFormValuesFinal.vue'
 
@@ -12,6 +11,10 @@ export default {
     OrderFormValuesFinal
   },
   props: {
+    clothingTypes: {
+      type: Array,
+      default: () => []
+    },
     form: {
       type: Object,
       required: true
@@ -27,22 +30,10 @@ export default {
     isOrderPreRegistered: {
       type: Boolean,
       default: false
-    }
-  },
-  apollo: {
-    clothingTypes: {
-      query: GetClothingTypes,
-      variables: {
-        is_hidden: false
-      },
-      result ({ data }) {
-        this.$emit('clothing-types-loaded', data.clothingTypes)
-      }
-    }
+    },
   },
   data () {
     return {
-      clothingTypes: [],
       maskCurrencyBRL: maskCurrencyBRL({ numeralPositiveOnly: true }),
       maskInteger: maskInteger({ delimiter: '', numeralDecimalScale: 0 })
     }
