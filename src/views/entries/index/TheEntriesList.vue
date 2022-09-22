@@ -1,4 +1,5 @@
 <script>
+import { isEmpty } from 'lodash-es'
 import { faDownload, faSync } from '@fortawesome/free-solid-svg-icons'
 import { GetBankEntries } from '@/graphql/BankEntry.gql'
 import { formatDatetime } from '@/utils/formatters'
@@ -16,6 +17,10 @@ export default {
     }
   },
   props: {
+    entry: {
+      type: Object,
+      default: () => ({})
+    },
     isLoading: {
       type: Boolean,
       default: false
@@ -41,11 +46,15 @@ export default {
   },
   methods: {
     formatDatetime,
+    isEmpty,
     refresh() {
       this.$apollo.queries.bankEntries.refetch()
     },
     onEntryClick(entry) {
       this.$emit('load-entry', entry)
+    },
+    isActive (entry) {
+      return entry.filename === this.entry?.filename
     }
   }
 }
@@ -77,10 +86,11 @@ export default {
         class="row row-cols-1 row-cols-sm-3 gx-0 mb-2"
       >
         <button
-          v-for="entry in bankEntries.data"
-          :key="entry.id"
-          class="btn btn-outline-primary d-flex align-items-center"
-          @click.prevent="onEntryClick(entry)"
+          v-for="item in bankEntries.data"
+          :key="item.id"
+          class="btn d-flex align-items-center"
+          :class="isActive(item) ? 'btn-outline-success' : 'btn-outline-primary'"
+          @click.prevent="onEntryClick(item)"
         >
           <div class="me-2">
             <FontAwesomeIcon
@@ -90,9 +100,9 @@ export default {
           </div>
           <div class="text-start text-truncate">
             <div class="text-truncate">
-              {{ entry.filename }}
+              {{ item.filename }}
             </div>
-            <span class="datetime text-secondary">{{ formatDatetime(entry.created_at) }}</span>
+            <span class="datetime text-secondary">{{ formatDatetime(item.created_at) }}</span>
           </div>
         </button>
       </div>

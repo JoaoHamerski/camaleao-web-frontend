@@ -38,7 +38,10 @@ export default {
           query: LoadBankEntry,
           variables: {
             id: entry.id
-          }
+          },
+          fetchPolicy: this.entry.filename === entry.filename
+            ? 'network-only'
+            : 'cache-first'
         })
 
         const parsedData = JSON.parse(entries)
@@ -62,6 +65,7 @@ export default {
 <template>
   <div class="pt-3 pb-5">
     <TheEntriesList
+      :entry="entry"
       :is-loading="isLoading"
       @load-entry="onLoadEntry"
     />

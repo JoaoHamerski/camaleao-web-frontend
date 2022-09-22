@@ -66,8 +66,6 @@ export default {
         @entry-success="onEntrySuccess"
       />
 
-      <AppLoading v-show="isLoading" />
-
       <div
         v-if="isEmpty(fileEntry)"
         class="text-secondary text-center py-5"

@@ -19,6 +19,9 @@ export default {
     }
   },
   computed: {
+    duplicatesCount () {
+      return this.fileEntry.entries.filter(entry => entry.isDuplicated).length
+    },
     headers () {
       return [
         { value: 'action', text: '' },
@@ -82,7 +85,18 @@ export default {
 
 <template>
   <div>
-    <span class="badge bg-primary mb-2">{{ fileEntry.entries.length }} entradas carregadas</span>
+    <span class="badge bg-primary mb-2">
+      {{ fileEntry.entries.length }} entradas carregadas
+    </span>
+
+    <span
+      v-tippy
+      content="Já constam no banco de dados"
+      class="badge bg-secondary ms-1 mb-2"
+    >
+      {{ duplicatesCount }} entradas duplicadas
+    </span>
+
     <AppCheckboxSwitch
       id="hideDuplicatesCheckbox"
       v-model="hideDuplicates"
