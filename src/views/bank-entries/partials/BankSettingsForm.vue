@@ -1,4 +1,6 @@
 <script>
+import { vias } from '@/graphql/Via.gql'
+
 import Form from '@/utils/Form'
 import { handleSuccess, handleError } from '@/utils/forms'
 import { CreateBankSetting } from '@/graphql/BankSetting.gql'
@@ -11,6 +13,11 @@ const SYSTEM_FIELDS = [
 ]
 
 export default {
+  apollo: {
+    vias: {
+      query: vias
+    }
+  },
   props: {
     fields: {
       type: Array,
@@ -24,6 +31,7 @@ export default {
       form: new Form({
         name: '',
         date_format: 'dd/mm/yyyy',
+        via_id: '',
         fields: {
           bank_uid: '',
           value: '',
@@ -136,6 +144,24 @@ export default {
     >
       Nome da configuração
     </AppInput>
+
+    <AppSimpleSelect
+      id="via_id"
+      v-model="form.via_id"
+      :options="vias"
+      label-prop="name"
+      value-prop="id"
+      name="via_id"
+      :error="form.errors.get('via_id')"
+      placeholder="Selecione uma via"
+      optional
+    >
+      Via padrão
+
+      <template #hint>
+        Via usada para autocompletar entradas com essa configuração.
+      </template>
+    </AppSimpleSelect>
 
     <div class="row mt-4">
       <div class="col">

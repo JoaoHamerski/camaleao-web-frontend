@@ -44,7 +44,8 @@ export default {
             bank_uid: this.entry.bank_uid,
             value: Math.abs(this.entry.value),
             date: this.entry.date,
-            description: this.entry.description
+            description: this.entry.description,
+            expense_via_id: this.entry.via_id
           }
         }
       }
@@ -55,7 +56,8 @@ export default {
           bank_uid: this.entry.bank_uid,
           value: this.entry.value,
           date: this.entry.date,
-          note: this.entry.description
+          note: this.entry.description,
+          via_id: this.entry.via_id
         }
       }
     },

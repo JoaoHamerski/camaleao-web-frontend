@@ -176,7 +176,8 @@ export default {
         bank_uid: entry.bank_uid,
         value: formatCurrencyBRL(entry.value),
         date: entry.date,
-        note: entry.description
+        note: entry.description,
+        payment_via_id: entry.via_id
       })
     }
   }

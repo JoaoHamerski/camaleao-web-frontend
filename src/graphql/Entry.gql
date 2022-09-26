@@ -14,6 +14,7 @@ query GetEntries (
       value
       date
       description
+      via_id
     }
   }
 }

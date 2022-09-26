@@ -67,7 +67,8 @@ export default {
     isFirstPropEmpty(item) {
       return isEmpty(item[Object.keys(item)[0]])
     },
-    getFormattedData (data, {fields}) {
+    getFormattedData (data, settings) {
+      const { fields } = settings
       const filtered = data.filter(item => !this.isFirstPropEmpty(item))
       const additionalOptions = {
         isDuplicated: false,
@@ -80,6 +81,7 @@ export default {
         date: item[fields.date],
         description: item[fields.description],
         value: item[fields.value],
+        via_id: settings.via_id,
         ...additionalOptions
       }))
     },

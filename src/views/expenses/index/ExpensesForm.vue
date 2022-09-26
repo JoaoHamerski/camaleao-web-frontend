@@ -167,15 +167,12 @@ export default {
     truncate,
     populateForm () {
       this.form = new Form({
+        ...this.form.data(),
         ...omit(this.expense, ['id', 'value', 'date']),
         ...{
           date: formatDatetime(this.expense.date),
           value: formatCurrencyBRL(this.expense.value),
-          expense_type_id: '',
-          product_type_id: '',
-          employee_id: '',
-          expense_via_id: '',
-        }
+        },
       })
     },
     attachEventListener () {

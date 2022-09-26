@@ -5,7 +5,7 @@ import { vias } from '@/graphql/Via.gql'
 import { CreateDailyPayment } from '@/graphql/Payment.gql'
 import { GetDailyCash, GetDailyCashBalance } from '@/graphql/DailyCash.gql'
 
-import { formatCurrencyBRL } from '@/utils/formatters'
+import { formatCurrencyBRL, formatDatetime } from '@/utils/formatters'
 import { maskCurrencyBRL, maskDate } from '@/utils/masks'
 import Form from '@/utils/Form'
 import { handleSuccess, handleError } from '@/utils/forms'
@@ -14,10 +14,15 @@ import DailyPaymentFormClient from './DailyPaymentFormClient.vue'
 import DailyPaymentFormOrder from './DailyPaymentFormOrder.vue'
 import SelectClientsFind from '@/views/resources/SelectClientsFind.vue'
 
+const NUMBER_OF_QUERIES = 1
+
 export default {
   apollo: {
     vias: {
-      query: vias
+      query: vias,
+      result () {
+        this.loadingQueries--
+      }
     }
   },
   components: {
@@ -33,9 +38,11 @@ export default {
   },
   data () {
     return {
-      maskCurrencyBRL: maskCurrencyBRL(),
       maskDate,
+      maskCurrencyBRL: maskCurrencyBRL(),
       isLoading: false,
+      loadingQueries: NUMBER_OF_QUERIES,
+      vias: [],
       icons: {
         faExclamationCircle
       },
@@ -64,6 +71,9 @@ export default {
     }
   },
   computed: {
+    isQueriesLoading () {
+      return this.loadingQueries > 0
+    },
     isFromBankEntry () {
       return !isEmpty(this.payment.bank_uid)
         || !isEmpty(this.form.bank_uid)
@@ -72,20 +82,27 @@ export default {
       return !isEmpty(this.form.order.id) && !this.form.order.isNew
     }
   },
-  mounted () {
-    if (!isEmpty(this.payment)) {
-      this.populateForm()
+  watch: {
+    loadingQueries (value) {
+      if (!value && (this.isEdit || !isEmpty(this.payment))) {
+        this.$nextTick(() => {
+          this.populateForm()
+        })
+      }
     }
   },
   methods: {
     isEmpty,
     formatCurrencyBRL,
-    populateForm() {
-      this.form.bank_uid = this.payment.bank_uid
-      this.form.date = this.payment.date
-      this.form.value = formatCurrencyBRL(this.payment.value)
-      this.form.note = this.payment.note
-      this.form.filename_entry_from = this.payment.filename_entry_from
+    populateForm () {
+      this.form = new Form({
+        ...this.form.data(),
+        ...omit(this.payment, ['id', 'value', 'date']),
+        ...{
+          date: formatDatetime(this.payment.date),
+          value: formatCurrencyBRL(this.payment.value),
+        },
+      })
     },
     customLabelVias ({ name }) {
       return name
@@ -113,7 +130,6 @@ export default {
     async onSubmit () {
       const input = this.getFormattedData()
 
-      console.log(input)
       this.isLoading = true
 
       try {
@@ -145,6 +161,7 @@ export default {
     :form="form"
     :on-submit="onSubmit"
   >
+    <AppLoading v-show="isQueriesLoading" />
     <AppContainer class="mb-3">
       <template #title>
         CLIENTE & PEDIDO
