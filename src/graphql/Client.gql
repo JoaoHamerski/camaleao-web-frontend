@@ -36,6 +36,8 @@ fragment ClientSimpleParts on Client {
   total_owing
   total_owing_as_sponsorship
   is_sponsor
+  has_balance
+  balance
 }
 
 fragment ClientParts on Client {

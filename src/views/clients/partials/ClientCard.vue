@@ -8,6 +8,7 @@ import ClientCardItems from './ClientCardItems.vue'
 import ClientCardFooter from './ClientCardFooter.vue'
 import ClientCardNotExist from './ClientCardNotExist.vue'
 import ClientModalDelete from './ClientModalDelete.vue'
+import ClientBalancesModal from './ClientBalancesModal.vue'
 
 export default {
   components: {
@@ -15,7 +16,8 @@ export default {
     ClientCardItems,
     ClientCardFooter,
     ClientCardNotExist,
-    ClientModalDelete
+    ClientModalDelete,
+    ClientBalancesModal
   },
   props: {
     client: {
@@ -37,6 +39,10 @@ export default {
   },
   data () {
     return {
+      clientBalancesModal: {
+        value: false,
+        client: {}
+      },
       clientModalEdit: {
         value: false,
         client: null
@@ -53,6 +59,13 @@ export default {
   computed: {
     key () {
       return this.clientKey || this.$route.params.clientKey
+    }
+  },
+  watch: {
+    client (value) {
+      if (!isEmpty(value)) {
+        this.skip = false
+      }
     }
   },
   methods: {
@@ -76,6 +89,10 @@ export default {
 
         this.$router.push({name: clients.index})
       })
+    },
+    onShowBalances () {
+      this.clientBalancesModal.client = this.client
+      this.clientBalancesModal.value = true
     }
   }
 }
@@ -102,6 +119,11 @@ export default {
       v-if="!isEmpty(client)"
       #body
     >
+      <ClientBalancesModal
+        v-model="clientBalancesModal.value"
+        :client="clientBalancesModal.client"
+      />
+
       <ClientModalEdit
         v-model="clientModalEdit.value"
         :client="clientModalEdit.client"
@@ -114,7 +136,10 @@ export default {
         @success="onDeleteSuccess"
       />
 
-      <ClientCardItems :client="client" />
+      <ClientCardItems
+        :client="client"
+        @show-balances="onShowBalances"
+      />
 
       <hr>
 

@@ -20,6 +20,10 @@ export default {
     hint: {
       type: String,
       default: ''
+    },
+    disabled: {
+      type: Boolean,
+      default: false
     }
   }
 }
@@ -37,6 +41,7 @@ export default {
       type="checkbox"
       :value="value"
       :checked="value"
+      :disabled="disabled"
       @input="$emit('input', $event.target.checked)"
     >
     <label
@@ -55,6 +60,7 @@ export default {
       <small
         v-else-if="$slots.hint"
         class="form-text"
+        :class="disabled && 'text-black-50'"
       >
         <slot
           name="hint"

@@ -3,7 +3,8 @@ import {
   faEdit,
   faCheck,
   faTimes,
-  faHandHoldingUsd
+  faHandHoldingUsd,
+  faExclamationCircle,
 } from '@fortawesome/free-solid-svg-icons'
 import { formatDatetime } from '@/utils/formatters'
 import roles from '@/constants/roles'
@@ -38,7 +39,8 @@ export default {
         faEdit,
         faCheck,
         faTimes,
-        faHandHoldingUsd
+        faHandHoldingUsd,
+        faExclamationCircle
       },
       selectedPayment: {},
       loadingId: '',
@@ -158,6 +160,25 @@ export default {
                   class="small text-secondary"
                 >
                   <strong>NOTA:</strong> {{ payment.note }}
+                </div>
+                <div
+                  v-if="payment.clientBalances.length"
+                  class="small text-secondary"
+                >
+                  <b>SALDO:</b>
+                  <span
+                    v-for="balance in payment.clientBalances"
+                    :key="balance.id"
+                    class="me-1"
+                  >
+                    {{ $helpers.toBRL(balance.value, false, balance.value > 0) }}
+                  </span>
+                  <FontAwesomeIcon
+                    v-if="payment.is_sponsor"
+                    v-tippy
+                    :icon="icons.faExclamationCircle"
+                    content="Saldo contabilizado para o patrocinador"
+                  />
                 </div>
               </div>
               <div class="d-flex">

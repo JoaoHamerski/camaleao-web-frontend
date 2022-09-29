@@ -18,8 +18,8 @@ const fallback = (object, prop, fallbackString = 'N/A') => {
   return isNil(object) ? fallbackString : object[prop]
 }
 
-const toBRL = (str, highlightNumerator = false) => {
-  return formatCurrencyBRL(str, highlightNumerator)
+const toBRL = (str, highlightNumerator = false, appendPlus = false) => {
+  return formatCurrencyBRL(str, highlightNumerator, appendPlus)
 }
 
 const inputFileToBase64 = file => new Promise((resolve, reject) => {

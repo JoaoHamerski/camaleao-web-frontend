@@ -1,7 +1,9 @@
 <script>
+import accounting from 'accounting-js'
 import { vias } from '@/graphql/Via.gql'
 import { CreatePayment, UpdatePayment } from '@/graphql/Payment.gql'
 import { GetEntries } from '@/graphql/Entry.gql'
+import { GetClientBalances } from '@/graphql/ClientBalance.gql'
 
 import { isEmpty } from 'lodash-es'
 import Form from '@/utils/Form'
@@ -47,11 +49,14 @@ export default {
       form: new Form({
         bank_uid: '',
         value: 'R$ ',
+        credit: 'R$ ',
         date: '',
         payment_via_id: '',
         note: '',
         sponsorship_client_id: '',
         is_sponsor: false,
+        add_rest_to_credits: false,
+        use_client_balance: false
       }),
       maskCurrencyBRL: maskCurrencyBRL(),
       maskDate,
@@ -64,6 +69,13 @@ export default {
     },
     isFromBankEntry () {
       return !isEmpty(this.bank_entry)
+    },
+    clientHasBalance () {
+      return this.order.client.has_balance && this.order.client.balance > 0
+    },
+    orderRest () {
+      const credit = accounting.unformat(this.form.credit, ',')
+      return (this.order.total_owing - credit).toFixed(2)
     }
   },
   watch: {
@@ -100,7 +112,7 @@ export default {
       })
     },
     onPayRestClick () {
-      this.form.value = this.$helpers.toBRL(this.order.total_owing)
+      this.form.value = this.$helpers.toBRL(this.orderRest)
     },
     getFormattedForm () {
       const form = this.form.data()
@@ -128,6 +140,7 @@ export default {
         this.bank_entry = ''
 
         this.$helpers.clearCacheFrom([
+          { fieldName: 'clientBalances' },
           { fieldName: 'entries' },
           { fieldName: 'payments' },
           { fieldName: 'cashFlowEntries' }
@@ -150,7 +163,7 @@ export default {
               order_id: this.order.id,
               ...data
             }
-          }
+          },
         })
 
         this.$helpers.clearCacheFrom({fieldName: 'dailyCash'})
@@ -179,7 +192,7 @@ export default {
         note: entry.description,
         payment_via_id: entry.via_id
       })
-    }
+    },
   }
 }
 </script>
@@ -207,43 +220,81 @@ export default {
     />
 
     <template v-if="!isEdit">
-      <AppInput
-        id="value"
-        v-model="form.value"
-        name="value"
-        :error="form.errors.get('value')"
-        :mask="maskCurrencyBRL"
-        numeric
-        :disabled="isFromBankEntry"
-      >
-        Valor
-
-        <template #append>
-          <AppButton
-            :disabled="isFromBankEntry"
-            outlined
-            :tooltip="$helpers.toBRL(order.total_owing)"
-            @click.prevent="onPayRestClick"
-          >
-            Restante
-          </AppButton>
+      <AppContainer class="mb-2">
+        <template #title>
+          Valor de pagamento
         </template>
-      </AppInput>
-      <AppCheckbox
-        id="is_sponsor"
-        v-model="form.is_sponsor"
-        name="is_sponsor"
-      >
-        Patrocínio
-      </AppCheckbox>
-      <SelectClientsFind
-        v-show="form.is_sponsor"
-        id="sponsorship_client_id"
-        v-model="form.sponsorship_client_id"
-        :error="form.errors.get('sponsorship_client_id')"
-      >
-        Cliente patrocinador
-      </SelectClientsFind>
+        <template #body>
+          <AppCheckbox
+            v-if="clientHasBalance"
+            id="clientCredit"
+            v-model="form.use_client_balance"
+            name="clientCredit"
+          >
+            Usar saldo do cliente
+          </AppCheckbox>
+          <AppInput
+            v-if="form.use_client_balance"
+            id="credit"
+            v-model="form.credit"
+            name="credit"
+            :error="form.errors.get('credit')"
+            :mask="maskCurrencyBRL"
+            numeric
+            :disabled="isFromBankEntry"
+          >
+            Valor a ser usado (Disponível: <span class="text-success">{{ $helpers.toBRL(order.client.balance) }})</span>
+          </AppInput>
+
+          <AppInput
+            id="value"
+            v-model="form.value"
+            name="value"
+            :error="form.errors.get('value')"
+            :mask="maskCurrencyBRL"
+            numeric
+            :disabled="isFromBankEntry"
+            :optional="form.use_client_balance"
+            :label="form.use_client_balance ? 'Valor para completar' : 'Valor'"
+          >
+            <template #append>
+              <AppButton
+                :disabled="isFromBankEntry"
+                outlined
+                :tooltip="$helpers.toBRL(orderRest)"
+                @click.prevent="onPayRestClick"
+              >
+                Restante
+              </AppButton>
+            </template>
+          </AppInput>
+          <AppCheckbox
+            id="rest"
+            v-model="form.add_rest_to_credits"
+            name="rest"
+          >
+            Adicionar resto ao saldo do cliente
+            <template #hint>
+              Caso o valor supere o que resta pagar.
+            </template>
+          </AppCheckbox>
+          <AppCheckbox
+            id="is_sponsor"
+            v-model="form.is_sponsor"
+            name="is_sponsor"
+          >
+            Patrocínio
+          </AppCheckbox>
+          <SelectClientsFind
+            v-show="form.is_sponsor"
+            id="sponsorship_client_id"
+            v-model="form.sponsorship_client_id"
+            :error="form.errors.get('sponsorship_client_id')"
+          >
+            Cliente patrocinador
+          </SelectClientsFind>
+        </template>
+      </AppContainer>
     </template>
 
     <AppInput

@@ -32,7 +32,7 @@ export const formatPhone = (str) => {
   return format(str, patterns[str.length])
 }
 
-export const formatCurrencyBRL = (str, highlightNumerator = false) => {
+export const formatCurrencyBRL = (str, highlightNumerator = false, appendPlus = false) => {
   const formatted = accounting.formatMoney(str, {
     symbol: 'R$',
     decimal: ',',
@@ -45,12 +45,20 @@ export const formatCurrencyBRL = (str, highlightNumerator = false) => {
     return str
   }
 
+  const numeric = formatted.split('R$ ')[1]
+  const numerator = numeric.split(',')[0]
+  const denominator = numeric.split(',')[1]
+
   if (highlightNumerator) {
-    const numerator = formatted.split(',')[0]
-    const denominator = formatted.split(',')[1]
-    const highlighted = `<b>${numerator}</b>,${denominator}`
+    const highlighted = `<b>R$ ${numerator}</b>,${denominator}`
 
     return highlighted
+  }
+
+  if (appendPlus) {
+    const appended = `R$ +${numerator},${denominator}`
+
+    return appended
   }
 
   return formatted

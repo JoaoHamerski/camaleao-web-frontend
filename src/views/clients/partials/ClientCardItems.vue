@@ -1,4 +1,5 @@
 <script>
+import { faEye } from '@fortawesome/free-solid-svg-icons'
 import { formatPhone } from '@/utils/formatters'
 import ClientCardItem from './ClientCardItem.vue'
 
@@ -12,7 +13,17 @@ export default {
       default: () => ({})
     }
   },
+  data () {
+    return {
+      icons: {
+        faEye
+      }
+    }
+  },
   computed: {
+    clientHasBalance () {
+      return this.client.has_balance && this.client.balance > 0
+    },
     clientCityInfo () {
       const city = this.client.city?.name
       const state = this.client.city?.state?.abbreviation
@@ -35,7 +46,10 @@ export default {
     }
   },
   methods: {
-    formatPhone
+    formatPhone,
+    onShowBalancesClick () {
+      this.$emit('show-balances')
+    }
   }
 }
 </script>
@@ -84,6 +98,28 @@ export default {
       >
         <template #text>
           <span v-html="$helpers.toBRL(client.total_owing_as_sponsorship, true)" />
+        </template>
+      </ClientCardItem>
+    </template>
+
+    <template v-if="clientHasBalance">
+      <hr>
+      <ClientCardItem
+        label="Saldo"
+        :color="client.balance > 0 ? 'success' : 'danger'"
+      >
+        <template #text>
+          <span v-html="$helpers.toBRL(client.balance, true)" />
+          <span class="ms-2">
+            <FontAwesomeIcon
+              v-tippy
+              content="Ver mais"
+              class="clickable link-primary"
+              :icon="icons.faEye"
+              fixed-width
+              @click.prevent="onShowBalancesClick"
+            />
+          </span>
         </template>
       </ClientCardItem>
     </template>

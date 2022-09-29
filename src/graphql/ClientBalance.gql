@@ -1,0 +1,37 @@
+#import "./_PaginatorFragment.gql"
+
+query GetClientBalances (
+  $clientId: ID!
+  $first: Int!
+  $page: Int
+) {
+  clientBalances (
+    client_id: $clientId
+    first: $first
+    page: $page
+    is_confirmed: true
+  ) {
+    paginatorInfo {
+      ...PaginatorSimpleParts
+    }
+
+    data {
+      id
+      value
+
+      payment {
+        id
+        value
+        order {
+          id
+          code
+          client {
+            id
+          }
+        }
+      }
+
+      created_at
+    }
+  }
+}

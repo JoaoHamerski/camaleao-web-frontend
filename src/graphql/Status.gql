@@ -5,6 +5,7 @@ query GetStatus {
     is_available
     order
     sector {
+      id
       name
     }
   }

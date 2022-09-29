@@ -79,6 +79,8 @@ fragment OrderClientParts on Order {
     id
     name
     phone
+    balance
+    has_balance
     total_owing
     total_owing_as_sponsorship
     is_sponsor
@@ -138,6 +140,11 @@ fragment PaymentsPart on Order {
     is_confirmed
     created_at
     is_sponsor
+
+    clientBalances {
+      id
+      value
+    }
 
     sponsorship_client {
       id
