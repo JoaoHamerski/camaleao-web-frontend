@@ -9,6 +9,15 @@ export default {
     }
   },
   computed: {
+    originalPaymentValue () {
+      const balance = this.balance.payment.clientBalances.find(balance => balance.value > 0)
+
+      if (balance) {
+        return this.balance.payment.value + balance.value
+      }
+
+      return this.balance.payment.value
+    },
     getOrderUrl () {
       return this.$helpers.getUrl('orders.show', {
         client: this.balance.payment.order.client.id,
@@ -48,6 +57,13 @@ export default {
         target="_blank"
         :href="getOrderUrl"
       >{{ balance.payment.order.code }}</a>
+    </div>
+
+    <div
+      v-if="balance.payment.value !== originalPaymentValue"
+      class="text-secondary small"
+    >
+      ({{ $helpers.toBRL(originalPaymentValue) }} restou {{ $helpers.toBRL(balance.value) }})
     </div>
   </li>
 </template>

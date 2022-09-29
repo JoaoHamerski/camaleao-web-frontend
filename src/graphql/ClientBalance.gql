@@ -22,6 +22,11 @@ query GetClientBalances (
       payment {
         id
         value
+        clientBalances {
+          id
+          value
+        }
+
         order {
           id
           code
