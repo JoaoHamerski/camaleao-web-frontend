@@ -273,7 +273,7 @@ export default {
             v-model="form.add_rest_to_credits"
             name="rest"
           >
-            Adicionar resto ao saldo do cliente
+            Adicionar resto ao saldo do {{ form.is_sponsor ? 'patrocinador' : 'cliente' }}
             <template #hint>
               Caso o valor supere o que resta pagar.
             </template>
