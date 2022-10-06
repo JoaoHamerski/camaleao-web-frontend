@@ -22,7 +22,9 @@ import {
   faTasks,
   faUserTag,
   faHandHoldingUsd,
-  faListUl
+  faListUl,
+  faFileSignature,
+  faThLarge
 } from '@fortawesome/free-solid-svg-icons'
 
 const ITEMS = {
@@ -180,7 +182,35 @@ const ITEMS = {
       title: 'Entradas bancárias',
       icon: faHandHoldingUsd,
       route: { name: 'bank-entries.index' },
-      condition:() => canView(ROLES.GERENCIA)
+      condition: () => canView(ROLES.GERENCIA)
+    }
+  },
+  OUTROS: {
+    title: 'Outros',
+    icon: faThLarge,
+    condition: () => canView(
+      ROLES.GERENCIA,
+      ROLES.ATENDIMENTO,
+      ROLES.COSTURA,
+      ROLES.ESTAMPA,
+      ROLES.DESIGN,
+    ),
+    get items () {
+      return [
+        this.GERADOR_DE_RECIBO
+      ]
+    },
+    GERADOR_DE_RECIBO: {
+      title: 'Gerador de recibo',
+      icon: faFileSignature,
+      route: { name: 'receipt-generator.index' },
+      condition: () => canView(
+        ROLES.GERENCIA,
+        ROLES.ATENDIMENTO,
+        ROLES.COSTURA,
+        ROLES.ESTAMPA,
+        ROLES.DESIGN
+      )
     }
   },
   PRODUCAO_USUARIOS: {
@@ -216,8 +246,9 @@ export default [
   ITEMS.CONTROLE_DE_PEDIDOS,
   ITEMS.FINANCEIRO,
   ITEMS.PRODUCAO_USUARIOS,
-  ITEMS.MINHA_CONTA,
   ITEMS.GERENCIAMENTO,
+  ITEMS.OUTROS,
+  ITEMS.MINHA_CONTA,
   ITEMS.ATIVIDADES,
   ITEMS.SAIR
 ]
