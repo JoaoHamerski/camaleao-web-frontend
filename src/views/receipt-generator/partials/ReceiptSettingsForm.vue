@@ -25,11 +25,11 @@ export default {
         }
 
         if (config.logo) {
-          config.logo = (process.env.VUE_APP_API_HTTP + config.logo).replace('public', 'storage')
+          config.logo = (process.env.VUE_APP_API_HTTP  + '/' + config.logo).replace('public', 'storage')
         }
 
         if (config.signature_image) {
-          config.signature_image = (process.env.VUE_APP_API_HTTP + config.signature_image).replace('public', 'storage')
+          config.signature_image = (process.env.VUE_APP_API_HTTP + '/' + config.signature_image).replace('public', 'storage')
         }
 
         return config
