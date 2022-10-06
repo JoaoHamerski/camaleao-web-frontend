@@ -16,6 +16,7 @@ export default {
   },
   data () {
     return {
+      isPreviewLoading: false,
       icons: {
         faCog
       }
@@ -23,6 +24,8 @@ export default {
   },
   methods: {
     async onPreviewClick () {
+      this.isPreviewLoading = true
+
       try {
         const { data: { receiptUrl } } = await this.$apollo.mutate({
           mutation: GetReceiptURL,
@@ -35,6 +38,8 @@ export default {
       } catch (error) {
         this.$toast.error('Ops! Algo deu errado.')
       }
+
+      this.isPreviewLoading = false
     }
   }
 }
@@ -62,6 +67,7 @@ export default {
           outlined
           class="fw-bold"
           content="Salve antes de pre-visualizar"
+          :loading="isPreviewLoading"
           @click.prevent="onPreviewClick"
         >
           Pré-visualizar
