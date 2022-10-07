@@ -23,6 +23,7 @@ query GetReceipts (
       value
       filepath
       date
+      has_signature
     }
   }
 }
@@ -31,8 +32,14 @@ mutation GetReceiptURL ($id: ID $preview: Boolean) {
   receiptUrl(id: $id, preview: $preview)
 }
 
-mutation CreateReceipt ($input: ReceiptCreateInput!) {
+mutation CreateReceipt ($input: ReceiptInput!) {
   receiptCreate (input: $input) {
+    id
+  }
+}
+
+mutation UpdateReceipt ($id: ID! $input: ReceiptInput!) {
+  receiptUpdate (id: $id input: $input) {
     id
   }
 }

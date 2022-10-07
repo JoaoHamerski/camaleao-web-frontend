@@ -19,17 +19,19 @@ export default {
       },
       update(data) {
         const config = JSON.parse(data.configGet)
+        const apiUrl = process.env.VUE_APP_API_HTTP
 
         if (!config) {
           return config
         }
 
         if (config.logo) {
-          config.logo = (process.env.VUE_APP_API_HTTP  + '/' + config.logo).replace('public', 'storage')
+
+          config.logo = `${apiUrl}/storage/receipt_settings/${config.logo}`
         }
 
         if (config.signature_image) {
-          config.signature_image = (process.env.VUE_APP_API_HTTP + '/' + config.signature_image).replace('public', 'storage')
+          config.signature_image = `${apiUrl}/storage/receipt_settings/${config.signature_image}`
         }
 
         return config

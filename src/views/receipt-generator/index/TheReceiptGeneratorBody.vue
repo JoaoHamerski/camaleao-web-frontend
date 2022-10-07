@@ -1,6 +1,8 @@
 <script>
-import { faThList, faEye } from '@fortawesome/free-solid-svg-icons'
+import { faThList, faEye, faEdit } from '@fortawesome/free-solid-svg-icons'
 import { GetReceipts, GetReceiptURL } from '@/graphql/Receipt.gql'
+
+import ReceiptEditModal from '../partials/ReceiptEditModal.vue'
 
 export default {
   apollo: {
@@ -14,6 +16,9 @@ export default {
       }
     }
   },
+  components: {
+    ReceiptEditModal
+  },
   data () {
     return {
       loadingFile: {
@@ -23,10 +28,15 @@ export default {
         paginatorInfo: {},
         data: []
       },
+      receiptEditModal: {
+        receipt: {},
+        value: false
+      },
       page: 1,
       icons: {
         faThList,
-        faEye
+        faEye,
+        faEdit
       }
     }
   },
@@ -40,11 +50,19 @@ export default {
         {value: 'product', text: 'Produto'},
         {value: 'value', text: 'Valor', format: 'currencyBRL'},
         {value: 'date', text: 'Data', format: 'datetime'},
-        {value: 'view', text: ''}
+        {value: 'actions', text: ''}
       ]
     }
   },
   methods: {
+    onEditReceiptClick (receipt) {
+      this.receiptEditModal.receipt = receipt
+      this.receiptEditModal.value = true
+    },
+    onEditReceiptSuccess () {
+      this.receiptEditModal.value = false
+      this.receiptEditModal.receipt = {}
+    },
     async onViewReceiptClick ({id}) {
       this.loadingFile.id = id
 
@@ -79,18 +97,35 @@ export default {
       </template>
       <template #body>
         <AppLoading v-show="isQueryLoading" />
+        <ReceiptEditModal
+          v-model="receiptEditModal.value"
+          :receipt="receiptEditModal.receipt"
+          @success="onEditReceiptSuccess"
+        />
+
         <div>
           <AppTable
             :headers="headers"
             :items="receipts.data"
           >
-            <template #[`items.view`]="{ item }">
+            <template #[`items.actions`]="{ item }">
               <AppButton
+                v-tippy
                 outlined
-                class="btn-sm"
+                class="me-2"
+                btn-class="btn-sm"
                 :icon="icons.faEye"
                 :loading="item.id === loadingFile.id"
+                content="Ver recibo"
                 @click.prevent="onViewReceiptClick(item)"
+              />
+              <AppButton
+                v-tippy
+                outlined
+                :icon="icons.faEdit"
+                btn-class="btn-sm"
+                content="Editar"
+                @click.prevent="onEditReceiptClick(item)"
               />
             </template>
           </AppTable>

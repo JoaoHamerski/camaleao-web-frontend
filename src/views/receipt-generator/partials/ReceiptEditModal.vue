@@ -1,5 +1,5 @@
 <script>
-import { faPlus } from '@fortawesome/free-solid-svg-icons'
+import { faEdit } from '@fortawesome/free-solid-svg-icons'
 import ReceiptForm from './ReceiptForm.vue'
 
 export default {
@@ -10,12 +10,16 @@ export default {
     value: {
       type: Boolean,
       default: false
+    },
+    receipt: {
+      type: Object,
+      default: () => ({})
     }
   },
   data () {
     return {
       icons: {
-        faPlus
+        faEdit
       }
     }
   },
@@ -29,21 +33,23 @@ export default {
 
 <template>
   <AppModal
-    id="receiptCreateModal"
+    id="receiptEditModal"
     :value="value"
     v-on="$listeners"
   >
     <template #title>
       <FontAwesomeIcon
-        :icon="icons.faPlus"
+        :icon="icons.faEdit"
         fixed-width
       />
-      Gerar novo recibo
+      Editar recibo
     </template>
 
     <template #body>
       <ReceiptForm
         v-if="value"
+        :receipt="receipt"
+        is-edit
         @success="onSuccess"
       />
     </template>

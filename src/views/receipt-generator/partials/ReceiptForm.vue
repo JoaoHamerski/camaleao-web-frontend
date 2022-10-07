@@ -1,8 +1,14 @@
 <script>
 import Form from '@/utils/Form'
-import { isEmpty, get } from 'lodash-es'
+import { isEmpty, get, omit, pick } from 'lodash-es'
+import { formatDatetime } from '@/utils/formatters'
 import { maskCurrencyBRL, maskDate } from '@/utils/masks'
-import { GetReceiptProductSuggestions, GetReceipts, CreateReceipt } from '@/graphql/Receipt.gql'
+import {
+  GetReceiptProductSuggestions,
+  GetReceipts,
+  CreateReceipt,
+  UpdateReceipt
+} from '@/graphql/Receipt.gql'
 import { GetConfig } from '@/graphql/Config.gql'
 import { handleSuccess, handleError } from '@/utils/forms'
 
@@ -18,10 +24,19 @@ export default {
         key: 'receipt_generator_settings',
         encoded: false
       },
-      fetchPolicy: 'network-only',
       update (data) {
         return JSON.parse(data.configGet)
       }
+    }
+  },
+  props: {
+    receipt: {
+      type: Object,
+      default: () => ({})
+    },
+    isEdit: {
+      type: Boolean,
+      default: false
     }
   },
   data () {
@@ -59,12 +74,40 @@ export default {
       )
     }
   },
+  mounted () {
+    if (this.isEdit) {
+      this.populateForm()
+    }
+  },
   methods: {
+    populateForm() {
+      const form = pick(this.receipt, Object.keys(this.form.data()));
+
+      Object.assign(
+        this.form,
+        new Form({
+          ...omit(form, ['date', 'value']),
+          ...{
+            date: formatDatetime(this.receipt.date),
+            value: this.$helpers.toBRL(this.receipt.value)
+          }
+        })
+      )
+    },
     async onSubmit () {
       const input = this.form.data()
 
       this.isLoading = true
 
+      if (this.isEdit) {
+        await this.update(input)
+      } else {
+        await this.create(input)
+      }
+
+      this.isLoading = false
+    },
+    async create (input) {
       try {
         await this.$apollo.mutate({
           mutation: CreateReceipt,
@@ -75,12 +118,27 @@ export default {
           awaitRefetchQueries: true
         })
 
-        handleSuccess(this, {message: 'Recibo gerado!'})
+        handleSuccess(this, { message: 'Recibo gerado!' })
       } catch (error) {
         handleError(this, error)
       }
+    },
+    async update (input) {
+      try {
+        await this.$apollo.mutate({
+          mutation: UpdateReceipt,
+          variables: {
+            id: this.receipt.id,
+            input
+          },
+          refetchQueries: [GetReceipts],
+          awaitRefetchQueries: true
+        })
 
-      this.isLoading = false
+        handleSuccess(this, { message: 'Recibo atualizado!' })
+      } catch (error) {
+        handleError(this, error)
+      }
     }
   }
 }
@@ -171,7 +229,7 @@ export default {
           :loading="isLoading"
           :disabled="!isFormEnabled"
         >
-          Gerar
+          {{ isEdit ? 'Atualizar' : 'Gerar' }}
         </AppButton>
       </div>
       <div class="col">
