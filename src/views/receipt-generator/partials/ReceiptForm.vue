@@ -56,6 +56,9 @@ export default {
     }
   },
   computed: {
+    isSuggestionsQueryLoading () {
+      return !!this.$apollo.queries.receiptProductSuggestions.loading
+    },
     isQueryLoading () {
       return !!this.$apollo.queries.receiptSettings.loading
     },
@@ -172,13 +175,26 @@ export default {
       id="product"
       v-model="form.product"
       list="productsList"
-      type="lists"
       name="product"
       placeholder="Digite o produto..."
       :error="form.errors.get('product')"
+      autocomplete="off"
     >
       Produto
+      <template
+        v-if="isSuggestionsQueryLoading"
+        #hint
+      >
+        <div
+          class="spinner-border spinner-border-sm me-1 text-primary"
+          role="status"
+        >
+          <span class="visually-hidden">Loading...</span>
+        </div>
+        Carregando lista de sugestões...
+      </template>
     </AppInput>
+
     <datalist id="productsList">
       <option
         v-for="suggestion in receiptProductSuggestions"
