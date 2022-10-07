@@ -83,7 +83,7 @@ const routes = [
   ...sectoresRoutes,
   ...bankEntriesRoutes,
   ...entriesRoutes,
-  // ...receiptGeneratorRoutes
+  ...receiptGeneratorRoutes
 ]
 
 if (process.env.NODE_ENV === 'development') {
