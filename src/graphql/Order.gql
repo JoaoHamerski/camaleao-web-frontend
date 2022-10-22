@@ -1,4 +1,5 @@
 #import "./_PaginatorFragment.gql"
+#import "./ActivityFragments.gql"
 
 fragment OrderParts on Order {
   id
@@ -180,14 +181,14 @@ fragment OrderType on Order {
   ...OrderConcludedStatusParts
 }
 
-query GetOrdersSimplified (
+query GetOrdersSimplified(
   $page: Int
   $hasClient: QueryOrdersHasClientWhereHasConditions
   $hasPayments: QueryOrdersHasPaymentsWhereHasConditions
   $orderBy: [QueryOrdersOrderByOrderByClause!]
   $where: QueryOrdersWhereWhereConditions
 ) {
-  orders (
+  orders(
     first: 10
     page: $page
     hasClient: $hasClient
@@ -205,55 +206,71 @@ query GetOrdersSimplified (
   }
 }
 
-query GetOrder ($id: ID! $client_id: ID) {
-  order (id: $id client_id: $client_id) {
+query GetOrder($id: ID!, $client_id: ID) {
+  order(id: $id, client_id: $client_id) {
     ...OrderType
   }
 }
 
-query GetOrderReport ($id: ID!) {
-  orderReport (id: $id)
+query GetOrderReport($id: ID!) {
+  orderReport(id: $id)
 }
 
-query GetOrdersReport ($input: OrdersReportInput!) {
-  ordersReport (input: $input)
+query GetOrdersReport($input: OrdersReportInput!) {
+  ordersReport(input: $input)
 }
 
-query GetOrdersByPrintDate ($input: OrdersReportPrintDateInput!) {
-  ordersReportPrintDate (input: $input)
+query GetOrdersByPrintDate($input: OrdersReportPrintDateInput!) {
+  ordersReportPrintDate(input: $input)
 }
 
-query GetOrdersWeeklyCalendarReport ($input: OrdersWeeklyCalendarReport!) {
-  ordersWeeklyCalendarReport (input: $input)
+query GetOrdersWeeklyCalendarReport($input: OrdersWeeklyCalendarReport!) {
+  ordersWeeklyCalendarReport(input: $input)
 }
 
-mutation UpdateOrder ($id: ID! $input: OrderInput!) {
-  orderUpdate (id: $id input: $input) {
+query GetOrderActivities($id: ID!) {
+  ordersActivities(id: $id) {
+    id
+    log_name
+    description
+    subject {
+      ...OrderSubject
+      ...ClientSubject
+    }
+    causer {
+      ...UserCauser
+    }
+    properties
+    created_at
+  }
+}
+
+mutation UpdateOrder($id: ID!, $input: OrderInput!) {
+  orderUpdate(id: $id, input: $input) {
     ...OrderType
   }
 }
 
-mutation UpdateOrderStatus ($id: ID! $status_id: ID!) {
-  orderUpdateStatus (id: $id status_id: $status_id) {
+mutation UpdateOrderStatus($id: ID!, $status_id: ID!) {
+  orderUpdateStatus(id: $id, status_id: $status_id) {
     ...OrderType
   }
 }
 
-mutation ToggleOrder ($id: ID!) {
-  orderToggle (id: $id) {
+mutation ToggleOrder($id: ID!) {
+  orderToggle(id: $id) {
     ...OrderType
   }
 }
 
-mutation DeleteOrder ($id: ID!) {
-  orderDelete (id: $id) {
+mutation DeleteOrder($id: ID!) {
+  orderDelete(id: $id) {
     ...OrderType
   }
 }
 
-mutation CreateOrder ($client_id: ID! $input: OrderInput!) {
-  orderCreate (client_id: $client_id input: $input) {
+mutation CreateOrder($client_id: ID!, $input: OrderInput!) {
+  orderCreate(client_id: $client_id, input: $input) {
     ...OrderType
   }
 }
-

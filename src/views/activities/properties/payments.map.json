@@ -5,7 +5,7 @@
     },
     "date": {
         "text": "Data",
-        "format": "date"
+        "format": "datetime"
     },
     "note": {
         "text": "Anotação"

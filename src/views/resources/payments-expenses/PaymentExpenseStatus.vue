@@ -24,7 +24,13 @@ export default {
   },
   computed: {
     showConfirmationButtons () {
-      return this.$helpers.canView(roles.GERENCIA) && this.entry.is_confirmed === null
+      if (this.isExpense) {
+        return this.$helpers.canView(roles.GERENCIA)
+          && this.entry.is_confirmed === null
+      }
+
+      return this.$helpers.canView(roles.GERENCIA, roles.ATENDIMENTO)
+          && this.entry.is_confirmed === null
     },
     getComponentAttrs () {
       if (this.showConfirmationButtons) {

@@ -18,6 +18,8 @@ import {
   GetProductTypeExpensesByMonth
 } from '@/graphql/Expense.gql'
 
+import roles from '@/constants/roles'
+
 const CONFIRMATION = {
   ACCEPT: true,
   REJECT: false
@@ -38,6 +40,7 @@ export default {
     return {
       isLoading: '',
       CONFIRMATION,
+      roles,
       icons: {
         faTimes,
         faCheck
@@ -120,6 +123,7 @@ export default {
 <template>
   <div>
     <AppButton
+      v-if="$helpers.canView(roles.GERENCIA)"
       :loading="isLoading === CONFIRMATION.ACCEPT"
       :disabled="isLoading === CONFIRMATION.REJECT"
       :icon="icons.faCheck"
@@ -130,6 +134,7 @@ export default {
       @click.prevent="assignConfirmation(CONFIRMATION.ACCEPT)"
     />
     <AppButton
+      v-if="$helpers.canView(roles.GERENCIA, roles.ATENDIMENTO)"
       :loading="isLoading === CONFIRMATION.REJECT"
       :disabled="isLoading === CONFIRMATION.ACCEPT"
       :icon="icons.faTimes"

@@ -1,5 +1,6 @@
 <script>
 import { formatDatetime } from '@/utils/formatters'
+import roles from '@/constants/roles'
 
 import OrderReminder from './partials/OrderReminder.vue'
 import OrderClothingTypes from './partials/OrderClothingTypes.vue'
@@ -7,6 +8,8 @@ import OrderNotes from './partials/OrderNotes.vue'
 import OrderPayments from './partials/OrderPayments.vue'
 import OrderFiles from './partials/OrderFiles.vue'
 import OrderStatusProgress from './partials/OrderStatusProgress.vue'
+import OrderActivities from './partials/OrderActivities.vue'
+
 
 export default {
   components: {
@@ -15,7 +18,8 @@ export default {
     OrderPayments,
     OrderFiles,
     OrderReminder,
-    OrderStatusProgress
+    OrderStatusProgress,
+    OrderActivities
   },
   props: {
     order: {
@@ -25,6 +29,11 @@ export default {
     isOrderPreRegistered: {
       type: Boolean,
       required: true
+    }
+  },
+  data () {
+    return {
+      roles
     }
   },
   computed: {
@@ -219,6 +228,12 @@ export default {
     <OrderFiles
       class="mt-3"
       :order="order"
+    />
+
+    <OrderActivities
+      v-if="$helpers.canView(roles.GERENCIA)"
+      :order="order"
+      class="mt-3"
     />
   </div>
 </template>
