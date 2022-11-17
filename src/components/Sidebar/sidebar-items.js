@@ -191,9 +191,9 @@ const ITEMS = {
     condition: () => canView(
       ROLES.GERENCIA,
       ROLES.ATENDIMENTO,
-      ROLES.COSTURA,
-      ROLES.ESTAMPA,
-      ROLES.DESIGN,
+      // ROLES.COSTURA,
+      // ROLES.ESTAMPA,
+      // ROLES.DESIGN,
     ),
     get items () {
       return [
@@ -207,9 +207,9 @@ const ITEMS = {
       condition: () => canView(
         ROLES.GERENCIA,
         ROLES.ATENDIMENTO,
-        ROLES.COSTURA,
-        ROLES.ESTAMPA,
-        ROLES.DESIGN
+        // ROLES.COSTURA,
+        // ROLES.ESTAMPA,
+        // ROLES.DESIGN
       )
     }
   },

@@ -8,8 +8,7 @@ export default {
       isLoading: false,
       form: new Form({
         email: '',
-        password: '',
-        remember: false
+        password: ''
       })
     }
   },
@@ -60,14 +59,7 @@ export default {
       Senha
     </AppInput>
 
-    <AppCheckbox
-      id="remember"
-      v-model="form.remember"
-    >
-      Lembre-se de mim
-    </AppCheckbox>
-
-    <div class="d-grid">
+    <div class="d-grid pt-3">
       <AppButton
         :loading="isLoading"
         color="primary"

@@ -60,12 +60,20 @@ export default {
       <AppLoading
         v-show="isQueryLoading"
       />
-      <template v-for="activity in ordersActivities ">
-        <ActivityItem
-          :key="activity.id"
-          :item="activity"
-        />
-      </template>
+      <div
+        v-if="!ordersActivities.length"
+        class="text-center text-secondary small my-4"
+      >
+        Nenhuma atividade encontrada
+      </div>
+      <div v-else>
+        <template v-for="activity in ordersActivities ">
+          <ActivityItem
+            :key="activity.id"
+            :item="activity"
+          />
+        </template>
+      </div>
     </template>
   </AppContainer>
 </template>
