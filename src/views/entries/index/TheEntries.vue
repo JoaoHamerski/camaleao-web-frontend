@@ -46,6 +46,13 @@ export default {
         }
       })
     },
+    onHideCanceledToggle (state) {
+      this.entry.entries.forEach(entry => {
+        if (entry.isCanceled) {
+          entry.display = state
+        }
+      })
+    },
     async onLoadEntry (entry) {
       this.isLoading = true
 
@@ -93,6 +100,7 @@ export default {
       :file-entry="entry"
       :is-loading="isLoading"
       @hide-duplicates-toggle="onHideDuplicatesToggle"
+      @hide-canceled-toggle="onHideCanceledToggle"
       @entry-registered="onEntryRegistered"
       @entry-canceled="onEntryCanceled"
     />

@@ -42,6 +42,9 @@ export default {
     onHideDuplicatesToggle (state) {
       this.$emit('hide-duplicates-toggle', state)
     },
+    onHideCanceledToggle (state) {
+      this.$emit('hide-canceled-toggle', state)
+    },
     onAddEntry (entry) {
       this.modalEntry.value = true
       this.modalEntry.entry = {filename: this.fileEntry.filename, ...entry}
@@ -97,6 +100,7 @@ export default {
         <BankEntries
           :file-entry="fileEntry"
           @hide-duplicates-toggle="onHideDuplicatesToggle"
+          @hide-canceled-toggle="onHideCanceledToggle"
           @add-entry="onAddEntry"
           @cancel-entry="onCancelEntry"
         />

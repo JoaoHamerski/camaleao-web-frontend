@@ -19,6 +19,12 @@ export default {
     },
     onCancelEntry (item) {
       this.$emit('cancel-entry', item)
+    },
+    onHideDuplicates (value) {
+      this.$emit('hide-duplicates-toggle', value)
+    },
+    onHideCanceled (value) {
+      this.$emit('hide-canceled-toggle', value)
     }
   }
 }
@@ -26,7 +32,11 @@ export default {
 
 <template>
   <div>
-    <BankEntriesHeader :file-entry="fileEntry" />
+    <BankEntriesHeader
+      :file-entry="fileEntry"
+      @hide-duplicates="onHideDuplicates"
+      @hide-canceled="onHideCanceled"
+    />
 
     <BankEntriesTable
       :file-entry="fileEntry"

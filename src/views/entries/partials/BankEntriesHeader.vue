@@ -11,6 +11,7 @@ export default {
   data () {
     return {
       hideDuplicates: false,
+      hideCanceled: false,
       icons: {
         faExclamationCircle
       },
@@ -27,16 +28,27 @@ export default {
         .filter(entry => entry.isDuplicated)
         .length
     },
+    canceledCount () {
+      return this
+        .fileEntry
+        .entries
+        .filter(entry => entry.isCanceled)
+        .length
+    }
   },
   watch: {
     fileEntry () {
       this.hideDuplicates = false
+      this.hideCanceled = false
     }
   },
   methods: {
     onHideDuplicatesClick () {
       this.$emit('hide-duplicates', !this.hideDuplicates)
     },
+    onHideCanceledClick () {
+      this.$emit('hide-canceled', !this.hideCanceled)
+    }
   }
 }
 </script>
@@ -52,16 +64,30 @@ export default {
       content="Já constam no banco de dados"
       class="badge bg-secondary ms-1 mb-2"
     >
-      {{ duplicatesCount }} entradas duplicadas
+      {{ duplicatesCount }} duplicadas
     </span>
 
-    <AppCheckboxSwitch
-      id="hideDuplicatesCheckbox"
-      v-model="hideDuplicates"
-      @input="onHideDuplicatesClick"
-    >
-      Ocultar duplicatas
-    </AppCheckboxSwitch>
+    <span class="badge ms-1 bg-secondary mb-2">
+      {{ canceledCount }} canceladas
+    </span>
+
+    <div class="d-flex">
+      <AppCheckboxSwitch
+        id="hideDuplicatesCheckbox"
+        v-model="hideDuplicates"
+        class="me-2"
+        @input="onHideDuplicatesClick"
+      >
+        Ocultar duplicatas
+      </AppCheckboxSwitch>
+      <AppCheckboxSwitch
+        id="hideCanceledCheckbox"
+        v-model="hideCanceled"
+        @input="onHideCanceledClick"
+      >
+        Ocultar cancelados
+      </AppCheckboxSwitch>
+    </div>
 
     <div
       class="small text-secondary"
