@@ -1,26 +1,21 @@
 <script>
-import { faPlus, faExclamationCircle } from '@fortawesome/free-solid-svg-icons'
 import { formatCurrencyBRL } from '@/utils/formatters'
 
+import BankEntriesTableActionBtn from './BankEntriesTableActionBtn.vue'
+
 export default {
+  components: {
+    BankEntriesTableActionBtn
+  },
   props: {
     fileEntry: {
       type: Object,
       required: true
     }
   },
-  data () {
-    return {
-      hideDuplicates: false,
-      icons: {
-        faPlus,
-        faExclamationCircle
-      }
-    }
-  },
   computed: {
-    duplicatesCount () {
-      return this.fileEntry.entries.filter(entry => entry.isDuplicated).length
+    entries () {
+      return this.fileEntry.entries
     },
     headers () {
       return [
@@ -31,118 +26,63 @@ export default {
       ]
     }
   },
-  watch: {
-    fileEntry () {
-      this.hideDuplicates = false
-    }
-  },
   methods: {
     formatCurrencyBRL,
-    onAddEntryClick(item) {
+    onAddEntry (item) {
       this.$emit('add-entry', item)
     },
-    onHideDuplicatesClick () {
-      this.$emit('hide-duplicates-toggle', !this.hideDuplicates)
+    onCancelEntry (item) {
+      this.$emit('cancel-entry', item)
     },
-    tableRowClass(item) {
-      if (item.isDuplicated) {
-        return 'table-secondary'
-      }
-      if (item.value > 0) {
-        return 'table-success'
-      }
-
-      return 'table-danger'
+    isItemDisabled (item) {
+      return item.isDuplicated || item.isCanceled
     },
-    getItemColor(item) {
-      if (item.isDuplicated) {
+    getItemColor (item) {
+      if (this.isItemDisabled(item)) {
         return 'secondary'
       }
 
       return item.value > 0 ? 'success' : 'danger'
     },
-    isItemDisabled(item) {
-      return item.isDuplicated
-    },
-    getContentMessage(item) {
-      if (item.isDuplicated) {
-        return 'Item duplicado'
+    tableRowClass (item) {
+      const itemColor = this.getItemColor(item)
+      const classes = []
+
+      if (item.isCanceled) {
+        classes.push('text-decoration-line-through')
       }
 
-      if (item.value > 0) {
-        return 'Entrada'
-      }
+      classes.push(`table-${itemColor}`)
 
-      if (item.value < 0) {
-        return 'Saída'
-      }
-
-      return 'Como isso foi parar ai?'
+      return classes
     }
   }
 }
 </script>
 
 <template>
-  <div>
-    <span class="badge bg-primary mb-2">
-      {{ fileEntry.entries.length }} entradas carregadas
-    </span>
-
-    <span
-      v-tippy
-      content="Já constam no banco de dados"
-      class="badge bg-secondary ms-1 mb-2"
-    >
-      {{ duplicatesCount }} entradas duplicadas
-    </span>
-
-    <AppCheckboxSwitch
-      id="hideDuplicatesCheckbox"
-      v-model="hideDuplicates"
-      @input="onHideDuplicatesClick"
-    >
-      Ocultar duplicatas
-    </AppCheckboxSwitch>
-    <div
-      class="small text-secondary"
-    >
-      <span
-        v-tippy
-        content="Significa que ela já consta no banco de dados de Pagamentos ou Despesas do sistema."
-      >
-        <FontAwesomeIcon
-          :icon="icons.faExclamationCircle"
-          fixed-width
-        />
-        Entradas duplicadas são marcadas em cinza.
-      </span>
-    </div>
-    <AppTable
-      :row-class="tableRowClass"
-      :headers="headers"
-      :items="fileEntry.entries"
-    >
-      <template #[`items.action`]="{ item }">
-        <AppButton
-          v-tippy
-          :content="getContentMessage(item)"
-          :disabled="isItemDisabled(item)"
-          btn-class="btn-sm"
-          :color="getItemColor(item)"
-          :icon="icons.faPlus"
-          @click.prevent="onAddEntryClick(item)"
-        />
-      </template>
-      <template #[`items.description`]="{ item }">
-        <span :class="isItemDisabled(item) && 'text-secondary'">{{ item.description }}</span>
-      </template>
-      <template #[`items.date`]="{ item }">
-        <span :class="isItemDisabled(item) && 'text-secondary'">{{ item.date }}</span>
-      </template>
-      <template #[`items.value`]="{ item }">
-        <b :class="`text-${getItemColor(item)}`">{{ formatCurrencyBRL(item.value) }}</b>
-      </template>
-    </AppTable>
-  </div>
+  <AppTable
+    :row-class="tableRowClass"
+    :headers="headers"
+    :items="entries"
+  >
+    <template #[`items.action`]="{ item }">
+      <BankEntriesTableActionBtn
+        :item="item"
+        :disabled="isItemDisabled(item)"
+        :color="getItemColor(item)"
+        @add-entry="onAddEntry"
+        @cancel-entry="onCancelEntry"
+      />
+    </template>
+    <template #[`items.value`]="{ item }">
+      <b :class="`text-${getItemColor(item)}`">{{ formatCurrencyBRL(item.value) }}</b>
+    </template>
+    <template #[`items.date`]="{ item }">
+      <span :class="isItemDisabled(item) && 'text-secondary'">{{ item.date }}</span>
+    </template>
+    <template #[`items.description`]="{ item }">
+      <span :class="isItemDisabled(item) && 'text-secondary'">{{ item.description }}</span>
+    </template>
+  </AppTable>
 </template>

@@ -81,7 +81,7 @@ export default {
     },
     onSuccess () {
       this.modal = false
-      this.$emit('entry-success', this.entry)
+      this.$emit('success', this.entry)
     }
   }
 }

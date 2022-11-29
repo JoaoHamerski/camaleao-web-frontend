@@ -32,16 +32,16 @@ fragment PaymentsOrderParts on Order {
   }
 }
 
-query GetSponsoredPayments (
+query GetSponsoredPayments(
   $sponsorship_client_id: ID!
   $first: Int!
   $page: Int
 ) {
-  payments (
+  payments(
     sponsorship_client_id: $sponsorship_client_id
     first: $first
     page: $page
-    orderBy: [{column: CREATED_AT order: DESC}]
+    orderBy: [{ column: CREATED_AT, order: DESC }]
   ) {
     paginatorInfo {
       ...PaginatorSimpleParts
@@ -65,7 +65,6 @@ query GetSponsoredPayments (
           name
         }
       }
-
     }
   }
 }
@@ -77,8 +76,8 @@ query GetPaymentsPendencies {
   }
 }
 
-mutation CreatePayment ($input: PaymentInput!) {
-  paymentCreate (input: $input) {
+mutation CreatePayment($input: PaymentInput!) {
+  paymentCreate(input: $input) {
     id
 
     order {
@@ -95,8 +94,8 @@ mutation CreatePayment ($input: PaymentInput!) {
   }
 }
 
-mutation UpdatePayment ($id: ID! $input: PaymentInput!) {
-  paymentUpdate (id: $id input: $input) {
+mutation UpdatePayment($id: ID!, $input: PaymentInput!) {
+  paymentUpdate(id: $id, input: $input) {
     ...PaymentsParts
 
     order {
@@ -109,14 +108,14 @@ mutation UpdatePayment ($id: ID! $input: PaymentInput!) {
   }
 }
 
-mutation DeletePayment ($id: ID! $password: String!) {
-  paymentDelete (id: $id password: $password) {
+mutation DeletePayment($id: ID!, $password: String!) {
+  paymentDelete(id: $id, password: $password) {
     id
   }
 }
 
-mutation AssignPaymentConfirmation ($id: ID! $confirmation: Boolean!) {
-  paymentAssignConfirmation (id: $id confirmation: $confirmation) {
+mutation AssignPaymentConfirmation($id: ID!, $confirmation: Boolean!) {
+  paymentAssignConfirmation(id: $id, confirmation: $confirmation) {
     id
     order {
       ...PaymentsOrderParts
@@ -132,8 +131,8 @@ mutation AssignPaymentConfirmation ($id: ID! $confirmation: Boolean!) {
   }
 }
 
-mutation CreateDailyPayment ($input: DailyCashInput! ) {
-  dailyCashEntry (input: $input) {
+mutation CreateDailyPayment($input: DailyCashInput!) {
+  dailyCashEntry(input: $input) {
     ...PaymentsParts
 
     order {

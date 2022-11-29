@@ -70,6 +70,13 @@
   &.btn-rounded {
     border-radius: 2.5rem;
   }
+
+  &.btn-xs {
+    font-size: .5rem;
+    padding: .25rem;
+    font-weight: bold;
+    text-transform: uppercase;
+  }
 }
 
 .pagination li {
@@ -89,4 +96,8 @@
       font-size: .9rem;
     }
   }
+}
+
+.extra-small {
+  font-size: .6rem;
 }

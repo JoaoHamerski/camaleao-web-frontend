@@ -3,6 +3,7 @@ import { LoadBankEntry } from '@/graphql/BankEntry.gql'
 
 import TheEntriesList from './TheEntriesList.vue'
 import TheEntriesBody from './TheEntriesBody.vue'
+import EntriesMonthlyBalance from '../partials/EntriesMonthlyBalance.vue'
 
 export default {
   metaInfo: {
@@ -10,7 +11,8 @@ export default {
   },
   components: {
     TheEntriesList,
-    TheEntriesBody
+    TheEntriesBody,
+    EntriesMonthlyBalance
   },
   data () {
     return {
@@ -19,9 +21,23 @@ export default {
     }
   },
   methods: {
+    findEntry (entry) {
+      return this
+        .entry
+        .entries
+        .find(
+          (item) => item.bank_uid === entry.bank_uid
+        )
+    },
     onEntryRegistered(_entry) {
-      const entry = this.entry.entries.find((item) => item.bank_uid === _entry.bank_uid)
+      const entry = this.findEntry(_entry)
+
       entry.isDuplicated = true
+    },
+    onEntryCanceled (_entry) {
+      const entry = this.findEntry(_entry)
+
+      entry.isCanceled = true
     },
     onHideDuplicatesToggle(state) {
       this.entry.entries.forEach(entry => {
@@ -69,12 +85,16 @@ export default {
       :is-loading="isLoading"
       @load-entry="onLoadEntry"
     />
+
+    <EntriesMonthlyBalance class="mt-3" />
+
     <TheEntriesBody
       class="mt-3"
       :file-entry="entry"
       :is-loading="isLoading"
       @hide-duplicates-toggle="onHideDuplicatesToggle"
       @entry-registered="onEntryRegistered"
+      @entry-canceled="onEntryCanceled"
     />
   </div>
 </template>

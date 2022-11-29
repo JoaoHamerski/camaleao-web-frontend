@@ -2,13 +2,15 @@
 import { faListUl } from '@fortawesome/free-solid-svg-icons'
 import { isEmpty } from 'lodash-es'
 
-import BankEntriesTable from '../partials/BankEntriesTable.vue'
+import BankEntries from '../partials/BankEntries.vue'
 import BankModalEntry from '../partials/BankModalEntry.vue'
+import EntryCancelModal from '../partials/EntryCancelModal.vue'
 
 export default {
   components: {
-    BankEntriesTable,
-    BankModalEntry
+    BankEntries,
+    BankModalEntry,
+    EntryCancelModal
   },
   props: {
     isLoading: {
@@ -26,6 +28,10 @@ export default {
         value: false,
         entry: {}
       },
+      entryCancelModal: {
+        value: false,
+        entry: {}
+      },
       icons: {
         faListUl
       }
@@ -36,13 +42,22 @@ export default {
     onHideDuplicatesToggle (state) {
       this.$emit('hide-duplicates-toggle', state)
     },
-    onAddEntry(entry) {
+    onAddEntry (entry) {
       this.modalEntry.value = true
       this.modalEntry.entry = {filename: this.fileEntry.filename, ...entry}
     },
-    onEntrySuccess(entry) {
+    onCancelEntry (entry) {
+      this.entryCancelModal.value = true
+      this.entryCancelModal.entry = entry
+    },
+    onCancelEntrySuccess (entry) {
+      this.entryCancelModal.value = false
+      this.entryCancelModal.entry = {}
+      this.$emit('entry-canceled', entry)
+    },
+    onAddEntrySuccess(entry) {
       this.$emit('entry-registered', entry)
-    }
+    },
   }
 }
 </script>
@@ -63,7 +78,13 @@ export default {
       <BankModalEntry
         v-model="modalEntry.value"
         :entry="modalEntry.entry"
-        @entry-success="onEntrySuccess"
+        @success="onAddEntrySuccess"
+      />
+
+      <EntryCancelModal
+        v-model="entryCancelModal.value"
+        :entry="entryCancelModal.entry"
+        @success="onCancelEntrySuccess"
       />
 
       <div
@@ -73,10 +94,11 @@ export default {
         Carregue um arquivo de entradas bancárias para exibir aqui
       </div>
       <div v-else>
-        <BankEntriesTable
+        <BankEntries
           :file-entry="fileEntry"
           @hide-duplicates-toggle="onHideDuplicatesToggle"
           @add-entry="onAddEntry"
+          @cancel-entry="onCancelEntry"
         />
       </div>
     </template>

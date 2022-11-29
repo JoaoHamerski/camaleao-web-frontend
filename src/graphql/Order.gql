@@ -245,6 +245,18 @@ query GetOrderActivities($id: ID!) {
   }
 }
 
+query GetOrderByPaymentUid($where: QueryPaymentWhereWhereConditions) {
+  payment(where: $where) {
+    id
+    order {
+      id
+      client {
+        id
+      }
+    }
+  }
+}
+
 mutation UpdateOrder($id: ID!, $input: OrderInput!) {
   orderUpdate(id: $id, input: $input) {
     ...OrderType
