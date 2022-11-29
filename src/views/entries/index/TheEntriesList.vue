@@ -107,17 +107,18 @@ export default {
         </button>
       </div>
 
-      <AppPaginator
-        v-model="page"
-        :pagination="bankEntries.paginatorInfo"
-      />
-
-      <AppButton
-        outlined
-        btn-class="btn-sm"
-        :icon="icons.faSync"
-        @click.prevent="refresh"
-      />
+      <div class="d-flex flex-column flex-sm-row justify-content-between">
+        <AppPaginator
+          v-model="page"
+          :pagination="bankEntries.paginatorInfo"
+        />
+        <AppButton
+          outlined
+          btn-class="btn-sm"
+          :icon="icons.faSync"
+          @click.prevent="refresh"
+        />
+      </div>
     </template>
   </AppContainer>
 </template>
