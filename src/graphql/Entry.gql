@@ -17,7 +17,10 @@ query GetEntries(
 }
 
 query GetEntriesMonthlyBalance {
-  entriesMonthlyBalance
+  entriesMonthlyBalance {
+    current
+    previous
+  }
 }
 
 mutation CancelEntry($uid: ID!) {

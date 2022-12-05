@@ -49,22 +49,27 @@ export default {
 
       <div
         v-if="balance !== null"
-        class="text-center"
       >
-        <div class="text-secondary mb-2">
-          Soma dos valores não lançados de
-          <b>
-            {{
-              DateTime.now().toFormat('LLLL', {
-                locale: 'pt-BR'
-              })
-            }}
-          </b>
+        <div class="text-center">
+          <div class="text-secondary mb-2">
+            Soma dos valores não lançados de
+            <b>
+              {{
+                DateTime.now().toFormat('LLLL', {
+                  locale: 'pt-BR'
+                })
+              }}
+            </b>
+          </div>
+          <h3
+            class="text-success"
+            v-html="$helpers.toBRL(balance.current, true)"
+          />
         </div>
-        <h3
-          class="text-success"
-          v-html="$helpers.toBRL(balance, true)"
-        />
+        <div class="text-end">
+          <span class="text-secondary me-1">Mês passado:</span>
+          <span class="fw-bold text-success">{{ $helpers.toBRL(balance.previous) }}</span>
+        </div>
       </div>
     </template>
   </AppContainer>
