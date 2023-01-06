@@ -20,6 +20,11 @@ export default {
     }
   },
   methods: {
+    onClientSelect(id) {
+      this.removeCurrentOrder()
+
+      this.form.set({'client.id': id})
+    },
     removeCurrentOrder () {
       this.form.set({'order.id': ''})
     },
@@ -62,7 +67,7 @@ export default {
       id="client"
       :value="form.client.id"
       :error="form.errors.get('client.id')"
-      @input="form.set({'client.id': $event})"
+      @input="onClientSelect"
     >
       <template #noOptions>
         Faça uma busca para exibir resultados

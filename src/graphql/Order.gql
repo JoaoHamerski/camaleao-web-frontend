@@ -9,6 +9,7 @@ fragment OrderParts on Order {
   original_price
   states
   discount
+  shipping_value
   quantity
   has_sponsor
   total_paid
@@ -141,6 +142,7 @@ fragment PaymentsPart on Order {
     is_confirmed
     created_at
     is_sponsor
+    is_shipping
 
     clientBalances {
       id

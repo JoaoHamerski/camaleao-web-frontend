@@ -42,15 +42,26 @@ export default {
           </span>
         </template>
         <template #bodyAppend>
-          <template v-if="hasDiscount">
+          <tr
+            v-if="order.clothing_types > 1"
+            class="fw-bold"
+          >
+            <td colspan="3">
+              TOTAL CAMISAS
+            </td>
+            <td>
+              {{ $helpers.toBRL(order.total_clothings_value) }}
+            </td>
+          </tr>
+          <template v-if="order.shipping_value">
             <tr class="fw-bold">
               <td colspan="3">
-                TOTAL
+                FRETE
               </td>
-              <td>
-                {{ $helpers.toBRL(order.total_clothings_value) }}
-              </td>
+              <td>{{ $helpers.toBRL(order.shipping_value) }}</td>
             </tr>
+          </template>
+          <template v-if="hasDiscount">
             <tr
               class="fw-bold"
             >
@@ -65,6 +76,7 @@ export default {
               </td>
             </tr>
           </template>
+
           <tr class="fw-bold table-primary">
             <td nowrap>
               VALOR FINAL

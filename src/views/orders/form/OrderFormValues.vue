@@ -71,8 +71,9 @@ export default {
     finalValue () {
       const unformattedTotalValue = accounting.unformat(this.totalValue, ',')
       const unformattedDiscount = accounting.unformat(this.form.discount, ',')
+      const unformattedShippingValue = accounting.unformat(this.form.shipping_value, ',')
       const finalValue = accounting.toFixed(
-        unformattedTotalValue - unformattedDiscount,
+        (unformattedTotalValue + unformattedShippingValue) - unformattedDiscount,
         2
       )
 

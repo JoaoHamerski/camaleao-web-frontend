@@ -1,6 +1,6 @@
 <script>
 import { isEmpty, isObject, omit, cloneDeep } from 'lodash-es'
-import { faExclamationCircle } from '@fortawesome/free-solid-svg-icons'
+import { faQuestionCircle } from '@fortawesome/free-solid-svg-icons'
 import { vias } from '@/graphql/Via.gql'
 import { CreateDailyPayment } from '@/graphql/Payment.gql'
 import { GetDailyCash, GetDailyCashBalance } from '@/graphql/DailyCash.gql'
@@ -44,7 +44,7 @@ export default {
       loadingQueries: NUMBER_OF_QUERIES,
       vias: [],
       icons: {
-        faExclamationCircle
+        faQuestionCircle
       },
       form: new Form({
         client: {
@@ -65,6 +65,7 @@ export default {
         note: '',
         via_id: '',
         is_sponsor: false,
+        is_shipping: false,
         sponsorship_client_id: '',
         filename_entry_from: ''
       })
@@ -236,21 +237,38 @@ export default {
           </div>
         </div>
 
-        <div>
+        <div class="d-flex align-items-center mb-3">
           <AppCheckbox
             id="is_sponsor"
             v-model="form.is_sponsor"
             name="is_sponsor"
+            :default-margin="false"
           >
             Patrocínio
-            <FontAwesomeIcon
-              v-tippy
-              :icon="icons.faExclamationCircle"
-              class="text-primary"
-              fixed-width
-              content="Caso o pagamento seja efetuado por outro cliente que não é dono do pedido"
-            />
           </AppCheckbox>
+          <FontAwesomeIcon
+            v-tippy
+            :icon="icons.faQuestionCircle"
+            class="ms-1 text-secondary"
+            fixed-width
+            content="Caso o pagamento seja efetuado por outro cliente que não seja o dono do pedido"
+          />
+        </div>
+        <div class="d-flex align-items-center mb-3">
+          <AppCheckbox
+            id="is_shipping"
+            v-model="form.is_shipping"
+            name="is_shipping"
+            :default-margin="false"
+          >
+            Adicionar como frete
+          </AppCheckbox>
+          <FontAwesomeIcon
+            v-tippy
+            class="text-secondary ms-2"
+            :icon="icons.faQuestionCircle"
+            content="O valor será somado ao preço final do pedido"
+          />
         </div>
 
         <div v-show="form.is_sponsor">
@@ -258,7 +276,9 @@ export default {
             id="sponsorship_client_id"
             v-model="form.sponsorship_client_id"
             :error="form.errors.get('sponsorship_client_id')"
-          />
+          >
+            Patrocinador
+          </SelectClientsFind>
         </div>
 
         <div>

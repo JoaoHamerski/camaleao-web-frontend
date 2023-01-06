@@ -7,7 +7,7 @@ import {
   faHandHoldingUsd,
   faFunnelDollar,
   faEdit,
-  faExclamationCircle
+  faQuestionCircle
 } from '@fortawesome/free-solid-svg-icons'
 import { isEmpty } from 'lodash-es'
 import roles from '@/constants/roles'
@@ -72,7 +72,7 @@ export default {
         faHandHoldingUsd,
         faFunnelDollar,
         faEdit,
-        faExclamationCircle
+        faQuestionCircle
       }
     }
   },
@@ -262,10 +262,10 @@ export default {
       <template #[`headers.date`]>
         DATA <FontAwesomeIcon
           v-tippy
-          class="text-primary"
-          :icon="icons.faExclamationCircle"
+          class="text-secondary"
+          :icon="icons.faQuestionCircle"
           fixed-width
-          content="Data para qual foi registrada a entrada/saída"
+          content="Data em que foi registrada a entrada/saída"
         />
       </template>
       <template #[`headers.payment_voucher`]>

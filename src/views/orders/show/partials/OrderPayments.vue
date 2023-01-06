@@ -2,6 +2,7 @@
 import {
   faEdit,
   faCheck,
+  faTruck,
   faTimes,
   faHandHoldingUsd,
   faExclamationCircle,
@@ -40,7 +41,8 @@ export default {
         faCheck,
         faTimes,
         faHandHoldingUsd,
-        faExclamationCircle
+        faExclamationCircle,
+        faTruck
       },
       selectedPayment: {},
       loadingId: '',
@@ -144,6 +146,15 @@ export default {
                   >
                     - [{{ getPaymentState(payment) }}]
                   </span>
+                  <small
+                    v-if="payment.is_shipping"
+                  >
+                    &bull;
+                    <FontAwesomeIcon
+                      class="small"
+                      :icon="icons.faTruck"
+                    />
+                  </small>
                 </div>
                 <div
                   v-if="payment.is_sponsor"

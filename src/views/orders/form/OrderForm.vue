@@ -68,6 +68,7 @@ export default {
         client_id: '',
         discount: 'R$ ',
         down_payment: 'R$ ',
+        shipping_value: 'R$ ',
         payment_via_id: '',
         seam_date: '',
         print_date: '',
@@ -151,6 +152,7 @@ export default {
         'price',
         'code',
         'discount',
+        'shipping_value',
         'seam_date',
         'print_date',
         'delivery_date',
@@ -164,6 +166,11 @@ export default {
       fields.discount = +fields.discount === 0
         ? 'R$ '
         : this.$helpers.toBRL(fields.discount)
+
+      fields.shipping_value = +fields.shipping_value === 0
+        ? 'R$ '
+        : this.$helpers.toBRL(fields.shipping_value)
+
       fields.price = this.$helpers.toBRL(fields.price)
       fields.seam_date = formatDatetime(fields.seam_date)
       fields.print_date = formatDatetime(fields.print_date)

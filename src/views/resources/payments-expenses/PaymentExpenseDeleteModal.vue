@@ -163,6 +163,12 @@ export default {
           >{{ getConfirmationText(entry.is_confirmed) }}</span>
         </li>
       </ul>
+      <div
+        v-if="entry.is_shipping"
+        class="mt-3 small"
+      >
+        <b>ATENÇÃO: </b> Este pagamento foi registrado como adicional de frete, ao ser deletado o valor também será reduzido do preço do pedido.
+      </div>
 
       <div class="mt-3">
         <AppForm

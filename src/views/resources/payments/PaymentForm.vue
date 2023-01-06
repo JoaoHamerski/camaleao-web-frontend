@@ -3,8 +3,7 @@ import accounting from 'accounting-js'
 import { vias } from '@/graphql/Via.gql'
 import { CreatePayment, UpdatePayment } from '@/graphql/Payment.gql'
 import { GetEntries } from '@/graphql/Entry.gql'
-import { GetClientBalances } from '@/graphql/ClientBalance.gql'
-
+import { faQuestionCircle } from '@fortawesome/free-solid-svg-icons'
 import { isEmpty } from 'lodash-es'
 import Form from '@/utils/Form'
 import { formatDatetime, formatCurrencyBRL } from '@/utils/formatters'
@@ -40,6 +39,9 @@ export default {
   },
   data () {
     return {
+      icons: {
+        faQuestionCircle
+      },
       vias: [],
       clients: {
         items: [],
@@ -55,6 +57,7 @@ export default {
         note: '',
         sponsorship_client_id: '',
         is_sponsor: false,
+        is_shipping: false,
         add_rest_to_credits: false,
         use_client_balance: false
       }),
@@ -193,6 +196,9 @@ export default {
         payment_via_id: entry.via_id
       })
     },
+    onIsShippingPaymentCheckbox () {
+      this.form.add_rest_to_credits = false
+    }
   }
 }
 </script>
@@ -268,16 +274,23 @@ export default {
               </AppButton>
             </template>
           </AppInput>
-          <AppCheckbox
-            id="rest"
-            v-model="form.add_rest_to_credits"
-            name="rest"
-          >
-            Adicionar resto ao saldo do {{ form.is_sponsor ? 'patrocinador' : 'cliente' }}
-            <template #hint>
-              Caso o valor supere o que resta pagar.
-            </template>
-          </AppCheckbox>
+          <div class="d-flex align-items-center mb-3">
+            <AppCheckbox
+              id="rest"
+              v-model="form.add_rest_to_credits"
+              name="rest"
+              :disabled="form.is_shipping"
+              :default-margin="false"
+            >
+              Adicionar resto ao saldo do {{ form.is_sponsor ? 'patrocinador' : 'cliente' }}
+            </AppCheckbox>
+            <FontAwesomeIcon
+              v-tippy
+              class="text-secondary ms-2"
+              :icon="icons.faQuestionCircle"
+              content="Caso o valor supere o que resta pagar"
+            />
+          </div>
           <AppCheckbox
             id="is_sponsor"
             v-model="form.is_sponsor"
@@ -285,6 +298,23 @@ export default {
           >
             Patrocínio
           </AppCheckbox>
+          <div class="d-flex align-items-center mb-3">
+            <AppCheckbox
+              id="shipping_payment"
+              v-model="form.is_shipping"
+              name="shipping_payment"
+              :default-margin="false"
+              @input="onIsShippingPaymentCheckbox"
+            >
+              Adicionar como frete
+            </AppCheckbox>
+            <FontAwesomeIcon
+              v-tippy
+              class="text-secondary ms-2"
+              :icon="icons.faQuestionCircle"
+              content="O valor será somado ao preço final do pedido"
+            />
+          </div>
           <SelectClientsFind
             v-show="form.is_sponsor"
             id="sponsorship_client_id"
