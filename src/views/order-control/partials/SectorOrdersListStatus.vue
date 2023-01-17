@@ -1,11 +1,18 @@
 <script>
-import { GetOrdersBySector, GetAuthUserSectors, StepToStatus } from '@/graphql/OrderControl.gql'
+import {
+  GetOrdersBySector,
+  GetAuthUserSectors,
+  StepToStatus
+} from '@/graphql/OrderControl.gql'
 
-import { faCheck, faClock, faUser } from '@fortawesome/free-solid-svg-icons'
-import { first, last, get, map } from 'lodash-es'
-import { formatDatetime } from '@/utils/formatters'
+import { map } from 'lodash-es'
+
+import OrderControlNavsItem from './OrderControlNavsItem.vue'
 
 export default {
+  components: {
+    OrderControlNavsItem
+  },
   props: {
     order: {
       type: Object,
@@ -16,65 +23,25 @@ export default {
       required: true
     },
     status: {
-      type: Array,
+      type: Object,
       required: true
-    }
-  },
-  data () {
-    return {
-      icons: {
-        faCheck,
-        faClock,
-        faUser
-      }
     }
   },
   computed: {
     getProgressBarWidth () {
+      const hasNextStatus = !!this.status.next_status
       const concludedStatusIds = map(this.concludedStatus, 'id')
-      const sectorStatusIds = map(this.status, 'id')
+      const sectorStatusIds = map(this.status.items, 'id')
       const matched = concludedStatusIds.filter(
         id => sectorStatusIds.includes(id)
       )
 
-      return (100 * matched.length) / sectorStatusIds.length
+      return (100 * matched.length) / (sectorStatusIds.length + (hasNextStatus ? 1 : 0))
     }
   },
   methods: {
-    get,
-    formatDatetime,
-    getConcludedStatus(status, props = null) {
-      const concludedStatus = this.concludedStatus.find(
-        _status => _status.id === status.id
-      )
-
-      if (props) {
-        return get(concludedStatus, props)
-      }
-
-      return concludedStatus
-    },
-    isStepConfirmable(status) {
-      const statusId = status.id
-      const concludedStatusIds = map(this.concludedStatus, 'id')
-
-      if (concludedStatusIds.includes(statusId)) {
-        return false
-      }
-
-      return true
-    },
-    isStepConfirmed(status) {
-      return this.concludedStatus.some(concluded => {
-        return concluded.id === status.id
-      })
-    },
-    async onStepClick (status) {
+    async stepToStatus (status) {
       const order = this.order
-
-      if (!this.isStepConfirmable(status)) {
-        return
-      }
 
       this.$emit('loading', {
         id: this.order.id,
@@ -122,63 +89,30 @@ export default {
       />
       <div class="step-progress-bar-placeholder" />
       <ul class="step-progress w-100 table-responsive">
-        <li
-          v-for="_status in status"
+        <OrderControlNavsItem
+          v-for="_status in status.items"
           :key="_status.id"
-          class="step w-100"
-          :class="{
-            'step-confirmed': isStepConfirmed(_status),
-            'step-confirmable': isStepConfirmable(_status)
-          }"
-        >
-          <div
-            class="step-number"
-            @click.prevent="onStepClick(_status)"
-          >
-            <FontAwesomeIcon
-              :icon="icons.faCheck"
-            />
-          </div>
-          <div class="step-label">
-            {{ _status.text }}
-          </div>
-          <template v-if="isStepConfirmed(_status)">
-            <div
-              class="step-info"
-            >
-              <FontAwesomeIcon
-                :icon="icons.faClock"
-                fixed-width
-              />
-              {{
-                formatDatetime(
-                  getConcludedStatus(_status, 'pivot.created_at'),
-                  "dd/LL 'às' HH:mm"
-                )
-              }}
-            </div>
-            <div
-              v-if="getConcludedStatus(_status, 'pivot.user.name')"
-              class="small text-secondary"
-            >
-              <FontAwesomeIcon
-                :icon="icons.faUser"
-                fixed-width
-              />
-              {{ getConcludedStatus(_status, 'pivot.user.name') }}
-            </div>
-          </template>
-        </li>
+          :status="_status"
+          :concluded-status="concludedStatus"
+          @step-click="stepToStatus"
+        />
+        <OrderControlNavsItem
+          v-if="status.next_status"
+          :status="status.next_status"
+          :concluded-status="concludedStatus"
+          @step-click="stepToStatus"
+        />
       </ul>
     </div>
   </div>
 </template>
 
 <style lang="scss" scoped>
-  @import "@/sass/_bootstrap-utilities.scss";
+@import "@/sass/_bootstrap-utilities.scss";
 
-  // Status classes: step.step-confirmed | step.step-confirmable
+// Status classes: step.step-confirmed | step.step-confirmable
 
+::v-deep {
   .step-container {
     position: relative;
   }
@@ -306,4 +240,5 @@ export default {
       font-size: .7rem !important;
     }
   }
+}
 </style>

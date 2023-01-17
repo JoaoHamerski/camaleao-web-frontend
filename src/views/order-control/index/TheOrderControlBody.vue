@@ -42,9 +42,12 @@ export default {
   },
   computed: {
     getSectorStatus () {
-      const sector = this.sectors.filter(sector => sector.id === this.sector.id)
+      const sector = this.sectors.filter(sector => sector.id === this.sector.id)[0]
 
-      return sector[0].status
+      return {
+        items: sector.status,
+        next_status: sector.next_status
+      }
     },
     isLoading () {
       return !!this.$apollo.queries.ordersBySector.loading

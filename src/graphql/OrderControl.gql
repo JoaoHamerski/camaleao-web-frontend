@@ -1,6 +1,5 @@
 #import "./_PaginatorFragment.gql"
 
-
 fragment OrdersBySectorParts on Order {
   id
   code
@@ -47,16 +46,20 @@ query GetAuthUserSectors {
         text
       }
     }
+    next_status {
+      id
+      text
+    }
   }
 }
 
-query GetOrdersBySector (
+query GetOrdersBySector(
   $sectorId: ID!
   $first: Int!
   $page: Int
   $order_by: [QueryOrdersBySectorOrderByOrderByClause!]
 ) {
-  ordersBySector (
+  ordersBySector(
     sector_id: $sectorId
     first: $first
     page: $page
@@ -72,12 +75,12 @@ query GetOrdersBySector (
   }
 }
 
-mutation StepToStatus ($orderId: ID! $statusId: ID!) {
-  stepToStatus (order_id: $orderId status_id: $statusId) {
+mutation StepToStatus($orderId: ID!, $statusId: ID!) {
+  stepToStatus(order_id: $orderId, status_id: $statusId) {
     ...OrdersBySectorParts
   }
 }
 
-mutation GetDuplicatedEntries ($bank_uids: [String!]!) {
-  bankCheckDuplicatedEntries (bank_uid: $bank_uids)
+mutation GetDuplicatedEntries($bank_uids: [String!]!) {
+  bankCheckDuplicatedEntries(bank_uid: $bank_uids)
 }

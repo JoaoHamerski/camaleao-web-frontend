@@ -9,7 +9,9 @@ export default {
       result () {
         const firstSector = this.authUserSectors[0].sector
 
-        this.$emit('sectors-loaded', map(this.authUserSectors, 'sector'))
+        this.$emit('sectors-loaded', map(
+          this.authUserSectors,
+          ({sector, next_status}) => ({...sector, next_status})))
 
         if (firstSector) {
           this.selectedSector = firstSector

@@ -18,8 +18,8 @@ export default {
       default: false
     },
     status: {
-      type: Array,
-      default: () => ([])
+      type: Object,
+      default: () => ({})
     },
     orders: {
       type: Array,
