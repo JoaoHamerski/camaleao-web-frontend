@@ -1,6 +1,6 @@
 <script>
 import { GetAuthUserSectors } from '@/graphql/OrderControl.gql'
-import { map } from 'lodash-es'
+import { map, isEmpty } from 'lodash-es'
 
 export default {
   apollo: {
@@ -11,9 +11,10 @@ export default {
 
         this.$emit('sectors-loaded', map(
           this.authUserSectors,
-          ({sector, next_status}) => ({...sector, next_status})))
+          ({sector, next_status}) => ({...sector, next_status})
+        ))
 
-        if (firstSector) {
+        if (isEmpty(this.selectedSector)) {
           this.selectedSector = firstSector
         }
       }
@@ -32,6 +33,7 @@ export default {
   },
   watch: {
     selectedSector (value) {
+      console.log(value)
       this.$emit('sector-change', value)
     }
   },

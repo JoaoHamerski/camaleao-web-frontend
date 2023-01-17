@@ -104,13 +104,15 @@ export default {
           class="text-end"
         >
           <AppButton
+            v-tippy
             rounded
             :loading="isLoading.id === order.id && isLoading.value"
             :color="orderHasPendencies(order) ? 'secondary' : 'success'"
             outlined
             btn-class="btn-sm"
+            :content="orderHasPendencies(order) ? 'Não é possível fechar pedido com pendência financeira' : 'Fechar pedido'"
             :icon="icons.faCheck"
-            :disabled-message="orderHasPendencies(order) && 'Não é possível fechar pedido com pendência financeira'"
+            :disabled="orderHasPendencies(order)"
             @click.prevent="onCloseOrderClick(order)"
           />
         </div>

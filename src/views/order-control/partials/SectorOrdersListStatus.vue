@@ -62,8 +62,6 @@ export default {
           awaitRefetchQueries: true
         })
 
-        this.$helpers.clearCacheFrom({fieldName: 'ordersBySector'})
-
         this.$toast.success('Status atualizado!')
       } catch (error) {
         this.$toast.error('Ops! Algo deu errado')
