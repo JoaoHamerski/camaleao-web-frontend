@@ -8,6 +8,7 @@ export default {
   apollo: {
     ordersBySector: {
         query: GetOrdersBySector,
+        fetchPolicy: 'no-cache',
         variables() {
           return {
             first: 10,

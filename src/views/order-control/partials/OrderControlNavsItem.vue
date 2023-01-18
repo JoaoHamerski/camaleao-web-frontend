@@ -41,11 +41,15 @@ export default {
       })
     },
     onStepClick (status) {
+      if (this.isStepConfirmed(status)) {
+        return
+      }
+
       this.$emit('step-click', status)
     },
-    getConcludedStatus(status, props = null) {
+    getConcludedStatus(props = null) {
       const concludedStatus = this.concludedStatus.find(
-        _status => _status.id === status.id
+        _status => _status.id === this.status.id
       )
 
       if (props) {
@@ -87,20 +91,20 @@ export default {
         />
         {{
           formatDatetime(
-            getConcludedStatus(status, 'pivot.created_at'),
+            getConcludedStatus('pivot.created_at'),
             "dd/LL 'às' HH:mm"
           )
         }}
       </div>
       <div
-        v-if="getConcludedStatus(status, 'pivot.user.name')"
+        v-if="getConcludedStatus('pivot.user.name')"
         class="small text-secondary"
       >
         <FontAwesomeIcon
           :icon="icons.faUser"
           fixed-width
         />
-        {{ getConcludedStatus(status, 'pivot.user.name') }}
+        {{ getConcludedStatus('pivot.user.name') }}
       </div>
     </template>
   </li>
