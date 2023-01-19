@@ -68,15 +68,13 @@ export default {
         <b>{{ formatDatetime(payment.date) }}</b>
       </div>
 
-      <KeepAlive>
-        <PaymentForm
-          v-if="value"
-          :order="order"
-          :is-edit="isEdit"
-          :payment="payment"
-          @success="onSuccess"
-        />
-      </KeepAlive>
+      <PaymentForm
+        v-if="value"
+        :order="order"
+        :is-edit="isEdit"
+        :payment="payment"
+        @success="onSuccess"
+      />
     </template>
   </AppModal>
 </template>

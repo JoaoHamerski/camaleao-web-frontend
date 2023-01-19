@@ -67,6 +67,17 @@ export default {
     }
   },
   computed: {
+    paymentMatchesBankEntry () {
+      if (!this.isEdit) {
+        return true
+      }
+
+      if (isEmpty(this.bank_entry)) {
+        return true
+      }
+
+      return this.payment.value === this.bank_entry.value
+    },
     isLoadingQuery () {
       return !!this.$apollo.queries.vias.loading
     },
@@ -79,6 +90,13 @@ export default {
     orderRest () {
       const credit = accounting.unformat(this.form.credit, ',')
       return (this.order.total_owing - credit).toFixed(2)
+    },
+    showEntriesInput () {
+      if (!this.isEdit) {
+        return true
+      }
+
+      return this.payment.is_confirmed === null
     }
   },
   watch: {
@@ -188,6 +206,16 @@ export default {
       this.isLoading = false
     },
     onSelectEntry (entry) {
+      if (this.isEdit) {
+        this.form.set({
+          bank_uid: entry.bank_uid,
+          payment_via_id: entry.via_id,
+          note: entry.description
+        })
+
+        return
+      }
+
       this.form.set({
         bank_uid: entry.bank_uid,
         value: formatCurrencyBRL(entry.value),
@@ -220,10 +248,18 @@ export default {
     </AppAlert>
 
     <SelectEntriesFind
-      v-if="!isEdit"
+      v-if="showEntriesInput"
       v-model="bank_entry"
       @select="onSelectEntry"
     />
+
+
+    <div
+      v-if="!paymentMatchesBankEntry"
+      class="small text-danger fw-bold mb-4"
+    >
+      O valor da entrada bancária e pagamento devem ser iguais.
+    </div>
 
     <template v-if="!isEdit">
       <AppContainer class="mb-2">
@@ -373,6 +409,7 @@ export default {
           class="fw-bold"
           block
           :loading="isLoading"
+          :disabled="!paymentMatchesBankEntry"
         >
           {{ isEdit ? 'ATUALIZAR' : 'REGISTRAR' }}
         </AppButton>
