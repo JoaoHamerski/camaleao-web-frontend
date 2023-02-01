@@ -85,6 +85,9 @@ fragment PiecesDayParts on SectorPiecesCurrentPrevious {
       id
       code
       quantity
+      client {
+        id
+      }
     }
   }
 

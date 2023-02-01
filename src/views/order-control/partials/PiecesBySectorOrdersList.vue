@@ -1,5 +1,10 @@
 <script>
+import PiecesBySectorOrdersTable from './PiecesBySectorOrdersTable.vue'
+
 export default {
+  components: {
+    PiecesBySectorOrdersTable
+  },
   props: {
     orders: {
       type: Array,
@@ -17,17 +22,12 @@ export default {
     hasOrders () {
       return !!this.orders.length
     },
-    headers () {
-      return [
-        {text: 'Cód.', value: 'code'},
-        {text: 'Peças', value: 'quantity'},
-      ]
-    }
   },
   methods: {
     seeAllOrdersClick () {
       this.$emit('show-sector')
-    }
+    },
+
   }
 }
 </script>
@@ -45,27 +45,12 @@ export default {
         >Ver todos</b>.
       </template>
     </div>
-    <table
+
+    <PiecesBySectorOrdersTable
       v-show="hasOrders"
-      class="table table-sm"
-    >
-      <thead>
-        <tr>
-          <th>Cód.</th>
-          <th>Peças</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr
-          v-for="order in orders"
-          :key="order.id"
-          class="small"
-        >
-          <td>{{ order.code }}</td>
-          <td>{{ order.quantity }}</td>
-        </tr>
-      </tbody>
-    </table>
+      :orders="orders"
+    />
+
     <div
       v-show="!hasOrders"
       class="text-center text-secondary small"

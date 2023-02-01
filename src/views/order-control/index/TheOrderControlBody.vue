@@ -87,7 +87,10 @@ export default {
       ref="scrollableDiv"
       class="card-body position-relative card-sector-body custom-scrollbar smooth-scroll"
     >
-      <AppLoading v-show="isLoading" />
+      <AppLoading
+        v-show="isLoading"
+      />
+
       <div
         v-if="!ordersBySector.data.length"
         class="text-center text-secondary my-3"

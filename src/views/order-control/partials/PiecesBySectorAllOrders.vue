@@ -2,10 +2,12 @@
 import { faArrowCircleLeft } from '@fortawesome/free-solid-svg-icons'
 
 import PiecesBySectorDaysCount from './PiecesBySectorDaysCount.vue'
+import PiecesBySectorOrdersTable from './PiecesBySectorOrdersTable.vue'
 
 export default {
   components: {
-    PiecesBySectorDaysCount
+    PiecesBySectorDaysCount,
+    PiecesBySectorOrdersTable
   },
   props: {
     sectorPieces: {
@@ -40,12 +42,6 @@ export default {
     pagination () {
       return this.pieces[this.selectedDate]?.current_orders?.paginatorInfo || {}
     },
-    headers () {
-      return [
-        {value: 'code', text: 'Cód.'},
-        {value: 'quantity', text: 'Peças'},
-      ]
-    }
   },
   methods: {
     onDateSelected ({ date }) {
@@ -81,11 +77,9 @@ export default {
       />
     </div>
 
-    <AppTable
+    <PiecesBySectorOrdersTable
+      :orders="orders"
       class="my-2"
-      table-class="table-sm"
-      :items="orders"
-      :headers="headers"
     />
 
     <AppPaginator

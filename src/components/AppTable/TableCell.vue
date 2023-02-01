@@ -24,6 +24,7 @@ function renderValue (h, context) {
 function renderLinkCell (h, context) {
   return (
     <a
+      target={context.openInNewTab ? '_blank' : '_self'}
       vOn:mouseup_prevent={context.onLinkClicked}
       vOn:click={context.prevent}
       href={context.url()}
@@ -81,10 +82,18 @@ export default {
     hasRowLinks: {
       type: Boolean,
       default: false
+    },
+    openInNewTab: {
+      type: Boolean,
+      default: false
     }
   },
   methods: {
     prevent (event) {
+      if (this.openInNewTab) {
+        return
+      }
+
       event.preventDefault()
     },
     onLinkClicked (event) {

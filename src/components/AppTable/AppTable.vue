@@ -57,6 +57,7 @@ const renderTableCell = (h, context, item) => {
         hasRowLinks={context.hasRowLinks}
         url={() => context.routeUrl(item)}
         header={header}
+        openInNewTab={context.openInNewTab}
         key={index}
         value={get(item, header.value)}
       >
@@ -135,6 +136,10 @@ export default {
     route: {
       type: Function,
       default: () => {}
+    },
+    openInNewTab: {
+      type: Boolean,
+      default: false
     }
   },
   computed: {
@@ -158,6 +163,10 @@ export default {
       return resolvedRoute.href
     },
     redirectTo (item) {
+      if (this.openInNewTab) {
+        return
+      }
+
       return this.$router.push(
         this.route(item)
       )
