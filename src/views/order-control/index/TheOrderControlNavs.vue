@@ -33,7 +33,6 @@ export default {
   },
   watch: {
     selectedSector (value) {
-      console.log(value)
       this.$emit('sector-change', value)
     }
   },

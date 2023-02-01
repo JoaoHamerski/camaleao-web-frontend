@@ -75,7 +75,6 @@ export default {
 
       const query = this.getQueryToSearch(options)
 
-      console.log(query)
       this.$emit('search', query)
     },
     clearSearch () {

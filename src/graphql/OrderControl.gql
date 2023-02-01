@@ -75,6 +75,44 @@ query GetOrdersBySector(
   }
 }
 
+fragment PiecesDayParts on SectorPiecesCurrentPrevious {
+  current_orders(first: $first, page: $page) {
+    paginatorInfo {
+      ...PaginatorSimpleParts
+    }
+
+    data {
+      id
+      code
+      quantity
+    }
+  }
+
+  current
+  previous
+}
+
+query GetSectorsPieces($first: Int!, $page: Int) {
+  sectorsPieces {
+    sector {
+      id
+      name
+    }
+
+    pieces {
+      day {
+        ...PiecesDayParts
+      }
+      week {
+        ...PiecesDayParts
+      }
+      month {
+        ...PiecesDayParts
+      }
+    }
+  }
+}
+
 mutation StepToStatus($orderId: ID!, $statusId: ID!) {
   stepToStatus(order_id: $orderId, status_id: $statusId) {
     ...OrdersBySectorParts

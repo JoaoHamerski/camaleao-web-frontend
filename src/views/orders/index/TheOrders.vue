@@ -169,8 +169,6 @@ export default {
         },
         orderBy: [this.getOrderBy(data)]
       }
-
-      console.log(this.params)
     },
     onFilterButtonsChanged (value) {
       const query = QUERIES[value.toUpperCase()]
