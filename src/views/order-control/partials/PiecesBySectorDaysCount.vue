@@ -45,11 +45,13 @@ export default {
         :key="date"
       >
         <span
+          v-tippy
           class="badge text-capitalize"
           :class="{
             'bg-success': selectedDate === date,
             'bg-link-primary clickable': selectedDate !== date
           }"
+          :content="`Anterior: ${datePieces.previous}`"
           @click="onDateClick(date)"
         >
           {{ DATES[date] }}: {{ datePieces.current }}

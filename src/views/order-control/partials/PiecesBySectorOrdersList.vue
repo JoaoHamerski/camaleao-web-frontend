@@ -38,11 +38,12 @@ export default {
       class="small"
     >
       Exibindo {{ orders.length }} de {{ total }} pedidos.
-      <b
-        v-if="total > totalShowingOrders"
-        class="link-primary clickable"
-        @click="seeAllOrdersClick"
-      >Ver todos</b>.
+      <template v-if="total > totalShowingOrders">
+        <b
+          class="link-primary clickable"
+          @click="seeAllOrdersClick"
+        >Ver todos</b>.
+      </template>
     </div>
     <table
       v-show="hasOrders"
