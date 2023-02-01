@@ -4,6 +4,7 @@ import {
   faSyncAlt,
   faTshirt
 } from '@fortawesome/free-solid-svg-icons'
+import roles from '@/constants/roles'
 
 import PiecesBySectorModal from '../partials/PiecesBySectorModal.vue'
 
@@ -14,6 +15,7 @@ export default {
   data () {
     return {
       piecesBySectorModal: false,
+      roles,
       icons: {
         faTasks,
         faSyncAlt,
@@ -44,6 +46,7 @@ export default {
       </div>
       <div>
         <AppButton
+          v-if="$helpers.canView(roles.GERENCIA)"
           :icon="icons.faTshirt"
           color="light"
           class="me-2"
@@ -61,6 +64,8 @@ export default {
       </div>
     </div>
 
-    <PiecesBySectorModal v-model="piecesBySectorModal" />
+    <template v-if="$helpers.canView(roles.GERENCIA)">
+      <PiecesBySectorModal v-model="piecesBySectorModal" />
+    </template>
   </div>
 </template>
