@@ -35,7 +35,7 @@ export default {
         :icon="icons.faTshirt"
         fixed-width
       />
-      Peças por setor
+      Controle de pedido
     </template>
 
     <template #body>
