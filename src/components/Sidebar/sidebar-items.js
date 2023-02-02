@@ -85,8 +85,8 @@ const ITEMS = {
       route: { name: 'weekly-calendar.delivery.index' }
     }
   },
-  CONTROLE_DE_PEDIDOS: {
-    title: 'Controle de Pedidos',
+  ESTEIRA_DE_PRODUCAO: {
+    title: 'Esteira de Produção',
     icon: faTasks,
     condition: () => canView(
       ROLES.GERENCIA,
@@ -243,7 +243,7 @@ export default [
   ITEMS.PEDIDOS,
   ITEMS.CAIXA_DIARIO,
   ITEMS.CALENDARIO_SEMANAL,
-  ITEMS.CONTROLE_DE_PEDIDOS,
+  ITEMS.ESTEIRA_DE_PRODUCAO,
   ITEMS.FINANCEIRO,
   ITEMS.PRODUCAO_USUARIOS,
   ITEMS.GERENCIAMENTO,

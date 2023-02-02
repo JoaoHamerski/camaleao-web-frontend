@@ -50,6 +50,7 @@ export default {
       isLoading: false,
       form: new Form({
         name: '',
+        alias: '',
         users: [],
         status: []
       })
@@ -71,6 +72,7 @@ export default {
       const statusIds = map(this.sector.status, 'id')
 
       this.form.name = this.sector.name
+      this.form.alias = this.sector.alias
       this.form.users = this.users.filter(user => usersIds.includes(user.id))
       this.form.status = this.status.filter(status => statusIds.includes(status.id))
     },
@@ -157,10 +159,21 @@ export default {
       id="name"
       v-model="form.name"
       name="name"
-      placeholder="Digite um nome para o setor..."
+      placeholder="Digite um nome..."
       :error="form.errors.get('name')"
     >
-      Nome do setor
+      Nome do setor na ESTEIRA DE PRODUÇÃO
+    </AppInput>
+
+    <AppInput
+      id="alias"
+      v-model="form.alias"
+      name="alias"
+      placeholder="Digite um nome..."
+      :error="form.errors.get('alias')"
+      hint="Caso deixe em branco, será o mesmo de ESTEIRA DE PRODUÇÃO"
+    >
+      Nome do setor no CONTROLE DE PRODUÇÃO
     </AppInput>
 
     <AppSelect

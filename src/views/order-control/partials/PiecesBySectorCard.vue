@@ -1,4 +1,5 @@
 <script>
+import { isEmpty } from 'lodash-es'
 import PiecesBySectorOrdersList from './PiecesBySectorOrdersList.vue'
 import PiecesBySectorDaysCount from './PiecesBySectorDaysCount.vue'
 
@@ -21,6 +22,15 @@ export default {
       required: true
     }
   },
+  computed:  {
+    sectorName () {
+      if (isEmpty(this.sector.alias)) {
+        return this.sector.name
+      }
+
+      return this.sector.alias
+    }
+  },
   methods: {
     onShowSector () {
       this.$emit('show-sector', {
@@ -40,10 +50,10 @@ export default {
 <template>
   <AppCard
     class="mb-3"
-    color="secondary"
+    color="camaleao"
   >
     <template #header>
-      <b>{{ sector.name }}</b>
+      <b>{{ sectorName }}</b>
     </template>
     <template #body>
       <PiecesBySectorOrdersList

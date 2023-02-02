@@ -100,6 +100,7 @@ query GetSectorsPieces($first: Int!, $page: Int) {
     sector {
       id
       name
+      alias
     }
 
     pieces {

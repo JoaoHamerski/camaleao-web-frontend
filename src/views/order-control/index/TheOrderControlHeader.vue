@@ -42,7 +42,7 @@ export default {
           :icon="icons.faTasks"
           fixed-width
         />
-        Controle de Pedidos
+        Esteira de pedidos
       </div>
       <div>
         <AppButton
@@ -53,7 +53,7 @@ export default {
           btn-class="text-primary btn-sm fw-bold"
           @click="piecesBySectorClick"
         >
-          Peças por setor
+          Controle de produção
         </AppButton>
         <AppButton
           :icon="icons.faSyncAlt"
