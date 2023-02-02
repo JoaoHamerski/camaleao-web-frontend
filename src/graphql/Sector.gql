@@ -1,6 +1,7 @@
 fragment SectorParts on Sector {
   id
   name
+  alias
 }
 
 fragment SectorStatusParts on Sector {
@@ -29,21 +30,21 @@ query GetSectors {
   }
 }
 
-mutation CreateSector ($input: SectorInput!) {
+mutation CreateSector($input: SectorInput!) {
   sectorCreate(input: $input) {
     id
   }
 }
 
-mutation UpdateSector ($id: ID! $input: SectorInput!) {
-  sectorUpdate (id: $id input: $input) {
+mutation UpdateSector($id: ID!, $input: SectorInput!) {
+  sectorUpdate(id: $id, input: $input) {
     ...SectorParts
     ...SectorStatusParts
     ...SectorUserParts
   }
 }
 
-mutation DeleteSector ($id: ID!) {
+mutation DeleteSector($id: ID!) {
   sectorDelete(id: $id) {
     id
   }
