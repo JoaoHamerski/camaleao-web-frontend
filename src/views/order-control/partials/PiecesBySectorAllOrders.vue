@@ -42,6 +42,13 @@ export default {
     pagination () {
       return this.pieces[this.selectedDate]?.current_orders?.paginatorInfo || {}
     },
+    sectorName () {
+      if (isEmpty(this.sector.alias)) {
+        return this.sector.name
+      }
+
+      return this.sector.alias
+    }
   },
   methods: {
     onDateSelected ({ date }) {
@@ -66,7 +73,7 @@ export default {
       Voltar
     </AppButton>
     <h5 class="text-primary fw-bold mt-2">
-      {{ sector.name }}
+      {{ sectorName }}
     </h5>
 
     <div class="col col-sm-4 my-3">
