@@ -45,7 +45,7 @@ export default {
         Esteira de pedidos
       </div>
       <div>
-        <AppButton
+        <!-- <AppButton
           v-if="$helpers.canView(roles.GERENCIA)"
           :icon="icons.faTshirt"
           color="light"
@@ -54,7 +54,7 @@ export default {
           @click="piecesBySectorClick"
         >
           Controle de produção
-        </AppButton>
+        </AppButton> -->
         <AppButton
           :icon="icons.faSyncAlt"
           color="light"
