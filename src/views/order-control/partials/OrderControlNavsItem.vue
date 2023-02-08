@@ -83,6 +83,7 @@ export default {
     </div>
     <template v-if="isStepConfirmed(status)">
       <div
+        v-if="getConcludedStatus('pivot.created_at')"
         class="step-info"
       >
         <FontAwesomeIcon

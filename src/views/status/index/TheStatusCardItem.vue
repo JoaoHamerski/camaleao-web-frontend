@@ -21,6 +21,15 @@ export default {
       }
     }
   },
+  computed: {
+    defaultStatusOnOrderRegister () {
+      if (this.status.order !== 0) {
+        return false
+      }
+
+      return '(Padrão após cadastro de pedido)'
+    }
+  },
   methods: {
     onEditClick () {
       this.$emit('edit', this.status)
@@ -47,7 +56,11 @@ export default {
         :class="{
           'fw-bold text-success': status.is_available
         }"
-      >{{ status.text }}</span>
+      >{{ status.text }}
+        <small
+          v-show="defaultStatusOnOrderRegister"
+          class="text-secondary"
+        >{{ defaultStatusOnOrderRegister }}</small></span>
     </div>
     <div class="d-flex flex-column flex-sm-row ">
       <AppButton

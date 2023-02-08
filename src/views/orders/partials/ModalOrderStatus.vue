@@ -2,7 +2,7 @@
 import { faExchangeAlt } from '@fortawesome/free-solid-svg-icons'
 
 import { GetStatus } from '@/graphql/Status.gql'
-import { UpdateOrderStatus } from '@/graphql/Order.gql'
+import { GetOrder, UpdateOrderStatus } from '@/graphql/Order.gql'
 
 import { handleError, handleSuccess } from '@/utils/forms'
 
@@ -50,7 +50,9 @@ export default {
           variables: {
             id: this.order.id,
             status_id: this.selected
-          }
+          },
+          refetchQueries: [GetOrder],
+          awaitRefetchQueries: true
         })
 
         handleSuccess(this, { message: 'Status alterado!' })
@@ -98,7 +100,7 @@ export default {
           Alterar para:
         </h6>
         <div
-          v-for="option in status"
+          v-for="(option, index) in status"
           :key="option.id"
           class="form-check"
         >
@@ -115,7 +117,7 @@ export default {
             class="form-check-label"
             :for="`radio__${option.id}__id`"
           >
-            {{ option.order + 1 }}. {{ option.text }}
+            {{ index + 1 }}. {{ option.text }}
           </label>
         </div>
       </div>

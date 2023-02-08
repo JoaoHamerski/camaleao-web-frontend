@@ -9,6 +9,12 @@ export default {
   components: {
     TheStatusCard,
     TheStatusHeader
+  },
+  methods: {
+    onCreated () {
+      console.log('alo')
+      window.scrollTo(0, 10000)
+    }
   }
 }
 </script>

@@ -1,5 +1,5 @@
 <script>
-import { faUserTag, faEdit, faTrashAlt } from '@fortawesome/free-solid-svg-icons'
+import { faUserTag, faEdit, faTrashAlt, faQuestionCircle } from '@fortawesome/free-solid-svg-icons'
 import { TippyComponent } from 'vue-tippy'
 import { GetSectors } from '@/graphql/Sector.gql'
 
@@ -33,7 +33,8 @@ export default {
       icons: {
         faUserTag,
         faEdit,
-        faTrashAlt
+        faTrashAlt,
+        faQuestionCircle
       }
     }
   },
@@ -107,6 +108,21 @@ export default {
         :headers="headers"
         :items="sectors"
       >
+        <template #[`items.name`]="{ item }">
+          <div>{{ item.name }}</div>
+          <div
+            v-if="item.alias"
+            class="small text-secondary"
+          >
+            {{ item.alias }}
+            <FontAwesomeIcon
+              v-tippy
+              fixed-width
+              :icon="icons.faQuestionCircle"
+              content="Nome no Controle de Produção"
+            />
+          </div>
+        </template>
         <template #[`items.users`]="{ item }">
           <div
             v-if="!item.users.length"
