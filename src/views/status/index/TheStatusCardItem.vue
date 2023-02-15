@@ -23,11 +23,11 @@ export default {
   },
   computed: {
     defaultStatusOnOrderRegister () {
-      if (this.status.order !== 0) {
-        return false
+      if (this.status.id === 22) {
+        return '(Padrão após cadastro de pedido)'
       }
 
-      return '(Padrão após cadastro de pedido)'
+      return false
     }
   },
   methods: {

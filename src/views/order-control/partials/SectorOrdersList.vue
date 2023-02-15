@@ -71,8 +71,9 @@ export default {
         value: false
       }
     },
-    onStatusLoading (loading) {
-      this.isStatusLoading = loading
+    onStatusLoading ({id, value}) {
+      this.isStatusLoading.id = id
+      this.isStatusLoading.value = value
     }
   }
 }
@@ -85,8 +86,9 @@ export default {
       :key="order.id"
       class="card mb-1"
     >
+      <AppLoading v-show="isStatusLoading.id === order.id && isStatusLoading.value" />
+
       <div class="card-body position-relative card-sector-body p-1 row flex-column flex-sm-row gx-2">
-        <AppLoading v-show="isStatusLoading.id === order.id && isStatusLoading.value" />
         <div class="col col-sm-3">
           <SectorOrdersListImage :image="order.art_paths" />
         </div>

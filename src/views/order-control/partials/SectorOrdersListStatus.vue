@@ -62,15 +62,16 @@ export default {
           awaitRefetchQueries: true
         })
 
+        this.$emit('loading', {
+          id: this.order.id,
+          value: false
+        })
+
         this.$toast.success('Status atualizado!')
       } catch (error) {
         this.$toast.error('Ops! Algo deu errado')
       }
 
-      this.$emit('loading', {
-        id: '',
-        value: false
-      })
     }
   }
 }

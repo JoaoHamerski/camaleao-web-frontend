@@ -103,6 +103,7 @@ export default {
         :status="getSectorStatus"
         :orders="ordersBySector.data"
       />
+
       <AppPaginator
         v-model="page"
         :style="{
