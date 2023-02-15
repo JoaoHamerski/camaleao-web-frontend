@@ -1,5 +1,6 @@
 <script>
 import { faArrowCircleLeft } from '@fortawesome/free-solid-svg-icons'
+import { isEmpty } from 'lodash-es'
 
 import PiecesBySectorDaysCount from './PiecesBySectorDaysCount.vue'
 import PiecesBySectorOrdersTable from './PiecesBySectorOrdersTable.vue'
@@ -51,6 +52,7 @@ export default {
     }
   },
   methods: {
+    isEmpty,
     onDateSelected ({ date }) {
       this.$emit('date-selected', {
         sector: this.sector,
