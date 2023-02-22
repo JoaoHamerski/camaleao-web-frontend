@@ -77,7 +77,7 @@ export default {
             :icon="getIconByFieldType"
             fixed-width
           />
-          Calendário semanal - {{ fieldTypeLabel }}
+          Calendário de {{ fieldTypeLabel }}
         </h5>
         <div class="small">
           Pedidos com

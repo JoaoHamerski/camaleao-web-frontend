@@ -9,52 +9,10 @@ const TheWeeklyCalendarDelivery = () => import(
   './TheWeeklyCalendarDelivery.vue'
 )
 
-const TheWeeklyCalendarSeam = () => import(
-  /* webpackChunkName: "weekly-calendar" */
-  /* webpackPrefetch: true */
-  './TheWeeklyCalendarSeam.vue'
-)
-
-const TheWeeklyCalendarPrint = () => import(
-  /* webpackChunkName: "weekly-calendar" */
-  /* webpackPrefetch: true */
-  './TheWeeklyCalendarPrint.vue'
-)
-
 const children = [
   {
-    name: 'weekly-calendar.print.index',
-    path: '/calendario-semanal/estampa',
-    component: TheWeeklyCalendarPrint,
-    meta: {
-      middleware: [role],
-      roles: [
-        roles.GERENCIA,
-        roles.ATENDIMENTO,
-        roles.DESIGN,
-        roles.COSTURA,
-        roles.ESTAMPA,
-      ]
-    }
-  },
-  {
-    name: 'weekly-calendar.seam.index',
-    path: '/calendario-semanal/costura',
-    component: TheWeeklyCalendarSeam,
-    meta: {
-      middleware: [role],
-      roles: [
-        roles.GERENCIA,
-        roles.ATENDIMENTO,
-        roles.DESIGN,
-        roles.COSTURA,
-        roles.ESTAMPA,
-      ]
-    }
-  },
-  {
     name: 'weekly-calendar.delivery.index',
-    path: '/calendario-semanal/entrega',
+    path: '/calendario-de-entrega',
     component: TheWeeklyCalendarDelivery,
     meta: {
       middleware: [role],

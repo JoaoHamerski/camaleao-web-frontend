@@ -24,7 +24,9 @@ import {
   faHandHoldingUsd,
   faListUl,
   faFileSignature,
-  faThLarge
+  faThLarge,
+  faColumns,
+  faDolly
 } from '@fortawesome/free-solid-svg-icons'
 
 const ITEMS = {
@@ -52,9 +54,10 @@ const ITEMS = {
     route: { name: 'daily-cash.index' },
     condition: () => canView(ROLES.GERENCIA, ROLES.ATENDIMENTO)
   },
-  CALENDARIO_SEMANAL: {
-    title: 'Calendário semanal',
-    icon: faCalendarAlt,
+  LINHA_DE_PRODUCAO: {
+    title: 'Linha de produção',
+    icon: faDolly,
+    route: { name: 'production-track.index' },
     condition: () => canView(
       ROLES.GERENCIA,
       ROLES.ATENDIMENTO,
@@ -64,38 +67,48 @@ const ITEMS = {
     ),
     get items() {
       return [
-        this.ESTAMPA,
-        this.COSTURA,
-        this.ENTREGA
+        this.CALENDARIO_DE_ENTREGA,
+        this.ESTEIRA_DE_PRODUCAO,
+        this.PAINEL_DE_PRODUTIVIDADE
       ]
     },
-    ESTAMPA: {
-      title: 'Estampa',
-      icon: faTshirt,
-      route: { name: 'weekly-calendar.print.index' }
+    CALENDARIO_DE_ENTREGA: {
+      title: 'Calendário de entrega',
+      icon: faCalendarAlt,
+      route: { name: 'weekly-calendar.delivery.index' },
+      style: {
+        fontSize: '.85rem',
+        whiteSpace: 'nowrap'
+      },
     },
-    COSTURA: {
-      title: 'Costura',
-      icon: faCut,
-      route: { name: 'weekly-calendar.seam.index' }
+    ESTEIRA_DE_PRODUCAO: {
+      title: 'Esteira de Produção',
+      icon: faTasks,
+      route: { name: 'production-track.index' },
+      style: {
+        fontSize: '.85rem',
+        whiteSpace: 'nowrap'
+      },
+      condition: () => canView(
+        ROLES.GERENCIA,
+        ROLES.ATENDIMENTO,
+        ROLES.DESIGN,
+        ROLES.COSTURA,
+        ROLES.ESTAMPA
+      ),
     },
-    ENTREGA: {
-      title: 'Entrega',
-      icon: faTruck,
-      route: { name: 'weekly-calendar.delivery.index' }
+    PAINEL_DE_PRODUTIVIDADE: {
+      title: 'Painel de Produtividade',
+      icon: faColumns,
+      route: { name: 'productivity-panel.index' },
+      style: {
+        fontSize: '.85rem',
+        whiteSpace: 'nowrap'
+      },
+      condition: () => canView(
+        ROLES.GERENCIA
+      )
     }
-  },
-  ESTEIRA_DE_PRODUCAO: {
-    title: 'Esteira de Produção',
-    icon: faTasks,
-    condition: () => canView(
-      ROLES.GERENCIA,
-      ROLES.ATENDIMENTO,
-      ROLES.DESIGN,
-      ROLES.COSTURA,
-      ROLES.ESTAMPA
-    ),
-    route: { name: 'order-control.index' }
   },
   FINANCEIRO: {
     title: 'Financeiro',
@@ -242,8 +255,7 @@ export default [
   ITEMS.CLIENTE,
   ITEMS.PEDIDOS,
   ITEMS.CAIXA_DIARIO,
-  ITEMS.CALENDARIO_SEMANAL,
-  ITEMS.ESTEIRA_DE_PRODUCAO,
+  ITEMS.LINHA_DE_PRODUCAO,
   ITEMS.FINANCEIRO,
   ITEMS.PRODUCAO_USUARIOS,
   ITEMS.GERENCIAMENTO,

@@ -1,5 +1,8 @@
 <script>
+import { DateTime } from 'luxon'
+
 import { formatDatetime } from '@/utils/formatters'
+import { faTruck } from '@fortawesome/free-solid-svg-icons'
 import orderStatesMixin from '@/views/orders/orderStatesMixin'
 
 export default {
@@ -10,7 +13,34 @@ export default {
       default: () => {}
     }
   },
+  data () {
+    return {
+      icons: {
+        faTruck
+      }
+    }
+  },
   computed: {
+    isNearDeliveryDate () {
+      const date = DateTime.fromISO(DateTime.now().toISODate())
+      const datePast = date.minus({days: 2})
+      const dateFuture = date.plus({days: 1})
+
+      const parsed = DateTime.fromISO(this.order.delivery_date)
+
+      return parsed >= datePast && parsed <= dateFuture
+    },
+    titleBackgroundClass () {
+      if (this.isNearDeliveryDate) {
+        return 'bg-link-danger'
+      }
+
+      if (this.isOrderPreRegistered) {
+        return 'bg-link-warning'
+      }
+
+      return 'bg-link-primary'
+    },
     orderUrl () {
       if (this.isOrderPreRegistered && !this.order.client) {
         return this.$helpers.getUrl('orders.show.pre-registered', {
@@ -35,12 +65,9 @@ export default {
     <h5>
       <a
         :href="orderUrl"
-        class="text-decoration-none text-white badge bg-link-primary clickable"
+        class="text-decoration-none text-white badge clickable"
         target="_blank"
-        :class="{
-          'bg-link-primary': !isOrderPreRegistered,
-          'bg-link-warning': isOrderPreRegistered
-        }"
+        :class="titleBackgroundClass"
       >
         <template v-if="!order.code && !order.client">
           [PRE-REGISTRO]
@@ -53,8 +80,13 @@ export default {
           <span>{{ order.client.name }}</span>
         </template>
 
-        <span class="mx-2">&bull;</span>
-        <span>{{ formatDatetime(order.created_at, 'dd/MM') }}</span>
+        <template v-if="order.delivery_date">
+          <span class="mx-2">&bull;</span>
+          <span>
+            <FontAwesomeIcon :icon="icons.faTruck" />
+            {{ formatDatetime(order.delivery_date, 'dd/MM') }}
+          </span>
+        </template>
       </a>
     </h5>
     <span

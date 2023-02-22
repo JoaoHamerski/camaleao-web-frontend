@@ -3,15 +3,15 @@ import Layout from '@/views/MainLayout.vue'
 import role from '@/middleware/role'
 import roles from '@/constants/roles'
 
-const TheOrderControl = () => import(
-  './index/TheOrderControl.vue'
+const TheProductionTrack = () => import(
+  './index/TheProductionTrack.vue'
 )
 
 const children = [
   {
-    name: 'order-control.index',
-    path: '/controle-de-pedidos',
-    component: TheOrderControl,
+    name: 'production-track.index',
+    path: '/esteira-de-producao',
+    component: TheProductionTrack,
     meta: {
       middleware: [role],
       roles: [
@@ -27,7 +27,7 @@ const children = [
 
 export default [
   {
-    name: 'order-control',
+    name: 'production-track',
     path: '/',
     component: Layout,
     children

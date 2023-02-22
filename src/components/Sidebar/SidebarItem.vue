@@ -1,6 +1,10 @@
 <script>
 export default {
   props: {
+    cssStyle: {
+      type: Object,
+      default: () => ({})
+    },
     icon: {
       type: Object,
       default: null
@@ -68,6 +72,7 @@ export default {
     <li
       class="list-group-item list-sidebar-item px-4 clickable position-relative"
       :class="{'active': isActive && hasRedirectRoute }"
+      :style="cssStyle"
       @click="e => onItemClick(e, navigate)"
     >
       <a

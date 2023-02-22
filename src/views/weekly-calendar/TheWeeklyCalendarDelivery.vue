@@ -3,7 +3,7 @@ import WeeklyCalendar from './index/WeeklyCalendar.vue'
 
 export default {
   metaInfo: {
-    title: 'Estampa - Calendário Semanal'
+    title: 'Calendário de Entrega'
   },
   components: {
     WeeklyCalendar

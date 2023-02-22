@@ -1,5 +1,5 @@
 <script>
-import { faTshirt } from '@fortawesome/free-solid-svg-icons'
+import { faColumns } from '@fortawesome/free-solid-svg-icons'
 
 import PiecesBySectorBody from './PiecesBySectorBody.vue'
 
@@ -16,7 +16,7 @@ export default {
   data () {
     return {
       icons: {
-        faTshirt
+        faColumns
       }
     }
   }
@@ -32,10 +32,10 @@ export default {
   >
     <template #title>
       <FontAwesomeIcon
-        :icon="icons.faTshirt"
+        :icon="icons.faColumns"
         fixed-width
       />
-      Controle de pedido
+      Painel de Produtividade
     </template>
 
     <template #body>

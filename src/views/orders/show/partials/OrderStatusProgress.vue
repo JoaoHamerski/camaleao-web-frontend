@@ -45,7 +45,7 @@ export default {
         :icon="icons.faTasks"
         fixed-width
       />
-      Controle de pedido
+      Controle de Pedido
     </template>
 
     <template #body>

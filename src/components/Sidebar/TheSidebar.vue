@@ -23,6 +23,7 @@ function renderSidebarNormalItem (h, context, item) {
       icon={item.icon}
       to={item.route}
       action={item.click}
+      cssStyle={item.style}
     >
       { item.title }
     </SidebarItem>

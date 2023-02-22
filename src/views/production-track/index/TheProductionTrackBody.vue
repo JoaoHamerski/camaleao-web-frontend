@@ -1,7 +1,7 @@
 <script>
 import { GetOrdersBySector } from '@/graphql/OrderControl.gql'
 
-import TheOrderControlNavs from './TheOrderControlNavs.vue'
+import TheProductionTrackNavs from './TheProductionTrackNavs.vue'
 import SectorOrdersList from '../partials/SectorOrdersList.vue'
 
 export default {
@@ -26,7 +26,7 @@ export default {
     }
   },
   components: {
-    TheOrderControlNavs,
+    TheProductionTrackNavs,
     SectorOrdersList
   },
   data () {
@@ -78,7 +78,7 @@ export default {
 <template>
   <div class="card mt-2">
     <div class="card-header p-0">
-      <TheOrderControlNavs
+      <TheProductionTrackNavs
         @sector-change="onSectorChange"
         @sectors-loaded="onSectorsLoaded"
       />

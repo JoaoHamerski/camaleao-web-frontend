@@ -7,11 +7,11 @@ import {
 
 import { map } from 'lodash-es'
 
-import OrderControlNavsItem from './OrderControlNavsItem.vue'
+import ProductionTrackNavItems from './ProductionTrackNavItems.vue'
 
 export default {
   components: {
-    OrderControlNavsItem
+    ProductionTrackNavItems
   },
   props: {
     order: {
@@ -88,14 +88,14 @@ export default {
       />
       <div class="step-progress-bar-placeholder" />
       <ul class="step-progress w-100 table-responsive">
-        <OrderControlNavsItem
+        <ProductionTrackNavItems
           v-for="_status in status.items"
           :key="_status.id"
           :status="_status"
           :concluded-status="concludedStatus"
           @step-click="stepToStatus"
         />
-        <OrderControlNavsItem
+        <ProductionTrackNavItems
           v-if="status.next_status"
           :status="status.next_status"
           :concluded-status="concludedStatus"

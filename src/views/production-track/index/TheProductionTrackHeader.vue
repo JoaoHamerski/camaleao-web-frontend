@@ -42,7 +42,7 @@ export default {
           :icon="icons.faTasks"
           fixed-width
         />
-        Esteira de pedidos
+        Esteira de Produção
       </div>
       <div>
         <AppButton
@@ -53,7 +53,7 @@ export default {
           btn-class="text-primary btn-sm fw-bold"
           @click="piecesBySectorClick"
         >
-          Controle de produção
+          Painel de Produtividade
         </AppButton>
         <AppButton
           :icon="icons.faSyncAlt"

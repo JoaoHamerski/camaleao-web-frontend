@@ -21,11 +21,12 @@ import myAccountRoutes from '@/views/my-account/routes'
 import weeklyProductionRoutes from '@/views/weekly-calendar/routes'
 import activitiesRoutes from '@/views/activities/routes'
 import statusRoutes from '@/views/status/routes'
-import orderControlRoutes from '@/views/order-control/routes'
+import productionTrackRoutes from '@/views/production-track/routes'
 import sectoresRoutes from '@/views/sectors/routes'
 import bankEntriesRoutes from '@/views/bank-entries/routes'
 import entriesRoutes from '@/views/entries/routes'
 import receiptGeneratorRoutes from '@/views/receipt-generator/routes'
+import productivityPanelRoutes from '@/views/productivity-panel/routes'
 
 import ErrorNotFound from '@/views/_errors/ErrorNotFound.vue'
 
@@ -79,11 +80,12 @@ const routes = [
   ...usersRoutes,
   ...weeklyProductionRoutes,
   ...statusRoutes,
-  ...orderControlRoutes,
+  ...productionTrackRoutes,
   ...sectoresRoutes,
   ...bankEntriesRoutes,
   ...entriesRoutes,
-  ...receiptGeneratorRoutes
+  ...receiptGeneratorRoutes,
+  ...productivityPanelRoutes
 ]
 
 if (process.env.NODE_ENV === 'development') {
