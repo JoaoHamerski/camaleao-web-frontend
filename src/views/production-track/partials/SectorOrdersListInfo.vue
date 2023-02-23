@@ -25,14 +25,14 @@ export default {
       const dateCurrent = DateTime.fromISO(DateTime.now().toISODate())
       const dateDelivery = DateTime.fromISO(this.order.delivery_date)
 
-      return dateDelivery > dateCurrent
+      return dateDelivery < dateCurrent
     },
     isNearDeliveryDate () {
       const dateCurrent = DateTime.fromISO(DateTime.now().toISODate())
-      const datePast = dateCurrent.minus({days: 2})
+      const dateFuture = dateCurrent.plus({days: 2})
       const dateDelivery = DateTime.fromISO(this.order.delivery_date)
 
-      return dateDelivery >= datePast || dateDelivery === dateCurrent
+      return dateFuture >= dateDelivery || dateDelivery === dateCurrent
     },
     titleBackgroundClass () {
       if (this.isExpiredDeliveryDate) {
