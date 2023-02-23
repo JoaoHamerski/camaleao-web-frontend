@@ -21,18 +21,26 @@ export default {
     }
   },
   computed: {
+    isExpiredDeliveryDate () {
+      const dateCurrent = DateTime.fromISO(DateTime.now().toISODate())
+      const dateDelivery = DateTime.fromISO(this.order.delivery_date)
+
+      return dateDelivery > dateCurrent
+    },
     isNearDeliveryDate () {
-      const date = DateTime.fromISO(DateTime.now().toISODate())
-      const datePast = date.minus({days: 2})
-      const dateFuture = date.plus({days: 1})
+      const dateCurrent = DateTime.fromISO(DateTime.now().toISODate())
+      const datePast = dateCurrent.minus({days: 2})
+      const dateDelivery = DateTime.fromISO(this.order.delivery_date)
 
-      const parsed = DateTime.fromISO(this.order.delivery_date)
-
-      return parsed >= datePast && parsed <= dateFuture
+      return dateDelivery >= datePast || dateDelivery === dateCurrent
     },
     titleBackgroundClass () {
-      if (this.isNearDeliveryDate) {
+      if (this.isExpiredDeliveryDate) {
         return 'bg-link-danger'
+      }
+
+      if (this.isNearDeliveryDate) {
+        return 'bg-link-camaleao'
       }
 
       if (this.isOrderPreRegistered) {
@@ -89,10 +97,22 @@ export default {
         </template>
       </a>
     </h5>
-    <span
-      class="badge small bg-warning"
-    >
-      {{ order.status.text }}
-    </span>
+    <div>
+      <span
+        v-if="isExpiredDeliveryDate"
+        class="badge small bg-danger me-2"
+      >
+        <FontAwesomeIcon
+          :icon="icons.faTruck"
+          fixed-width
+        />
+        Entrega atrasada
+      </span>
+      <span
+        class="badge small bg-warning"
+      >
+        {{ order.status.text }}
+      </span>
+    </div>
   </div>
 </template>
