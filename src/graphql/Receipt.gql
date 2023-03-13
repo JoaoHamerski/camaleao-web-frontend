@@ -4,19 +4,13 @@ query GetReceiptProductSuggestions {
   receiptProductSuggestions
 }
 
-query GetReceipts (
-  $first: Int!
-  $page: Int
-) {
-  receipts (
-    first: $first
-    page: $page
-  ) {
+query GetReceipts($first: Int!, $page: Int) {
+  receipts(first: $first, page: $page) {
     paginatorInfo {
       ...PaginatorSimpleParts
     }
 
-    data  {
+    data {
       id
       client
       product
@@ -28,24 +22,24 @@ query GetReceipts (
   }
 }
 
-mutation GetReceiptURL ($id: ID $preview: Boolean) {
+mutation GetReceiptURL($id: ID, $preview: Boolean) {
   receiptUrl(id: $id, preview: $preview)
 }
 
-mutation CreateReceipt ($input: ReceiptInput!) {
-  receiptCreate (input: $input) {
+mutation CreateReceipt($input: ReceiptInput!) {
+  receiptCreate(input: $input) {
     id
   }
 }
 
-mutation UpdateReceipt ($id: ID! $input: ReceiptInput!) {
-  receiptUpdate (id: $id input: $input) {
+mutation UpdateReceipt($id: ID!, $input: ReceiptInput!) {
+  receiptUpdate(id: $id, input: $input) {
     id
   }
 }
 
-mutation UploadReceiptGeneratorSettings ($input: ReceiptSettingsInput!) {
-  receiptGeneratorSettingsUpload (input: $input) {
+mutation UploadReceiptGeneratorSettings($input: ReceiptSettingsInput!) {
+  receiptGeneratorSettingsUpload(input: $input) {
     id
     name
     json

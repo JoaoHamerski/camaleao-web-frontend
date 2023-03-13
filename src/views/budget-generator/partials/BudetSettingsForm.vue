@@ -1,20 +1,18 @@
 <script>
 import { get } from 'lodash-es'
 import Form from '@/utils/Form'
-import filesMixin from '@/mixins/filesMixin'
-import { UploadReceiptGeneratorSettings } from '@/graphql/Receipt.gql'
-import { GetConfig } from '@/graphql/Config.gql'
 import { handleError } from '@/utils/forms'
 
-export default {
+import { GetConfig } from '@/graphql/Config.gql'
+import { UploadBudgetGeneratorSettings } from '@/graphql/Budget.gql'
 
-  mixins: [filesMixin],
-  apollo: {
+export default {
+   apollo: {
     generatorSettings: {
       query: GetConfig,
       variables: {
         name: 'app',
-        key: 'receipt_generator_settings',
+        key: 'budget_generator_settings',
         encoded: false
       },
       update(data) {
@@ -26,12 +24,7 @@ export default {
         }
 
         if (config.logo) {
-
-          config.logo = `${apiUrl}/storage/receipt_settings/${config.logo}`
-        }
-
-        if (config.signature_image) {
-          config.signature_image = `${apiUrl}/storage/receipt_settings/${config.signature_image}`
+          config.logo = `${apiUrl}/storage/budget_settings/${config.logo}`
         }
 
         return config
@@ -43,16 +36,14 @@ export default {
   },
   data () {
     return {
-      isLoading: false,
       generatorSettings: {},
+      isLoading: false,
       form: new Form({
         logo: '',
         header: '',
         content: '',
-        date: '',
-        signature_image: '',
-        signature_name: ''
-      }),
+        date: ''
+      })
     }
   },
   computed: {
@@ -81,23 +72,19 @@ export default {
           text: 'Data',
           fields: ['date']
         },
-        {
-          value: 'signature',
-          text: 'Assinatura',
-          fields: ['signature_image', 'signature_name']
-        }
       ]
     }
   },
   methods: {
-    configHasImage(prop) {
-      return get(this.generatorSettings, prop)
-    },
     populateForm() {
       Object.assign(this.form, this.generatorSettings || {})
     },
+    configHasImage(prop) {
+      return get(this.generatorSettings, prop)
+    },
     async onFileUpload(files, prop) {
       const base64File = await this.$helpers.inputFileToBase64(files[0])
+
       this.form[prop] = base64File
       this.form.errors.clear(prop)
     },
@@ -107,7 +94,7 @@ export default {
 
       try {
         await this.$apollo.mutate({
-          mutation: UploadReceiptGeneratorSettings,
+          mutation: UploadBudgetGeneratorSettings,
           variables: {
             input
           }
@@ -125,7 +112,9 @@ export default {
 </script>
 
 <template>
-  <form @submit.prevent="onSubmit">
+  <form
+    @submit.prevent="onSubmit"
+  >
     <AppLoading v-show="isQueryLoading" />
     <AppNavPills
       :items="navItems"
@@ -152,6 +141,7 @@ export default {
           </div>
         </template>
       </template>
+
       <template #header>
         <AppEditor
           v-model="form.header"
@@ -160,12 +150,12 @@ export default {
           @focus="form.errors.clear('header')"
         />
       </template>
+
       <template #content>
         <div class="text-secondary small">
           Informe os seguintes caracteres para serem substituídos por dados:
           <ul>
             <li><b>%cliente%</b> - Nome do cliente (Ex.: José da Penha)</li>
-            <li><b>%valor%</b> - Valor do recibo (Ex.: 500,00)</li>
             <li><b>%produto%</b> - Produto do recibo (Ex.: Camisa personalizada)</li>
           </ul>
         </div>
@@ -176,6 +166,7 @@ export default {
           @focus="form.errors.clear('content')"
         />
       </template>
+
       <template #date>
         <div class="text-secondary small">
           Informe os seguintes caracteres para serem substituídos por dados:
@@ -189,37 +180,6 @@ export default {
           placeholder="Digite a data..."
           @focus="form.errors.clear('date')"
         />
-      </template>
-      <template #signature>
-        <AppInputFile
-          id="signature"
-          centered
-          @input="(event) => onFileUpload(event, 'signature_image')"
-        />
-        <div
-          v-if="form.signature_image"
-          class="mb-2"
-        >
-          <div class="form-label fw-bold">
-            {{ configHasImage('signature_image') ? 'Assinatura armazenada:' : 'Pré-visualização:' }}
-          </div>
-          <div class="col-4">
-            <img
-              class="img-fluid img-thumbnail"
-              :src="form.signature_image"
-              alt="Logo"
-            >
-          </div>
-        </div>
-        <AppInput
-          id="signature_name"
-          v-model="form.signature_name"
-          name="signature_name"
-          placeholder="Nome que será exibido por escrito..."
-          :error="form.errors.get('signature_name')"
-        >
-          Nome na assinatura
-        </AppInput>
       </template>
     </AppNavPills>
 
@@ -249,7 +209,3 @@ export default {
     </div>
   </form>
 </template>
-
-<style lang="scss" scoped>
-  @import "@/sass/_bootstrap-utilities.scss";
-</style>

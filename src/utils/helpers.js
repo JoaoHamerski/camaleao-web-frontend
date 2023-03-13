@@ -11,6 +11,8 @@ import router from '@/router'
 import { map, isObject, isNil, flattenDeep } from 'lodash-es'
 import { formatCurrencyBRL } from '@/utils/formatters'
 
+import accounting from 'accounting-js'
+
 const fallback = (object, prop, fallbackString = 'N/A') => {
   if (isNil(prop)) {
     return object || fallbackString
@@ -258,6 +260,10 @@ export const openInNewTab = (href) => {
   }).click();
 }
 
+export const unformatCurrencyBRL = (value) => {
+  return accounting.unformat(value, ',')
+}
+
 export default {
   fallback,
   toBRL,
@@ -273,5 +279,6 @@ export default {
   replaceStrArray,
   clearCacheFrom,
   plural,
-  openInNewTab
+  openInNewTab,
+  unformatCurrencyBRL
 }

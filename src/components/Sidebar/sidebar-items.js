@@ -203,26 +203,34 @@ const ITEMS = {
     icon: faThLarge,
     condition: () => canView(
       ROLES.GERENCIA,
-      ROLES.ATENDIMENTO,
-      // ROLES.COSTURA,
-      // ROLES.ESTAMPA,
-      // ROLES.DESIGN,
+      ROLES.ATENDIMENTO
     ),
     get items () {
       return [
-        this.GERADOR_DE_RECIBO
+        this.GERADOR_DE_RECIBO,
+        this.GERADOR_DE_ORCAMENTO
       ]
     },
     GERADOR_DE_RECIBO: {
       title: 'Gerador de recibo',
       icon: faFileSignature,
       route: { name: 'receipt-generator.index' },
+
       condition: () => canView(
         ROLES.GERENCIA,
-        ROLES.ATENDIMENTO,
-        // ROLES.COSTURA,
-        // ROLES.ESTAMPA,
-        // ROLES.DESIGN
+        ROLES.ATENDIMENTO
+      )
+    },
+    GERADOR_DE_ORCAMENTO: {
+      title: 'Gerador de orçamento',
+      icon: faFileSignature,
+      route: { name: 'budget-generator.index' },
+      style: {
+        fontSize: '.8rem'
+      },
+      condition: () => canView(
+        ROLES.GERENCIA,
+        ROLES.ATENDIMENTO
       )
     }
   },

@@ -1,5 +1,5 @@
 <script>
-import { faThList, faEye, faEdit } from '@fortawesome/free-solid-svg-icons'
+import { faThList, faExternalLinkAlt, faEdit } from '@fortawesome/free-solid-svg-icons'
 import { GetReceipts, GetReceiptURL } from '@/graphql/Receipt.gql'
 
 import ReceiptEditModal from '../partials/ReceiptEditModal.vue'
@@ -35,7 +35,7 @@ export default {
       page: 1,
       icons: {
         faThList,
-        faEye,
+        faExternalLinkAlt,
         faEdit
       }
     }
@@ -50,7 +50,7 @@ export default {
         {value: 'product', text: 'Produto'},
         {value: 'value', text: 'Valor', format: 'currencyBRL'},
         {value: 'date', text: 'Data', format: 'datetime'},
-        {value: 'actions', text: ''}
+        {value: 'actions', text: '', align: 'rigt'}
       ]
     }
   },
@@ -109,24 +109,26 @@ export default {
             :items="receipts.data"
           >
             <template #[`items.actions`]="{ item }">
-              <AppButton
-                v-tippy
-                outlined
-                class="me-2"
-                btn-class="btn-sm"
-                :icon="icons.faEye"
-                :loading="item.id === loadingFile.id"
-                content="Ver recibo"
-                @click.prevent="onViewReceiptClick(item)"
-              />
-              <AppButton
-                v-tippy
-                outlined
-                :icon="icons.faEdit"
-                btn-class="btn-sm"
-                content="Editar"
-                @click.prevent="onEditReceiptClick(item)"
-              />
+              <div class="text-end">
+                <AppButton
+                  v-tippy
+                  outlined
+                  class="me-2"
+                  btn-class="btn-sm"
+                  :icon="icons.faExternalLinkAlt"
+                  :loading="item.id === loadingFile.id"
+                  content="Ver recibo"
+                  @click.prevent="onViewReceiptClick(item)"
+                />
+                <AppButton
+                  v-tippy
+                  outlined
+                  :icon="icons.faEdit"
+                  btn-class="btn-sm"
+                  content="Editar"
+                  @click.prevent="onEditReceiptClick(item)"
+                />
+              </div>
             </template>
           </AppTable>
         </div>

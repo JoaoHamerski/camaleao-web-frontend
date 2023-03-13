@@ -182,7 +182,7 @@ export default {
 
       this.params = {
         page: 1,
-        order: [{ column: 'created_at', order: 'DESC' }],
+        orderBy: [{ column: 'CREATED_AT', order: 'DESC' }],
         where: {
           column: 'CODE', operator: 'LIKE', value: `%${this.code}%`
         }
