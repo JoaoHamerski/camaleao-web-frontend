@@ -82,7 +82,8 @@ export default {
           query: GetBudgetGeneratedPDF,
           variables: {
             id: budget.id
-          }
+          },
+          fetchPolicy: 'no-cache'
         })
 
         this.$helpers.openInNewTab(budgetUrl)

@@ -27,6 +27,10 @@ export default {
           config.logo = `${apiUrl}/storage/budget_settings/${config.logo}`
         }
 
+        if (config.signature_image) {
+          config.signature_image = `${apiUrl}/storage/budget_settings/${config.signature_image}`
+        }
+
         return config
       },
       result() {
@@ -42,7 +46,8 @@ export default {
         logo: '',
         header: '',
         content: '',
-        date: ''
+        date: '',
+        signature_image: '',
       })
     }
   },
@@ -72,6 +77,11 @@ export default {
           text: 'Data',
           fields: ['date']
         },
+        {
+          value: 'signature_image',
+          text: 'Assinatura',
+          fields: ['signature_image']
+        }
       ]
     }
   },
@@ -180,6 +190,28 @@ export default {
           placeholder="Digite a data..."
           @focus="form.errors.clear('date')"
         />
+      </template>
+
+      <template #signature_image>
+        <AppInputFile
+          id="signature_image"
+          accept="image/*"
+          centered
+          @input="(event) => onFileUpload(event, 'signature_image')"
+        />
+
+        <template v-if="form.signature_image">
+          <div class="form-label fw-bold">
+            {{ configHasImage('signature_imageg') ? 'Assinature armazenada:' : 'Pré-visualização:' }}
+          </div>
+          <div class="col-4">
+            <img
+              class="img-fluid img-thumbnail"
+              :src="form.signature_image"
+              alt="Assinature"
+            >
+          </div>
+        </template>
       </template>
     </AppNavPills>
 
