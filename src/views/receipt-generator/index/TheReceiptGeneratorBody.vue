@@ -67,8 +67,8 @@ export default {
       this.loadingFile.id = id
 
       try {
-        const { data: { receiptUrl } } = await this.$apollo.mutate({
-          mutation: GetReceiptURL,
+        const { data: { receiptUrl } } = await this.$apollo.query({
+          query: GetReceiptURL,
           variables: { id }
         })
 

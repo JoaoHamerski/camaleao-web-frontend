@@ -27,8 +27,8 @@ export default {
       this.isPreviewLoading = true
 
       try {
-        const { data: { receiptUrl } } = await this.$apollo.mutate({
-          mutation: GetReceiptURL,
+        const { data: { receiptUrl } } = await this.$apollo.query({
+          query: GetReceiptURL,
           variables: {
             preview: true
           }

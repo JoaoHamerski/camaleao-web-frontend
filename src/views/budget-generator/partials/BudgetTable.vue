@@ -6,7 +6,7 @@ import {
 } from '@fortawesome/free-solid-svg-icons'
 
 import {
-  GetBudgetGeneratedPDF,
+  GetBudgetUrl,
   GetBudgets,
   DeleteBudget
 } from '@/graphql/Budget.gql'
@@ -78,8 +78,8 @@ export default {
       this.budgetToOpen.isLoading = true
 
       try {
-        const { data: { budgetGeneratePDF: budgetUrl } } = await this.$apollo.query({
-          query: GetBudgetGeneratedPDF,
+        const { data: { budgetUrl } } = await this.$apollo.query({
+          query: GetBudgetUrl,
           variables: {
             id: budget.id
           },
@@ -89,6 +89,7 @@ export default {
         this.$helpers.openInNewTab(budgetUrl)
       } catch (error) {
         this.$toast.error('Ops! Algo deu errado.')
+        console.log(error)
       }
 
       this.budgetToOpen.isLoading = false

@@ -22,7 +22,7 @@ query GetReceipts($first: Int!, $page: Int) {
   }
 }
 
-mutation GetReceiptURL($id: ID, $preview: Boolean) {
+query GetReceiptURL($id: ID, $preview: Boolean) {
   receiptUrl(id: $id, preview: $preview)
 }
 
