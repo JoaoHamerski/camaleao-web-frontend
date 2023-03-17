@@ -14,6 +14,9 @@ const CUSTOM_TOOLBARS = {
       <html>
         <head>
           <title>${imageAlt}</title>
+          <style>
+            @media print{@page {size: landscape}}
+          </style>
         </head>
         <body>
           <img src="${imageUrl}" alt="${imageAlt}" onload="window.print();window.close()" />
