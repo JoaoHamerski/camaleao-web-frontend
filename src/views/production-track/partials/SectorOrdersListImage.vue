@@ -22,7 +22,10 @@ export default {
 
 <template>
   <div class="d-flex h-100 justify-content-center align-items-center">
-    <AppViewer v-if="orderImage">
+    <AppViewer
+      v-if="orderImage"
+      :extra-toolbar="['print']"
+    >
       <VueLoadImage>
         <img
           slot="image"

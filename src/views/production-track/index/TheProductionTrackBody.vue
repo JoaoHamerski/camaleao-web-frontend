@@ -15,7 +15,7 @@ export default {
             page: this.page,
             sectorId: this.sector.id,
             order_by: [{
-              column: 'CREATED_AT',
+              column: 'DELIVERY_DATE',
               order: 'DESC'
             }]
           }
@@ -97,6 +97,7 @@ export default {
       >
         Nenhum pedido encontrado
       </div>
+
       <SectorOrdersList
         v-else
         :can-close-orders="sector.can_close_sector_orders"
