@@ -16,7 +16,7 @@ export default {
             sectorId: this.sector.id,
             order_by: [{
               column: 'DELIVERY_DATE',
-              order: 'DESC'
+              order: 'ASC'
             }]
           }
         },
