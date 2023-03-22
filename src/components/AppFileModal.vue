@@ -1,5 +1,5 @@
 <script>
-import ViewerFileModal from '@/components/AppViewer/ViewerFileModal'
+import ViewerFileModal from '@/components/AppViewer/ViewerFileModal.vue'
 
 export default {
   components: {

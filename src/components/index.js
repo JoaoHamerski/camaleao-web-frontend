@@ -1,30 +1,21 @@
 import Vue from 'vue'
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
-import { upperFirst, camelCase } from 'lodash-es'
+// import { upperFirst, camelCase } from 'lodash-es'
 
 Vue.component('FontAwesomeIcon', FontAwesomeIcon)
 
-// Auto register globally every base component: "App*.vue"
-const requireComponent = require.context(
-  '../components',
-  true,
-  /App[A-z]\w+\.(vue)$/
+const components = import.meta.glob(
+  './**/App*.(jsx|vue)', 
+  { eager: true }
 )
 
-for (const fileName of requireComponent.keys()) {
-  const componentConfig = requireComponent(fileName)
-
-  const componentName = upperFirst(
-    camelCase(
-      fileName
-        .split('/')
-        .pop()
-        .replace(/\.\w+$/, '')
-    )
-  )
-
-  Vue.component(
-    componentName,
-    componentConfig.default || componentConfig
-  )
-}
+Object.entries(components).forEach(([path, definition]) => {
+  // Get name of component, based on filename
+  const componentName = path
+    .split('/')
+    .pop()
+    .replace(/\.\w+$/, '')
+  
+  // Register component on this Vue instance
+  Vue.component(componentName, definition.default)
+})

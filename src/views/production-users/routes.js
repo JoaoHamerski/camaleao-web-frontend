@@ -6,7 +6,7 @@ import { productionUsers } from '@/constants/route-names'
 
 const TheProductionUsers = () => import(
   /* webpackChunkName: "production-users" */
-  './index/TheProductionUsers'
+  './index/TheProductionUsers.vue'
 )
 
 const children = [

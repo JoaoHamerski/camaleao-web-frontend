@@ -1,4 +1,4 @@
-<script>
+<script lang="jsx">
 import classNames from 'classnames'
 import { TippyComponent } from 'vue-tippy'
 import { Collapse } from 'bootstrap'

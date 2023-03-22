@@ -28,15 +28,6 @@ export default {
     return {
       errors
     }
-  },
-  computed: {
-    getComponent () {
-      if (this.error === 404) {
-        return NotFound404
-      }
-
-      return ''
-    }
   }
 }
 </script>

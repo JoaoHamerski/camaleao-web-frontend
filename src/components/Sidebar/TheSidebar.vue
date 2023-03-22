@@ -1,4 +1,4 @@
-<script>
+<script lang="jsx">
 import classNames from 'classnames'
 
 import sidebarItems from './sidebar-items'
@@ -81,7 +81,7 @@ function renderSidebar (h, context) {
     >
       { <SidebarHeader auth-user={context.authUser}/> }
 
-      <hr class="bg-light" />
+      <hr class="border-light" />
 
       { renderList(h, context) }
     </nav>

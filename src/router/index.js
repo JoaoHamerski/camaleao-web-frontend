@@ -90,10 +90,10 @@ const routes = [
   ...budgetGeneratorRoutes
 ]
 
-if (process.env.NODE_ENV === 'development') {
+if (import.meta.env.MODE === 'development') {
   routes.push({
     path: '/testes',
-    component: () => import('@/views/TheTest')
+    component: () => import('@/views/TheTest.vue')
   })
 }
 

@@ -5,12 +5,12 @@ import { GetOrder, GetOrderReport } from '@/graphql/Order.gql'
 import orderStatesMixin from '../orderStatesMixin'
 import { clients } from '@/constants/route-names'
 
-import ClientCard from '@/views/clients/partials/ClientCard'
-import TheOrderHeader from './TheOrderHeader'
-import TheOrderCard from './TheOrderCard'
+import ClientCard from '@/views/clients/partials/ClientCard.vue'
+import TheOrderHeader from './TheOrderHeader.vue'
+import TheOrderCard from './TheOrderCard.vue'
 import ModalPaymentForm from '@/views/resources/payments/ModalPaymentForm.vue'
-import ModalOrderStatus from '../partials/ModalOrderStatus'
-import ModalOrderDelete from '../partials/ModalOrderDelete'
+import ModalOrderStatus from '../partials/ModalOrderStatus.vue'
+import ModalOrderDelete from '../partials/ModalOrderDelete.vue'
 
 export default {
   metaInfo () {

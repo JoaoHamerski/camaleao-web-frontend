@@ -21,7 +21,7 @@ export default {
             id: this.entry.id,
             date: this.entry.date,
             description: this.entry.description,
-            expense_type_id: '',
+            // expense_type_id: '',
             value: this.$helpers.toBRL(this.entry.value),
             expense_via_id: this.entry.via.id,
             expense_type_id: this.entry.type.id,

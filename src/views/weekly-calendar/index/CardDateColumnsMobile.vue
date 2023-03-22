@@ -1,4 +1,4 @@
-<script>
+<script lang="jsx">
 import { renderCardDateColumn } from './WeeklyCalendarBody.vue'
 import { Carousel, Slide } from 'vue-carousel'
 import { DateTime } from 'luxon'

@@ -1,4 +1,4 @@
-<script>
+<script lang="jsx">
 import classNames from 'classnames'
 import { isEmpty } from 'lodash-es'
 import Cleave from 'cleave.js'

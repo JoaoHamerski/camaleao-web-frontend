@@ -1,6 +1,6 @@
 import { isNil, startsWith } from 'lodash-es'
 import { DateTime } from 'luxon'
-import accounting from 'accounting-js'
+import * as accounting from 'accounting-js'
 
 export const format = (str, pattern) => {
   let i = 0

@@ -4,11 +4,7 @@ import role from '@/middleware/role'
 import roles from '@/constants/roles'
 import { dailyCash } from '@/constants/route-names'
 
-const TheDailyCash = () => import(
-  /* webpackChunkName: "daily-cash" */
-  /* webpackPrefetch: true */
-  './index/TheDailyCash'
-)
+const TheDailyCash = () => import('./index/TheDailyCash.vue')
 
 const children = [
   {

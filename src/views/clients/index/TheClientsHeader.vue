@@ -1,8 +1,8 @@
 <script>
 import { faUserPlus, faSearch } from '@fortawesome/free-solid-svg-icons'
-import ClientModalNew from '../partials/ClientModalNew'
+import ClientModalNew from '../partials/ClientModalNew.vue'
 
-import { COLUMNS } from './TheClients'
+import { COLUMNS } from './TheClients.vue'
 
 export default {
   components: {

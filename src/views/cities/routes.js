@@ -7,7 +7,7 @@ import { citiesRoutes } from '@/constants/route-names'
 const TheCities = () => import(
   /* webpackChunkName: "cities" */
   /* webpackPrefetch: true */
-  './index/TheCities'
+  './index/TheCities.vue'
 )
 
 const children = [

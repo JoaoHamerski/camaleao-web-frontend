@@ -1,7 +1,8 @@
 <script>
 import { formatPhone } from '@/utils/formatters'
 import { GetClientsForForm } from '@/graphql/Resources.gql'
-import{ isNumeric } from '@/utils/helpers'
+import { isNumeric } from '@/utils/helpers'
+import { stripNonDigits } from '@/utils/helpers'
 
 const whereClientsClause = (query) => {
   if (query.startsWith('(')) {

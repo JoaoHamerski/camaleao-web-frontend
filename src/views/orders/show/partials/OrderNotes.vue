@@ -4,8 +4,8 @@ import { faStickyNote } from '@fortawesome/free-solid-svg-icons'
 import { DeleteNote } from '@/graphql/Note.gql'
 import { formatDatetime } from '@/utils/formatters'
 import Form from '@/utils/Form'
-import OrderNotesForm from './OrderNotesForm'
-import OrderNotesActionButtons from './OrderNotesActionButtons'
+import OrderNotesForm from './OrderNotesForm.vue'
+import OrderNotesActionButtons from './OrderNotesActionButtons.vue'
 
 export default {
   components: {

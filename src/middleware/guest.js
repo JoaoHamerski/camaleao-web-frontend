@@ -4,7 +4,7 @@ const HOME_ROUTE = {
   path: '/'
 }
 
-export default async function guest ({ from, next }) {
+export default async function guest ({ next }) {
   if (!store.getters['auth/authUser']) {
     await store.dispatch('auth/getAuthUser')
   }

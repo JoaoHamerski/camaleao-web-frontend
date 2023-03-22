@@ -58,10 +58,10 @@ export default {
   },
   computed: {
     modalDialogClasses () {
-      return {
+      return [this.modalDialogClass, {
         'modal-dialog-scrollable': this.scrollable,
         'modal-dialog-centered': this.centered
-      }
+      }]
     }
   },
   watch: {
@@ -136,7 +136,7 @@ export default {
   >
     <div
       class="modal-dialog"
-      :class="[modalDialogClass, ...modalDialogClasses]"
+      :class="modalDialogClasses"
     >
       <div class="modal-content">
         <div

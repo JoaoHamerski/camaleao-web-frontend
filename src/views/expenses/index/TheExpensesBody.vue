@@ -7,13 +7,14 @@ import {
 
 import ModalExpensesEdit from './modals/ModalExpensesEdit.vue'
 import TheExpensesBodyCardTable from './TheExpensesBodyCardTable.vue'
+import { config as viewerConfig } from '@/components/AppViewer/AppViewer.vue'
 
 export default {
   components: {
     ModalExpensesEdit,
     TheExpensesBodyCardTable,
     ExpensesTypesOverview: () => import('./ExpensesTypesOverview.vue'),
-    ViewerFileModal: () => import('@/components/AppViewer/ViewerFileModal'),
+    ViewerFileModal: () => import('@/components/AppViewer/ViewerFileModal.vue'),
     PaymentExpenseDeleteModal: () => import('@/views/resources/payments-expenses/PaymentExpenseDeleteModal.vue')
   },
   props: {

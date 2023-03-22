@@ -4,7 +4,7 @@ const fetch = require('node-fetch')
 const fs = require('fs')
 const FILE_PATH = './src/fragmentTypes.json'
 
-fetch(process.env.VUE_APP_GRAPHQL_HTTP, {
+fetch(import.meta.env.VITE_APP_GRAPHQL_HTTP, {
   method: 'POST',
   headers: { 'Content-Type': 'application/json' },
   body: JSON.stringify({

@@ -140,7 +140,9 @@ export default {
         })
 
         this.balance.value = cashFlowBalance
-      } catch (error) {}
+      } catch (error) {
+        this.$toast.error('Ops! Algo deu errado.')
+      }
 
       this.balance.isLoading = false
     },

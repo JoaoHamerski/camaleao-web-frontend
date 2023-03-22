@@ -3,7 +3,7 @@ import { faPlus, faTrashAlt } from '@fortawesome/free-solid-svg-icons'
 import BudgetFormProductsHeader from './BudgetFormProductsHeader.vue'
 
 import { maskCurrencyBRL, maskInteger } from '@/utils/masks'
-import accounting from 'accounting-js'
+import * as accounting from 'accounting-js'
 
 
 const UNITIES = [

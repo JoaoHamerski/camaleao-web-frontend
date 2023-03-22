@@ -17,7 +17,7 @@ export default {
       },
       update(data) {
         const config = JSON.parse(data.configGet)
-        const apiUrl = process.env.VUE_APP_API_HTTP
+        const apiUrl = import.meta.env.VITE_APP_API_HTTP
 
         if (!config) {
           return config

@@ -23,6 +23,7 @@ export default {
           credentials
         })
       } catch (error) {
+        console.log(error)
         handleError(this, error)
         this.isLoading = false
       }

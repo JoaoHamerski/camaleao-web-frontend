@@ -34,7 +34,7 @@ export const getters = {
 }
 
 export const actions = {
-  bootstrap ({ state, commit }) {
+  bootstrap ({ commit }) {
     if (!hasSidebarCookie()) {
       commit('SET_SIDEBAR_STATE', DEFAULT_SIDEBAR_STATE)
     }

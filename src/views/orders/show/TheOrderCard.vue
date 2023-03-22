@@ -1,7 +1,7 @@
 <script>
-import TheOrderCardBody from './TheOrderCardBody'
-import TheOrderCardHeader from './TheOrderCardHeader'
-import TheOrderCardPlaceholder from './TheOrderCardPlaceholder'
+import TheOrderCardBody from './TheOrderCardBody.vue'
+import TheOrderCardHeader from './TheOrderCardHeader.vue'
+import TheOrderCardPlaceholder from './TheOrderCardPlaceholder.vue'
 
 export default {
   components: {

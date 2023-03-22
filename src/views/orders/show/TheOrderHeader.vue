@@ -9,7 +9,7 @@ import {
 import { isEmpty } from 'lodash-es'
 import { clients } from '@/constants/route-names'
 
-import TheOrderHeaderCogOptions from './TheOrderHeaderCogOptions'
+import TheOrderHeaderCogOptions from './TheOrderHeaderCogOptions.vue'
 
 export default {
   components: {

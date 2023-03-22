@@ -1,8 +1,8 @@
-<script>
+<script lang="jsx">
 import ErrorPage from './ErrorPage.vue'
 
 export default {
-  render (h) {
+  render () {
     return (
       <ErrorPage error={404} />
     )

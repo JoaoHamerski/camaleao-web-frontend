@@ -7,7 +7,7 @@ import { users } from '@/constants/route-names'
 const TheUsers = () => import(
   /* webpackChunkName: "users" */
   /* webpackPrefetch: true */
-  './index/TheUsers'
+  './index/TheUsers.vue'
 )
 
 const children = [

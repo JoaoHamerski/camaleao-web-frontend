@@ -1,4 +1,4 @@
-<script>
+<script lang="jsx">
 import classNames from 'classnames'
 import { upperFirst, isNil } from 'lodash-es'
 import format from '@/utils/formatters'

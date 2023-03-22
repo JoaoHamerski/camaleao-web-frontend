@@ -11,7 +11,7 @@ import router from '@/router'
 import { map, isObject, isNil, flattenDeep } from 'lodash-es'
 import { formatCurrencyBRL } from '@/utils/formatters'
 
-import accounting from 'accounting-js'
+import * as accounting from 'accounting-js'
 
 const fallback = (object, prop, fallbackString = 'N/A') => {
   if (isNil(prop)) {

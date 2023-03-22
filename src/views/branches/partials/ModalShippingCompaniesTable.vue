@@ -74,7 +74,7 @@ export default {
         this.$refs.editCompanyNameInput.focusInput()
       })
     },
-    onCancelEditClick (item) {
+    onCancelEditClick () {
       this.edit.id = ''
     },
     onActionButtonClick (action, item) {

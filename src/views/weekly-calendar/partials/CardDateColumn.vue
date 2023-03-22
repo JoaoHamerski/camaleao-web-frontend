@@ -1,4 +1,4 @@
-<script>
+<script lang="jsx">
 import roles from '@/constants/roles'
 import filesMixin from '@/mixins/filesMixin'
 import classNames from 'classnames'
@@ -257,7 +257,7 @@ export default {
 
       this.onImageUploaded(files)
     },
-    onDragOverCard (event) {
+    onDragOverCard () {
       if (this.isOrderable) {
         return
       }

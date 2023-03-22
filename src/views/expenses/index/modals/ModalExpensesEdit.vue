@@ -1,7 +1,7 @@
 <script>
 
 import { isEmpty } from 'lodash-es'
-import { formatCurrencyBRL, formatDatetime } from '@/utils/formatters'
+import { formatCurrencyBRL } from '@/utils/formatters'
 import { faEdit } from '@fortawesome/free-solid-svg-icons'
 import ExpensesForm from '../ExpensesForm.vue'
 

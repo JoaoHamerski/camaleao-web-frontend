@@ -1,7 +1,7 @@
 <script>
 import { GetConfig } from '@/graphql/Config.gql'
 
-import { pick, cloneDeep } from 'lodash-es'
+import { cloneDeep } from 'lodash-es'
 import { faTshirt, faCut, faTruck } from '@fortawesome/free-solid-svg-icons'
 import Form from '@/utils/Form'
 import { UpdateUpdatableStatusFromWeeklyCalendar } from '@/graphql/WeeklyCalendar.gql'

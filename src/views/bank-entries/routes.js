@@ -6,7 +6,7 @@ import roles from '@/constants/roles'
 const TheBankEntries = () => import(
   /* webpackChunkName: "bank-entries" */
   /* webpackPrefetch: true */
-  './index/TheBankEntries'
+  './index/TheBankEntries.vue'
 )
 
 const children = [

@@ -17,6 +17,11 @@ export default {
       default: () => ({})
     }
   },
+  data () {
+    return {
+      properties: {}
+    }
+  },
   computed: {
     isConfig () {
       return this.item.log_name.startsWith('configs')
@@ -24,11 +29,6 @@ export default {
     renderPropChanges () {
       return this.description.type === 'updated'
         && !this.isConfig
-    },
-    properties () {
-      const filename = this.item.log_name
-
-      return require(`../properties/${filename}.map.json`)
     },
     description () {
       return JSON.parse(this.item.description)
@@ -61,6 +61,12 @@ export default {
 
       return text
     }
+  },
+  async created () {
+    const filename = this.item.log_name
+    const properties = await import(`../properties/${filename}.map.json`)
+
+    this.properties = properties.default
   },
   methods: {
     formatDatetime,

@@ -7,7 +7,7 @@ import { activities } from '@/constants/route-names'
 const TheActivities = () => import(
   /* webpackChunkName: "activities" */
   /* webpackPrefetch: true */
-  './index/TheActivities'
+  './index/TheActivities.vue'
 )
 
 const children = [

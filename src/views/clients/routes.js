@@ -7,13 +7,13 @@ import { clients } from '@/constants/route-names'
 const TheClients = () => import(
   /* webpackChunkName: "clients" */
   /* webpackPrefetch: true */
-  './index/TheClients'
+  './index/TheClients.vue'
 )
 
 const TheClient = () => import(
   /* webpackChunkName: "clients" */
   /* webpackPrefetch: true */
-  './show/TheClient'
+  './show/TheClient.vue'
 )
 
 const children = [

@@ -1,4 +1,4 @@
-<script>
+<script lang="jsx">
 import { faCheck } from '@fortawesome/free-solid-svg-icons'
 import { get, isFunction } from 'lodash-es'
 import classNames from 'classnames'

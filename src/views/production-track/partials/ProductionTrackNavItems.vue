@@ -1,4 +1,4 @@
-<script setup>
+<script>
 import { get, map } from 'lodash-es'
 import { faCheck, faClock, faUser } from '@fortawesome/free-solid-svg-icons'
 import { formatDatetime } from '@/utils/formatters'

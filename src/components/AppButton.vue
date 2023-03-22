@@ -1,4 +1,4 @@
-<script>
+<script lang="jsx">
 import { isEmpty } from 'lodash-es'
 import classNames from 'classnames'
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
@@ -9,7 +9,7 @@ const tippy = {
   placement: 'top'
 }
 
-function renderIsLoadingIcon (h, context) {
+function renderIsLoadingIcon () {
   return (
     <span>
       <span

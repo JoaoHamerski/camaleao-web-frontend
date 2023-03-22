@@ -1,5 +1,5 @@
 <script>
-import ClothingTypeForm from './ClothingTypeForm'
+import ClothingTypeForm from './ClothingTypeForm.vue'
 
 export default {
   components: {

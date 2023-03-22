@@ -17,8 +17,6 @@ import {
   faListAlt,
   faSignOutAlt,
   faCheckCircle,
-  faCut,
-  faTruck,
   faTasks,
   faUserTag,
   faHandHoldingUsd,

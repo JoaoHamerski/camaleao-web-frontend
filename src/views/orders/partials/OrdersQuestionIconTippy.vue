@@ -2,7 +2,7 @@
 import { faQuestionCircle } from '@fortawesome/free-solid-svg-icons'
 
 import { TippyComponent } from 'vue-tippy'
-import OrdersListLegend from '../../orders/partials/OrdersListLegend'
+import OrdersListLegend from '../../orders/partials/OrdersListLegend.vue'
 
 export default {
   components: {

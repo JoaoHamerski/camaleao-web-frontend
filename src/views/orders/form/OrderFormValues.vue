@@ -1,5 +1,5 @@
 <script>
-import accounting from 'accounting-js'
+import * as accounting from 'accounting-js'
 import { isEmpty } from 'lodash-es'
 import { formatCurrencyBRL } from '@/utils/formatters'
 import { maskCurrencyBRL, maskInteger } from '@/utils/masks'

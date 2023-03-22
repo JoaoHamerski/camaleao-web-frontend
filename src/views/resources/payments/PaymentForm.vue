@@ -1,5 +1,5 @@
 <script>
-import accounting from 'accounting-js'
+import * as accounting from 'accounting-js'
 import { vias } from '@/graphql/Via.gql'
 import { CreatePayment, UpdatePayment } from '@/graphql/Payment.gql'
 import { GetEntries } from '@/graphql/Entry.gql'

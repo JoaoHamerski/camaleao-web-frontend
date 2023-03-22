@@ -1,5 +1,5 @@
 <script>
-import { isEmpty } from 'lodash'
+import { isEmpty } from 'lodash-es'
 import { faCalendarAlt } from '@fortawesome/free-solid-svg-icons'
 import { GetMonthCommissionByRole } from '@/graphql/Production.gql'
 import Form from '@/utils/Form'

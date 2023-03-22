@@ -1,6 +1,6 @@
 <script>
 import { faUsers } from '@fortawesome/free-solid-svg-icons'
-import TheClientsCardTable from './TheClientsCardTable'
+import TheClientsCardTable from './TheClientsCardTable.vue'
 
 export default {
   components: {

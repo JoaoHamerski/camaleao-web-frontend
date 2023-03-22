@@ -1,5 +1,5 @@
-<script>
-import { get, map } from 'lodash'
+<script lang="jsx">
+import { get, map } from 'lodash-es'
 import classNames from 'classnames'
 
 import TableCell from './TableCell.vue'

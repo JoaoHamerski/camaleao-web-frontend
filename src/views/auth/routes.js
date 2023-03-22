@@ -1,7 +1,7 @@
 import guest from '@/middleware/guest'
 import { auth } from '@/constants/route-names'
 
-import TheLogin from './TheLogin'
+import TheLogin from './TheLogin.vue'
 
 export default [
   {

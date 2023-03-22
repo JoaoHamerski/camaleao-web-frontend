@@ -1,7 +1,7 @@
 <script>
 import { faFilter } from '@fortawesome/free-solid-svg-icons'
 import { maskDate } from '@/utils/masks'
-import { users } from '@/graphql/User.gql'
+import { GetUsers } from '@/graphql/User.gql'
 
 import Form from '@/utils/Form'
 
@@ -28,7 +28,7 @@ export default {
   },
   apollo: {
     users: {
-      query: users
+      query: GetUsers
     }
   },
   data () {

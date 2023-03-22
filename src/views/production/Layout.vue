@@ -1,5 +1,5 @@
 <script>
-import TheLayout from '../MainLayout'
+import TheLayout from '../MainLayout.vue'
 
 export default {
   name: 'ProductionLayout',

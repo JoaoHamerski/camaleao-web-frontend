@@ -6,7 +6,7 @@ import { clothingTypes } from '@/constants/route-names'
 const TheClothingTypes = () => import(
   /* webpackChunkName: "clothing-types" */
   /* webpackPrefetch: true */
-  './index/TheClothingTypes'
+  './index/TheClothingTypes.vue'
 )
 
 const children = [

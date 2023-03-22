@@ -3,7 +3,7 @@
 $calendar-active-background-color: $primary;
 $default-color: $secondary;
 
-@import '~vue2-datepicker/scss/index.scss';
+@import 'vue2-datepicker/scss/index.scss';
 
 .mx-datepicker.custom-date-picker {
   &.today-btn {

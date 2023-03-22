@@ -1,4 +1,4 @@
-<script>
+<script lang="jsx">
 import pasteFilesMixin from '@/mixins/pasteFilesMixin'
 import filesMixin from '@/mixins/filesMixin'
 import Cookies from 'js-cookie'

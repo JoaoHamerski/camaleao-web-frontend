@@ -6,7 +6,7 @@ import roles from '@/constants/roles'
 const TheStatus = () => import(
   /* webpackChunkName: "status" */
   /* webpackPrefetch: true */
-  './index/TheStatus'
+  './index/TheStatus.vue'
 )
 
 const children = [

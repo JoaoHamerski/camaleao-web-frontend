@@ -39,10 +39,10 @@ export const mutations = {
 }
 
 export const actions = {
-  async login ({ commit, dispatch }, payload) {
+  async login (_, payload) {
     const { credentials } = payload
 
-    await fetch(`${process.env.VUE_APP_API_HTTP}/api/csrf-cookie`, {
+    await fetch(`${import.meta.env.VITE_APP_API_HTTP}/api/csrf-cookie`, {
       credentials: 'include'
     })
 
@@ -57,7 +57,7 @@ export const actions = {
 
     router.push(ON_LOGIN_ROUTE)
   },
-  async logout ({ getters, commit, dispatch }) {
+  async logout ({ commit }) {
     try {
       await commit('SET_USER', null)
       await apolloClient.mutate({

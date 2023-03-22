@@ -1,4 +1,4 @@
-<script>
+<script lang="jsx">
 import { VueEditor } from 'vue2-editor/dist/vue2-editor.core.js'
 
 const DEFAULT_TOOLBAR_OPTIONS = [
@@ -53,9 +53,9 @@ export default {
   </div>
 </template>
 <style lang="scss" scoped>
-@import "~vue2-editor/dist/vue2-editor.css";
-@import '~quill/dist/quill.core.css';
-@import '~quill/dist/quill.snow.css';
+@import "vue2-editor/dist/vue2-editor.css";
+@import 'quill/dist/quill.core.css';
+@import 'quill/dist/quill.snow.css';
 
 ::v-deep {
   &.quillWrapper.is-invalid {

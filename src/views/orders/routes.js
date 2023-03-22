@@ -7,25 +7,25 @@ import { orders } from '@/constants/route-names'
 const TheOrders = () => import(
   /* webpackChunkName: "orders" */
   /* webpackPrefetch: true */
-  './index/TheOrders'
+  './index/TheOrders.vue'
 )
 
 const TheOrder = () => import(
   /* webpackChunkName: "orders" */
   /* webpackPrefetch: true */
-  './show/TheOrder'
+  './show/TheOrder.vue'
 )
 
 const TheOrderNew = () => import(
   /* webpackChunkName: "orders" */
   /* webpackPrefetch: true */
-  './create/TheOrderNew'
+  './create/TheOrderNew.vue'
 )
 
 const TheOrderEdit = () => import(
   /* webpackChunkName: "orders" */
   /* webpackPrefetch: true */
-  './edit/TheOrderEdit'
+  './edit/TheOrderEdit.vue'
 )
 
 const children = [

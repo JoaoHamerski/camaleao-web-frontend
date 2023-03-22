@@ -12,7 +12,7 @@ Vue.use(VueApollo)
 const AUTH_TOKEN_NAME = 'auth-token'
 
 const httpLink = createHttpLink({
-  uri: process.env.VUE_APP_GRAPHQL_HTTP,
+  uri: import.meta.env.VITE_APP_GRAPHQL_HTTP,
   credentials: 'include'
 })
 
@@ -62,7 +62,7 @@ const handleErrors = async (category) => {
   }
 }
 
-export function createProvider (options = {}) {
+export function createProvider () {
   const { apolloClient } = apolloClientInstance
 
   const apolloProvider = new VueApollo({

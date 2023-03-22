@@ -11,7 +11,7 @@ import {
 } from '@fortawesome/free-solid-svg-icons'
 import { isEmpty } from 'lodash-es'
 import roles from '@/constants/roles'
-import { config as viewerConfig } from '@/components/AppViewer/AppViewer'
+import { config as viewerConfig } from '@/components/AppViewer/AppViewer.vue'
 import { formatCurrencyBRL } from '@/utils/formatters'
 
 import PaymentVouchersModal from '../payments/PaymentVouchersModal.vue'

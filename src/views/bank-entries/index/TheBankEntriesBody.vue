@@ -1,6 +1,6 @@
 <script>
 import { faHandHoldingUsd } from '@fortawesome/free-solid-svg-icons'
-import { take, deburr, isEmpty } from 'lodash'
+import { take, deburr, isEmpty } from 'lodash-es'
 import csvParser from 'papaparse'
 import { GetBankSettings } from '@/graphql/BankSetting.gql'
 
@@ -132,7 +132,7 @@ export default {
       })
     },
     onRemoveDuplicates() {
-      this.entry.data.forEach(item => {
+      this.entry.data.forEach(() => {
         const index = this.entry.data.findIndex(
           _item => _item.isDuplicated
         )
