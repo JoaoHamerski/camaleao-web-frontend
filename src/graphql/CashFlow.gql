@@ -1,0 +1,35 @@
+#import "./_PaginatorFragment.gql"
+#import "./PaymentExpense.gql"
+
+query GetCashFlowEntries (
+  $first: Int = 10
+  $page: Int
+  $where: QueryCashFlowEntriesWhereWhereConditions
+  $orderBy: [QueryCashFlowEntriesOrderByOrderByClause!]
+) {
+  cashFlowEntries (
+    first: $first
+    page: $page
+    where: $where
+    orderBy: $orderBy
+  ) {
+    paginatorInfo {
+      ...PaginatorSimpleParts
+    }
+
+    data {
+      ...PaymentExpenseBasicParts
+      ...PaymentExpenseProductTypeParts
+      ...PaymentExpenseEmployeeParts
+      ...PaymentExpenseViaParts
+      ...PaymentExpenseTypeParts
+      ...PaymentExpenseOrderParts
+      ...PaymentExpenseUserParts
+      ...PaymentExpenseSponsorshipClientParts
+    }
+  }
+}
+
+query GetCashFlowBalance ($input: CashFlowFilterDatesInput!) {
+  cashFlowBalance(input: $input)
+}

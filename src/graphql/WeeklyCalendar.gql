@@ -1,0 +1,65 @@
+
+query GetWeeklyCalendarOrders ($date: String! $field: QueryFromDateColumns!) {
+  weeklyCalendar (date: $date field: $field) {
+    date
+    total_quantity
+    orders {
+      id
+      code
+      price
+      quantity
+      total_owing
+      states
+      art_paths
+      created_at
+      reminder
+      is_concluded
+      can_be_concluded
+      order
+
+      status {
+        id
+        text
+        is_available
+      }
+
+      client {
+        id
+        name
+      }
+    }
+  }
+}
+
+mutation CreatePreRegisteredOrder ($input: OrderPreRegisteredInput!) {
+  orderCreatePreRegistered (input: $input) {
+    id
+  }
+}
+
+mutation ConcludeOrderStatus ($id: ID! $field: QueryFromDateColumns!) {
+  orderConcludeStatus (id: $id field: $field) {
+    is_concluded
+    can_be_concluded
+
+    status {
+      id
+      text
+      is_available
+    }
+  }
+}
+
+mutation UpdateConcludeStatusFromWeeklyCalendar ($input: OrderDatesFieldsConcludeStatus!) {
+  statusUpdateConcludeWeeklyCalendar (input: $input)
+}
+
+mutation UpdateUpdatableStatusFromWeeklyCalendar ($input: OrderDatesFieldsUpdatableStatus!) {
+  statusUpdateUpdatableWeeklyCalendar (input: $input)
+}
+
+mutation ReorderWeeklyCalendar ($input: [ReorderWeeklyCalendarOrdersInput]) {
+  weeklyCalendarReorder (input: $input) {
+    id
+  }
+}

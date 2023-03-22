@@ -1,0 +1,138 @@
+#import "./_PaginatorFragment.gql"
+
+fragment ExpenseParts on Expense {
+  id
+  value
+  date
+  description
+  receipt_path
+  is_confirmed
+  confirmed_at
+  created_at
+
+  employee {
+    id
+    name
+  }
+  product_type {
+    id
+    name
+  }
+}
+
+fragment ExpenseUserSimpleParts on Expense {
+  user {
+    name
+    role {
+      name
+    }
+  }
+}
+
+fragment ExpenseTypeSimpleParts on Expense {
+  type {
+    id
+    name
+  }
+}
+
+fragment ExpenseViaSimpleParts on Expense {
+  via {
+    id
+    name
+  }
+}
+
+query GetExpenses (
+  $page: Int
+  $descriptionLike: String
+) {
+  expenses (
+    first: 10
+    page: $page
+    descriptionLike: $descriptionLike
+    orderBy: [{column: CREATED_AT order: DESC}]
+  ) {
+    paginatorInfo {
+      ...PaginatorSimpleParts
+    }
+
+    data {
+      ...ExpenseParts
+      ...ExpenseUserSimpleParts
+      ...ExpenseTypeSimpleParts
+      ...ExpenseViaSimpleParts
+    }
+  }
+}
+
+query GetExpensesReportUrl ($start_date: String! $final_date: String) {
+  expensesReport(start_date: $start_date final_date: $final_date)
+}
+
+query GetProductTypeExpensesByMonth ($date: String!) {
+  productTypesExpensesByMonth (date: $date) {
+    total
+    subtypes {
+      name
+      expense
+    }
+  }
+}
+
+query GetEmployeeExpensesByMonth ($date: String!) {
+  employeeExpensesByMonth (date: $date) {
+    total
+    subtypes {
+      name
+      expense
+    }
+  }
+}
+
+mutation CreateExpense ($input: ExpenseInput!) {
+  expenseCreate (input: $input) {
+    ...ExpenseParts
+    ...ExpenseUserSimpleParts
+    ...ExpenseTypeSimpleParts
+    ...ExpenseViaSimpleParts
+  }
+}
+
+mutation UpdateExpense ($id: ID! $input: ExpenseInput!) {
+  expenseUpdate(id: $id input: $input) {
+    ...ExpenseParts
+    ...ExpenseUserSimpleParts
+    ...ExpenseTypeSimpleParts
+    ...ExpenseViaSimpleParts
+  }
+}
+
+mutation DeleteExpense ($id: ID! $password: String!) {
+  expenseDelete (id: $id password: $password) {
+    id
+  }
+}
+
+mutation AssignExpenseConfirmation ($id: ID! $confirmation: Boolean!) {
+  expenseAssignConfirmation (id: $id confirmation: $confirmation) {
+    ...ExpenseParts
+    ...ExpenseUserSimpleParts
+    ...ExpenseTypeSimpleParts
+    ...ExpenseViaSimpleParts
+  }
+}
+
+mutation ChangeProductTypesExpenseField ($id: ID!) {
+  changeProductTypesExpenseField (id: $id) {
+    id
+    name
+  }
+}
+
+mutation ChangeEmployeeExpenseField ($id: ID!) {
+  changeEmployeeExpenseField (id: $id) {
+    id
+    name
+  }
+}

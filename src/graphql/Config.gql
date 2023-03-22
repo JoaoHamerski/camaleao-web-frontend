@@ -1,0 +1,3 @@
+query GetConfig($name: String!  $key: String $encoded: Boolean!) {
+  configGet(name: $name key: $key encoded: $encoded)
+}

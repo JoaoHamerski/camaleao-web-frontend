@@ -1,0 +1,21 @@
+query GetBankSettings {
+  bankSettings {
+    id
+    name
+    settings
+  }
+}
+
+mutation CreateBankSetting ($input: BankSettingsInput!) {
+  bankSettingsCreate (input: $input) {
+    id
+    settings
+  }
+}
+
+mutation DeleteBankSetting ($id: ID!) {
+  bankSettingDelete (id: $id) {
+    id
+    settings
+  }
+}

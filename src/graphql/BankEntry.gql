@@ -1,0 +1,26 @@
+#import "./_PaginatorFragment.gql"
+
+query GetBankEntries ($first: Int! $page: Int) {
+  bankEntries(first: $first page: $page) {
+    paginatorInfo {
+      ...PaginatorSimpleParts
+    }
+
+    data {
+      id
+      filename
+      created_at
+    }
+  }
+}
+
+query LoadBankEntry ($id: ID!) {
+  bankEntryLoad (id: $id)
+}
+
+mutation UploadBankEntry ($input: BankEntryInput!) {
+  bankEntryUpload (input: $input) {
+    id
+    filename
+  }
+}

@@ -1,0 +1,25 @@
+{
+    "value": {
+        "text": "Valor",
+        "format": "currencyBRL"
+    },
+    "date": {
+        "text": "Data",
+        "format": "datetime"
+    },
+    "note": {
+        "text": "Anotação"
+    },
+    "is_confirmed": {
+        "text": "Confirmaçao",
+        "type": "boolean",
+        "handle": {
+            "null": "Pendente",
+            "true": "Confirmado",
+            "false": "Rejeitado"
+        }
+    },
+    "via.name": {
+        "text": "Via"
+    }
+}

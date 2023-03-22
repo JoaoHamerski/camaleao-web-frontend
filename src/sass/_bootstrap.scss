@@ -1,0 +1,109 @@
+/// Bootstrap styling replacement and additions
+.list-group.list-group-sm {
+  li {
+    padding: .3rem .5rem;
+    font-size: .8rem;
+  }
+}
+
+.form-label {
+  font-size: .85rem;
+}
+
+.input-group>.form-select {
+  width: fit-content;
+  flex-grow: 0;
+}
+
+.pagination {
+  .page-item:first-child .page-link {
+    border-left: none;
+  }
+
+  .page-item:last-child .page-link {
+    border-right: none;
+  }
+
+  .page-link {
+    font-size: .9rem;
+    border-top: none;
+    border-bottom: none;
+    border-color: rgba($secondary, .1);
+  }
+}
+
+.table {
+  font-size: .9rem;
+
+  &.table-click tbody tr:hover {
+    cursor: pointer;
+  }
+
+  tbody tr:last-child td {
+    border-bottom: none;
+  }
+
+  &.table-sm {
+    tr td a {
+      padding: .25rem .25rem;
+    }
+  }
+}
+
+.table> :not(:last-child)> :last-child>* {
+  border-bottom: 2px solid $gray-300;
+}
+
+.input-group {
+  .form-select-wrapper {
+    z-index: 1;
+
+    .form-select {
+      border-top-right-radius: 0;
+      border-bottom-right-radius: 0;
+    }
+  }
+}
+
+.btn-group .btn,
+.input-group .btn {
+  box-shadow: none;
+}
+
+.btn {
+  box-shadow: $card-box-shadow;
+
+  &.btn-rounded {
+    border-radius: 2.5rem;
+  }
+
+  &.btn-xs {
+    font-size: .5rem;
+    padding: .25rem;
+    font-weight: bold;
+    text-transform: uppercase;
+  }
+}
+
+.pagination li {
+  box-shadow: $box-shadow;
+}
+
+.input-group {
+  .form-select {
+    flex-grow: 1 !important;
+  }
+}
+
+.card {
+  &.card-sm {
+    .card-header {
+      padding: .25rem .5rem;
+      font-size: .9rem;
+    }
+  }
+}
+
+.extra-small {
+  font-size: .6rem;
+}

@@ -1,0 +1,50 @@
+fragment DailyCashReminderParts on DailyCashReminder {
+  id
+  description
+  date
+  value
+  type
+  created_at
+  user {
+    id
+    name
+  }
+}
+
+query GetDailyCashReminders ($date: String) {
+  dailyCashReminders (date: $date) {
+    ...DailyCashReminderParts
+  }
+}
+
+query GetDailyCashReminderDates {
+   dailyCashReminderDates {
+     date
+     total
+   }
+}
+
+query GetDailyCashRemindersInfo {
+  dailyCashRemindersInfo {
+    has_near_reminder
+    has_expired_reminder
+  }
+}
+
+mutation CreateDailyCashReminder ($input: DailyCashReminderInput!) {
+  dailyCashReminderCreate (input: $input) {
+    ...DailyCashReminderParts
+  }
+}
+
+mutation UpdateDailyCashReminder ($id: ID! $input: DailyCashReminderInput!) {
+  dailyCashReminderUpdate (id: $id input: $input) {
+    ...DailyCashReminderParts
+  }
+}
+
+mutation DeleteDailyCashReminder ($id: ID!) {
+  dailyCashReminderDelete (id: $id) {
+    id
+  }
+}

@@ -1,0 +1,155 @@
+#import "./_PaginatorFragment.gql"
+#import "./PaymentExpense.gql"
+
+query GetDailyCash (
+  $first: Int!
+  $page: Int
+  $orderBy: [QueryDailyCashOrderByOrderByClause!]
+  $where: QueryDailyCashWhereWhereConditions
+  $created_at: String
+) {
+  dailyCash(
+    first: $first
+    page: $page
+    orderBy: $orderBy
+    where: $where
+    created_at: $created_at
+  ) {
+    paginatorInfo {
+      ...PaginatorSimpleParts
+    }
+
+    data {
+      ...PaymentExpenseBasicParts
+      ...PaymentExpenseProductTypeParts
+      ...PaymentExpenseEmployeeParts
+      ...PaymentExpenseViaParts
+      ...PaymentExpenseTypeParts
+      ...PaymentExpenseOrderParts
+      ...PaymentExpenseUserParts
+      ...PaymentExpenseSponsorshipClientParts
+    }
+  }
+}
+
+query GetDailyCashPendencies {
+  dailyCashPendencies {
+    created_at_entry
+    total
+  }
+}
+
+fragment BalanceParts on BalanceData {
+  entry
+  out
+  balance
+}
+
+query GetDailyCashBalance {
+  dailyCashBalance {
+    balance_of_day {
+      ...BalanceParts
+    }
+
+    balance_of_week {
+      ...BalanceParts
+    }
+
+    balance_of_month {
+      ...BalanceParts
+    }
+
+    pendency {
+      total_owing_on_month
+      total_owing_last_month
+      total_shirts_on_month
+      total_shirts_last_month
+    }
+  }
+}
+
+query GetDailyCashBalancePendenciesOrders (
+  $first: Int!
+  $page: Int
+  $date: String!
+) {
+  dailyCashBalancePendenciesOrders (
+    first: $first
+    page: $page
+    date: $date,
+    orderBy: {
+      column: PRINT_DATE,
+      order: DESC
+    }
+  ) {
+    paginatorInfo {
+      ...PaginatorSimpleParts
+    }
+
+    data {
+      id
+      code
+      quantity
+      price
+      total_owing
+      print_date
+      delivery_date
+      art_paths
+      states
+
+      client {
+        id
+        name
+      }
+
+      status {
+        id
+        text
+        is_available
+      }
+    }
+  }
+}
+
+query GetDailyCashDetailedFlow ($page: Int! $date: String) {
+  dailyCashDetailedFlow (page: $page date: $date) {
+    date
+    total_price
+    shirts_total
+    entry {
+      total
+      orders_price_avg
+      unities_avg
+    }
+
+    out {
+      total
+      expense_types {
+        name
+        total
+      }
+    }
+
+    shirts_details {
+      less_than_five {
+        value
+        quantity
+        count
+      }
+
+      between_five_and_ten {
+        value
+        quantity
+        count
+      }
+
+      more_than_ten {
+        value
+        quantity
+        count
+      }
+    }
+
+    pendency
+  }
+}

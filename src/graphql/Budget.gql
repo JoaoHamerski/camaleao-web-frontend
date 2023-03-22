@@ -1,0 +1,51 @@
+#import "./_PaginatorFragment.gql"
+
+fragment BudgetParts on Budget {
+  id
+  client
+  product
+  product_items
+  date
+}
+
+query GetBudgets($first: Int!, $page: Int) {
+  budgets(first: $first, page: $page) {
+    paginatorInfo {
+      ...PaginatorSimpleParts
+    }
+
+    data {
+      ...BudgetParts
+    }
+  }
+}
+
+query GetBudgetUrl($id: ID!) {
+  budgetUrl(id: $id)
+}
+
+mutation UploadBudgetGeneratorSettings($input: BudgetSettingsInput!) {
+  budgetGeneratorSettingsUpload(input: $input) {
+    id
+    name
+    json
+  }
+}
+
+mutation CreateBudget($input: BudgetInput!) {
+  budgetCreate(input: $input) {
+    id
+  }
+}
+
+mutation UpdateBudget($id: ID!, $input: BudgetInput!) {
+  budgetUpdate(id: $id, input: $input) {
+    ...BudgetParts
+  }
+}
+
+mutation DeleteBudget($id: ID!) {
+  budgetDelete(id: $id) {
+    id
+  }
+}

@@ -1,0 +1,8 @@
+$camaleao: #f04800;
+
+$custom-colors: (
+  "camaleao": $camaleao,
+  "muted": $gray-500
+);
+
+$theme-colors: map-merge($theme-colors, $custom-colors);

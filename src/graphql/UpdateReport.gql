@@ -1,0 +1,22 @@
+query GetUpdateReports {
+  updateReports (first: 10 page: 1) {
+    data {
+      id
+      description
+      read_by_user_ids
+      created_at
+    }
+  }
+}
+
+mutation UpdateReportReadByUser {
+  updateReportReadByUser {
+    id
+  }
+}
+
+mutation CreateUpdateReport ($description: String!) {
+  updateReportCreate (description: $description) {
+    id
+  }
+}

@@ -1,0 +1,22 @@
+{
+    "description": {
+        "text": "Descrição"
+    },
+    "value": {
+        "text": "Valor",
+        "format": "currencyBRL"
+    },
+    "type.name": {
+        "text": "Tipo"
+    },
+    "via.name": {
+        "text": "Via"
+    },
+    "productType.name": {
+        "text": "Produto"
+    },
+    "date": {
+        "text": "Data",
+        "format": "datetime"
+    }
+}

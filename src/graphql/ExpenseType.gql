@@ -1,0 +1,22 @@
+fragment ExpenseTypeParts on ExpenseType {
+  id
+  name
+}
+
+query GetExpenseTypes {
+  expenseTypes {
+    ...ExpenseTypeParts
+  }
+}
+
+mutation CreateExpenseType ($input: ExpenseTypesInput!) {
+  expenseTypesCreate (input: $input) {
+    ...ExpenseTypeParts
+  }
+}
+
+mutation UpdateExpenseType ($id: ID! $input: ExpenseTypesInput!) {
+  expenseTypesUpdate (id: $id input: $input) {
+    ...ExpenseTypeParts
+  }
+}

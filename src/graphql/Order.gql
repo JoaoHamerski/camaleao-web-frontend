@@ -1,0 +1,290 @@
+#import "./_PaginatorFragment.gql"
+#import "./ActivityFragments.gql"
+
+fragment OrderParts on Order {
+  id
+  code
+  name
+  price
+  original_price
+  states
+  discount
+  shipping_value
+  quantity
+  has_sponsor
+  total_paid
+  total_paid_sponsor
+  total_paid_non_sponsor
+  total_owing
+  total_clothings_value
+  print_date
+  seam_date
+  delivery_date
+  created_at
+  closed_at
+  art_paths
+  size_paths
+  payment_voucher_paths
+  has_order_control
+  final_status
+  reminder
+}
+
+fragment OrderSimplifiedParts on Order {
+  id
+  code
+  quantity
+  price
+  total_paid
+  seam_date
+  print_date
+  delivery_date
+  states
+  total_owing
+  client {
+    id
+    name
+  }
+}
+
+fragment OrderClientShippingCompanyParts on Client {
+  shipping_company {
+    id
+    name
+  }
+}
+
+fragment OrderClientBranchParts on Client {
+  branch {
+    id
+    city {
+      id
+      name
+    }
+  }
+}
+
+fragment OrderClientCityParts on Client {
+  city {
+    id
+    name
+    state {
+      id
+      name
+      abbreviation
+    }
+  }
+}
+
+fragment OrderClientParts on Order {
+  client {
+    id
+    name
+    phone
+    balance
+    has_balance
+    total_owing
+    total_owing_as_sponsorship
+    is_sponsor
+    ...OrderClientBranchParts
+    ...OrderClientCityParts
+    ...OrderClientShippingCompanyParts
+  }
+}
+
+fragment OrderConcludedStatusParts on Order {
+  concluded_status {
+    id
+    text
+    sector {
+      id
+      name
+    }
+
+    pivot {
+      user {
+        id
+        name
+      }
+      created_at
+    }
+  }
+}
+
+fragment StatusParts on Order {
+  status {
+    id
+    text
+    is_available
+  }
+}
+
+fragment ClothingTypesParts on Order {
+  clothing_types {
+    id
+    key
+    name
+    is_hidden
+    commission
+    quantity
+    value
+    total_value
+  }
+}
+
+fragment PaymentsPart on Order {
+  payments {
+    id
+    value
+    date
+    note
+    confirmed_at
+    is_confirmed
+    created_at
+    is_sponsor
+    is_shipping
+
+    clientBalances {
+      id
+      value
+    }
+
+    sponsorship_client {
+      id
+      name
+    }
+
+    order {
+      total_owing
+    }
+
+    via {
+      id
+      name
+    }
+  }
+}
+
+fragment NotesParts on Order {
+  notes {
+    id
+    text
+    created_at
+  }
+}
+
+fragment OrderType on Order {
+  ...OrderParts
+  ...OrderClientParts
+  ...StatusParts
+  ...ClothingTypesParts
+  ...PaymentsPart
+  ...NotesParts
+  ...OrderConcludedStatusParts
+}
+
+query GetOrdersSimplified(
+  $page: Int
+  $hasClient: QueryOrdersHasClientWhereHasConditions
+  $hasPayments: QueryOrdersHasPaymentsWhereHasConditions
+  $orderBy: [QueryOrdersOrderByOrderByClause!]
+  $where: QueryOrdersWhereWhereConditions
+) {
+  orders(
+    first: 10
+    page: $page
+    hasClient: $hasClient
+    hasPayments: $hasPayments
+    orderBy: $orderBy
+    where: $where
+  ) {
+    paginatorInfo {
+      ...PaginatorSimpleParts
+    }
+
+    data {
+      ...OrderSimplifiedParts
+    }
+  }
+}
+
+query GetOrder($id: ID!, $client_id: ID) {
+  order(id: $id, client_id: $client_id) {
+    ...OrderType
+  }
+}
+
+query GetOrderReport($id: ID!) {
+  orderReport(id: $id)
+}
+
+query GetOrdersReport($input: OrdersReportInput!) {
+  ordersReport(input: $input)
+}
+
+query GetOrdersByPrintDate($input: OrdersReportPrintDateInput!) {
+  ordersReportPrintDate(input: $input)
+}
+
+query GetOrdersWeeklyCalendarReport($input: OrdersWeeklyCalendarReport!) {
+  ordersWeeklyCalendarReport(input: $input)
+}
+
+query GetOrderActivities($id: ID!) {
+  ordersActivities(id: $id) {
+    id
+    log_name
+    description
+    subject {
+      ...OrderSubject
+      ...ClientSubject
+    }
+    causer {
+      ...UserCauser
+    }
+    properties
+    created_at
+  }
+}
+
+query GetOrderByPaymentUid($where: QueryPaymentWhereWhereConditions) {
+  payment(where: $where) {
+    id
+    order {
+      id
+      client {
+        id
+      }
+    }
+  }
+}
+
+mutation UpdateOrder($id: ID!, $input: OrderInput!) {
+  orderUpdate(id: $id, input: $input) {
+    ...OrderType
+  }
+}
+
+mutation UpdateOrderStatus($id: ID!, $status_id: ID!) {
+  orderUpdateStatus(id: $id, status_id: $status_id) {
+    ...OrderType
+  }
+}
+
+mutation ToggleOrder($id: ID!) {
+  orderToggle(id: $id) {
+    ...OrderType
+  }
+}
+
+mutation DeleteOrder($id: ID!) {
+  orderDelete(id: $id) {
+    ...OrderType
+  }
+}
+
+mutation CreateOrder($client_id: ID!, $input: OrderInput!) {
+  orderCreate(client_id: $client_id, input: $input) {
+    ...OrderType
+  }
+}

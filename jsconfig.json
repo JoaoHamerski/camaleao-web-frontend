@@ -1,0 +1,9 @@
+{
+    "vueCompilerOptions": {
+        "target": 2.7
+    },
+    "exclude": [
+        "dist",
+        "public"
+    ]
+}

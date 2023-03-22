@@ -1,0 +1,30 @@
+query GetEntries(
+  $first: Int!
+  $page: Int
+  $where: QueryEntriesWhereWhereConditions
+) {
+  entries(first: $first, page: $page, where: $where) {
+    data {
+      id
+      bank_uid
+      value
+      date
+      description
+      is_canceled
+      via_id
+    }
+  }
+}
+
+query GetEntriesMonthlyBalance {
+  entriesMonthlyBalance {
+    current
+    previous
+  }
+}
+
+mutation CancelEntry($uid: ID!) {
+  entryCancel(uid: $uid) {
+    id
+  }
+}

@@ -1,0 +1,154 @@
+#import "./_PaginatorFragment.gql"
+
+fragment PaymentsParts on Payment {
+  id
+  value
+  date
+  note
+  confirmed_at
+  is_confirmed
+  created_at
+}
+
+fragment PaymentsViaParts on Via {
+  id
+  name
+}
+
+fragment PaymentsOrderParts on Order {
+  id
+  code
+  name
+  total_owing
+  total_paid
+  states
+  payment_voucher_paths
+  total_paid_sponsor
+
+  client {
+    id
+    name
+    total_owing
+  }
+}
+
+query GetSponsoredPayments(
+  $sponsorship_client_id: ID!
+  $first: Int!
+  $page: Int
+) {
+  payments(
+    sponsorship_client_id: $sponsorship_client_id
+    first: $first
+    page: $page
+    orderBy: [{ column: CREATED_AT, order: DESC }]
+  ) {
+    paginatorInfo {
+      ...PaginatorSimpleParts
+    }
+
+    data {
+      id
+      value
+      is_confirmed
+      created_at
+
+      order {
+        id
+        code
+        price
+        total_paid
+        total_owing
+
+        client {
+          id
+          name
+        }
+      }
+    }
+  }
+}
+
+query GetPaymentsPendencies {
+  paymentsPendencies {
+    created_at_payment
+    total
+  }
+}
+
+mutation CreatePayment($input: PaymentInput!) {
+  paymentCreate(input: $input) {
+    id
+
+    order {
+      ...PaymentsOrderParts
+
+      payments {
+        ...PaymentsParts
+
+        via {
+          ...PaymentsViaParts
+        }
+      }
+    }
+  }
+}
+
+mutation UpdatePayment($id: ID!, $input: PaymentInput!) {
+  paymentUpdate(id: $id, input: $input) {
+    ...PaymentsParts
+
+    order {
+      ...PaymentsOrderParts
+    }
+
+    via {
+      ...PaymentsViaParts
+    }
+  }
+}
+
+mutation DeletePayment($id: ID!, $password: String!) {
+  paymentDelete(id: $id, password: $password) {
+    id
+  }
+}
+
+mutation AssignPaymentConfirmation($id: ID!, $confirmation: Boolean!) {
+  paymentAssignConfirmation(id: $id, confirmation: $confirmation) {
+    id
+    order {
+      ...PaymentsOrderParts
+
+      payments {
+        ...PaymentsParts
+
+        via {
+          ...PaymentsViaParts
+        }
+      }
+    }
+  }
+}
+
+mutation CreateDailyPayment($input: DailyCashInput!) {
+  dailyCashEntry(input: $input) {
+    ...PaymentsParts
+
+    order {
+      ...PaymentsOrderParts
+
+      payments {
+        ...PaymentsParts
+
+        via {
+          ...PaymentsViaParts
+        }
+      }
+    }
+
+    via {
+      ...PaymentsViaParts
+    }
+  }
+}
