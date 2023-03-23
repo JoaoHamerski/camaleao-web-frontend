@@ -3,9 +3,10 @@ import { faHandHoldingUsd } from '@fortawesome/free-solid-svg-icons'
 import { take, deburr, isEmpty } from 'lodash-es'
 import csvParser from 'papaparse'
 import { GetBankSettings } from '@/graphql/BankSetting.gql'
+import { DateTime } from 'luxon'
 
 import BankEntryTable from '../partials/BankEntryTable.vue'
-import BankSettingsHandleModal from '../partials/BankSettingsHandleModal.vue'
+import BankSettingsFormModal from '../partials/BankSettingsFormModal.vue'
 import BankEntryUploadModal from '../partials/BankEntryUploadModal.vue'
 
 export default {
@@ -21,7 +22,7 @@ export default {
   },
   components: {
     BankEntryTable,
-    BankSettingsHandleModal,
+    BankSettingsFormModal,
     BankEntryUploadModal
   },
   props: {
@@ -67,6 +68,18 @@ export default {
     isFirstPropEmpty(item) {
       return isEmpty(item[Object.keys(item)[0]])
     },
+    getDateFormatted(date, dateFormat) {
+      const format = dateFormat.replace('mm', 'MM')
+      const possibleDates = [
+        DateTime.fromFormat(date, format),
+        DateTime.fromFormat(date, `${format} hh:mm`),
+        DateTime.fromFormat(date, `${format} hh:mm:ss`),
+      ]
+
+      return possibleDates.find(
+        (dateTime) => dateTime.isValid
+      ).toFormat('dd/MM/yyyy')
+    },
     getFormattedData (data, settings) {
       const { fields } = settings
       const filtered = data.filter(item => !this.isFirstPropEmpty(item))
@@ -78,7 +91,7 @@ export default {
 
       return filtered.map(item => ({
         bank_uid: item[fields.bank_uid],
-        date: item[fields.date],
+        date: this.getDateFormatted(item[fields.date], settings.date_format),
         description: item[fields.description],
         value: item[fields.value],
         via_id: settings.via_id,
@@ -162,7 +175,7 @@ export default {
 
 <template>
   <div>
-    <BankSettingsHandleModal
+    <BankSettingsFormModal
       v-model="modalBankSettings.value"
       :samples="modalBankSettings.samples"
       :fields="modalBankSettings.fields"

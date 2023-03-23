@@ -86,16 +86,6 @@ export default {
 
       this.isLoading = false
     },
-    getDate(item) {
-      const settings = this.entry.settings
-      const dateFormat = settings.date_format.replace('mm', 'MM')
-      const date = DateTime.fromFormat(
-        item.date,
-        dateFormat
-      )
-
-      return date.toFormat('dd/MM/yyyy')
-    },
     tableRowClass(item) {
       return 'table-' + this.getItemColor(item)
     },
@@ -154,9 +144,6 @@ export default {
           :icon="item.isVisible ? icons.faEye : icons.faEyeSlash"
           @click.prevent="toggleVisibility(item)"
         />
-      </template>
-      <template #[`items.date`]="{ item }">
-        {{ getDate(item) }}
       </template>
       <template #[`items.value`]="{ item }">
         <span

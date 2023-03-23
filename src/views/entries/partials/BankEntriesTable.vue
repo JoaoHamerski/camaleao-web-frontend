@@ -82,7 +82,7 @@ export default {
       <span :class="isItemDisabled(item) && 'text-secondary'">{{ item.date }}</span>
     </template>
     <template #[`items.description`]="{ item }">
-      <span :class="isItemDisabled(item) && 'text-secondary'">{{ item.description }}</span>
+      <span :class="isItemDisabled(item) && 'text-secondary'">{{ item.description || 'N/A' }}</span>
     </template>
   </AppTable>
 </template>

@@ -62,7 +62,7 @@ export default {
       }
 
       if (key === 'date') {
-        return 'Data que foi dada a entrada.'
+        return 'Data que foi dada a entrada (pode ter o horário ao lado).'
       }
 
       if (key === 'description') {
@@ -104,12 +104,13 @@ export default {
     >
       <AppSimpleSelect
         :id="field.key"
-        :key="field.key + '-select'"
+        :key="`select-${field.key}`"
         v-model="form.fields[field.key]"
         placeholder="Selecione uma opção do arquivo"
-        :name="field.key"
+        :name="`fields.${field.key}`"
         :options="fields"
         :error="form.errors.get(`fields.${field.key}`)"
+        :optional="field.key === 'description'"
       >
         {{ field.text }}
 
@@ -129,21 +130,12 @@ export default {
         >
           Formato da data:
           <template #hint>
-            Desconsidere os separadores "/", mesmo que a data use "-".
+            <div>Desconsidere os separadores "/", mesmo que a data use "-".</div>
+            <div>Ignore caso tenha a hora ao lado da data.</div>
           </template>
         </AppRadio>
       </template>
     </template>
-
-    <AppInput
-      id="name"
-      v-model="form.name"
-      name="name"
-      placeholder="Digite um nome para a configuração..."
-      :error="form.errors.get('name')"
-    >
-      Nome da configuração
-    </AppInput>
 
     <AppSimpleSelect
       id="via_id"
@@ -162,6 +154,16 @@ export default {
         Via usada para autocompletar entradas com essa configuração.
       </template>
     </AppSimpleSelect>
+
+    <AppInput
+      id="name"
+      v-model="form.name"
+      name="name"
+      placeholder="Digite um nome para a configuração..."
+      :error="form.errors.get('name')"
+    >
+      Nome da configuração
+    </AppInput>
 
     <div class="row mt-4">
       <div class="col">

@@ -27,24 +27,24 @@ export default {
         faCog,
         faSyncAlt
       },
-      sampleItem: 0,
+      sampleItemIndex: 0,
     }
   },
   computed: {
     sample() {
-      return this.samples[this.sampleItem]
+      return this.samples[this.sampleItemIndex]
     }
   },
   methods: {
-    regenerateSampleItem () {
-      const sampleItem = random(0, this.samples.length - 1)
+    regenerateSampleItemIndex () {
+      const sampleItemIndex = random(0, this.samples.length - 1)
 
-      if (sampleItem === this.sampleItem) {
-        this.regenerateSampleItem()
+      if (sampleItemIndex === this.sampleItemIndex) {
+        this.regenerateSampleItemIndex()
         return
       }
 
-      this.sampleItem = sampleItem
+      this.sampleItemIndex = sampleItemIndex
     },
     onSuccess () {
       this.$emit('success')
@@ -95,7 +95,7 @@ export default {
           <div class="mb-2">
             <span
               class="clickable link-primary small"
-              @click.prevent="regenerateSampleItem"
+              @click.prevent="regenerateSampleItemIndex"
             >
               <FontAwesomeIcon
                 :icon="icons.faSyncAlt"
@@ -106,11 +106,11 @@ export default {
           </div>
 
           <div
-            v-for="(field, key) in sample"
-            :key="field"
+            v-for="(_value, key) in sample"
+            :key="key"
             class="small"
           >
-            <span class="fw-bold text-primary">{{ key }}</span>: {{ field }}
+            <span class="fw-bold text-primary">{{ key }}</span>: {{ _value }}
           </div>
         </template>
       </AppContainer>
