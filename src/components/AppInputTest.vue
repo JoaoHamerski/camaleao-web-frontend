@@ -1,4 +1,4 @@
-<script>
+<script lang="jsx">
 import Cleave from 'cleave.js'
 
 function renderInput (h, context) {
