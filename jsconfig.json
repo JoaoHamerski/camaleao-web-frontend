@@ -1,6 +1,16 @@
 {
+    "allowJs": true,
+    "compilerOptions": {
+        "baseUrl": "./src",
+        "paths": {
+            "@/*": [
+                "./*"
+            ]
+        },
+    },
     "vueCompilerOptions": {
-        "target": 2.7
+        "target": 2.7,
+        "allowJs": true
     },
     "exclude": [
         "dist",

@@ -167,6 +167,7 @@ export default {
         for="order"
         class="fw-bold form-label mb-2"
       >Código do pedido</label>
+
       <AppButton
         v-if="clientExists && !form.isNewClient"
         color="primary"
@@ -177,6 +178,7 @@ export default {
         Procurar pedido
       </AppButton>
     </div>
+
     <AppInput
       id="order"
       :value="form.order.code"
@@ -185,6 +187,7 @@ export default {
       placeholder="Digite o cód. do pedido..."
       @input="form.set({'order.code': $event})"
     />
+
     <AppInput
       id="price"
       :value="form.order.price"
@@ -206,7 +209,7 @@ export default {
         v-tippy
         content="Adicione uma anotação para lembrar do pedido na página de pedidos"
         :icon="icons.faQuestionCircle"
-        class="ms-1 text-primary"
+        class="ms-1 text-secondary"
       />
     </AppCheckbox>
 

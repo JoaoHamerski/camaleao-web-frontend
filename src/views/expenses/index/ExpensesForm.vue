@@ -1,4 +1,5 @@
 <script>
+// Utils
 import { truncate, isEmpty, omit } from 'lodash-es'
 import { maskDate, maskCurrencyBRL } from '@/utils/masks'
 import { handleError, handleSuccess } from '@/utils/forms'
@@ -7,6 +8,7 @@ import fileMixin from '@/mixins/filesMixin'
 import pasteFilesMixin from '@/mixins/pasteFilesMixin'
 import Form from '@/utils/Form'
 
+// Graphql
 import {
   GetExpenses,
   CreateExpense,
@@ -14,14 +16,14 @@ import {
   GetProductTypeExpensesByMonth,
   GetEmployeeExpensesByMonth
 } from '@/graphql/Expense.gql'
-
 import { GetExpenseTypes } from '@/graphql/ExpenseType.gql'
 import { GetDailyCash, GetDailyCashBalance } from '@/graphql/DailyCash.gql'
-import { vias } from '@/graphql/Via.gql'
+import { GetVias } from '@/graphql/Via.gql'
 import { GetProductTypes } from '@/graphql/ProductType.gql'
 import { GetConfig } from '@/graphql/Config.gql'
 import { GetUsers } from '@/graphql/User.gql'
 
+// Components
 import ViewerItemsCardFile from '@/components/AppViewer/ViewerItemsCardFile.vue'
 import SelectEntriesFind from '@/views/resources/SelectEntriesFind.vue'
 
@@ -35,7 +37,7 @@ export default {
   mixins: [fileMixin, pasteFilesMixin],
   apollo: {
     vias: {
-      query: vias,
+      query: GetVias,
       result () {
         this.loadingQueries--
       }
@@ -99,7 +101,7 @@ export default {
     isEdit: {
       type: Boolean,
       default: false
-    },
+    }
   },
   data () {
     return {
@@ -198,26 +200,26 @@ export default {
       this.form.receipt_path = ''
     },
     async onSubmit () {
+      const input = this.getFormattedForm(this.form.data())
+
       this.isLoading = true
 
       if (this.isEdit) {
-        await this.update()
+        await this.update(input)
       } else {
-        await this.create()
+        await this.create(input)
       }
 
       this.isLoading = false
     },
-    getFormattedData () {
+    getFormattedForm () {
       const data = this.form.data()
 
       data.receipt_path = data.receipt_path?.base64 || data.receipt_path
 
       return data
     },
-    async update () {
-      const input = this.getFormattedData(this.form.data())
-
+    async update (input) {
       try {
         await this.$apollo.mutate({
           mutation: UpdateExpense,
@@ -240,9 +242,7 @@ export default {
         handleError(this, error)
       }
     },
-    async create () {
-      const input = this.getFormattedData(this.form.data())
-
+    async create (input) {
       try {
         await this.$apollo.mutate({
           mutation: CreateExpense,
@@ -441,14 +441,23 @@ export default {
       Data
     </AppInput>
 
-    <div class="row mt-4">
+    <slot
+      v-if="$scopedSlots.footer"
+      name="footer"
+      :form="form"
+      :get-formatted-form="getFormattedForm"
+    />
+    <div
+      v-else
+      class="row mt-4"
+    >
       <div class="col">
         <AppButton
           color="success"
           btn-class="fw-bold"
           :loading="isLoading"
           block
-          @click="onSubmit"
+          @click.prevent="onSubmit"
         >
           {{ isEdit ? 'Atualizar' : 'Registrar' }}
         </AppButton>

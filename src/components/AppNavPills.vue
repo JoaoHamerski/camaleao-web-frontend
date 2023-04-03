@@ -11,7 +11,14 @@ export default {
     }
   },
   methods: {
+    onNavClick (item) {
+      this.$emit('nav-selected', item.value)
+    },
     itemHasError(item) {
+      if (!this.errors.length) {
+        return
+      }
+
       return item.fields.some(field => this.errors.includes(field))
     }
   }
@@ -41,7 +48,8 @@ export default {
           type="button"
           role="tab"
           :aria-controls="`pills-${item.value}`"
-          :aria-selected="index === 0 && true"
+          :aria-selected="index === 0"
+          @click.prevent="onNavClick(item)"
         >
           {{ item.text }}
         </button>

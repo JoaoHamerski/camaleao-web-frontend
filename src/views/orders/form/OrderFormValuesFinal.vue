@@ -1,6 +1,6 @@
 <script>
 import { maskCurrencyBRL } from '@/utils/masks'
-import { vias } from '@/graphql/Via.gql'
+import { GetVias } from '@/graphql/Via.gql'
 
 export default {
   props: {
@@ -19,7 +19,7 @@ export default {
   },
   apollo: {
     vias: {
-      query: vias
+      query: GetVias
     }
   },
   data () {

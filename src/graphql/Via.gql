@@ -1,4 +1,4 @@
-query vias {
+query GetVias {
   vias {
     id
     name

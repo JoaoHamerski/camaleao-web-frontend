@@ -84,7 +84,11 @@ export default {
         return item.receipt_path
       }
 
-      return item.order.payment_voucher_paths
+      if (item.order) {
+        return item.order.payment_voucher_paths
+      }
+
+      return null
     },
     showVoucher (item) {
       if (item.is_expense) {
@@ -240,9 +244,14 @@ export default {
             class="text-decoration-none fw-bold"
           >{{ item.order.code }}</a>
         </template>
-        <template v-else>
-          {{ item.description }}
-        </template>
+        <p
+          v-else
+          class="mb-0"
+          :class="item.description && 'small'"
+          :style="{lineHeight: '1rem'}"
+        >
+          {{ item.description || 'N/A' }}
+        </p>
       </template>
       <template #[`items.client`]="{ item }">
         <template v-if="item.order">

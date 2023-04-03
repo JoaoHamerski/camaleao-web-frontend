@@ -23,7 +23,6 @@ export default {
           credentials
         })
       } catch (error) {
-        console.log(error)
         handleError(this, error)
         this.isLoading = false
       }
@@ -33,10 +32,9 @@ export default {
 </script>
 
 <template>
-  <form
-    @submit.prevent="onSubmit"
-    @keypress.enter.capture.prevent="onSubmit"
-    @focus.capture="form.errors.clear($event.target.name)"
+  <AppForm
+    :form="form"
+    :on-submit="onSubmit"
   >
     <AppInput
       id="email"
@@ -69,5 +67,5 @@ export default {
         ENTRAR
       </AppButton>
     </div>
-  </form>
+  </AppForm>
 </template>

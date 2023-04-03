@@ -1,5 +1,5 @@
 <script>
-import { vias } from '@/graphql/Via.gql'
+import { GetVias } from '@/graphql/Via.gql'
 
 import Form from '@/utils/Form'
 import { handleSuccess, handleError } from '@/utils/forms'
@@ -15,7 +15,7 @@ const SYSTEM_FIELDS = [
 export default {
   apollo: {
     vias: {
-      query: vias
+      query: GetVias
     }
   },
   props: {

@@ -78,7 +78,10 @@ export default {
       @open-pendency-orders="onOpenPendencyOrders"
     />
 
-    <DailyCashDetailedFlow @open-pendency-orders="onOpenPendencyOrders" />
+    <DailyCashDetailedFlow
+      v-if="$helpers.canView(roles.GERENCIA)"
+      @open-pendency-orders="onOpenPendencyOrders"
+    />
 
     <TheDailyCashBodyDate
       :date="date"

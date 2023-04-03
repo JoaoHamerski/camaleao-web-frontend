@@ -1,6 +1,6 @@
 <script>
 import * as accounting from 'accounting-js'
-import { vias } from '@/graphql/Via.gql'
+import { GetVias } from '@/graphql/Via.gql'
 import { CreatePayment, UpdatePayment } from '@/graphql/Payment.gql'
 import { GetEntries } from '@/graphql/Entry.gql'
 import { faQuestionCircle } from '@fortawesome/free-solid-svg-icons'
@@ -20,7 +20,7 @@ export default {
   },
   apollo: {
     vias: {
-      query: vias
+      query: GetVias
     }
   },
   props: {

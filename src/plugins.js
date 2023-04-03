@@ -22,6 +22,7 @@ Vue.use(VueTippy, {
 
 Vue.use(Toast, {
   containerClassName: 'camaleao-container',
+  pauseOnFocusLoss: false,
   position: store.state.isMobile
     ? POSITION.BOTTOM_CENTER
     : POSITION.TOP_RIGHT

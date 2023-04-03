@@ -28,6 +28,7 @@ import entriesRoutes from '@/views/entries/routes'
 import receiptGeneratorRoutes from '@/views/receipt-generator/routes'
 import productivityPanelRoutes from '@/views/productivity-panel/routes'
 import budgetGeneratorRoutes from '@/views/budget-generator/routes'
+import bankMirrorRoutes from '@/views/bank-mirror/routes'
 
 import ErrorNotFound from '@/views/_errors/ErrorNotFound.vue'
 
@@ -87,7 +88,8 @@ const routes = [
   ...entriesRoutes,
   ...receiptGeneratorRoutes,
   ...productivityPanelRoutes,
-  ...budgetGeneratorRoutes
+  ...budgetGeneratorRoutes,
+  ...bankMirrorRoutes
 ]
 
 if (import.meta.env.MODE === 'development') {

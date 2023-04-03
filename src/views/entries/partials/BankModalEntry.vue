@@ -1,5 +1,6 @@
 <script>
 import { isEmpty } from 'lodash-es'
+
 import DailyPaymentModal from '@/views/daily-cash/partials/daily-cash-payment/DailyPaymentModal.vue'
 import ModalExpensesNew from '@/views/expenses/index/modals/ModalExpensesNew.vue'
 

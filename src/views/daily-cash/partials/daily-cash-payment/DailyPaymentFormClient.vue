@@ -54,6 +54,7 @@ export default {
         for="client"
         class="fw-bold form-label text-primary"
       >Cliente</label>
+
       <AppButton
         color="success"
         class="fw-bold"
@@ -63,6 +64,7 @@ export default {
         Cadastrar novo
       </AppButton>
     </div>
+
     <SelectClientsFind
       id="client"
       :value="form.client.id"
@@ -72,6 +74,7 @@ export default {
       <template #noOptions>
         Faça uma busca para exibir resultados
       </template>
+
       <template #noResult>
         Nenhum cliente encontrado, <a
           href="#"
@@ -90,6 +93,7 @@ export default {
         for="client"
         class="fw-bold form-label"
       >Nome do cliente</label>
+
       <AppButton
         color="primary"
         class="fw-bold"
@@ -99,6 +103,7 @@ export default {
         Procurar cliente
       </AppButton>
     </div>
+
     <AppInput
       id="client"
       :value="form.client.name"

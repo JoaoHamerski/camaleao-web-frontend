@@ -133,22 +133,28 @@ mutation AssignPaymentConfirmation($id: ID!, $confirmation: Boolean!) {
 
 mutation CreateDailyPayment($input: DailyCashInput!) {
   dailyCashEntry(input: $input) {
-    ...PaymentsParts
+    ... on Payment {
+      ...PaymentsParts
 
-    order {
-      ...PaymentsOrderParts
+      order {
+        ...PaymentsOrderParts
 
-      payments {
-        ...PaymentsParts
+        payments {
+          ...PaymentsParts
 
-        via {
-          ...PaymentsViaParts
+          via {
+            ...PaymentsViaParts
+          }
         }
+      }
+
+      via {
+        ...PaymentsViaParts
       }
     }
 
-    via {
-      ...PaymentsViaParts
+    ... on Entry {
+      id
     }
   }
 }

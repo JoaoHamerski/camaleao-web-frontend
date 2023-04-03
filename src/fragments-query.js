@@ -1,10 +1,12 @@
-require('dotenv').config()
+import dotenv from 'dotenv'
+import fetch from 'node-fetch'
+import fs from 'fs'
 
-const fetch = require('node-fetch')
-const fs = require('fs')
 const FILE_PATH = './src/fragmentTypes.json'
 
-fetch(import.meta.env.VITE_APP_GRAPHQL_HTTP, {
+dotenv.config()
+
+fetch(process.env.VITE_APP_GRAPHQL_HTTP, {
   method: 'POST',
   headers: { 'Content-Type': 'application/json' },
   body: JSON.stringify({

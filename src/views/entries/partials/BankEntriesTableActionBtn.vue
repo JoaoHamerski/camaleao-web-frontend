@@ -32,9 +32,6 @@ export default {
         ? 'Entrada'
         : 'Saída'
     },
-    hasRelatedOrder () {
-      return this.item.isDuplicated && this.item.value > 0
-    },
     isEntryCancelable () {
       return !this.item.isDuplicated && !this.item.isCanceled
     }
@@ -78,7 +75,7 @@ export default {
 
 <template>
   <div class="text-center">
-    <div v-if="hasRelatedOrder">
+    <div v-if="item.hasOrder">
       <AppButton
         v-tippy
         content="Ver pedido relacionado"

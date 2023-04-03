@@ -1,3 +1,5 @@
+#import ./_PaginatorFragment.gql
+
 query GetEntries(
   $first: Int!
   $page: Int
@@ -23,8 +25,55 @@ query GetEntriesMonthlyBalance {
   }
 }
 
+query GetBankMirrorEntries(
+  $first: Int!
+  $page: Int
+  $where: QueryEntriesBankMirrorWhereWhereConditions
+) {
+  entriesBankMirror(first: $first, page: $page, where: $where) {
+    paginatorInfo {
+      ...PaginatorSimpleParts
+    }
+
+    data {
+      id
+      bank_uid
+      value
+      description
+      date
+      via_id
+      is_confirmed
+      is_tied
+      created_at
+    }
+  }
+}
+
 mutation CancelEntry($uid: ID!) {
   entryCancel(uid: $uid) {
     id
+  }
+}
+
+mutation ConfirmBankMirrorEntry($id: ID!) {
+  bankMirrorEntryConfirm(id: $id) {
+    id
+    is_confirmed
+  }
+}
+
+mutation TieBankMirrorPayment($input: DailyCashInput!) {
+  bankMirrorTiePayment(input: $input) {
+    id
+    is_tied
+    is_confirmed
+  }
+}
+
+mutation TieBankMirrorExpense($input: ExpenseInput!) {
+  bankMirrorTieExpense(input: $input) {
+    id
+    is_tied
+    is_confirmed
   }
 }

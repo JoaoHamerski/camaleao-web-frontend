@@ -6,7 +6,6 @@ import {
   faTrashAlt,
   faUpload
 } from '@fortawesome/free-solid-svg-icons'
-import { DateTime } from 'luxon'
 import { formatCurrencyBRL } from '@/utils/formatters'
 import { GetDuplicatedEntries } from '@/graphql/OrderControl.gql'
 

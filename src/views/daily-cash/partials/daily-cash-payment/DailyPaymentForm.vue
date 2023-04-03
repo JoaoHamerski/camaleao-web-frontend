@@ -1,15 +1,18 @@
 <script>
-import { isEmpty, isObject, omit, cloneDeep } from 'lodash-es'
-import { faQuestionCircle } from '@fortawesome/free-solid-svg-icons'
-import { vias } from '@/graphql/Via.gql'
+// Graphql
+import { GetVias } from '@/graphql/Via.gql'
 import { CreateDailyPayment } from '@/graphql/Payment.gql'
 import { GetDailyCash, GetDailyCashBalance } from '@/graphql/DailyCash.gql'
 
+// Utils
+import { isEmpty, isObject, omit, cloneDeep } from 'lodash-es'
+import { faQuestionCircle } from '@fortawesome/free-solid-svg-icons'
 import { formatCurrencyBRL, formatDatetime } from '@/utils/formatters'
 import { maskCurrencyBRL, maskDate } from '@/utils/masks'
 import Form from '@/utils/Form'
 import { handleSuccess, handleError } from '@/utils/forms'
 
+// Components
 import DailyPaymentFormClient from './DailyPaymentFormClient.vue'
 import DailyPaymentFormOrder from './DailyPaymentFormOrder.vue'
 import SelectClientsFind from '@/views/resources/SelectClientsFind.vue'
@@ -19,7 +22,7 @@ const NUMBER_OF_QUERIES = 1
 export default {
   apollo: {
     vias: {
-      query: vias,
+      query: GetVias,
       result () {
         this.loadingQueries--
       }
@@ -64,6 +67,7 @@ export default {
         bank_uid: '',
         note: '',
         via_id: '',
+        untied: false,
         is_sponsor: false,
         is_shipping: false,
         sponsorship_client_id: '',
@@ -111,7 +115,7 @@ export default {
     onRestValueClick () {
       this.form.value = formatCurrencyBRL(this.form.order.id.total_owing)
     },
-    getFormattedData () {
+    getFormattedForm () {
       const data = cloneDeep(this.form.data())
 
       if (isObject(data.client.id)) {
@@ -129,7 +133,7 @@ export default {
       return data
     },
     async onSubmit () {
-      const input = this.getFormattedData()
+      const input = this.getFormattedForm()
 
       this.isLoading = true
 
@@ -168,13 +172,29 @@ export default {
         CLIENTE & PEDIDO
       </template>
       <template #body>
-        <DailyPaymentFormClient
-          :form="form"
-        />
-
-        <DailyPaymentFormOrder
-          :form="form"
-        />
+        <div v-show="!form.untied">
+          <DailyPaymentFormClient
+            :form="form"
+          />
+          <DailyPaymentFormOrder
+            :form="form"
+          />
+        </div>
+        <AppCheckbox
+          v-if="isEmpty(payment)"
+          id="untied"
+          v-model="form.untied"
+          name="untied"
+          :default-margin="false"
+        >
+          Vincular depois
+          <FontAwesomeIcon
+            v-tippy
+            class="ms-1 text-secondary"
+            :icon="icons.faQuestionCircle"
+            content="Registre o pagamento sem um cliente ou pedido, poderá ser vinculado a um pedido mais tarde."
+          />
+        </AppCheckbox>
       </template>
     </AppContainer>
 
@@ -304,6 +324,7 @@ export default {
             name="note"
             :error="form.errors.get('note')"
             optional
+            placeholder="Anotação para o pagamento..."
           >
             Nota
           </AppInput>
@@ -311,8 +332,16 @@ export default {
       </template>
     </AppContainer>
 
-
-    <div class="row">
+    <slot
+      v-if="$scopedSlots.footer"
+      name="footer"
+      :form="form"
+      :get-formatted-form="getFormattedForm"
+    />
+    <div
+      v-else
+      class="row"
+    >
       <div class="col">
         <AppButton
           color="success"
@@ -331,6 +360,7 @@ export default {
           data-bs-dismiss="modal"
           type="button"
           block
+          :disabled="isLoading"
         >
           Cancelar
         </AppButton>

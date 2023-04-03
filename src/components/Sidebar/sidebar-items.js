@@ -24,7 +24,8 @@ import {
   faFileSignature,
   faThLarge,
   faColumns,
-  faDolly
+  faDolly,
+  faFileInvoiceDollar
 } from '@fortawesome/free-solid-svg-icons'
 
 const ITEMS = {
@@ -116,7 +117,8 @@ const ITEMS = {
       return [
         this.ENTRADAS,
         this.DESPESAS,
-        this.FLUXO_DE_CAIXA
+        this.FLUXO_DE_CAIXA,
+        this.ESPELHO_BANCARIO
       ]
     },
     ENTRADAS: {
@@ -135,6 +137,12 @@ const ITEMS = {
       title: 'Fluxo de caixa',
       icon: faCashRegister,
       route: { name: 'cash-flow.index' },
+      condition: () => canView(ROLES.GERENCIA)
+    },
+    ESPELHO_BANCARIO: {
+      title: 'Espelho bancário',
+      icon: faFileInvoiceDollar,
+      route: { name: 'bank-mirror.index' },
       condition: () => canView(ROLES.GERENCIA)
     }
   },
