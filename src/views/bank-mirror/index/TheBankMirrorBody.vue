@@ -1,5 +1,5 @@
 <script>
-import { faFileInvoiceDollar } from '@fortawesome/free-solid-svg-icons'
+import { faFileInvoiceDollar, faSyncAlt } from '@fortawesome/free-solid-svg-icons'
 
 import BankMirrorNavs from '../partials/BankMirrorNavs.vue'
 
@@ -10,8 +10,14 @@ export default {
   data () {
     return {
       icons: {
-        faFileInvoiceDollar
+        faFileInvoiceDollar,
+        faSyncAlt
       }
+    }
+  },
+  methods: {
+    onRefreshClick () {
+      this.$refs.bankMirrorNavs.refreshEntries()
     }
   }
 }
@@ -20,16 +26,24 @@ export default {
 <template>
   <AppCard>
     <template #header>
-      <h6 class="fw-bold mb-0">
-        <FontAwesomeIcon
-          :icon="icons.faFileInvoiceDollar"
-          fixed-width
+      <div class="d-flex align-items-center justify-content-between">
+        <h6 class="fw-bold mb-0">
+          <FontAwesomeIcon
+            :icon="icons.faFileInvoiceDollar"
+            fixed-width
+          />
+          Espelho bancário
+        </h6>
+        <AppButton
+          :icon="icons.faSyncAlt"
+          class="text-primary"
+          color="light"
+          @click.prevent="onRefreshClick"
         />
-        Espelho bancário
-      </h6>
+      </div>
     </template>
     <template #body>
-      <BankMirrorNavs />
+      <BankMirrorNavs ref="bankMirrorNavs" />
     </template>
   </AppCard>
 </template>

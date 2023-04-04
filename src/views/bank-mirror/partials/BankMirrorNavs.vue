@@ -1,6 +1,5 @@
 <script>
-import { GetVias } from '@/graphql/Via.gql'
-import { GetBankMirrorEntries } from '@/graphql/Entry.gql'
+import { GetBankMirrorEntriesNavs, GetBankMirrorEntries } from '@/graphql/Entry.gql'
 
 import BankMirrorEntries from './BankMirrorEntries.vue'
 
@@ -18,33 +17,34 @@ export default {
         }
       },
       skip () {
-        return this.skip
+        return this.skipEntriesBankMirror
       }
     },
-    vias: {
-      query: GetVias,
-      update ({ vias }) {
-        return vias.map(({id, name}) => ({
+    entriesBankMirrorNavs: {
+      query: GetBankMirrorEntriesNavs,
+      update ({ entriesBankMirrorNavs }) {
+        return entriesBankMirrorNavs.map(({via: { id, name }, count}) => ({
           id,
           value: id,
-          text: name
+          text: name,
+          count
         }))
       },
       result () {
         this.isViaLoaded = true
-        this.skip = false
+        this.skipEntriesBankMirror = false
       }
     },
   },
   data () {
     return {
-      vias: [],
+      entriesBankMirrorNavs: [],
+      isViaLoaded: false,
+      skipEntriesBankMirror: true,
       entriesBankMirror: {
         data: [],
         paginatorInfo: {}
       },
-      isViaLoaded: false,
-      skip: true,
       entriesBankMirrorVars: {
         first: 10,
         page: 1,
@@ -64,11 +64,14 @@ export default {
   watch: {
     isViaLoaded (value) {
       if (value) {
-        this.onNavSelected(this.vias[0].id)
+        this.onNavSelected(this.entriesBankMirrorNavs[0].id)
       }
     }
   },
   methods: {
+    refreshEntries () {
+      this.$apollo.queries.entriesBankMirror.refetch()
+    },
     onNavSelected (value) {
       this.entriesBankMirrorVars.where.value = value
     }
@@ -79,11 +82,11 @@ export default {
 <template>
   <div>
     <AppNavPills
-      :items="vias"
+      :items="entriesBankMirrorNavs"
       @nav-selected="onNavSelected"
     >
       <template
-        v-for="via in vias"
+        v-for="via in entriesBankMirrorNavs"
         #[`${via.id}`]
       >
         <div

@@ -25,6 +25,17 @@ query GetEntriesMonthlyBalance {
   }
 }
 
+query GetBankMirrorEntriesNavs {
+  entriesBankMirrorNavs {
+    via {
+      id
+      name
+    }
+
+    count
+  }
+}
+
 query GetBankMirrorEntries(
   $first: Int!
   $page: Int
