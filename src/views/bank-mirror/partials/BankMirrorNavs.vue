@@ -59,6 +59,9 @@ export default {
   computed: {
     isEntriesQueryLoading () {
       return !!this.$apollo.queries.entriesBankMirror.loading
+    },
+    isNavsQueryLoading () {
+      return !!this.$apollo.queries.entriesBankMirrorNavs.loading
     }
   },
   watch: {
@@ -81,6 +84,7 @@ export default {
 
 <template>
   <div>
+    <AppLoading v-show="isNavsQueryLoading" />
     <AppNavPills
       :items="entriesBankMirrorNavs"
       @nav-selected="onNavSelected"
