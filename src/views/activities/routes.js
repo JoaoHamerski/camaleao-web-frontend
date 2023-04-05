@@ -5,8 +5,6 @@ import roles from '@/constants/roles'
 import { activities } from '@/constants/route-names'
 
 const TheActivities = () => import(
-  /* webpackChunkName: "activities" */
-  /* webpackPrefetch: true */
   './index/TheActivities.vue'
 )
 

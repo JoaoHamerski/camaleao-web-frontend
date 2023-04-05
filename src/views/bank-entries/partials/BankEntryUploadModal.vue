@@ -52,10 +52,13 @@ export default {
           mutation: UploadBankEntry,
           variables: {
             input
-          },
-          refetchQueries: [GetBankEntries],
-          awaitRefetchQueries: true
+          }
         })
+
+        this.$clearCacheFrom([
+          {fieldName: 'bankEntries'},
+          {fieldName: 'entriesBankMirror'},
+        ])
 
         this.$toast.success('Arquivo enviado!')
         this.$emit('success')

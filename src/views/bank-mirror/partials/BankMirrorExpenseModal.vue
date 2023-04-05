@@ -38,6 +38,11 @@ export default {
           variables: { input }
         })
 
+        this.$helpers.clearCacheFrom([
+          {fieldName: 'expenses'},
+          {fieldName: 'cashFlowEntries'},
+        ])
+
         this.$toast.success('Vinculado com sucesso!')
         this.$emit('success')
       } catch (error) {

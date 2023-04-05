@@ -17,6 +17,7 @@ export default new Vuex.Store({
     isMobile: checkIsMobile(),
     error: null,
     booted: false,
+    isPageLoading: false
   },
   mutations: {
     SET_BOOTED (state, booted) {
@@ -27,6 +28,9 @@ export default new Vuex.Store({
     },
     SET_ERROR (state, error) {
       state.error = error
+    },
+    SET_IS_PAGE_LOADING (state, isLoading) {
+      state.isPageLoading = isLoading
     }
   }
 })

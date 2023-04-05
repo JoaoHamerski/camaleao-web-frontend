@@ -1,9 +1,10 @@
 <script>
-import DailyPaymentForm from '@/views/daily-cash/partials/daily-cash-payment/DailyPaymentForm.vue'
-
-import { faLink } from '@fortawesome/free-solid-svg-icons'
-import { TieBankMirrorPayment } from '@/graphql/Entry.gql'
 import { handleError } from '@/utils/forms'
+import { faLink } from '@fortawesome/free-solid-svg-icons'
+
+import { TieBankMirrorPayment } from '@/graphql/Entry.gql'
+
+import DailyPaymentForm from '@/views/daily-cash/partials/daily-cash-payment/DailyPaymentForm.vue'
 
 export default {
   components: {
@@ -38,6 +39,11 @@ export default {
           mutation: TieBankMirrorPayment,
           variables: { input }
         })
+
+        this.$helpers.clearCacheFrom([
+          {fieldName: 'dailyCash'},
+          {fieldName: 'cashFlowEntries'},
+        ])
 
         this.$toast.success('Vinculado com sucesso!')
         this.$emit('success')

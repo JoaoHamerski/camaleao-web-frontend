@@ -113,6 +113,7 @@ router.beforeEach((to, from, next) => {
   const context = { from, next, roles }
 
   store.commit('SET_ERROR', null)
+  store.commit('SET_IS_PAGE_LOADING', true)
 
   if (!middleware) {
     return next()
@@ -121,6 +122,11 @@ router.beforeEach((to, from, next) => {
   middleware[0](
     middlewarePipeline(context, middleware, 1)
   )
+})
+
+router.beforeResolve((to, from, next) => {
+  store.commit('SET_IS_PAGE_LOADING', false)
+  next()
 })
 
 export default router

@@ -101,10 +101,12 @@ export default {
         await this.$apollo.mutate({
           mutation: CreateBranch,
           variables: { input },
-          refetchQueries: [GetBranches, GetCities]
         })
 
-        this.$helpers.clearCacheFrom({ fieldName: 'cities' })
+        this.$helpers.clearCacheFrom([
+          { fieldName: 'cities' },
+          { fieldName: 'branches' },
+        ])
 
         handleSuccess(this, { message: 'Filial registrada!', resetForm: true })
       } catch (error) {

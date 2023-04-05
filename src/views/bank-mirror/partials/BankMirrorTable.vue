@@ -1,8 +1,12 @@
 <script>
+import { ConfirmBankMirrorEntry } from '@/graphql/Entry.gql'
+import { GetCashFlowEntries } from '@/graphql/CashFlow.gql'
+import { GetExpenses } from '@/graphql/Expense.gql'
+import { GetDailyCash } from '@/graphql/DailyCash.gql'
+import { apolloClientInstance } from '@/vue-apollo'
+
 import { faPlus, faCheck } from '@fortawesome/free-solid-svg-icons'
 import { get } from 'lodash-es'
-
-import { ConfirmBankMirrorEntry } from '@/graphql/Entry.gql'
 import { formatCurrencyBRL } from '@/utils/formatters'
 
 import { TippyComponent } from 'vue-tippy'
@@ -70,8 +74,16 @@ export default {
           variables: { id }
         })
 
+        this.$helpers.clearCacheFrom([
+          {fieldName: 'cashFlowEntries'},
+          {fieldName: 'expenses'},
+          {fieldName: 'dailyCash'},
+          {fieldName: 'dailyCashBalance'},
+        ])
+
         this.$toast.success('Entrada confirmada!')
       } catch (error) {
+        console.log((error))
         this.$toast.error('Ops! Algo deu errado.')
       }
 

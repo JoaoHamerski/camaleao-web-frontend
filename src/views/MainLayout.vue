@@ -1,6 +1,7 @@
 <script>
 import TheHeaderbar from '@/components/Headerbar/TheHeaderbar.vue'
 import TheSidebar from '@/components/Sidebar/TheSidebar.vue'
+import ProgressBar from '@/components/ProgressBar.vue'
 
 export default {
   metaInfo: {
@@ -11,7 +12,8 @@ export default {
   },
   components: {
     TheHeaderbar,
-    TheSidebar
+    TheSidebar,
+    ProgressBar
   },
   props: {
     error: {
@@ -43,6 +45,8 @@ export default {
     v-if="authUser || hasError"
     key="layout"
   >
+    <ProgressBar />
+
     <template v-if="authUser && !hasError">
       <TheHeaderbar :auth-user="authUser" />
       <TheSidebar :auth-user="authUser" />

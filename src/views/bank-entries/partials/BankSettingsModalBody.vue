@@ -40,8 +40,9 @@ export default {
             id: item.id
           },
           refetchQueries: [GetBankSettings],
-          awaitRefetchQueries: true
+          awaitRefetchQueries: true,
         })
+
 
         this.$toast.success('Configuração deletada!')
       } catch (error) {
