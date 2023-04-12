@@ -76,9 +76,15 @@ export default {
         DateTime.fromFormat(date, `${format} hh:mm:ss`),
       ]
 
-      return possibleDates.find(
+      const validDate = possibleDates.find(
         (dateTime) => dateTime.isValid
-      ).toFormat('dd/MM/yyyy')
+      )
+
+      if (validDate) {
+        return validDate.toFormat('dd/MM/yyyy')
+      }
+
+      return 'Invalid Date'
     },
     getFormattedData (data, settings) {
       const { fields } = settings

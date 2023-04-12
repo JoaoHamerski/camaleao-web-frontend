@@ -55,7 +55,7 @@ export default {
           }
         })
 
-        this.$clearCacheFrom([
+        this.$helpers.clearCacheFrom([
           {fieldName: 'bankEntries'},
           {fieldName: 'entriesBankMirror'},
         ])
@@ -63,7 +63,10 @@ export default {
         this.$toast.success('Arquivo enviado!')
         this.$emit('success')
       } catch (error) {
-        this.checkIfFileAlreadyExists({...error})
+        if (error.graphQLErrors) {
+          this.checkIfFileAlreadyExists({...error})
+        }
+
         this.$toast.error('Ops! Algo deu errado.')
       }
 
