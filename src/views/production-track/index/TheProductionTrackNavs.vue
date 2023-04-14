@@ -3,6 +3,8 @@ import { GetAuthUserSectors } from '@/graphql/OrderControl.gql'
 import { map, isEmpty } from 'lodash-es'
 import { faTshirt, faHandHoldingUsd } from '@fortawesome/free-solid-svg-icons'
 
+import roles from '@/constants/roles'
+
 export default {
   apollo: {
     authUserSectors: {
@@ -23,6 +25,7 @@ export default {
   },
   data () {
     return {
+      roles,
       icons: {
         faHandHoldingUsd,
         faTshirt
@@ -89,7 +92,10 @@ export default {
             >{{ sector.orders_count }}</span>
           </a>
 
-          <div class="d-flex flex-column bg-white justify-content-between">
+          <div
+            v-if="$helpers.canView(roles.GERENCIA)"
+            class="d-flex flex-column bg-white justify-content-between"
+          >
             <span class="fw-bold text-primary text-nowrap">
               <FontAwesomeIcon :icon="icons.faTshirt" />
               {{ sector.quantity_count }}
