@@ -38,6 +38,9 @@ fragment OrdersBySectorParts on Order {
 query GetAuthUserSectors {
   authUserSectors {
     orders_count
+    quantity_count
+    pendency_total
+
     sector {
       id
       name

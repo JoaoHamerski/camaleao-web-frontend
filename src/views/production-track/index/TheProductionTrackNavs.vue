@@ -1,6 +1,7 @@
 <script>
 import { GetAuthUserSectors } from '@/graphql/OrderControl.gql'
 import { map, isEmpty } from 'lodash-es'
+import { faTshirt, faHandHoldingUsd } from '@fortawesome/free-solid-svg-icons'
 
 export default {
   apollo: {
@@ -22,6 +23,10 @@ export default {
   },
   data () {
     return {
+      icons: {
+        faHandHoldingUsd,
+        faTshirt
+      },
       authUserSectors: [],
       selectedSector: {}
     }
@@ -61,7 +66,7 @@ export default {
         <li
           v-for="sector in authUserSectors"
           :key="sector.sector.id"
-          class="nav-item"
+          class="nav-item small"
         >
           <a
             class="nav-link"
@@ -83,6 +88,17 @@ export default {
               }"
             >{{ sector.orders_count }}</span>
           </a>
+
+          <div class="d-flex flex-column bg-white justify-content-between">
+            <span class="fw-bold text-primary text-nowrap">
+              <FontAwesomeIcon :icon="icons.faTshirt" />
+              {{ sector.quantity_count }}
+            </span>
+            <span class="fw-bold text-success text-nowrap">
+              <FontAwesomeIcon :icon="icons.faHandHoldingUsd" />
+              {{ $helpers.toBRL(sector.pendency_total) }}
+            </span>
+          </div>
         </li>
       </ul>
     </div>
