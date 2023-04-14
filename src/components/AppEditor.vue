@@ -52,7 +52,8 @@ export default {
     </div>
   </div>
 </template>
-<style lang="scss" scoped>
+
+<style lang="scss">
 @import "vue2-editor/dist/vue2-editor.css";
 @import 'quill/dist/quill.core.css';
 @import 'quill/dist/quill.snow.css';
