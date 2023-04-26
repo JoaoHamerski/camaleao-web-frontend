@@ -1,6 +1,6 @@
 <script>
 import { faHandHoldingUsd } from '@fortawesome/free-solid-svg-icons'
-import { take, deburr, isEmpty } from 'lodash-es'
+import { take, deburr, isEmpty, uniqueId } from 'lodash-es'
 import csvParser from 'papaparse'
 import { GetBankSettings } from '@/graphql/BankSetting.gql'
 import { DateTime } from 'luxon'
@@ -86,6 +86,16 @@ export default {
 
       return 'Invalid Date'
     },
+    getValueFormatted (value) {
+      return value.replace('R$ ', '')
+    },
+    getBankId(value) {
+      if (!value) {
+        return uniqueId(+new Date())
+      }
+
+      return value
+    },
     getFormattedData (data, settings) {
       const { fields } = settings
       const filtered = data.filter(item => !this.isFirstPropEmpty(item))
@@ -96,10 +106,10 @@ export default {
       }
 
       return filtered.map(item => ({
-        bank_uid: item[fields.bank_uid],
+        bank_uid: this.getBankId(item[fields.bank_uid]),
         date: this.getDateFormatted(item[fields.date], settings.date_format),
         description: item[fields.description],
-        value: item[fields.value],
+        value: this.getValueFormatted(item[fields.value]),
         via_id: settings.via_id,
         ...additionalOptions
       }))
