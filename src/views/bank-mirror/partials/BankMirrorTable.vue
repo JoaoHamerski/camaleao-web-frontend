@@ -83,7 +83,6 @@ export default {
 
         this.$toast.success('Entrada confirmada!')
       } catch (error) {
-        console.log((error))
         this.$toast.error('Ops! Algo deu errado.')
       }
 

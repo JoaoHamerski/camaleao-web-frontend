@@ -27,7 +27,6 @@ export default {
       this.budgetSettingsModal = true
     },
     onNewBudgetCreated () {
-      console.log('alao')
       this.budgetCreateModal = false
     },
     onEditBudget () {

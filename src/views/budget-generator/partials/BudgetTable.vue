@@ -89,7 +89,6 @@ export default {
         this.$helpers.openInNewTab(budgetUrl)
       } catch (error) {
         this.$toast.error('Ops! Algo deu errado.')
-        console.log(error)
       }
 
       this.budgetToOpen.isLoading = false
