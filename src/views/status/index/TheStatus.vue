@@ -12,7 +12,6 @@ export default {
   },
   methods: {
     onCreated () {
-      console.log('alo')
       window.scrollTo(0, 10000)
     }
   }
