@@ -73,6 +73,7 @@ export default {
             ([, obj]) => ({...obj})
           )
 
+        console.log(formattedEntries)
         this.entry = {
           entries: formattedEntries,
           filename: entry.filename,
