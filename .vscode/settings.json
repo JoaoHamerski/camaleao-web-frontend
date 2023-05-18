@@ -1,9 +1,12 @@
 {
     "workbench.colorCustomizations": {
-        "activityBar.background": "#42b8833a"
+        "activityBar.background": "#1a7049"
     },
     "cSpell.language": "en,pt-BR",
-    "cSpell.ignoreRegExpList": ["\\'(.*?)\\'", "\\\"(.*?)\\\""],
+    "cSpell.ignoreRegExpList": [
+        "\\'(.*?)\\'",
+        "\\\"(.*?)\\\""
+    ],
     "cSpell.words": [
         "camaleao",
         "camelcase",

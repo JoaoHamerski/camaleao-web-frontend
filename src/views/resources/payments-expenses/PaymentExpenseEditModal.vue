@@ -15,7 +15,6 @@ export default {
   },
   computed: {
     getComponentProps () {
-      console.log(this.entry)
       if (this.isExpense) {
         return {
           expense: {
@@ -32,7 +31,6 @@ export default {
         }
       }
 
-      console.log(this.entry)
       return {
         order: this.entry.order,
         payment: {
