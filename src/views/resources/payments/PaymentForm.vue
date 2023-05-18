@@ -76,7 +76,7 @@ export default {
         return true
       }
 
-      return this.payment.value === this.bank_entry.value
+      return +this.payment.value === +this.bank_entry.value
     },
     isLoadingQuery () {
       return !!this.$apollo.queries.vias.loading
@@ -253,10 +253,9 @@ export default {
       @select="onSelectEntry"
     />
 
-
     <div
       v-if="!paymentMatchesBankEntry"
-      class="small text-danger fw-bold mb-4"
+      class="small text-danger mb-4"
     >
       O valor da entrada bancária e pagamento devem ser iguais.
     </div>

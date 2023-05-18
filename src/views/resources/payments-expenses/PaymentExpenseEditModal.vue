@@ -15,13 +15,13 @@ export default {
   },
   computed: {
     getComponentProps () {
+      console.log(this.entry)
       if (this.isExpense) {
         return {
           expense: {
             id: this.entry.id,
             date: this.entry.date,
             description: this.entry.description,
-            // expense_type_id: '',
             value: this.$helpers.toBRL(this.entry.value),
             expense_via_id: this.entry.via.id,
             expense_type_id: this.entry.type.id,
@@ -32,13 +32,16 @@ export default {
         }
       }
 
+      console.log(this.entry)
       return {
         order: this.entry.order,
         payment: {
           id: this.entry.id,
           via: this.entry.via,
           note: this.entry.note,
-          date: this.entry.date
+          value: this.entry.value,
+          date: this.entry.date,
+          is_confirmed: this.entry.is_confirmed
         }
       }
     },
