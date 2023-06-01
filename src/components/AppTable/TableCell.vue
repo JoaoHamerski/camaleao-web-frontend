@@ -24,9 +24,9 @@ function renderValue (h, context) {
 function renderLinkCell (h, context) {
   return (
     <a
-      target={context.openInNewTab ? '_blank' : '_self'}
-      vOn:mouseup_prevent={context.onLinkClicked}
-      vOn:click={context.prevent}
+      key={context.url()}
+      target="_blank"
+      vOn:click={context.redirect}
       href={context.url()}
       class={classNames([
         'd-block text-decoration-none',
@@ -90,17 +90,24 @@ export default {
   },
   methods: {
     prevent (event) {
-      if (this.openInNewTab) {
-        return
-      }
-
       event.preventDefault()
     },
     onLinkClicked (event) {
       if (event.which === 1) {
-        this.$emit('clicked')
+        this.redirect()
       }
-    }
+    },
+    redirect (event) {
+      if (this.openInNewTab) {
+        return true
+      }
+
+      event.preventDefault()
+
+      return this.$router.push({
+        path: this.url()
+      })
+    },
   },
   render (h) {
     const element = this.hasRowLinks

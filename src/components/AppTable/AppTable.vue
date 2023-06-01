@@ -52,13 +52,13 @@ const renderTableCell = (h, context, item) => {
   return map(context.headers, (header, index) => {
     return (
       <TableCell
-        vOn:clicked={() => context.redirectTo(item)}
+        key={index}
+        vOn:clicked={() => { context.redirectTo(item) }}
         isUsingSlot={context.hasSlot(`items.${header.value}`)}
         hasRowLinks={context.hasRowLinks}
         url={() => context.routeUrl(item)}
         header={header}
         openInNewTab={context.openInNewTab}
-        key={index}
         value={get(item, header.value)}
       >
         { tableCellContent(h, context, header, item) }
@@ -161,15 +161,6 @@ export default {
       )
 
       return resolvedRoute.href
-    },
-    redirectTo (item) {
-      if (this.openInNewTab) {
-        return
-      }
-
-      return this.$router.push(
-        this.route(item)
-      )
     },
     hasSlot (name) {
       return !!(this.$slots[name] || this.$scopedSlots[name])
