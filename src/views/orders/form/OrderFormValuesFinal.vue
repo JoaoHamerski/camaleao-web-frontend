@@ -26,7 +26,7 @@ export default {
     return {
       vias: [],
       hasDownPayment: false,
-      maskCurrencyBRL: maskCurrencyBRL({ numeralPositiveOnly: true })
+      maskCurrencyBRL: maskCurrencyBRL({ numeralPositiveOnly: true }),
     }
   },
 }

@@ -1,8 +1,9 @@
 <script>
 
 import Form from '@/utils/Form'
+import Vue from 'vue'
 import { formatDatetime } from '@/utils/formatters'
-import { map, pick } from 'lodash-es'
+import { map, pick, cloneDeep } from 'lodash-es'
 import { CreateOrder, UpdateOrder } from '@/graphql/Order.gql'
 import { handleError } from '@/utils/forms'
 import { GetDailyCashDetailedFlow, GetDailyCashBalance } from '@/graphql/DailyCash.gql'
@@ -10,19 +11,62 @@ import { GetClothingTypes } from '@/graphql/ClothingType.gql'
 
 import OrderFormClient from './OrderFormClient.vue'
 import OrderFormBasicInfo from './OrderFormBasicInfo.vue'
-import OrderFormValues from './OrderFormValues.vue'
 import OrderFormDates from './OrderFormDates.vue'
 import OrderFormFiles from './OrderFormFiles.vue'
+import FormClothes from './form-clothes/FormClothes.vue'
+import OrderFormMoreValuesInfo from './OrderFormMoreValuesInfo.vue'
+
+const OrderFormClothingTypes = () => import('./OrderFormClothingTypes.vue')
 
 const NUMBER_OF_QUERIES = 1
+
+export const DEFAULT_CLOTH_INDIVIDUAL_NAME_ITEM = {
+  name: '', size: '', number: ''
+}
+
+export const DEFAULT_CLOTH_ITEM = {
+  size: '', quantity: ''
+}
+
+export const DEFAULT_CLOTH = {
+  id: 'first',
+  open: true,
+  individual_names: false,
+  model_id: '',
+  material_id: '',
+  neck_type_id: '',
+  sleeve_type_id: '',
+  items: [{...DEFAULT_CLOTH_ITEM}],
+  items_individual: [{...DEFAULT_CLOTH_INDIVIDUAL_NAME_ITEM}],
+}
+
+export const form = Vue.observable(new Form({
+  name: '',
+  code: '',
+  client_id: '',
+  discount: 'R$ ',
+  down_payment: 'R$ ',
+  shipping_value: 'R$ ',
+  payment_via_id: '',
+  seam_date: '',
+  print_date: '',
+  delivery_date: '',
+  clothing_types: [],
+  art_paths: [],
+  size_paths: [],
+  payment_voucher_paths: [],
+  clothes: [{...cloneDeep(DEFAULT_CLOTH)}],
+}))
 
 export default {
   components: {
     OrderFormClient,
     OrderFormBasicInfo,
-    OrderFormValues,
+    OrderFormClothingTypes,
     OrderFormDates,
-    OrderFormFiles
+    OrderFormFiles,
+    FormClothes,
+    OrderFormMoreValuesInfo
   },
   apollo: {
     clothingTypes: {
@@ -62,22 +106,16 @@ export default {
       isLoading: false,
       queriesLoading: NUMBER_OF_QUERIES,
       clothingTypes: [],
-      form: new Form({
-        name: '',
-        code: '',
-        client_id: '',
-        discount: 'R$ ',
-        down_payment: 'R$ ',
-        shipping_value: 'R$ ',
-        payment_via_id: '',
-        seam_date: '',
-        print_date: '',
-        delivery_date: '',
-        clothing_types: [],
-        art_paths: [],
-        size_paths: [],
-        payment_voucher_paths: []
-      })
+      form,
+    }
+  },
+  computed: {
+    hasClothingTypes () {
+      if (!this.isEdit) {
+        return false
+      }
+
+      return !!this.order.clothing_types.length
     }
   },
   watch: {
@@ -234,7 +272,19 @@ export default {
       class="mb-3"
     />
 
-    <OrderFormValues
+    <FormClothes
+      :form="form"
+      class="mb-3"
+    />
+
+    <OrderFormMoreValuesInfo
+      v-if="!hasClothingTypes"
+      :form="form"
+      class="mb-3"
+    />
+
+    <OrderFormClothingTypes
+      v-else
       v-bind="{order, form, isEdit, isOrderPreRegistered, clothingTypes}"
       class="mb-3"
     />

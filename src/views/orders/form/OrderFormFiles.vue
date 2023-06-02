@@ -1,4 +1,5 @@
 <script>
+import { faFileAlt } from '@fortawesome/free-solid-svg-icons'
 import { formatBytes } from '@/utils/formatters'
 import { truncate } from 'lodash-es'
 import filesMixin from '@/mixins/filesMixin'
@@ -32,7 +33,10 @@ export default {
       maxFileSize: 1048576,
       modal: false,
       transferredItems: [],
-      pasteEnabled: false
+      pasteEnabled: false,
+      icons: {
+        faFileAlt
+      }
     }
   },
   watch: {
@@ -98,6 +102,10 @@ export default {
 <template>
   <AppContainer>
     <template #title>
+      <FontAwesomeIcon
+        :icon="icons.faFileAlt"
+        fixed-width
+      />
       Anexos
     </template>
 
