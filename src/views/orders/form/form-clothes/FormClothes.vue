@@ -1,6 +1,7 @@
 <script>
+import { GetClothMatches } from '@/graphql/ClothMatch.gql'
 import { faTshirt, faTrashAlt } from  '@fortawesome/free-solid-svg-icons'
-import { uniqueId, cloneDeep } from 'lodash-es'
+import { uniqueId, cloneDeep, uniq, map } from 'lodash-es'
 
 import FormClothesIndNames from './FormClothesIndNames.vue';
 import FormClothesNoIndNames from './FormClothesNoIndNames.vue'
@@ -8,19 +9,49 @@ import FormClothesOptions from './FormClothesOptions.vue';
 
 import { form, DEFAULT_CLOTH } from '../OrderForm.vue'
 
+export const getUniqueValues = (items, property) => {
+  const plucked = items.map(item => item[property])
+  const filtered = plucked.filter(item => item !== null)
+
+  return uniq(filtered)
+}
+
 export default {
   components: {
     FormClothesIndNames,
     FormClothesNoIndNames,
     FormClothesOptions
   },
+  apollo: {
+    clothMatches: {
+      query: GetClothMatches
+    }
+  },
   data: () => ({
     form,
     icons: {
       faTshirt,
       faTrashAlt
-    }
+    },
+    clothMatches: []
   }),
+  computed: {
+    models () {
+      return getUniqueValues(this.clothMatches, 'model')
+    },
+    materials () {
+      return getUniqueValues(this.clothMatches, 'material')
+    },
+    neckTypes () {
+      return getUniqueValues(this.clothMatches, 'neck_type')
+    },
+    sleeveTypes () {
+      return getUniqueValues(this.clothMatches, 'sleeve_type')
+    },
+    isClothMatchesLoading () {
+      return !!this.$apollo.queries.clothMatches.loading
+    }
+  },
   methods: {
     toggleClothItem (index, value) {
       if (index < 0) {
@@ -62,7 +93,8 @@ export default {
 </script>
 
 <template>
-  <div>
+  <div class="position-relative">
+    <AppLoading v-if="isClothMatchesLoading" />
     <AppContainer>
       <template #title>
         <FontAwesomeIcon
@@ -91,8 +123,7 @@ export default {
               <template #body>
                 <FormClothesOptions
                   class="mb-3"
-                  :form="form"
-                  :index="index"
+                  v-bind="{ index, models, materials, neckTypes, sleeveTypes, clothMatches }"
                   @new="onNewItem"
                   @duplicate="onDuplicateItem"
                   @delete="onDeleteItem"

@@ -21,11 +21,11 @@ const OrderFormClothingTypes = () => import('./OrderFormClothingTypes.vue')
 const NUMBER_OF_QUERIES = 1
 
 export const DEFAULT_CLOTH_INDIVIDUAL_NAME_ITEM = {
-  name: '', size: '', number: ''
+  name: '', size_id: '', number: ''
 }
 
 export const DEFAULT_CLOTH_ITEM = {
-  size: '', quantity: ''
+  size_id: '', quantity: ''
 }
 
 export const DEFAULT_CLOTH = {

@@ -48,6 +48,10 @@ export default {
       type: [String, Number],
       default: ''
     },
+    disabled: {
+      type: Boolean,
+      default: false
+    },
     options: {
       type: Array,
       default: () => []
@@ -125,6 +129,7 @@ export default {
     >
       <select
         :id="id"
+        :disabled="disabled"
         :value="value"
         :name="name"
         :multiple="multiple"
