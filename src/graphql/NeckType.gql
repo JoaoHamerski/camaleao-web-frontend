@@ -1,0 +1,13 @@
+query GetNeckTypes {
+  neckTypes {
+    id
+    name
+  }
+}
+
+mutation CreateNeckType($input: NeckTypeInput) {
+  neckTypeCreate(input: $input) {
+    id
+    name
+  }
+}

@@ -1,0 +1,57 @@
+fragment ClothMatchParts on ClothMatch {
+  id
+  model {
+    id
+    name
+  }
+
+  material {
+    id
+    name
+  }
+
+  neck_type {
+    id
+    name
+  }
+
+  sleeve_type {
+    id
+    name
+  }
+
+  neck_type {
+    id
+    name
+  }
+
+  values {
+    id
+    value
+    start
+    end
+  }
+
+  sizes {
+    id
+    name
+    pivot {
+      id
+      value
+    }
+  }
+
+  unique_value
+}
+
+query GetClothMatches {
+  clothMatches {
+    ...ClothMatchParts
+  }
+}
+
+mutation CreateClothMatch($input: ClothMatchInput) {
+  clothMatchCreate(input: $input) {
+    ...ClothMatchParts
+  }
+}

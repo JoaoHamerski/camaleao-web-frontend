@@ -1,0 +1,13 @@
+query GetClothSizes {
+  clothSizes {
+    id
+    name
+  }
+}
+
+mutation CreateClothSize($input: ClothSizeInput) {
+  clothSizeCreate(input: $input) {
+    id
+    name
+  }
+}
