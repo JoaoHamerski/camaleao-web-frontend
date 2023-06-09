@@ -264,6 +264,10 @@ export const unformatCurrencyBRL = (value) => {
   return accounting.unformat(value, ',')
 }
 
+export const getQueryName = (query) => {
+  return query?.definitions?.[0]?.selectionSet?.selections?.[0]?.name?.value || null
+}
+
 export default {
   fallback,
   toBRL,
