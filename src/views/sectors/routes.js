@@ -12,7 +12,7 @@ const TheSectors = () => import(
 const children = [
   {
     name: 'sectors.index',
-    path: '/setores',
+    path: '/gerenciamento/setores',
     component: TheSectors,
     meta: {
       middleware: [role],
