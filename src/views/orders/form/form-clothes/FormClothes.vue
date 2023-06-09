@@ -1,7 +1,7 @@
 <script>
 import { GetClothMatches } from '@/graphql/ClothMatch.gql'
 import { faTshirt, faTrashAlt } from  '@fortawesome/free-solid-svg-icons'
-import { uniqueId, cloneDeep, uniq, map } from 'lodash-es'
+import { uniqueId, cloneDeep, uniq } from 'lodash-es'
 
 import FormClothesIndNames from './FormClothesIndNames.vue';
 import FormClothesNoIndNames from './FormClothesNoIndNames.vue'
@@ -9,12 +9,10 @@ import FormClothesOptions from './FormClothesOptions.vue';
 
 import { form, DEFAULT_CLOTH } from '../OrderForm.vue'
 
-export const getUniqueValues = (items, property) => {
-  const plucked = items.map(item => item[property])
-  const filtered = plucked.filter(item => item !== null)
-
-  return uniq(filtered)
-}
+export const getUniqueValues = (items, prop) => uniq(
+  items.map(item => item[prop])
+    .filter(item => item !== null)
+)
 
 export default {
   components: {
@@ -38,15 +36,6 @@ export default {
   computed: {
     models () {
       return getUniqueValues(this.clothMatches, 'model')
-    },
-    materials () {
-      return getUniqueValues(this.clothMatches, 'material')
-    },
-    neckTypes () {
-      return getUniqueValues(this.clothMatches, 'neck_type')
-    },
-    sleeveTypes () {
-      return getUniqueValues(this.clothMatches, 'sleeve_type')
     },
     isClothMatchesLoading () {
       return !!this.$apollo.queries.clothMatches.loading
@@ -123,7 +112,7 @@ export default {
               <template #body>
                 <FormClothesOptions
                   class="mb-3"
-                  v-bind="{ index, models, materials, neckTypes, sleeveTypes, clothMatches }"
+                  v-bind="{ index, models, clothMatches }"
                   @new="onNewItem"
                   @duplicate="onDuplicateItem"
                   @delete="onDeleteItem"
