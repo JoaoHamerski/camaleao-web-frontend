@@ -161,9 +161,11 @@ export default {
             />
           </div>
         </div>
+
         <div :class="['modal-body', modalBodyClass]">
           <slot name="body" />
         </div>
+
         <div
           v-if="$slots.footer"
           class="modal-footer"
