@@ -25,7 +25,8 @@ import {
   faThLarge,
   faColumns,
   faDolly,
-  faFileInvoiceDollar
+  faFileInvoiceDollar,
+  faFileAlt
 } from '@fortawesome/free-solid-svg-icons'
 
 const ITEMS = {
@@ -180,10 +181,13 @@ const ITEMS = {
       condition: () => canView(ROLES.GERENCIA)
     },
     TIPOS_DE_ROUPAS: {
-      title: 'Tipos de roupas',
-      icon: faTshirt,
-      route: { name: 'clothing-types.index' },
-      condition: () => canView(ROLES.GERENCIA)
+      title: 'Formulário de pedido',
+      icon: faFileAlt,
+      route: { name: 'clothes.index' },
+      condition: () => canView(ROLES.GERENCIA),
+      style: {
+        fontSize: '.85rem'
+      }
     },
     STATUS: {
       title: 'Status',
