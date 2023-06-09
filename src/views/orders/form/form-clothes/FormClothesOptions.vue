@@ -1,7 +1,9 @@
 <script>
 import { faPaste, faTrashAlt, faPlus } from '@fortawesome/free-solid-svg-icons';
 import { form } from '../OrderForm.vue';
-import { getUniqueValues } from './FormClothes.vue'
+import { find } from 'lodash-es';
+
+import { getUniqueValues } from './FormClothes.vue';
 
 export default {
   props: {
@@ -20,6 +22,9 @@ export default {
   },
   data: () => ({
     form,
+    materials: [],
+    neckTypes: [],
+    sleeveTypes: [],
     icons: {
       faPlus,
       faPaste,
@@ -30,20 +35,20 @@ export default {
     isDeleteDisabled () {
       return this.form.clothes.length <= 1
     },
-    availableMaterials () {
-      const matches = this.clothMatches.filter(
-        item => this.form.clothes[this.index].model_id === item.model.id
-      )
-
-      return this.av('material')
-      // return getUniqueValues(matches, 'material')
+    formCloth () {
+      return this.form.clothes[this.index]
     }
   },
   methods: {
-    av (prop) {
-      return getUniqueValues(this.clothMatches.filter(
-        item => this.form.clothes[this.index].model_id === item.model.id
-      ), prop)
+    evaluateOptions (field) {
+      const matches = this.clothMatches.filter(item => {
+        return +this.formCloth[field + '_id'] === +item[field].id
+      })
+
+      // Atualizar cada item filtrando
+      // cada opção que foi selecionada
+
+      this.materials = getUniqueValues(matches, 'material')
     },
     onNewClick () {
       this.$emit('new', this.index)
@@ -89,7 +94,9 @@ export default {
         Deletar
       </a>
     </div>
-    <div class="row">
+    <div
+      class="row"
+    >
       <div class="col-3">
         <AppSimpleSelect
           :id="`clothes.${index}.model_id`"
@@ -99,6 +106,7 @@ export default {
           :name="`clothes.${index}.model_id`"
           select-class="form-select-sm"
           placeholder="Selecione um modelo"
+          @input="evaluateOptions('model')"
         >
           Modelo
         </AppSimpleSelect>
@@ -107,12 +115,12 @@ export default {
         <AppSimpleSelect
           :id="`clothes.${index}.material_id`"
           v-model="form.clothes[index].material_id"
-          :options="availableMaterials"
           select-class="form-select-sm"
           :name="`clothes.${index}.material_id`"
           label-prop="name"
           placeholder="Selecione um material"
-          :disabled="!availableMaterials.length"
+          :disabled="!materials.length"
+          :options="materials"
         >
           Material
         </AppSimpleSelect>
