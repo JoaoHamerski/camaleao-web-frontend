@@ -14,6 +14,9 @@ export default {
   },
   methods: {
     clearError ({ target }) {
+      if (target.dataset.disableClearError) {
+        return
+      }
       this.form.errors.clear(target.name)
     }
   }
