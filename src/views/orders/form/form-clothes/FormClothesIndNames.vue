@@ -1,13 +1,18 @@
 <script>
 import { faPlus, faTrashAlt } from '@fortawesome/free-solid-svg-icons';
 import { maskInteger } from '@/utils/masks';
-import { form, DEFAULT_CLOTH_INDIVIDUAL_NAME_ITEM } from '../OrderForm.vue'
+import { form, DEFAULT_CLOTH_INDIVIDUAL_ITEM } from '../OrderForm.vue'
+import { isEmpty } from 'lodash-es';
 
 export default {
   props: {
     clothIndex: {
       type: Number,
       required: true,
+    },
+    match: {
+      type: Object,
+      default: () => ({})
     }
   },
   data: () => ({
@@ -23,6 +28,13 @@ export default {
     })
   }),
   computed: {
+    sizes () {
+      if (isEmpty(this.match)) {
+        return []
+      }
+
+      return this.match.sizes
+    },
     isDeleteDisabled () {
       return this.form.clothes[this.clothIndex].items_individual.length <= 1
     }
@@ -30,7 +42,7 @@ export default {
   methods: {
     newIndividualNameItem () {
       this.form.clothes[this.clothIndex].items_individual.push({
-        ...DEFAULT_CLOTH_INDIVIDUAL_NAME_ITEM
+        ...DEFAULT_CLOTH_INDIVIDUAL_ITEM
       })
     },
     deleteIndividualNameItem (index) {
@@ -59,8 +71,8 @@ export default {
     </div>
 
     <div
-      v-for="(item, index) in form.clothes[clothIndex].items_individual"
-      :key="item.id"
+      v-for="(_, index) in form.clothes[clothIndex].items_individual"
+      :key="index"
       class="row align-items-end mb-2"
     >
       <div class="col-4">
@@ -77,11 +89,14 @@ export default {
       <div class="col-3">
         <AppSimpleSelect
           :id="`clothes.${index}.size`"
-          v-model="form.clothes[clothIndex].items_individual[index].size"
+          v-model="form.clothes[clothIndex].items_individual[index].size_id"
           :name="`clothes.${index}.size`"
+          :options="sizes"
+          label-prop="name"
           select-class="form-select-sm"
           placeholder="Selecione um tam."
           remove-default-margin
+          :disabled="!sizes.length"
         />
       </div>
 

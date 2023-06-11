@@ -1,6 +1,10 @@
 <script>
 export default {
   props: {
+    value: {
+      type: Number,
+      default: 0
+    },
     items: {
       type: Array,
       required: true
@@ -8,10 +12,23 @@ export default {
     errors: {
       type: Array,
       default: () => []
+    },
+    noFill: {
+      type: Boolean,
+      default: false
+    },
+    tabsStyle: {
+      type: Boolean,
+      default: false
+    },
+    headerClass: {
+      type: String,
+      default: ''
     }
   },
   methods: {
-    onNavClick (item) {
+    onNavClick (item, index) {
+      this.$emit('input', index)
       this.$emit('nav-selected', item.value)
     },
     itemHasError(item) {
@@ -29,29 +46,44 @@ export default {
   <div>
     <ul
       id="pills-tab"
-      class="nav nav-pills nav-fill flex-sm-row mb-3"
+      class="nav flex-sm-row mb-3"
+      :class="[{
+        'nav-fill': !noFill,
+      }, tabsStyle ? 'nav-tabs' : 'nav-pills']"
       role="tablist"
     >
       <li
         v-for="(item, index) in items"
         :key="item.value"
         class="nav-item"
-        :class="itemHasError(item) && 'has-error'"
+        :class="[{
+          'has-error': itemHasError(item)
+        }, headerClass]"
         :role="item.value"
       >
         <button
           :id="`pills-${item.value}-tab`"
           class="nav-link"
-          :class="index === 0 && 'active'"
+          :class="value === index && 'active'"
           data-bs-toggle="pill"
           :data-bs-target="`#pills-${item.value}`"
           type="button"
           role="tab"
           :aria-controls="`pills-${item.value}`"
-          :aria-selected="index === 0"
-          @click.prevent="onNavClick(item)"
+          :aria-selected="value === index"
+          @click.prevent="onNavClick(item, index)"
         >
-          {{ item.text }}
+          <template
+            v-if="$scopedSlots[`headers.${item.value}`]"
+          >
+            <slot
+              :name="`headers.${item.value}`"
+              :item="item"
+            />
+          </template>
+          <template v-else>
+            {{ item.text }}
+          </template>
         </button>
       </li>
     </ul>
@@ -64,7 +96,7 @@ export default {
         :id="`pills-${item.value}`"
         :key="item.value"
         class="tab-pane"
-        :class="index === 0 && 'show active'"
+        :class="value === index && 'show active'"
         role="tabpanel"
         :aria-labelledby="`pills-${item.value}-tab`"
       >

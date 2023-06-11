@@ -3,7 +3,7 @@
 import Form from '@/utils/Form'
 import Vue from 'vue'
 import { formatDatetime } from '@/utils/formatters'
-import { map, pick, cloneDeep } from 'lodash-es'
+import { map, pick, cloneDeep, uniqueId, omit } from 'lodash-es'
 import { CreateOrder, UpdateOrder } from '@/graphql/Order.gql'
 import { handleError } from '@/utils/forms'
 import { GetDailyCashDetailedFlow, GetDailyCashBalance } from '@/graphql/DailyCash.gql'
@@ -14,30 +14,32 @@ import OrderFormBasicInfo from './OrderFormBasicInfo.vue'
 import OrderFormDates from './OrderFormDates.vue'
 import OrderFormFiles from './OrderFormFiles.vue'
 import FormClothes from './form-clothes/FormClothes.vue'
-import OrderFormMoreValuesInfo from './OrderFormMoreValuesInfo.vue'
+import OrderFormValuesFinalWrapper from './OrderFormValuesFinalWrapper.vue'
 
 const OrderFormClothingTypes = () => import('./OrderFormClothingTypes.vue')
 
 const NUMBER_OF_QUERIES = 1
 
-export const DEFAULT_CLOTH_INDIVIDUAL_NAME_ITEM = {
+export const DEFAULT_CLOTH_INDIVIDUAL_ITEM = {
   name: '', size_id: '', number: ''
 }
 
 export const DEFAULT_CLOTH_ITEM = {
-  size_id: '', quantity: ''
+   size_id: '', quantity: '',
 }
 
 export const DEFAULT_CLOTH = {
-  id: 'first',
+  id: uniqueId(),
   open: true,
   individual_names: false,
   model_id: '',
   material_id: '',
   neck_type_id: '',
   sleeve_type_id: '',
-  items: [{...DEFAULT_CLOTH_ITEM}],
-  items_individual: [{...DEFAULT_CLOTH_INDIVIDUAL_NAME_ITEM}],
+  items: [{ ...DEFAULT_CLOTH_ITEM }],
+  items_individual: [{ ...DEFAULT_CLOTH_INDIVIDUAL_ITEM }],
+  match: null,
+  total: ''
 }
 
 export const form = Vue.observable(new Form({
@@ -48,8 +50,6 @@ export const form = Vue.observable(new Form({
   down_payment: 'R$ ',
   shipping_value: 'R$ ',
   payment_via_id: '',
-  seam_date: '',
-  print_date: '',
   delivery_date: '',
   clothing_types: [],
   art_paths: [],
@@ -66,7 +66,7 @@ export default {
     OrderFormDates,
     OrderFormFiles,
     FormClothes,
-    OrderFormMoreValuesInfo
+    OrderFormValuesFinalWrapper
   },
   apollo: {
     clothingTypes: {
@@ -129,6 +129,13 @@ export default {
     getFile (item) {
       return item.base64 || item
     },
+    getFormattedClothes () {
+      return this.form.clothes.map(cloth => ({
+        ...omit(cloth, [
+          'id', 'open', 'total', 'match'
+        ])
+      }))
+    },
     getFormattedForm () {
       const form = { ...this.form.data() }
 
@@ -136,6 +143,7 @@ export default {
       form.art_paths = map(form.art_paths, this.getFile)
       form.size_paths = map(form.size_paths, this.getFile)
       form.payment_voucher_paths = map(form.payment_voucher_paths, this.getFile)
+      form.clothes = this.getFormattedClothes()
 
       return form
     },
@@ -159,17 +167,19 @@ export default {
       }
     },
     async create () {
-      const data = this.getFormattedForm()
+      const input = this.getFormattedForm()
       const { clientKey } = this.$route.params
 
+      console.log(input)
+      return
+      // eslint-disable-next-line
       try {
         const { data: { orderCreate: { id } } } = await this.$apollo.mutate({
           mutation: CreateOrder,
           variables: {
             client_id: clientKey,
-            input: { ...data }
-          },
-          refetchQueries: [GetDailyCashDetailedFlow, GetDailyCashBalance]
+            input
+          }
         })
 
         this.$helpers.clearCacheFrom([
@@ -191,8 +201,6 @@ export default {
         'code',
         'discount',
         'shipping_value',
-        'seam_date',
-        'print_date',
         'delivery_date',
         'art_paths',
         'size_paths',
@@ -210,15 +218,15 @@ export default {
         : this.$helpers.toBRL(fields.shipping_value)
 
       fields.price = this.$helpers.toBRL(fields.price)
-      fields.seam_date = formatDatetime(fields.seam_date)
-      fields.print_date = formatDatetime(fields.print_date)
       fields.delivery_date = formatDatetime(fields.delivery_date)
 
       for (const field in fields) {
         this.form[field] = fields[field]
       }
 
-      this.populateClothingTypes(order.clothing_types)
+      if (order.clothing_types.length) {
+        this.populateClothingTypes(order.clothing_types)
+      }
     },
     async onSubmit () {
       this.isLoading = true
@@ -277,7 +285,7 @@ export default {
       class="mb-3"
     />
 
-    <OrderFormMoreValuesInfo
+    <OrderFormValuesFinalWrapper
       v-if="!hasClothingTypes"
       :form="form"
       class="mb-3"

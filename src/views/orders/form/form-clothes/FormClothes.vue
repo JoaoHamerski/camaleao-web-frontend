@@ -1,13 +1,10 @@
 <script>
 import { GetClothMatches } from '@/graphql/ClothMatch.gql'
 import { faTshirt, faTrashAlt } from  '@fortawesome/free-solid-svg-icons'
-import { uniqueId, cloneDeep, uniq } from 'lodash-es'
-
-import FormClothesIndNames from './FormClothesIndNames.vue';
-import FormClothesNoIndNames from './FormClothesNoIndNames.vue'
-import FormClothesOptions from './FormClothesOptions.vue';
+import { uniq, uniqueId, cloneDeep, omit } from 'lodash-es'
 
 import { form, DEFAULT_CLOTH } from '../OrderForm.vue'
+import FormClothItem from './FormClothItem.vue'
 
 export const getUniqueValues = (items, prop) => uniq(
   items.map(item => item[prop])
@@ -16,9 +13,7 @@ export const getUniqueValues = (items, prop) => uniq(
 
 export default {
   components: {
-    FormClothesIndNames,
-    FormClothesNoIndNames,
-    FormClothesOptions
+    FormClothItem
   },
   apollo: {
     clothMatches: {
@@ -27,6 +22,8 @@ export default {
   },
   data: () => ({
     form,
+    match: null,
+    activeItem: 0,
     icons: {
       faTshirt,
       faTrashAlt
@@ -34,46 +31,50 @@ export default {
     clothMatches: []
   }),
   computed: {
-    models () {
-      return getUniqueValues(this.clothMatches, 'model')
+    navItems () {
+      return this.form.clothes.map((item, index) => ({
+        text: `ITEM ${index + 1}`,
+        value: 'nav-' + item.id
+      }))
     },
     isClothMatchesLoading () {
       return !!this.$apollo.queries.clothMatches.loading
+    },
+    optionsListeners () {
+      return {
+        new: this.onNewItem,
+        duplicate: this.onDuplicateItem,
+        delete: this.onDeleteItem
+      }
     }
   },
   methods: {
-    toggleClothItem (index, value) {
-      if (index < 0) {
-        return
-      }
-
-      this.form.clothes[index].open = value
-    },
-    onNewItem (index) {
-      this.toggleClothItem(index, false)
-
+    onNewItem () {
       this.form.clothes.push({
         ...cloneDeep(DEFAULT_CLOTH),
-        id: uniqueId(),
-        open: true
+        id: uniqueId()
       })
-    },
-    onDuplicateItem (index) {
-      const duplicate = cloneDeep(this.form.clothes[index])
-      this.toggleClothItem(index, false)
 
-      this.form.clothes.push({
-        ...duplicate,
-        id: uniqueId(),
-        open: true
+      this.activeItem = this.form.clothes.length - 1
+    },
+    onDuplicateItem (indexToClone) {
+      const duplicate = cloneDeep(this.form.clothes[indexToClone])
+      const newIndex = this.form.clothes.length
+
+      this.onNewItem()
+
+      this.$nextTick(() => {
+        Object.assign(this.form.clothes[newIndex], omit(duplicate, ['id']))
       })
     },
     onDeleteItem (index) {
-      this.toggleClothItem(index - 1, true)
-
       if (this.form.clothes.length <= 1) {
         return
       }
+
+      this.activeItem = index === 0
+        ? index
+        : index - 1
 
       this.form.clothes.splice(index, 1)
     }
@@ -93,55 +94,37 @@ export default {
         Roupas
       </template>
       <template #body>
-        <template v-for="(cloth, index) in form.clothes">
-          <div
-            :key="cloth.id"
-            class="mb-2"
+        <AppNavPills
+          v-model="activeItem"
+          :items="navItems"
+          no-fill
+          tabs-style
+          header-class="small"
+        >
+          <template
+            v-for="cloth in form.clothes"
+            #[`headers.nav-${cloth.id}`]="{ item }"
           >
-            <AppContainer
-              v-model="form.clothes[index].open"
-              :color="form.clothes[index].open ? 'primary' : 'secondary'"
-              collapsible
-            >
-              <template #title>
-                <small>
-                  ITEM {{ index + 1 }}
-                </small>
-              </template>
+            <div :key="cloth.id">
+              <div>
+                {{ item.text }}
+                <span v-if="cloth.total">
+                  ({{ $helpers.toBRL(cloth.total) }})
+                </span>
+              </div>
+            </div>
+          </template>
 
-              <template #body>
-                <FormClothesOptions
-                  class="mb-3"
-                  v-bind="{ index, models, clothMatches }"
-                  @new="onNewItem"
-                  @duplicate="onDuplicateItem"
-                  @delete="onDeleteItem"
-                />
-
-                <AppContainer color="secondary">
-                  <template #title>
-                    <small>
-                      Nomes
-                      {{ form.clothes[index].individual_names ? '(individuais)' : '' }}
-                    </small>
-                  </template>
-
-                  <template #body>
-                    <FormClothesIndNames
-                      v-if="form.clothes[index].individual_names"
-                      :cloth-index="index"
-                    />
-
-                    <FormClothesNoIndNames
-                      v-else
-                      :cloth-index="index"
-                    />
-                  </template>
-                </AppContainer>
-              </template>
-            </AppContainer>
-          </div>
-        </template>
+          <template
+            v-for="(cloth, index) in form.clothes"
+            #[`nav-${cloth.id}`]
+          >
+            <FormClothItem
+              :key="cloth.id"
+              v-bind="{ index, cloth, clothMatches, optionsListeners }"
+            />
+          </template>
+        </AppNavPills>
       </template>
     </AppContainer>
   </div>

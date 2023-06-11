@@ -1,9 +1,8 @@
 <script>
-import { faPaste, faTrashAlt, faPlus } from '@fortawesome/free-solid-svg-icons';
+import { faPaste, faTrashAlt, faPlus, faSyncAlt, faExclamationCircle } from '@fortawesome/free-solid-svg-icons';
 import { form } from '../OrderForm.vue';
-import { find } from 'lodash-es';
-
 import { getUniqueValues } from './FormClothes.vue';
+import { camelCase, get, isEmpty } from 'lodash-es';
 
 export default {
   props: {
@@ -22,13 +21,17 @@ export default {
   },
   data: () => ({
     form,
+    matched: null,
+    possibleMatch: null,
     materials: [],
     neckTypes: [],
     sleeveTypes: [],
     icons: {
       faPlus,
       faPaste,
-      faTrashAlt
+      faTrashAlt,
+      faSyncAlt,
+      faExclamationCircle
     }
   }),
   computed: {
@@ -37,18 +40,122 @@ export default {
     },
     formCloth () {
       return this.form.clothes[this.index]
-    }
+    },
+  },
+  mounted () {
+    this.evaluateOptions()
+
+    this.$nextTick(() => {
+      this.evaluateOptions()
+
+      const filledFields = this.getOnlyFilledOptionsKeys()
+      if (!filledFields.length) {
+        this.materials = []
+        this.neckTypes = []
+        this.sleeveTypes = []
+      }
+    })
   },
   methods: {
-    evaluateOptions (field) {
-      const matches = this.clothMatches.filter(item => {
-        return +this.formCloth[field + '_id'] === +item[field].id
+    get,
+    getOnlyFilledOptionsKeys() {
+      const keys = [
+        'model_id',
+        'material_id',
+        'neck_type_id',
+        'sleeve_type_id'
+      ]
+
+      return keys.filter(key => !isEmpty(this.formCloth[key]))
+    },
+    compareOptions (clothMatch, keysToCompare) {
+      const keys = keysToCompare.map(key => key.replace('_id', ''))
+
+      return keys.every(
+        key => this.formCloth[`${key}_id`] === clothMatch[key].id
+      )
+    },
+    resetFormOptions () {
+      this.matched = null
+
+      this.form.set({
+        [`clothes.${this.index}.material_id`]: '',
+        [`clothes.${this.index}.neck_type_id`]: '',
+        [`clothes.${this.index}.sleeve_type_id`]: '',
       })
 
-      // Atualizar cada item filtrando
-      // cada opção que foi selecionada
+      this.form.clothes[this.index].items.forEach(item => {
+        item.size_id = ''
+      })
+    },
+    fillSelectOptions (matches) {
+      const fields = ['material', 'neck_type', 'sleeve_type']
 
-      this.materials = getUniqueValues(matches, 'material')
+      for (const field of fields) {
+        const fieldCamelPlural = camelCase(field) + 's'
+
+        this[fieldCamelPlural] = getUniqueValues(matches, field)
+      }
+    },
+    evaluateOptions (field = null) {
+      this.$emit('matched', null)
+      this.matched = null
+      this.possibleMatch = null
+
+      if (field == 'model') {
+        this.resetFormOptions()
+      }
+
+      const matches = this.clothMatches.filter(
+        clothMatch => this.compareOptions(
+          clothMatch,
+          this.getOnlyFilledOptionsKeys()
+        )
+      )
+
+      this.fillSelectOptions(matches)
+
+      if (matches.length === 1) {
+        this.possibleMatch = matches[0]
+      }
+
+      if (this.filledFieldsMatch()) {
+        this.onMatchFound()
+      }
+    },
+    onMatchFound () {
+      this.matched = this.possibleMatch
+      this.$emit('matched', this.matched)
+      this.possibleMatch = null
+    },
+    filledFieldsMatch () {
+      if (!this.possibleMatch) {
+        return false
+      }
+
+      const keys = ['model_id', 'material_id', 'neck_type_id', 'sleeve_type_id']
+
+      const keysToCompare = keys.filter(key => {
+        return !isEmpty(this.possibleMatch[key.replace('_id', '')]?.id)
+      })
+
+      return this.compareOptions(
+        this.possibleMatch,
+        keysToCompare
+      )
+    },
+    onFillWithMatchedClick () {
+      const matched = this.possibleMatch
+      const { model, material, neck_type, sleeve_type } = matched
+
+      this.form.set({
+        [`clothes.${this.index}.model_id`]: model.id || '',
+        [`clothes.${this.index}.material_id`]: material.id || '',
+        [`clothes.${this.index}.neck_type_id`]: neck_type.id || '',
+        [`clothes.${this.index}.sleeve_type_id`]: sleeve_type.id || '',
+      })
+
+      this.evaluateOptions()
     },
     onNewClick () {
       this.$emit('new', this.index)
@@ -94,6 +201,32 @@ export default {
         Deletar
       </a>
     </div>
+
+    <div class="small text-secondary mb-3">
+      <FontAwesomeIcon :icon="icons.faExclamationCircle" />
+      Ao selecionar uma opção,
+      todas opções são atualizadas para refletir as combinações possíveis,
+      clique em
+      <FontAwesomeIcon
+        :icon="icons.faSyncAlt"
+        fixed-width
+      />
+      para reseta-las
+    </div>
+
+    <div>
+      <span
+        class="link-primary clickable fw-bold small"
+        @click.prevent="evaluateOptions('model')"
+      >
+        <FontAwesomeIcon
+          :icon="icons.faSyncAlt"
+          fixed-width
+        />
+        Resetar
+      </span>
+    </div>
+
     <div
       class="row"
     >
@@ -101,12 +234,12 @@ export default {
         <AppSimpleSelect
           :id="`clothes.${index}.model_id`"
           v-model="form.clothes[index].model_id"
+          :name="`clothes.${index}.model_id`"
           :options="models"
           label-prop="name"
-          :name="`clothes.${index}.model_id`"
-          select-class="form-select-sm"
           placeholder="Selecione um modelo"
-          @input="evaluateOptions('model')"
+          :select-class="['form-select-sm', {'is-valid': matched && formCloth.model_id}]"
+          @change="evaluateOptions('model')"
         >
           Modelo
         </AppSimpleSelect>
@@ -115,12 +248,13 @@ export default {
         <AppSimpleSelect
           :id="`clothes.${index}.material_id`"
           v-model="form.clothes[index].material_id"
-          select-class="form-select-sm"
+          :disabled="!materials.length"
           :name="`clothes.${index}.material_id`"
+          :options="materials"
           label-prop="name"
           placeholder="Selecione um material"
-          :disabled="!materials.length"
-          :options="materials"
+          :select-class="['form-select-sm', {'is-valid': matched && formCloth.material_id}]"
+          @change="evaluateOptions('material')"
         >
           Material
         </AppSimpleSelect>
@@ -129,11 +263,13 @@ export default {
         <AppSimpleSelect
           :id="`clothes.${index}.neck_type_id`"
           v-model="form.clothes[index].neck_type_id"
-          select-class="form-select-sm"
+          :disabled="!neckTypes.length"
           :name="`clothes.${index}.neck_type_id`"
+          :options="neckTypes"
           label-prop="name"
           placeholder="Selecione um tipo"
-          disabled
+          :select-class="['form-select-sm', {'is-valid': matched && formCloth.neck_type_id}]"
+          @change="evaluateOptions('neck_type')"
         >
           Tipo de gola
         </AppSimpleSelect>
@@ -142,22 +278,57 @@ export default {
         <AppSimpleSelect
           :id="`clothes.${index}.sleeve_type_id`"
           v-model="form.clothes[index].sleeve_type_id"
-          select-class="form-select-sm"
+          :disabled="!sleeveTypes.length"
           :name="`clothes.${index}.sleeve_type_id`"
+          :options="sleeveTypes"
           label-prop="name"
           placeholder="Selecione um tipo"
-          disabled
+          :select-class="['form-select-sm', {'is-valid': matched && formCloth.sleeve_type_id}]"
+          @change="evaluateOptions('sleeve_type')"
         >
           Tipo de manga
         </AppSimpleSelect>
       </div>
     </div>
-
-    <AppCheckboxSwitch
-      :id="`clothes.${index}.individual_names`"
-      v-model="form.clothes[index].individual_names"
+    <div
+      v-if="possibleMatch"
+      class="col-6"
     >
-      Nomes individuais
-    </AppCheckboxSwitch>
+      <div class="small text-success fw-bold">
+        Apenas uma combinação possível (<a
+          href="#"
+          class="text-decoration-none"
+          @click.prevent="onFillWithMatchedClick"
+        >preencher</a>):
+      </div>
+      <table class="table table-sm table-bordered">
+        <tbody>
+          <tr>
+            <td class="fw-bold">
+              Modelo
+            </td>
+            <td>{{ get(possibleMatch, 'model.name', 'N/A') }}</td>
+          </tr>
+          <tr>
+            <td class="fw-bold">
+              Material
+            </td>
+            <td>{{ get(possibleMatch, 'material.name', 'N/A') }}</td>
+          </tr>
+          <tr>
+            <td class="fw-bold">
+              Tipo de gola
+            </td>
+            <td>{{ get(possibleMatch, 'neck_type.name', 'N/A') }}</td>
+          </tr>
+          <tr>
+            <td class="fw-bold">
+              Tipo de manga
+            </td>
+            <td>{{ get(possibleMatch, 'sleeve_type.name', 'N/A') }}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
   </div>
 </template>

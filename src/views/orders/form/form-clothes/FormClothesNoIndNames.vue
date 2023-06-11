@@ -2,12 +2,17 @@
 import { faTrashAlt, faPlus } from '@fortawesome/free-solid-svg-icons';
 import { form, DEFAULT_CLOTH_ITEM } from '../OrderForm.vue'
 import { maskInteger } from '@/utils/masks'
+import { isEmpty } from 'lodash-es';
 
 export default {
   props: {
     clothIndex: {
       type: Number,
       required: true
+    },
+    match: {
+      type: Object,
+      default: () => ({})
     }
   },
   data: () => ({
@@ -23,6 +28,13 @@ export default {
     }
   }),
   computed: {
+    sizes () {
+      if (isEmpty(this.match)) {
+        return []
+      }
+
+      return this.match.sizes
+    },
     isDeleteDisabled () {
       return this.form.clothes[this.clothIndex].items.length <= 1
     }
@@ -48,8 +60,11 @@ export default {
       <div class="col-3 small">
         Tamanho
       </div>
-      <div class="col-3 small">
+      <div class="col-2 small">
         Quantidade
+      </div>
+      <div class="col-3 small">
+        Total do item
       </div>
     </div>
     <div
@@ -60,15 +75,18 @@ export default {
       <div class="col-3">
         <AppSimpleSelect
           :id="`clothes.${index}.size`"
-          v-model="form.clothes[clothIndex].items[index].size"
+          v-model="form.clothes[clothIndex].items[index].size_id"
           :name="`clothes.${index}.size`"
+          :options="sizes"
+          label-prop="name"
           select-class="form-select-sm"
           placeholder="Selecione um tam."
           remove-default-margin
+          :disabled="!sizes.length"
         />
       </div>
 
-      <div class="col-3">
+      <div class="col-2">
         <AppInput
           :id="`clothes.${index}.quantity`"
           v-model="form.clothes[clothIndex].items[index].quantity"

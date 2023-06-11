@@ -1,21 +1,19 @@
 <script>
+import { form } from './OrderForm.vue'
+
 import { maskCurrencyBRL } from '@/utils/masks'
 import { GetVias } from '@/graphql/Via.gql'
 
 export default {
   props: {
-    finalValue: {
-      type: [String, Number],
-      required: true
-    },
-    form: {
-      type: Object,
-      required: true
-    },
     isEdit: {
       type: Boolean,
       default: false
-    }
+    },
+    finalValue: {
+      type: [String, Number],
+      default: ''
+    },
   },
   apollo: {
     vias: {
@@ -24,6 +22,7 @@ export default {
   },
   data () {
     return {
+      form,
       vias: [],
       hasDownPayment: false,
       maskCurrencyBRL: maskCurrencyBRL({ numeralPositiveOnly: true }),
@@ -53,29 +52,23 @@ export default {
         >
           <AppInput
             id="down_payment"
-            :value="form.down_payment"
+            v-model="form.down_payment"
             name="down_payment"
             :mask="maskCurrencyBRL"
             :error="form.errors.get('down_payment')"
             optional
-            @input="form.set({
-              down_payment: $event
-            })"
           >
             Entrada
           </AppInput>
         </div>
         <div class="col-12 col-sm">
           <AppSimpleSelect
-            :value="form.payment_via_id"
+            v-model="form.payment_via_id"
             name="payment_via_id"
             :options="vias"
             label-prop="name"
             :error="form.errors.get('payment_via_id')"
             :disabled="!hasDownPayment"
-            @input="form.set({
-              payment_via_id: $event
-            })"
           >
             Via da entrada
           </AppSimpleSelect>
@@ -86,14 +79,11 @@ export default {
       <div class="col-6 col-sm">
         <AppInput
           id="shipping_value"
-          :value="form.shipping_value"
+          v-model="form.shipping_value"
           :mask="maskCurrencyBRL"
           name="shipping_value"
           numeric
           optional
-          @input="form.set({
-            shipping_value: $event
-          })"
         >
           Frete
         </AppInput>
@@ -101,15 +91,12 @@ export default {
       <div class="col-6 col-sm">
         <AppInput
           id="discount"
-          :value="form.discount"
+          v-model="form.discount"
           :mask="maskCurrencyBRL"
           name="discount"
           :error="form.errors.get('discount')"
           optional
           numeric
-          @input="form.set({
-            discount: $event
-          })"
         >
           Desconto
         </AppInput>
