@@ -17,8 +17,6 @@ fragment OrderParts on Order {
   total_paid_non_sponsor
   total_owing
   total_clothings_value
-  print_date
-  seam_date
   delivery_date
   created_at
   closed_at
@@ -36,8 +34,6 @@ fragment OrderSimplifiedParts on Order {
   quantity
   price
   total_paid
-  seam_date
-  print_date
   delivery_date
   states
   total_owing
@@ -132,6 +128,50 @@ fragment ClothingTypesParts on Order {
   }
 }
 
+fragment GarmentsParts on Order {
+  garments {
+    id
+    match {
+      model {
+        id
+        name
+      }
+
+      material {
+        id
+        name
+      }
+
+      neck_type {
+        id
+        name
+      }
+
+      sleeve_type {
+        id
+        name
+      }
+    }
+
+    sizes {
+      id
+      name
+      pivot {
+        ... on GarmentGarmentSize {
+          id
+          quantity
+          value
+        }
+      }
+    }
+
+    quantity
+    value
+    sizes_value
+    value_per_unit
+  }
+}
+
 fragment PaymentsPart on Order {
   payments {
     id
@@ -181,6 +221,7 @@ fragment OrderType on Order {
   ...PaymentsPart
   ...NotesParts
   ...OrderConcludedStatusParts
+  ...GarmentsParts
 }
 
 query GetOrdersSimplified(

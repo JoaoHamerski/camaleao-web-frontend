@@ -2,11 +2,11 @@
 import { faEdit } from '@fortawesome/free-solid-svg-icons'
 import { getOperationName } from '@apollo/client/utilities'
 
-import ClothItemForm from './ClothItemForm.vue'
+import GarmentItemForm from './GarmentItemForm.vue'
 
 export default {
   components: {
-    ClothItemForm
+    GarmentItemForm
   },
   apollo: {
     items () {
@@ -80,7 +80,7 @@ export default {
         class="list-group-item d-flex justify-content-between align-items-center"
       >
         <template v-if="isEdit.id === _item.id">
-          <ClothItemForm
+          <GarmentItemForm
             :item="_item"
             :item-query-name="item.queryName"
             @cancel="onCancelEdit"
@@ -102,7 +102,7 @@ export default {
         v-if="newItem"
         class="list-group-item"
       >
-        <ClothItemForm
+        <GarmentItemForm
           :item-query-name="item.queryName"
           :submit="submit"
           @cancel="onCancelForm"

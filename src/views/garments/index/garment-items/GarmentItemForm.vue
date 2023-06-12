@@ -39,7 +39,7 @@ export default {
       return !isEmpty(this.item)
     },
     mask () {
-      if (this.itemQueryName === 'clothSizes') {
+      if (this.itemQueryName === 'garmentSizes') {
         return INPUT_SIZE_MASK
       }
 

@@ -3,13 +3,13 @@ import Layout from '@/views/MainLayout.vue'
 import role from '@/middleware/role'
 import roles from '@/constants/roles'
 
-const TheClothes = () => import('./index/TheClothes.vue')
+const TheGarments = () => import('./index/TheGarments.vue')
 
 const children = [
   {
-    name: 'clothes.index',
+    name: 'garments.index',
     path: '/gerenciamento/roupas',
-    component: TheClothes,
+    component: TheGarments,
     meta: {
       middleware: [role],
       roles: [roles.GERENCIA]
@@ -19,7 +19,7 @@ const children = [
 
 export default [
   {
-    name: 'clothes',
+    name: 'garments',
     path: '/',
     component: Layout,
     children

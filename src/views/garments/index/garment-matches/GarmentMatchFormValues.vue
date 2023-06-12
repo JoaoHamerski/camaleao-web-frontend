@@ -1,5 +1,5 @@
 <script>
-import { form } from './ClothMatchForm.vue'
+import { form } from './GarmentMatchForm.vue'
 import { faPlus, faTrashAlt } from '@fortawesome/free-solid-svg-icons'
 import { maskCurrencyBRL, maskInteger } from '@/utils/masks';
 import { debounce } from 'lodash-es';

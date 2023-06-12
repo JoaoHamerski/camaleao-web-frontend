@@ -1,27 +1,27 @@
 <script>
 import { form } from '../OrderForm.vue'
-import { getUniqueValues } from './FormClothes.vue';
+import { getUniqueValues } from './FormGarments.vue';
 
-import FormClothesIndNames from './FormClothesIndNames.vue';
-import FormClothesNoIndNames from './FormClothesNoIndNames.vue'
-import FormClothesOptions from './FormClothesOptions.vue';
+import FormGarmentsIndNames from './FormGarmentsIndNames.vue';
+import FormGarmentsNoIndNames from './FormGarmentsNoIndNames.vue'
+import FormGarmentsOptions from './FormGarmentsOptions.vue';
 
 export default {
   components: {
-    FormClothesIndNames,
-    FormClothesNoIndNames,
-    FormClothesOptions
+    FormGarmentsIndNames,
+    FormGarmentsNoIndNames,
+    FormGarmentsOptions
   },
   props: {
     index: {
       type: Number,
       required: true
     },
-    cloth: {
+    garment: {
       type: Object,
       default: () => ({})
     },
-    clothMatches: {
+    garmentMatches: {
       type: Array,
       default: () => []
     },
@@ -36,12 +36,12 @@ export default {
   }),
   computed: {
     models () {
-      return getUniqueValues(this.clothMatches, 'model')
+      return getUniqueValues(this.garmentMatches, 'model')
     }
   },
   methods: {
     onMatchFound (match) {
-      this.form.clothes[this.index].match = match
+      this.form.garments[this.index].match = match
       this.match = match
     }
   }
@@ -50,9 +50,9 @@ export default {
 
 <template>
   <div class="mb-2">
-    <FormClothesOptions
+    <FormGarmentsOptions
       class="mb-2"
-      v-bind="{ index, models, clothMatches }"
+      v-bind="{ index, models, garmentMatches }"
       v-on="optionsListeners"
       @matched="onMatchFound"
     />
@@ -60,8 +60,8 @@ export default {
     <template v-if="match">
       <div class="col mb-3">
         <AppCheckboxSwitch
-          :id="`clothes.${index}.individual_names`"
-          v-model="form.clothes[index].individual_names"
+          :id="`garments.${index}.individual_names`"
+          v-model="form.garments[index].individual_names"
         >
           Nomes individuais
         </AppCheckboxSwitch>
@@ -71,18 +71,18 @@ export default {
         <template #title>
           <small>
             Nomes
-            {{ cloth.individual_names ? '(individuais)' : '' }}
+            {{ garment.individual_names ? '(individuais)' : '' }}
           </small>
         </template>
         <template #body>
-          <FormClothesIndNames
-            v-if="cloth.individual_names"
-            :cloth-index="index"
+          <FormGarmentsIndNames
+            v-if="garment.individual_names"
+            :garment-index="index"
             :match="match"
           />
-          <FormClothesNoIndNames
+          <FormGarmentsNoIndNames
             v-else
-            :cloth-index="index"
+            :garment-index="index"
             :match="match"
           />
         </template>

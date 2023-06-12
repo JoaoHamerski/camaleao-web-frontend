@@ -2,7 +2,7 @@ import { GetModels, CreateModel } from '@/graphql/Model.gql'
 import { GetMaterials, CreateMaterial } from '@/graphql/Material.gql'
 import { GetNeckTypes, CreateNeckType } from '@/graphql/NeckType.gql'
 import { GetSleeveTypes, CreateSleeveType } from '@/graphql/SleeveType.gql'
-import { GetClothSizes, CreateClothSize } from '@/graphql/ClothSize.gql'
+import { GetGarmentSizes, CreateGarmentSize } from '@/graphql/GarmentSize.gql'
 
 import { getQueryName } from '@/utils/helpers'
 
@@ -49,8 +49,8 @@ export const TYPES_MAP = {
   },
   SIZES: {
     name: 'Tamanhos',
-    query: GetClothSizes,
-    createMutation: CreateClothSize,
+    query: GetGarmentSizes,
+    createMutation: CreateGarmentSize,
     get queryName () {
       return getQueryName(this.query)
     }

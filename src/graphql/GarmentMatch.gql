@@ -1,4 +1,4 @@
-fragment ClothMatchParts on ClothMatch {
+fragment GarmentMatchParts on GarmentMatch {
   id
   model {
     id
@@ -36,22 +36,24 @@ fragment ClothMatchParts on ClothMatch {
     id
     name
     pivot {
-      id
-      value
+      ... on GarmentMatchGarmentSize {
+        id
+        value
+      }
     }
   }
 
   unique_value
 }
 
-query GetClothMatches {
-  clothMatches {
-    ...ClothMatchParts
+query GetGarmentMatches {
+  garmentMatches {
+    ...GarmentMatchParts
   }
 }
 
-mutation CreateClothMatch($input: ClothMatchInput) {
-  clothMatchCreate(input: $input) {
-    ...ClothMatchParts
+mutation CreateGarmentMatch($input: GarmentMatchInput) {
+  garmentMatchCreate(input: $input) {
+    ...GarmentMatchParts
   }
 }

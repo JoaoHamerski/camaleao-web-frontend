@@ -1,24 +1,25 @@
 <script>
 import { get } from 'lodash-es';
-import { GetClothMatches } from '@/graphql/ClothMatch.gql'
+import { GetGarmentMatches } from '@/graphql/GarmentMatch.gql'
 import { faEdit, faTrashAlt } from '@fortawesome/free-solid-svg-icons';
 
 export default {
   apollo: {
-    clothMatches: {
-      query: GetClothMatches
+    garmentMatches: {
+      query: GetGarmentMatches,
+      fetchPolicy: 'no-cache'
     }
   },
   data: () => ({
-    clothMatches: [],
+    garmentMatches: [],
     icons: {
       faEdit,
       faTrashAlt
     }
   }),
   computed: {
-    isClothMatchesLoading () {
-      return !!this.$apollo.queries.clothMatches.loading
+    isGarmentMatchesLoading () {
+      return !!this.$apollo.queries.garmentMatches.loading
     },
     headers () {
       return [
@@ -39,7 +40,7 @@ export default {
 <template>
   <div class="position-relative">
     <div
-      v-if="isClothMatchesLoading"
+      v-if="isGarmentMatchesLoading"
       class="py-4"
     >
       <AppLoading />
@@ -47,7 +48,7 @@ export default {
 
     <AppTable
       :headers="headers"
-      :items="clothMatches"
+      :items="garmentMatches"
     >
       <template #[`items.matches`]="{ item }">
         <ul class="list-group small">
@@ -93,7 +94,7 @@ export default {
         <div class="list-group small">
           <div
             v-for="size in item.sizes"
-            :key="size.id"
+            :key="size.pivot.id"
             class="list-group-item"
           >
             <b>{{ size.name }}</b>: <b>{{ $helpers.toBRL(size.pivot.value, false, true) }}</b>

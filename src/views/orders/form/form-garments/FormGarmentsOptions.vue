@@ -1,7 +1,7 @@
 <script>
 import { faPaste, faTrashAlt, faPlus, faSyncAlt, faExclamationCircle } from '@fortawesome/free-solid-svg-icons';
 import { form } from '../OrderForm.vue';
-import { getUniqueValues } from './FormClothes.vue';
+import { getUniqueValues } from './FormGarments.vue';
 import { camelCase, get, isEmpty } from 'lodash-es';
 
 export default {
@@ -10,7 +10,7 @@ export default {
       type: Number,
       required: true
     },
-    clothMatches: {
+    garmentMatches: {
       type: Array,
       default: () => []
     },
@@ -36,10 +36,10 @@ export default {
   }),
   computed: {
     isDeleteDisabled () {
-      return this.form.clothes.length <= 1
+      return this.form.garments.length <= 1
     },
-    formCloth () {
-      return this.form.clothes[this.index]
+    formGarment () {
+      return this.form.garments[this.index]
     },
   },
   mounted () {
@@ -66,25 +66,25 @@ export default {
         'sleeve_type_id'
       ]
 
-      return keys.filter(key => !isEmpty(this.formCloth[key]))
+      return keys.filter(key => !isEmpty(this.formGarment[key]))
     },
-    compareOptions (clothMatch, keysToCompare) {
+    compareOptions (garmentMatch, keysToCompare) {
       const keys = keysToCompare.map(key => key.replace('_id', ''))
 
       return keys.every(
-        key => this.formCloth[`${key}_id`] === clothMatch[key].id
+        key => this.formGarment[`${key}_id`] === garmentMatch[key].id
       )
     },
     resetFormOptions () {
       this.matched = null
 
       this.form.set({
-        [`clothes.${this.index}.material_id`]: '',
-        [`clothes.${this.index}.neck_type_id`]: '',
-        [`clothes.${this.index}.sleeve_type_id`]: '',
+        [`garments.${this.index}.material_id`]: '',
+        [`garments.${this.index}.neck_type_id`]: '',
+        [`garments.${this.index}.sleeve_type_id`]: '',
       })
 
-      this.form.clothes[this.index].items.forEach(item => {
+      this.form.garments[this.index].items.forEach(item => {
         item.size_id = ''
       })
     },
@@ -106,9 +106,9 @@ export default {
         this.resetFormOptions()
       }
 
-      const matches = this.clothMatches.filter(
-        clothMatch => this.compareOptions(
-          clothMatch,
+      const matches = this.garmentMatches.filter(
+        garmentMatch => this.compareOptions(
+          garmentMatch,
           this.getOnlyFilledOptionsKeys()
         )
       )
@@ -149,10 +149,10 @@ export default {
       const { model, material, neck_type, sleeve_type } = matched
 
       this.form.set({
-        [`clothes.${this.index}.model_id`]: model.id || '',
-        [`clothes.${this.index}.material_id`]: material.id || '',
-        [`clothes.${this.index}.neck_type_id`]: neck_type.id || '',
-        [`clothes.${this.index}.sleeve_type_id`]: sleeve_type.id || '',
+        [`garments.${this.index}.model_id`]: model.id || '',
+        [`garments.${this.index}.material_id`]: material.id || '',
+        [`garments.${this.index}.neck_type_id`]: neck_type.id || '',
+        [`garments.${this.index}.sleeve_type_id`]: sleeve_type.id || '',
       })
 
       this.evaluateOptions()
@@ -232,13 +232,13 @@ export default {
     >
       <div class="col-3">
         <AppSimpleSelect
-          :id="`clothes.${index}.model_id`"
-          v-model="form.clothes[index].model_id"
-          :name="`clothes.${index}.model_id`"
+          :id="`garments.${index}.model_id`"
+          v-model="form.garments[index].model_id"
+          :name="`garments.${index}.model_id`"
           :options="models"
           label-prop="name"
           placeholder="Selecione um modelo"
-          :select-class="['form-select-sm', {'is-valid': matched && formCloth.model_id}]"
+          :select-class="['form-select-sm', {'is-valid': matched && formGarment.model_id}]"
           @change="evaluateOptions('model')"
         >
           Modelo
@@ -246,14 +246,14 @@ export default {
       </div>
       <div class="col-3">
         <AppSimpleSelect
-          :id="`clothes.${index}.material_id`"
-          v-model="form.clothes[index].material_id"
+          :id="`garments.${index}.material_id`"
+          v-model="form.garments[index].material_id"
           :disabled="!materials.length"
-          :name="`clothes.${index}.material_id`"
+          :name="`garments.${index}.material_id`"
           :options="materials"
           label-prop="name"
           placeholder="Selecione um material"
-          :select-class="['form-select-sm', {'is-valid': matched && formCloth.material_id}]"
+          :select-class="['form-select-sm', {'is-valid': matched && formGarment.material_id}]"
           @change="evaluateOptions('material')"
         >
           Material
@@ -261,14 +261,14 @@ export default {
       </div>
       <div class="col-3">
         <AppSimpleSelect
-          :id="`clothes.${index}.neck_type_id`"
-          v-model="form.clothes[index].neck_type_id"
+          :id="`garments.${index}.neck_type_id`"
+          v-model="form.garments[index].neck_type_id"
           :disabled="!neckTypes.length"
-          :name="`clothes.${index}.neck_type_id`"
+          :name="`garments.${index}.neck_type_id`"
           :options="neckTypes"
           label-prop="name"
           placeholder="Selecione um tipo"
-          :select-class="['form-select-sm', {'is-valid': matched && formCloth.neck_type_id}]"
+          :select-class="['form-select-sm', {'is-valid': matched && formGarment.neck_type_id}]"
           @change="evaluateOptions('neck_type')"
         >
           Tipo de gola
@@ -276,14 +276,14 @@ export default {
       </div>
       <div class="col-3">
         <AppSimpleSelect
-          :id="`clothes.${index}.sleeve_type_id`"
-          v-model="form.clothes[index].sleeve_type_id"
+          :id="`garments.${index}.sleeve_type_id`"
+          v-model="form.garments[index].sleeve_type_id"
           :disabled="!sleeveTypes.length"
-          :name="`clothes.${index}.sleeve_type_id`"
+          :name="`garments.${index}.sleeve_type_id`"
           :options="sleeveTypes"
           label-prop="name"
           placeholder="Selecione um tipo"
-          :select-class="['form-select-sm', {'is-valid': matched && formCloth.sleeve_type_id}]"
+          :select-class="['form-select-sm', {'is-valid': matched && formGarment.sleeve_type_id}]"
           @change="evaluateOptions('sleeve_type')"
         >
           Tipo de manga

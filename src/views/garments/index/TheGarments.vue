@@ -1,17 +1,17 @@
 <script>
 import { faTshirt, faPlus } from '@fortawesome/free-solid-svg-icons';
 
-import TheClothesHeader from './TheClothesHeader.vue'
-import TheClothesBody from './TheClothesBody.vue';
-import ClothItemModal from './cloth-items/ClothItemModal.vue';
-import ClothMatchModalNew from './cloth-matches/ClothMatchModalNew.vue';
+import TheGarmentsHeader from './TheGarmentsHeader.vue'
+import TheGarmentsBody from './TheGarmentsBody.vue';
+import GarmentItemModal from './garment-items/GarmentItemModal.vue';
+import GarmentMatchModalNew from './garment-matches/GarmentMatchModalNew.vue';
 
 export default {
   components: {
-    TheClothesHeader,
-    TheClothesBody,
-    ClothItemModal,
-    ClothMatchModalNew
+    TheGarmentsHeader,
+    TheGarmentsBody,
+    GarmentItemModal,
+    GarmentMatchModalNew
   },
   metaInfo: {
     title: 'Roupas'
@@ -45,15 +45,15 @@ export default {
 
 <template>
   <div class="my-3">
-    <ClothItemModal
+    <GarmentItemModal
       v-model="itemModal.value"
       :type="itemModal.type"
       @hidden="onModalHidden"
     />
 
-    <ClothMatchModalNew v-model="matchModalNew" />
+    <GarmentMatchModalNew v-model="matchModalNew" />
 
-    <TheClothesHeader
+    <TheGarmentsHeader
       class="mb-3"
       @open-modal-item="onItemOpen"
     />
@@ -81,7 +81,7 @@ export default {
         </h6>
       </template>
       <template #body>
-        <TheClothesBody />
+        <TheGarmentsBody />
       </template>
     </AppCard>
   </div>

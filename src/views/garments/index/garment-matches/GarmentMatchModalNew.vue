@@ -1,10 +1,10 @@
 <script>
 import { faPlus } from '@fortawesome/free-solid-svg-icons';
-import ClothMatchForm from './ClothMatchForm.vue';
+import GarmentMatchForm from './GarmentMatchForm.vue';
 
 export default {
   components: {
-    ClothMatchForm
+    GarmentMatchForm
   },
   data: () => ({
     icons: {
@@ -16,7 +16,7 @@ export default {
 
 <template>
   <AppModal
-    id="clothMatchModalNew"
+    id="garmentMatchModalNew"
     v-bind="$attrs"
     color="success"
     modal-dialog-class="modal-lg"
@@ -30,7 +30,7 @@ export default {
       Nova combinação
     </template>
     <template #body>
-      <ClothMatchForm v-if="$attrs.value" />
+      <GarmentMatchForm v-if="$attrs.value" />
     </template>
   </AppModal>
 </template>

@@ -50,7 +50,6 @@ fragment ClientParts on Client {
 fragment ClientOrdersSimplePart on Order {
   client {
     id
-
   }
 
   id
@@ -58,20 +57,18 @@ fragment ClientOrdersSimplePart on Order {
   price
   total_paid
   quantity
-  print_date
-  seam_date
   delivery_date
   states
 }
 
-query GetClients (
+query GetClients(
   $page: Int
   $where: QueryClientsWhereWhereConditions
   $hasCity: QueryClientsHasCityWhereHasConditions
   $orderBy: [QueryClientsOrderByOrderByClause!]
 ) {
-  clients (
-    first: 10,
+  clients(
+    first: 10
     page: $page
     orderBy: $orderBy
     where: $where
@@ -88,24 +85,24 @@ query GetClients (
   }
 }
 
-query GetClient ($id: ID!) {
-  client (id: $id) {
+query GetClient($id: ID!) {
+  client(id: $id) {
     ...ClientSimpleParts
   }
 }
 
-query GetClientWithOrders (
+query GetClientWithOrders(
   $id: ID!
   $orderPage: Int
   $orderWhere: ClientOrdersWhereWhereConditions
 ) {
-  client (id: $id) {
+  client(id: $id) {
     ...ClientParts
 
-    orders (
+    orders(
       first: 10
       page: $orderPage
-      orderBy: [{column: CREATED_AT order: DESC}]
+      orderBy: [{ column: CREATED_AT, order: DESC }]
       where: $orderWhere
     ) {
       paginatorInfo {
@@ -119,20 +116,20 @@ query GetClientWithOrders (
   }
 }
 
-mutation CreateClient ($input: ClientInput!) {
-  clientCreate (input: $input) {
+mutation CreateClient($input: ClientInput!) {
+  clientCreate(input: $input) {
     ...ClientParts
   }
 }
 
-mutation UpdateClient ($id: ID! $input: ClientInput!) {
-  clientUpdate (id: $id input: $input) {
+mutation UpdateClient($id: ID!, $input: ClientInput!) {
+  clientUpdate(id: $id, input: $input) {
     ...ClientParts
   }
 }
 
-mutation DeleteClient ($id: ID! $password: String!) {
-  clientDelete (id: $id password: $password) {
+mutation DeleteClient($id: ID!, $password: String!) {
+  clientDelete(id: $id, password: $password) {
     ...ClientParts
   }
 }

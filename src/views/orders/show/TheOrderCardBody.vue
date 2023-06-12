@@ -3,13 +3,13 @@ import { formatDatetime } from '@/utils/formatters'
 import roles from '@/constants/roles'
 
 import OrderReminder from './partials/OrderReminder.vue'
-import OrderClothingTypes from './partials/OrderClothingTypes.vue'
 import OrderNotes from './partials/OrderNotes.vue'
 import OrderPayments from './partials/OrderPayments.vue'
 import OrderFiles from './partials/OrderFiles.vue'
 import OrderStatusProgress from './partials/OrderStatusProgress.vue'
 import OrderActivities from './partials/OrderActivities.vue'
-
+import OrderGarments from './partials/OrderGarments.vue'
+const OrderClothingTypes = () => import('./partials/OrderClothingTypes.vue')
 
 export default {
   components: {
@@ -19,7 +19,8 @@ export default {
     OrderFiles,
     OrderReminder,
     OrderStatusProgress,
-    OrderActivities
+    OrderActivities,
+    OrderGarments
   },
   props: {
     order: {
@@ -137,6 +138,11 @@ export default {
 
     <OrderClothingTypes
       v-if="shouldShowClothingTypes"
+      :order="order"
+      class="mt-3"
+    />
+
+    <OrderGarments
       :order="order"
       class="mt-3"
     />

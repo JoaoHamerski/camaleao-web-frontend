@@ -1,12 +1,12 @@
 <script>
 import { faTrashAlt, faPlus } from '@fortawesome/free-solid-svg-icons';
-import { form, DEFAULT_CLOTH_ITEM } from '../OrderForm.vue'
+import { form, DEFAULT_GARMENT_ITEM } from '../OrderForm.vue'
 import { maskInteger } from '@/utils/masks'
 import { isEmpty } from 'lodash-es';
 
 export default {
   props: {
-    clothIndex: {
+    garmentIndex: {
       type: Number,
       required: true
     },
@@ -36,19 +36,19 @@ export default {
       return this.match.sizes
     },
     isDeleteDisabled () {
-      return this.form.clothes[this.clothIndex].items.length <= 1
+      return this.form.garments[this.garmentIndex].items.length <= 1
     }
   },
   methods: {
     newItem () {
-      this.form.clothes[this.clothIndex].items.push({...DEFAULT_CLOTH_ITEM})
+      this.form.garments[this.garmentIndex].items.push({...DEFAULT_GARMENT_ITEM})
     },
     deleteItem (index) {
       if (this.isDeleteDisabled) {
         return
       }
 
-      this.form.clothes[this.clothIndex].items.splice(index, 1)
+      this.form.garments[this.garmentIndex].items.splice(index, 1)
     }
   }
 }
@@ -68,15 +68,15 @@ export default {
       </div>
     </div>
     <div
-      v-for="(_, index) in form.clothes[clothIndex].items"
+      v-for="(_, index) in form.garments[garmentIndex].items"
       :key="index"
       class="row mb-2"
     >
       <div class="col-3">
         <AppSimpleSelect
-          :id="`clothes.${index}.size`"
-          v-model="form.clothes[clothIndex].items[index].size_id"
-          :name="`clothes.${index}.size`"
+          :id="`garments.${index}.size`"
+          v-model="form.garments[garmentIndex].items[index].size_id"
+          :name="`garments.${index}.size`"
           :options="sizes"
           label-prop="name"
           select-class="form-select-sm"
@@ -88,9 +88,9 @@ export default {
 
       <div class="col-2">
         <AppInput
-          :id="`clothes.${index}.quantity`"
-          v-model="form.clothes[clothIndex].items[index].quantity"
-          :name="`clothes.${index}.quantity`"
+          :id="`garments.${index}.quantity`"
+          v-model="form.garments[garmentIndex].items[index].quantity"
+          :name="`garments.${index}.quantity`"
           input-class="form-control-sm"
           :default-margin="false"
           :mask="maskInteger"

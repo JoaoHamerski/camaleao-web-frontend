@@ -13,22 +13,22 @@ import OrderFormClient from './OrderFormClient.vue'
 import OrderFormBasicInfo from './OrderFormBasicInfo.vue'
 import OrderFormDates from './OrderFormDates.vue'
 import OrderFormFiles from './OrderFormFiles.vue'
-import FormClothes from './form-clothes/FormClothes.vue'
+import FormGarments from './form-garments/FormGarments.vue'
 import OrderFormValuesFinalWrapper from './OrderFormValuesFinalWrapper.vue'
 
 const OrderFormClothingTypes = () => import('./OrderFormClothingTypes.vue')
 
 const NUMBER_OF_QUERIES = 1
 
-export const DEFAULT_CLOTH_INDIVIDUAL_ITEM = {
+export const DEFAULT_GARMENT_INDIVIDUAL_ITEM = {
   name: '', size_id: '', number: ''
 }
 
-export const DEFAULT_CLOTH_ITEM = {
+export const DEFAULT_GARMENT_ITEM = {
    size_id: '', quantity: '',
 }
 
-export const DEFAULT_CLOTH = {
+export const DEFAULT_GARMENT = {
   id: uniqueId(),
   open: true,
   individual_names: false,
@@ -36,8 +36,8 @@ export const DEFAULT_CLOTH = {
   material_id: '',
   neck_type_id: '',
   sleeve_type_id: '',
-  items: [{ ...DEFAULT_CLOTH_ITEM }],
-  items_individual: [{ ...DEFAULT_CLOTH_INDIVIDUAL_ITEM }],
+  items: [{ ...DEFAULT_GARMENT_ITEM }],
+  items_individual: [{ ...DEFAULT_GARMENT_INDIVIDUAL_ITEM }],
   match: null,
   total: ''
 }
@@ -55,7 +55,7 @@ export const form = Vue.observable(new Form({
   art_paths: [],
   size_paths: [],
   payment_voucher_paths: [],
-  clothes: [{...cloneDeep(DEFAULT_CLOTH)}],
+  garments: [{...cloneDeep(DEFAULT_GARMENT)}],
 }))
 
 export default {
@@ -65,8 +65,8 @@ export default {
     OrderFormClothingTypes,
     OrderFormDates,
     OrderFormFiles,
-    FormClothes,
-    OrderFormValuesFinalWrapper
+    OrderFormValuesFinalWrapper,
+    FormGarments,
   },
   apollo: {
     clothingTypes: {
@@ -129,9 +129,9 @@ export default {
     getFile (item) {
       return item.base64 || item
     },
-    getFormattedClothes () {
-      return this.form.clothes.map(cloth => ({
-        ...omit(cloth, [
+    getFormattedGarments () {
+      return this.form.garments.map(garment => ({
+        ...omit(garment, [
           'id', 'open', 'total', 'match'
         ])
       }))
@@ -143,7 +143,7 @@ export default {
       form.art_paths = map(form.art_paths, this.getFile)
       form.size_paths = map(form.size_paths, this.getFile)
       form.payment_voucher_paths = map(form.payment_voucher_paths, this.getFile)
-      form.clothes = this.getFormattedClothes()
+      form.garments = this.getFormattedGarments()
 
       return form
     },
@@ -170,9 +170,6 @@ export default {
       const input = this.getFormattedForm()
       const { clientKey } = this.$route.params
 
-      console.log(input)
-      return
-      // eslint-disable-next-line
       try {
         const { data: { orderCreate: { id } } } = await this.$apollo.mutate({
           mutation: CreateOrder,
@@ -229,7 +226,7 @@ export default {
       }
     },
     async onSubmit () {
-      this.isLoading = true
+      // this.isLoading = true
 
       if (this.isEdit) {
         await this.update()
@@ -280,7 +277,7 @@ export default {
       class="mb-3"
     />
 
-    <FormClothes
+    <FormGarments
       :form="form"
       class="mb-3"
     />

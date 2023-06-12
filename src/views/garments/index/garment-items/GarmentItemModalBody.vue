@@ -1,11 +1,11 @@
 <script>
 import { faPlus } from '@fortawesome/free-solid-svg-icons'
 
-import ClothItemBodyItems from './ClothItemModalItems.vue'
+import GarmentItemModalItems from './GarmentItemModalItems.vue'
 
 export default {
   components: {
-    ClothItemBodyItems
+    GarmentItemModalItems
   },
   props: {
     item: {
@@ -44,7 +44,7 @@ export default {
       </AppButton>
     </div>
 
-    <ClothItemBodyItems
+    <GarmentItemModalItems
       class="my-3"
       :item="item"
       :new-item="newItem"

@@ -1,5 +1,5 @@
 <script>
-import { form } from './ClothMatchForm.vue'
+import { form } from './GarmentMatchForm.vue'
 
 export default {
   data: () => ({

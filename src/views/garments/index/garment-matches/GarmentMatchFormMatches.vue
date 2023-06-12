@@ -1,5 +1,5 @@
 <script>
-import { form } from './ClothMatchForm.vue'
+import { form } from './GarmentMatchForm.vue'
 
 import { GetModels } from '@/graphql/Model.gql'
 import { GetMaterials } from '@/graphql/Material.gql'

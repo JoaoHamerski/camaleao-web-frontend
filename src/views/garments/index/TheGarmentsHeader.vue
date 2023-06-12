@@ -1,6 +1,6 @@
 <script>
 import { faFileAlt } from '@fortawesome/free-solid-svg-icons';
-import { TYPES_ENUM } from './cloth-items/cloth-items-type'
+import { TYPES_ENUM } from './garment-items/garment-items-type'
 
 export default {
   data: () => ({

@@ -8,32 +8,32 @@ import OrderFormValuesFinal from './OrderFormValuesFinal.vue'
 const validIndividualItems = (item) => item.size_id
 const validItems = (item) => item.size_id && item.quantity
 
-const validCloth = (cloth) => {
-  if (!cloth.match) {
+const validGarment = (garment) => {
+  if (!garment.match) {
     return false
   }
 
-  return cloth.individual_names
-    ? cloth.items_individual.some(validIndividualItems)
-    : cloth.items.some(validItems)
+  return garment.individual_names
+    ? garment.items_individual.some(validIndividualItems)
+    : garment.items.some(validItems)
 }
 
-const getExtraSizeValues = (cloth) => {
-  const match = cloth.match
+const getExtraSizeValues = (garment) => {
+  const match = garment.match
   const sizes = match.sizes
 
-  if (!cloth.individual_names) {
-    return cloth.items.reduce((total, item) => {
+  if (!garment.individual_names) {
+    return garment.items.reduce((total, item) => {
       const size = sizes.find(size => size.id === item.size_id)
 
       return +(+(size?.pivot?.value || 0) * +item.quantity).toFixed(2) + +total
     }, 0)
   }
 
-  return cloth.items_individual.reduce((total, item) => {
+  return garment.items_individual.reduce((total, item) => {
     const size = sizes.find(size => size.id === item.size_id)
 
-    return (size.pivot.value + total).toFixed(2)
+    return +(+(size?.pivot?.value || 0) + total).toFixed(2)
   }, 0)
 }
 
@@ -47,25 +47,25 @@ const findValuePerUnit = (match, quantity) => {
   return +value.value
 }
 
-const getClothQuantity = (cloth) => {
-  if (cloth.individual_names) {
-    const items = cloth.items_individual.filter(validIndividualItems)
+const getClothQuantity = (garment) => {
+  if (garment.individual_names) {
+    const items = garment.items_individual.filter(validIndividualItems)
     return items.length
   }
 
-  const items = cloth.items.filter(validItems)
+  const items = garment.items.filter(validItems)
 
   return sumBy(items, (item) => +item.quantity)
 }
 
-const getClothTotalValue = (cloth) => {
-  if (!validCloth(cloth)) {
+const getClothTotalValue = (garment) => {
+  if (!validGarment(garment)) {
     return 0
   }
 
-  const quantity = getClothQuantity(cloth)
-  const value = findValuePerUnit(cloth.match, quantity)
-  const extraSizeValues = getExtraSizeValues(cloth)
+  const quantity = getClothQuantity(garment)
+  const value = findValuePerUnit(garment.match, quantity)
+  const extraSizeValues = getExtraSizeValues(garment)
   const totalCloth = (+quantity * +value).toFixed(2)
   const totalValue = (+totalCloth + +extraSizeValues).toFixed(2)
 
@@ -81,31 +81,31 @@ export default {
     icons: {
       faFileInvoiceDollar
     },
-    totalClothesValue: ''
+    totalGarmentsValue: ''
   }),
   computed: {
     finalValue () {
       const discount = this.$helpers.unformatCurrencyBRL(this.form.discount)
       const shippingValue = this.$helpers.unformatCurrencyBRL(this.form.shipping_value)
-      const total = (+this.totalClothesValue + +shippingValue).toFixed(2)
+      const total = (+this.totalGarmentsValue + +shippingValue).toFixed(2)
 
       return this.$helpers.toBRL((+total - +discount).toFixed(2))
     },
-    clothes () {
-      return this.form.clothes
+    garments () {
+      return this.form.garments
     }
   },
   watch: {
     form: {
       handler () {
-        const result = this.clothes.reduce((total, cloth) => {
-            const clothTotal = getClothTotalValue(cloth)
-            cloth.total = clothTotal
+        const result = this.garments.reduce((total, garment) => {
+            const clothTotal = getClothTotalValue(garment)
+            garment.total = clothTotal
 
             return (+clothTotal + +total).toFixed(2)
         }, 0)
 
-        this.totalClothesValue = result
+        this.totalGarmentsValue = result
       },
       deep: true
     }

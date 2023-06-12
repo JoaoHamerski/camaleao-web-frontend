@@ -12,7 +12,6 @@ import {
   faCog,
   faCity,
   faBuilding,
-  faTshirt,
   faUser,
   faListAlt,
   faSignOutAlt,
@@ -156,7 +155,7 @@ const ITEMS = {
         this.USUARIOS,
         this.CIDADES,
         this.FILIAIS,
-        this.TIPOS_DE_ROUPAS,
+        this.FORMULARIO_DE_PEDIDO,
         this.STATUS,
         this.SETORES,
         this.ENTRADAS_BANCARIAS
@@ -180,10 +179,10 @@ const ITEMS = {
       route: { name: 'branches.index' },
       condition: () => canView(ROLES.GERENCIA)
     },
-    TIPOS_DE_ROUPAS: {
+    FORMULARIO_DE_PEDIDO: {
       title: 'Formulário de pedido',
       icon: faFileAlt,
-      route: { name: 'clothes.index' },
+      route: { name: 'garments.index' },
       condition: () => canView(ROLES.GERENCIA),
       style: {
         fontSize: '.85rem'

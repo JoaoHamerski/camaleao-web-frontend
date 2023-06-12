@@ -1,23 +1,25 @@
 <script>
-import { GetClothMatches } from '@/graphql/ClothMatch.gql'
+import { GetGarmentMatches } from '@/graphql/GarmentMatch.gql'
 import { faTshirt, faTrashAlt } from  '@fortawesome/free-solid-svg-icons'
-import { uniq, uniqueId, cloneDeep, omit } from 'lodash-es'
+import { uniqBy, uniqueId, cloneDeep, omit } from 'lodash-es'
 
-import { form, DEFAULT_CLOTH } from '../OrderForm.vue'
-import FormClothItem from './FormClothItem.vue'
+import { form, DEFAULT_GARMENT } from '../OrderForm.vue'
+import FormGarmentsItem from './FormGarmentsItem.vue'
 
-export const getUniqueValues = (items, prop) => uniq(
+export const getUniqueValues = (items, prop) => uniqBy(
   items.map(item => item[prop])
-    .filter(item => item !== null)
+    .filter(item => item !== null),
+    'id'
 )
 
 export default {
   components: {
-    FormClothItem
+    FormGarmentsItem
   },
   apollo: {
-    clothMatches: {
-      query: GetClothMatches
+    garmentMatches: {
+      query: GetGarmentMatches,
+      fetchPolicy: 'no-cache'
     }
   },
   data: () => ({
@@ -28,17 +30,17 @@ export default {
       faTshirt,
       faTrashAlt
     },
-    clothMatches: []
+    garmentMatches: []
   }),
   computed: {
     navItems () {
-      return this.form.clothes.map((item, index) => ({
+      return this.form.garments.map((item, index) => ({
         text: `ITEM ${index + 1}`,
         value: 'nav-' + item.id
       }))
     },
     isClothMatchesLoading () {
-      return !!this.$apollo.queries.clothMatches.loading
+      return !!this.$apollo.queries.garmentMatches.loading
     },
     optionsListeners () {
       return {
@@ -50,25 +52,25 @@ export default {
   },
   methods: {
     onNewItem () {
-      this.form.clothes.push({
-        ...cloneDeep(DEFAULT_CLOTH),
+      this.form.garments.push({
+        ...cloneDeep(DEFAULT_GARMENT),
         id: uniqueId()
       })
 
-      this.activeItem = this.form.clothes.length - 1
+      this.activeItem = this.form.garments.length - 1
     },
     onDuplicateItem (indexToClone) {
-      const duplicate = cloneDeep(this.form.clothes[indexToClone])
-      const newIndex = this.form.clothes.length
+      const duplicate = cloneDeep(this.form.garments[indexToClone])
+      const newIndex = this.form.garments.length
 
       this.onNewItem()
 
       this.$nextTick(() => {
-        Object.assign(this.form.clothes[newIndex], omit(duplicate, ['id']))
+        Object.assign(this.form.garments[newIndex], omit(duplicate, ['id']))
       })
     },
     onDeleteItem (index) {
-      if (this.form.clothes.length <= 1) {
+      if (this.form.garments.length <= 1) {
         return
       }
 
@@ -76,7 +78,7 @@ export default {
         ? index
         : index - 1
 
-      this.form.clothes.splice(index, 1)
+      this.form.garments.splice(index, 1)
     }
   }
 }
@@ -102,7 +104,7 @@ export default {
           header-class="small"
         >
           <template
-            v-for="cloth in form.clothes"
+            v-for="cloth in form.garments"
             #[`headers.nav-${cloth.id}`]="{ item }"
           >
             <div :key="cloth.id">
@@ -116,12 +118,12 @@ export default {
           </template>
 
           <template
-            v-for="(cloth, index) in form.clothes"
+            v-for="(cloth, index) in form.garments"
             #[`nav-${cloth.id}`]
           >
-            <FormClothItem
+            <FormGarmentsItem
               :key="cloth.id"
-              v-bind="{ index, cloth, clothMatches, optionsListeners }"
+              v-bind="{ index, cloth, garmentMatches, optionsListeners }"
             />
           </template>
         </AppNavPills>

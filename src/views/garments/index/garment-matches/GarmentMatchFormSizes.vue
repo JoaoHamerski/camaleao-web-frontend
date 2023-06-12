@@ -1,15 +1,15 @@
 <script>
 import { faQuestionCircle } from '@fortawesome/free-solid-svg-icons'
-import { GetClothSizes } from '@/graphql/ClothSize.gql'
-import { form } from './ClothMatchForm.vue'
+import { GetGarmentSizes } from '@/graphql/GarmentSize.gql'
+import { form } from './GarmentMatchForm.vue'
 import { maskCurrencyBRL } from '@/utils/masks'
 
 export default {
   apollo: {
-    clothSizes: {
-      query: GetClothSizes,
+    garmentSizes: {
+      query: GetGarmentSizes,
       result ({ data }) {
-        const sizes = data.clothSizes.map(({ id, name }) => ({
+        const sizes = data.garmentSizes.map(({ id, name }) => ({
           id,
           name,
           value: 'R$ ',
@@ -26,11 +26,11 @@ export default {
       faQuestionCircle
     },
     form,
-    clothSizes: []
+    garmentSizes: []
   }),
   computed: {
-    isClothSizesLoading () {
-      return !!this.$apollo.queries.clothSizes.loading
+    isGarmentSizesLoading () {
+      return !!this.$apollo.queries.garmentSizes.loading
     }
   }
 }
@@ -58,7 +58,7 @@ export default {
     </div>
 
     <div
-      v-if="isClothSizesLoading"
+      v-if="isGarmentSizesLoading"
       class="py-5"
     >
       <AppLoading />

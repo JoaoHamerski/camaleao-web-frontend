@@ -1,12 +1,12 @@
 <script>
 import { isEmpty } from 'lodash-es'
-import { TYPES_MAP } from './cloth-items-type'
+import { TYPES_MAP } from './garment-items-type'
 
-import ClothItemModalBody from './ClothItemModalBody.vue'
+import GarmentItemModalBody from './GarmentItemModalBody.vue'
 
 export default {
   components: {
-    ClothItemModalBody
+    GarmentItemModalBody
   },
   props: {
     type: {
@@ -31,7 +31,7 @@ export default {
 
 <template>
   <AppModal
-    id="clothItemModal"
+    id="garmentItemModal"
     v-bind="$attrs"
     v-on="$listeners"
   >
@@ -43,7 +43,7 @@ export default {
     </template>
 
     <template #body>
-      <ClothItemModalBody
+      <GarmentItemModalBody
         v-if="!isEmpty(item)"
         :item="item"
       />

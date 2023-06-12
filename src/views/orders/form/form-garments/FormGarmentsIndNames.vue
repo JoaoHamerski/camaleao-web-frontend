@@ -1,12 +1,12 @@
 <script>
 import { faPlus, faTrashAlt } from '@fortawesome/free-solid-svg-icons';
 import { maskInteger } from '@/utils/masks';
-import { form, DEFAULT_CLOTH_INDIVIDUAL_ITEM } from '../OrderForm.vue'
+import { form, DEFAULT_GARMENT_INDIVIDUAL_ITEM } from '../OrderForm.vue'
 import { isEmpty } from 'lodash-es';
 
 export default {
   props: {
-    clothIndex: {
+    garmentIndex: {
       type: Number,
       required: true,
     },
@@ -36,13 +36,13 @@ export default {
       return this.match.sizes
     },
     isDeleteDisabled () {
-      return this.form.clothes[this.clothIndex].items_individual.length <= 1
+      return this.form.garments[this.garmentIndex].items_individual.length <= 1
     }
   },
   methods: {
     newIndividualNameItem () {
-      this.form.clothes[this.clothIndex].items_individual.push({
-        ...DEFAULT_CLOTH_INDIVIDUAL_ITEM
+      this.form.garments[this.garmentIndex].items_individual.push({
+        ...DEFAULT_GARMENT_INDIVIDUAL_ITEM
       })
     },
     deleteIndividualNameItem (index) {
@@ -50,7 +50,7 @@ export default {
         return
       }
 
-      this.form.clothes[this.clothIndex].items_individual.splice(index, 1)
+      this.form.garments[this.garmentIndex].items_individual.splice(index, 1)
     }
   }
 }
@@ -71,15 +71,15 @@ export default {
     </div>
 
     <div
-      v-for="(_, index) in form.clothes[clothIndex].items_individual"
+      v-for="(_, index) in form.garments[garmentIndex].items_individual"
       :key="index"
       class="row align-items-end mb-2"
     >
       <div class="col-4">
         <AppInput
-          :id="`clothes.${index}.name`"
-          v-model="form.clothes[clothIndex].items_individual[index].name"
-          :name="`clothes.${index}.name`"
+          :id="`garments.${index}.name`"
+          v-model="form.garments[garmentIndex].items_individual[index].name"
+          :name="`garments.${index}.name`"
           input-class="form-control-sm"
           placeholder="Digite o nome..."
           :default-margin="false"
@@ -88,9 +88,9 @@ export default {
 
       <div class="col-3">
         <AppSimpleSelect
-          :id="`clothes.${index}.size`"
-          v-model="form.clothes[clothIndex].items_individual[index].size_id"
-          :name="`clothes.${index}.size`"
+          :id="`garments.${index}.size`"
+          v-model="form.garments[garmentIndex].items_individual[index].size_id"
+          :name="`garments.${index}.size`"
           :options="sizes"
           label-prop="name"
           select-class="form-select-sm"
@@ -102,9 +102,9 @@ export default {
 
       <div class="col-3 align-self-end">
         <AppInput
-          :id="`clothes.${index}.number`"
-          v-model="form.clothes[clothIndex].items_individual[index].number"
-          :name="`clothes.${index}.number`"
+          :id="`garments.${index}.number`"
+          v-model="form.garments[garmentIndex].items_individual[index].number"
+          :name="`garments.${index}.number`"
           input-class="form-control-sm"
           :default-margin="false"
           placeholder="Digite o núm..."

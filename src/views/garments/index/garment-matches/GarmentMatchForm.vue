@@ -2,12 +2,12 @@
 import Form from '@/utils/Form'
 import Vue from 'vue'
 import { maskCurrencyBRL,  } from '@/utils/masks'
-import { CreateClothMatch } from '@/graphql/ClothMatch.gql'
+import { CreateGarmentMatch } from '@/graphql/GarmentMatch.gql'
 
-import ClothMatchFormValues from './ClothMatchFormValues.vue'
-import ClothMatchFormMatches from './ClothMatchFormMatches.vue'
-import ClothMatchFormSizes from './ClothMatchFormSizes.vue'
-import ClothMatchFormUniqueValue from './ClothMatchFormUniqueValue.vue'
+import GarmentMatchFormValues from './GarmentMatchFormValues.vue'
+import GarmentMatchFormMatches from './GarmentMatchFormMatches.vue'
+import GarmentMatchFormSizes from './GarmentMatchFormSizes.vue'
+import GarmentMatchFormUniqueValue from './GarmentMatchFormUniqueValue.vue'
 import { handleError } from '@/utils/forms'
 
 export const form = Vue.observable(new Form({
@@ -26,10 +26,10 @@ export const form = Vue.observable(new Form({
 
 export default {
   components: {
-    ClothMatchFormValues,
-    ClothMatchFormMatches,
-    ClothMatchFormSizes,
-    ClothMatchFormUniqueValue
+    GarmentMatchFormValues,
+    GarmentMatchFormMatches,
+    GarmentMatchFormSizes,
+    GarmentMatchFormUniqueValue
   },
   data: () => ({
     maskCurrencyBRL: maskCurrencyBRL(),
@@ -39,7 +39,7 @@ export default {
   methods: {
     async store (input) {
       await this.$apollo.mutate({
-        mutation: CreateClothMatch,
+        mutation: CreateGarmentMatch,
         variables: { input }
       })
     },
@@ -69,7 +69,7 @@ export default {
         Combinação
       </template>
       <template #body>
-        <ClothMatchFormMatches />
+        <GarmentMatchFormMatches />
       </template>
     </AppContainer>
 
@@ -87,8 +87,8 @@ export default {
             Valor único
           </AppCheckboxSwitch>
 
-          <ClothMatchFormValues v-if="!form.is_unique_value" />
-          <ClothMatchFormUniqueValue v-else />
+          <GarmentMatchFormValues v-if="!form.is_unique_value" />
+          <GarmentMatchFormUniqueValue v-else />
         </div>
       </template>
     </AppContainer>
@@ -98,7 +98,7 @@ export default {
         Tamanhos
       </template>
       <template #body>
-        <ClothMatchFormSizes />
+        <GarmentMatchFormSizes />
       </template>
     </AppContainer>
 
