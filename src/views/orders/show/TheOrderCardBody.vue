@@ -114,13 +114,13 @@ export default {
         </div>
 
         <div class="mt-3 d-flex flex-column flex-sm-row justify-content-between">
-          <div>
+          <div v-if="order.print_date">
             <b class="small text-secondary">Data de estampa</b>
             <div>
               {{ $helpers.fallback(formatDatetime(order.print_date)) }}
             </div>
           </div>
-          <div>
+          <div v-if="order.seam_date">
             <b class="small text-secondary">Data de costura</b>
             <div>
               {{ $helpers.fallback(formatDatetime(order.seam_date)) }}

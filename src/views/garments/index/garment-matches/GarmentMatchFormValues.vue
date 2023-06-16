@@ -2,7 +2,7 @@
 import { form } from './GarmentMatchForm.vue'
 import { faPlus, faTrashAlt } from '@fortawesome/free-solid-svg-icons'
 import { maskCurrencyBRL, maskInteger } from '@/utils/masks';
-import { debounce } from 'lodash-es';
+import { debounce, isEmpty } from 'lodash-es';
 
 const isFirstItem = (index) => index === 0
 const isLastItem = (values, index) => index === values.length - 1
@@ -32,6 +32,12 @@ const isFirstItemValid = (value, index) => {
 }
 
 export default {
+  props: {
+    match: {
+      type: Object,
+      default: () => ({})
+    }
+  },
   data: () => ({
     maskCurrencyBRL: maskCurrencyBRL({numeralPositiveOnly: true}),
     maskInteger: maskInteger({
@@ -53,7 +59,22 @@ export default {
       deep: true
     }
   },
+  mounted () {
+    if (!isEmpty(this.match)) {
+      this.populateForm()
+    }
+  },
   methods: {
+    populateForm() {
+      const values = this.match.values
+      const formattedValues = values.map(({start, end, value}) => ({
+        start,
+        end,
+        value: this.$helpers.toBRL(value)
+      }))
+
+      this.form.values = formattedValues
+    },
     getStartValue(index) {
       const previousValue = getPreviousValue(this.form.values, index)
 

@@ -1,14 +1,13 @@
 <script>
-import { form } from '../OrderForm.vue'
 import { getUniqueValues } from './FormGarments.vue';
 
-import FormGarmentsIndNames from './FormGarmentsIndNames.vue';
+// import FormGarmentsIndNames from './FormGarmentsIndNames.vue';
 import FormGarmentsNoIndNames from './FormGarmentsNoIndNames.vue'
 import FormGarmentsOptions from './FormGarmentsOptions.vue';
 
 export default {
   components: {
-    FormGarmentsIndNames,
+    // FormGarmentsIndNames,
     FormGarmentsNoIndNames,
     FormGarmentsOptions
   },
@@ -28,10 +27,17 @@ export default {
     optionsListeners:{
       type: Object,
       default: () => ({})
+    },
+    order: {
+      type: Object,
+      default: () => ({})
+    },
+    form: {
+      type: Object,
+      required: true
     }
   },
   data: () => ({
-    form,
     match: null
   }),
   computed: {
@@ -40,9 +46,17 @@ export default {
     }
   },
   methods: {
+    onNewGarmentSize (event) {
+      this.$emit('new-garment-size', event)
+    },
+    onDeleteGarmentSize(event) {
+      this.$emit('delete-garment-size', event)
+    },
     onMatchFound (match) {
-      this.form.garments[this.index].match = match
       this.match = match
+      this.form.set({
+        [`garments[${this.index}].match`]: match
+      })
     }
   }
 }
@@ -52,7 +66,7 @@ export default {
   <div class="mb-2">
     <FormGarmentsOptions
       class="mb-2"
-      v-bind="{ index, models, garmentMatches }"
+      v-bind="{ index, models, garmentMatches, order, form }"
       v-on="optionsListeners"
       @matched="onMatchFound"
     />
@@ -61,7 +75,10 @@ export default {
       <div class="col mb-3">
         <AppCheckboxSwitch
           :id="`garments.${index}.individual_names`"
-          v-model="form.garments[index].individual_names"
+          :value="form.garments[index].individual_names"
+          @input="form.set({
+            [`garments[${index}].individual_names`]: $event
+          })"
         >
           Nomes individuais
         </AppCheckboxSwitch>
@@ -75,15 +92,14 @@ export default {
           </small>
         </template>
         <template #body>
-          <FormGarmentsIndNames
+          <!-- <FormGarmentsIndNames
             v-if="garment.individual_names"
-            :garment-index="index"
-            :match="match"
-          />
+            v-bind="{garmentIndex: index, match, form}"
+          /> -->
           <FormGarmentsNoIndNames
-            v-else
-            :garment-index="index"
-            :match="match"
+            v-bind="{garmentIndex: index, match, form}"
+            @delete-garment-size="onDeleteGarmentSize"
+            @new-garment-size="onNewGarmentSize"
           />
         </template>
       </AppContainer>

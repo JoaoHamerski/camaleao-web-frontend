@@ -3,6 +3,7 @@ import { faQuestionCircle } from '@fortawesome/free-solid-svg-icons'
 import { GetGarmentSizes } from '@/graphql/GarmentSize.gql'
 import { form } from './GarmentMatchForm.vue'
 import { maskCurrencyBRL } from '@/utils/masks'
+import { isEmpty } from 'lodash-es'
 
 export default {
   apollo: {
@@ -17,8 +18,18 @@ export default {
         }))
 
         form.sizes = [...sizes]
+
+        if (!isEmpty(this.match)) {
+          this.populateForm()
+        }
       }
     },
+  },
+  props: {
+    match: {
+      type: Object,
+      default: () => ({})
+    }
   },
   data: () => ({
     maskCurrencyBRL: maskCurrencyBRL(),
@@ -30,7 +41,22 @@ export default {
   }),
   computed: {
     isGarmentSizesLoading () {
-      return !!this.$apollo.queries.garmentSizes.loading
+      return !!this.$apollo.loading
+    }
+  },
+  methods: {
+    populateForm () {
+      const sizes = this.match.sizes
+      const sizesIds = this.match.sizes.map(({id}) => id)
+
+      this.form.sizes.forEach(size => {
+        const value = sizes.find(({ id }) => id === size.id)?.pivot?.value
+
+        Object.assign(size, {
+          value: value ? this.$helpers.toBRL(value) : 'R$ ',
+          is_shown: sizesIds.includes(size.id)
+        })
+      })
     }
   }
 }
@@ -38,6 +64,9 @@ export default {
 
 <template>
   <div class="position-relative">
+    <div class="small text-secondary mb-2">
+      Escolha como os tamanhos irão aparecer quando essa combinação for selecionada
+    </div>
     <div class="row small fw-bold">
       <div class="col-3">
         Tamanho

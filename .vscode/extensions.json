@@ -1,6 +1,5 @@
 {
     "recommendations": [
-        "vue.vscode-typescript-vue-plugin",
         "dbaeumer.vscode-eslint",
         "kumar-harsh.graphql-for-vscode",
         "streetsidesoftware.code-spell-checker",

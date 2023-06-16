@@ -45,7 +45,8 @@ export default {
           id: orderKey,
           client_id: clientKey
         }
-      }
+      },
+      fetchPolicy: 'no-cache'
     }
   },
   data () {
@@ -129,7 +130,7 @@ export default {
 
         <OrderForm
           v-if="!isEmpty(order)"
-          v-bind="{isEdit: true, order, isOrderPreRegistered}"
+          v-bind="{order, isOrderPreRegistered}"
           @success="onSuccess"
         />
         <div

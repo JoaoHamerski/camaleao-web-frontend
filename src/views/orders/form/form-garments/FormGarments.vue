@@ -1,9 +1,8 @@
 <script>
 import { GetGarmentMatches } from '@/graphql/GarmentMatch.gql'
 import { faTshirt, faTrashAlt } from  '@fortawesome/free-solid-svg-icons'
-import { uniqBy, uniqueId, cloneDeep, omit } from 'lodash-es'
+import { uniqBy } from 'lodash-es'
 
-import { form, DEFAULT_GARMENT } from '../OrderForm.vue'
 import FormGarmentsItem from './FormGarmentsItem.vue'
 
 export const getUniqueValues = (items, prop) => uniqBy(
@@ -16,14 +15,34 @@ export default {
   components: {
     FormGarmentsItem
   },
+  props: {
+    order: {
+      type: Object,
+      default: () => ({})
+    },
+    isEdit: {
+      type: Boolean,
+      default: false
+    },
+    form: {
+      type: Object,
+      required: true
+    }
+  },
   apollo: {
     garmentMatches: {
       query: GetGarmentMatches,
-      fetchPolicy: 'no-cache'
+      fetchPolicy: 'no-cache',
+      async result () {
+        await this.$nextTick()
+
+        if (this.isEdit) {
+          this.populateForm()
+        }
+      }
     }
   },
   data: () => ({
-    form,
     match: null,
     activeItem: 0,
     icons: {
@@ -44,30 +63,37 @@ export default {
     },
     optionsListeners () {
       return {
-        new: this.onNewItem,
+        new: () => this.onNewItem(true),
         duplicate: this.onDuplicateItem,
         delete: this.onDeleteItem
       }
     }
   },
   methods: {
-    onNewItem () {
-      this.form.garments.push({
-        ...cloneDeep(DEFAULT_GARMENT),
-        id: uniqueId()
-      })
+    populateForm() {
+      const garments = this.order.garments
+      const garmentsCount = garments.length
 
-      this.activeItem = this.form.garments.length - 1
+      for (const i of Array.from({length: garmentsCount - 1})) {
+        this.onNewItem(false)
+      }
+    },
+    onNewItem (focusNewItem = true) {
+      this.$emit('new-garment')
+
+      if (focusNewItem) {
+        this.activeItem = this.form.garments.length - 1
+      }
+    },
+    onNewGarmentSize (event) {
+      this.$emit('new-garment-size', event)
+    },
+    onDeleteGarmentSize(event) {
+      this.$emit('delete-garment-size', event)
     },
     onDuplicateItem (indexToClone) {
-      const duplicate = cloneDeep(this.form.garments[indexToClone])
-      const newIndex = this.form.garments.length
-
-      this.onNewItem()
-
-      this.$nextTick(() => {
-        Object.assign(this.form.garments[newIndex], omit(duplicate, ['id']))
-      })
+      this.$emit('duplicate-garment', {indexToClone})
+      this.activeItem = this.form.garments.length - 1
     },
     onDeleteItem (index) {
       if (this.form.garments.length <= 1) {
@@ -78,7 +104,7 @@ export default {
         ? index
         : index - 1
 
-      this.form.garments.splice(index, 1)
+      this.$emit('delete-garment', {indexToDelete: index})
     }
   }
 }
@@ -97,6 +123,7 @@ export default {
       </template>
       <template #body>
         <AppNavPills
+          v-if="garmentMatches.length"
           v-model="activeItem"
           :items="navItems"
           no-fill
@@ -104,26 +131,28 @@ export default {
           header-class="small"
         >
           <template
-            v-for="cloth in form.garments"
-            #[`headers.nav-${cloth.id}`]="{ item }"
+            v-for="garment in form.garments"
+            #[`headers.nav-${garment.id}`]="{ item }"
           >
-            <div :key="cloth.id">
+            <div :key="garment.id">
               <div>
                 {{ item.text }}
-                <span v-if="cloth.total">
-                  ({{ $helpers.toBRL(cloth.total) }})
+                <span v-if="garment.total">
+                  ({{ $helpers.toBRL(garment.total) }})
                 </span>
               </div>
             </div>
           </template>
 
           <template
-            v-for="(cloth, index) in form.garments"
-            #[`nav-${cloth.id}`]
+            v-for="(garment, index) in form.garments"
+            #[`nav-${garment.id}`]
           >
             <FormGarmentsItem
-              :key="cloth.id"
-              v-bind="{ index, cloth, garmentMatches, optionsListeners }"
+              :key="garment.id"
+              v-bind="{ index, garment, garmentMatches, optionsListeners, order, form }"
+              @new-garment-size="onNewGarmentSize"
+              @delete-garment-size="onDeleteGarmentSize"
             />
           </template>
         </AppNavPills>

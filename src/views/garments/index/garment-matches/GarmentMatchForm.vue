@@ -2,13 +2,14 @@
 import Form from '@/utils/Form'
 import Vue from 'vue'
 import { maskCurrencyBRL,  } from '@/utils/masks'
-import { CreateGarmentMatch } from '@/graphql/GarmentMatch.gql'
+import { CreateGarmentMatch, UpdateGarmentMatch } from '@/graphql/GarmentMatch.gql'
 
 import GarmentMatchFormValues from './GarmentMatchFormValues.vue'
 import GarmentMatchFormMatches from './GarmentMatchFormMatches.vue'
 import GarmentMatchFormSizes from './GarmentMatchFormSizes.vue'
 import GarmentMatchFormUniqueValue from './GarmentMatchFormUniqueValue.vue'
-import { handleError } from '@/utils/forms'
+import { handleError, handleSuccess } from '@/utils/forms'
+import { isEmpty } from 'lodash-es'
 
 export const form = Vue.observable(new Form({
   is_unique_value: false,
@@ -31,16 +32,37 @@ export default {
     GarmentMatchFormSizes,
     GarmentMatchFormUniqueValue
   },
+  props: {
+    match: {
+      type: Object,
+      default: () => ({})
+    },
+  },
   data: () => ({
     maskCurrencyBRL: maskCurrencyBRL(),
     form,
     isLoading: false
   }),
+  computed: {
+    isEdit () {
+      return !isEmpty(this.match)
+    }
+  },
   methods: {
     async store (input) {
       await this.$apollo.mutate({
         mutation: CreateGarmentMatch,
-        variables: { input }
+        variables: { input },
+        refetchQueries: ['GetGarmentMatches'],
+        awaitRefetchQueries: true
+      })
+    },
+    async update(input) {
+      await this.$apollo.mutate({
+        mutation: UpdateGarmentMatch,
+        variables: {id: this.match.id, input },
+        refetchQueries: ['GetGarmentMatches'],
+        awaitRefetchQueries: true
       })
     },
     async onSubmit () {
@@ -48,7 +70,15 @@ export default {
       this.isLoading = true
 
       try {
-        await this.store(input)
+        await (this.isEdit ? this.update(input) : this.store(input))
+
+        handleSuccess(this, {
+          message: this.isEdit
+            ? 'Combinação atualizada!'
+            : 'Combinação criada!'
+        })
+
+        this.form.reset()
       } catch (error) {
         handleError(this, error)
       }
@@ -69,7 +99,10 @@ export default {
         Combinação
       </template>
       <template #body>
-        <GarmentMatchFormMatches />
+        <GarmentMatchFormMatches
+          :match="match"
+          :is-edit="isEdit"
+        />
       </template>
     </AppContainer>
 
@@ -87,7 +120,10 @@ export default {
             Valor único
           </AppCheckboxSwitch>
 
-          <GarmentMatchFormValues v-if="!form.is_unique_value" />
+          <GarmentMatchFormValues
+            v-if="!form.is_unique_value"
+            :match="match"
+          />
           <GarmentMatchFormUniqueValue v-else />
         </div>
       </template>
@@ -98,7 +134,7 @@ export default {
         Tamanhos
       </template>
       <template #body>
-        <GarmentMatchFormSizes />
+        <GarmentMatchFormSizes :match="match" />
       </template>
     </AppContainer>
 

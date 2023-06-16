@@ -1,6 +1,5 @@
 <script>
 import { faTrashAlt, faPlus } from '@fortawesome/free-solid-svg-icons';
-import { form, DEFAULT_GARMENT_ITEM } from '../OrderForm.vue'
 import { maskInteger } from '@/utils/masks'
 import { isEmpty } from 'lodash-es';
 
@@ -13,10 +12,13 @@ export default {
     match: {
       type: Object,
       default: () => ({})
+    },
+    form: {
+      type: Object,
+      required: true
     }
   },
   data: () => ({
-    form,
     maskInteger: maskInteger({
       numeralIntegerScale: 3,
       stripLeadingZeroes: false,
@@ -41,14 +43,19 @@ export default {
   },
   methods: {
     newItem () {
-      this.form.garments[this.garmentIndex].items.push({...DEFAULT_GARMENT_ITEM})
+      this.$emit('new-garment-size', {
+        garmentIndex: this.garmentIndex
+      })
     },
     deleteItem (index) {
       if (this.isDeleteDisabled) {
         return
       }
 
-      this.form.garments[this.garmentIndex].items.splice(index, 1)
+      this.$emit('delete-garment-size', {
+        garmentIndex: this.garmentIndex,
+        index
+      })
     }
   }
 }
@@ -75,7 +82,7 @@ export default {
       <div class="col-3">
         <AppSimpleSelect
           :id="`garments.${index}.size`"
-          v-model="form.garments[garmentIndex].items[index].size_id"
+          :value="form.garments[garmentIndex].items[index].size_id"
           :name="`garments.${index}.size`"
           :options="sizes"
           label-prop="name"
@@ -83,17 +90,23 @@ export default {
           placeholder="Selecione um tam."
           remove-default-margin
           :disabled="!sizes.length"
+          @input="form.set({
+            [`garments[${garmentIndex}].items[${index}].size_id`]: $event
+          })"
         />
       </div>
 
       <div class="col-2">
         <AppInput
           :id="`garments.${index}.quantity`"
-          v-model="form.garments[garmentIndex].items[index].quantity"
+          :value="form.garments[garmentIndex].items[index].quantity"
           :name="`garments.${index}.quantity`"
           input-class="form-control-sm"
           :default-margin="false"
           :mask="maskInteger"
+          @input="form.set({
+            [`garments[${garmentIndex}].items[${index}].quantity`]: $event
+          })"
         />
       </div>
       <div class="col-2">

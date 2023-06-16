@@ -5,13 +5,17 @@ import TheGarmentsHeader from './TheGarmentsHeader.vue'
 import TheGarmentsBody from './TheGarmentsBody.vue';
 import GarmentItemModal from './garment-items/GarmentItemModal.vue';
 import GarmentMatchModalNew from './garment-matches/GarmentMatchModalNew.vue';
+import GarmentMatchModalEdit from './garment-matches/GarmentMatchModalEdit.vue'
+import GarmentMatchModalDelete from './garment-matches/GarmentMatchModalDelete.vue'
 
 export default {
   components: {
     TheGarmentsHeader,
     TheGarmentsBody,
     GarmentItemModal,
-    GarmentMatchModalNew
+    GarmentMatchModalNew,
+    GarmentMatchModalEdit,
+    GarmentMatchModalDelete
   },
   metaInfo: {
     title: 'Roupas'
@@ -22,12 +26,39 @@ export default {
       type: ''
     },
     matchModalNew: false,
+    matchModalEdit: {
+      value: false,
+      match: {}
+    },
+    matchModalDelete: {
+      value: false,
+      match: {}
+    },
     icons: {
       faPlus,
       faTshirt
     }
   }),
   methods: {
+    onDelete (match) {
+      this.matchModalDelete.match = match
+      this.matchModalDelete.value = true
+    },
+    onDeleteSuccess () {
+      this.matchModalDelete.value = false
+      this.matchModalDelete.match = {}
+    },
+    onEditClose () {
+      this.matchModalEdit.match = {}
+      this.matchModalEdit.value = false
+    },
+    onEdit (match) {
+      this.matchModalEdit.match = match
+      this.matchModalEdit.value = true
+    },
+    onNewMatchSuccess () {
+      this.matchModalNew = false
+    },
     onItemOpen (itemType) {
       this.itemModal.type = itemType
       this.itemModal.value = true
@@ -51,7 +82,22 @@ export default {
       @hidden="onModalHidden"
     />
 
-    <GarmentMatchModalNew v-model="matchModalNew" />
+    <GarmentMatchModalNew
+      v-model="matchModalNew"
+      @success="onNewMatchSuccess"
+    />
+
+    <GarmentMatchModalDelete
+      v-model="matchModalDelete.value"
+      :match="matchModalDelete.match"
+      @success="onDeleteSuccess"
+    />
+
+    <GarmentMatchModalEdit
+      v-model="matchModalEdit.value"
+      :match="matchModalEdit.match"
+      @hide="onEditClose"
+    />
 
     <TheGarmentsHeader
       class="mb-3"
@@ -81,7 +127,10 @@ export default {
         </h6>
       </template>
       <template #body>
-        <TheGarmentsBody />
+        <TheGarmentsBody
+          @edit="onEdit"
+          @delete="onDelete"
+        />
       </template>
     </AppCard>
   </div>

@@ -1,7 +1,6 @@
 <script>
 import { faFileInvoiceDollar } from '@fortawesome/free-solid-svg-icons'
 import { sumBy } from 'lodash-es'
-import { form } from './OrderForm.vue'
 
 import OrderFormValuesFinal from './OrderFormValuesFinal.vue'
 
@@ -76,8 +75,13 @@ export default {
   components: {
     OrderFormValuesFinal
   },
+  props: {
+    form: {
+      type: Object,
+      required: true
+    }
+  },
   data: () => ({
-    form,
     icons: {
       faFileInvoiceDollar
     },
@@ -126,6 +130,7 @@ export default {
     <template #body>
       <OrderFormValuesFinal
         :final-value="finalValue"
+        :form="form"
       />
     </template>
   </AppContainer>

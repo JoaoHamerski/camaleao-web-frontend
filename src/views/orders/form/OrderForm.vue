@@ -1,9 +1,8 @@
 <script>
 
 import Form from '@/utils/Form'
-import Vue from 'vue'
 import { formatDatetime } from '@/utils/formatters'
-import { map, pick, cloneDeep, uniqueId, omit } from 'lodash-es'
+import { map, pick, cloneDeep, uniqueId, omit, isEmpty } from 'lodash-es'
 import { CreateOrder, UpdateOrder } from '@/graphql/Order.gql'
 import { handleError } from '@/utils/forms'
 import { GetDailyCashDetailedFlow, GetDailyCashBalance } from '@/graphql/DailyCash.gql'
@@ -30,7 +29,6 @@ export const DEFAULT_GARMENT_ITEM = {
 
 export const DEFAULT_GARMENT = {
   id: uniqueId(),
-  open: true,
   individual_names: false,
   model_id: '',
   material_id: '',
@@ -41,22 +39,6 @@ export const DEFAULT_GARMENT = {
   match: null,
   total: ''
 }
-
-export const form = Vue.observable(new Form({
-  name: '',
-  code: '',
-  client_id: '',
-  discount: 'R$ ',
-  down_payment: 'R$ ',
-  shipping_value: 'R$ ',
-  payment_via_id: '',
-  delivery_date: '',
-  clothing_types: [],
-  art_paths: [],
-  size_paths: [],
-  payment_voucher_paths: [],
-  garments: [{...cloneDeep(DEFAULT_GARMENT)}],
-}))
 
 export default {
   components: {
@@ -88,10 +70,6 @@ export default {
     }
   },
   props: {
-    isEdit: {
-      type: Boolean,
-      default: false
-    },
     order: {
       type: Object,
       default: () => {}
@@ -99,17 +77,35 @@ export default {
     isOrderPreRegistered: {
       type: Boolean,
       default: false
-    }
+    },
+
   },
   data () {
     return {
+      form: new Form({
+        name: '',
+        code: '',
+        client_id: '',
+        discount: 'R$ ',
+        down_payment: 'R$ ',
+        shipping_value: 'R$ ',
+        payment_via_id: '',
+        delivery_date: '',
+        clothing_types: [],
+        art_paths: [],
+        size_paths: [],
+        payment_voucher_paths: [],
+        garments: [{...cloneDeep(DEFAULT_GARMENT)}],
+      }),
       isLoading: false,
       queriesLoading: NUMBER_OF_QUERIES,
       clothingTypes: [],
-      form,
     }
   },
   computed: {
+    isEdit () {
+      return !isEmpty(this.order)
+    },
     hasClothingTypes () {
       if (!this.isEdit) {
         return false
@@ -126,6 +122,31 @@ export default {
     }
   },
   methods: {
+    onNewGarment () {
+      this.form.garments.push({
+        ...cloneDeep(DEFAULT_GARMENT),
+        id: uniqueId()
+      })
+    },
+    onNewGarmentSize ({ garmentIndex }) {
+      this.form.garments[garmentIndex].items.push({...DEFAULT_GARMENT_ITEM})
+    },
+    onDuplicateGarment ({indexToClone}) {
+      const duplicate = cloneDeep(this.form.garments[indexToClone])
+      const newIndex = this.form.garments.length
+
+      this.onNewGarment()
+
+      this.$nextTick(() => {
+        Object.assign(this.form.garments[newIndex], omit(duplicate, ['id']))
+      })
+    },
+    onDeleteGarment({indexToDelete}) {
+      this.form.garments.splice(indexToDelete, 1)
+    },
+    onDeleteGarmentSize({ garmentIndex, index}) {
+      this.form.garments[garmentIndex].items.splice(index, 1)
+    },
     getFile (item) {
       return item.base64 || item
     },
@@ -279,7 +300,14 @@ export default {
 
     <FormGarments
       :form="form"
+      :order="order"
+      :is-edit="isEdit"
       class="mb-3"
+      @new-garment="onNewGarment"
+      @new-garment-size="onNewGarmentSize"
+      @delete-garment-size="onDeleteGarmentSize"
+      @duplicate-garment="onDuplicateGarment"
+      @delete-garment="onDeleteGarment"
     />
 
     <OrderFormValuesFinalWrapper

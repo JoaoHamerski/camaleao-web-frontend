@@ -1,7 +1,7 @@
 <script>
 import { faPlus, faTrashAlt } from '@fortawesome/free-solid-svg-icons';
 import { maskInteger } from '@/utils/masks';
-import { form, DEFAULT_GARMENT_INDIVIDUAL_ITEM } from '../OrderForm.vue'
+import { DEFAULT_GARMENT_INDIVIDUAL_ITEM } from '../OrderForm.vue'
 import { isEmpty } from 'lodash-es';
 
 export default {
@@ -13,10 +13,13 @@ export default {
     match: {
       type: Object,
       default: () => ({})
+    },
+    form: {
+      type: Object,
+      required: true
     }
   },
   data: () => ({
-    form,
     icons: {
       faPlus,
       faTrashAlt

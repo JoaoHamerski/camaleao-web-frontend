@@ -31,7 +31,13 @@ export default {
     }
   },
   methods: {
-    get
+    get,
+    onEditClick (item) {
+      this.$emit('edit', item)
+    },
+    onDeleteClick(item) {
+      this.$emit('delete', item)
+    }
   }
 }
 </script>
@@ -101,19 +107,21 @@ export default {
           </div>
         </div>
       </template>
-      <template #[`items.options`]>
+      <template #[`items.options`]="{ item }">
         <div class="text-end">
           <AppButton
             class="me-2"
             :icon="icons.faEdit"
             btn-class="btn-sm"
             outlined
+            @click.prevent="onEditClick(item)"
           />
           <AppButton
             :icon="icons.faTrashAlt"
             btn-class="btn-sm"
             outlined
             color="danger"
+            @click.prevent="onDeleteClick(item)"
           />
         </div>
       </template>

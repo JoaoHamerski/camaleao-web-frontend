@@ -49,7 +49,7 @@ const tableCellContent = (h, context, header, item) => {
 }
 
 const renderTableCell = (h, context, item) => {
-  return map(context.headers, (header, index) => {
+  return map(context.headers, (header) => {
     return (
       <TableCell
         key={uniqueId()}

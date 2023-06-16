@@ -1,6 +1,5 @@
 <script>
 import { faPaste, faTrashAlt, faPlus, faSyncAlt, faExclamationCircle } from '@fortawesome/free-solid-svg-icons';
-import { form } from '../OrderForm.vue';
 import { getUniqueValues } from './FormGarments.vue';
 import { camelCase, get, isEmpty } from 'lodash-es';
 
@@ -17,10 +16,17 @@ export default {
     models: {
       type: Array,
       default: () => []
+    },
+    order: {
+      type: Object,
+      default: () => ({})
+    },
+    form: {
+      type: Object,
+      required: true
     }
   },
   data: () => ({
-    form,
     matched: null,
     possibleMatch: null,
     materials: [],
@@ -42,22 +48,45 @@ export default {
       return this.form.garments[this.index]
     },
   },
-  mounted () {
+  async mounted () {
+    this.evaluateOptions()
+    await this.$nextTick()
     this.evaluateOptions()
 
-    this.$nextTick(() => {
-      this.evaluateOptions()
+    if (!isEmpty(this.order)) {
+      this.populateForm()
+    }
 
-      const filledFields = this.getOnlyFilledOptionsKeys()
-      if (!filledFields.length) {
-        this.materials = []
-        this.neckTypes = []
-        this.sleeveTypes = []
-      }
-    })
+    const filledFields = this.getOnlyFilledOptionsKeys()
+
+    if (!filledFields.length) {
+      this.materials = []
+      this.neckTypes = []
+      this.sleeveTypes = []
+    }
+
+    if (!isEmpty(this.order)) {
+      this.onMatchFound()
+    }
   },
   methods: {
     get,
+    populateForm() {
+      const garment = this.form.garments[this.index]
+      const match = this.order.garments[this.index].match
+      const items = this.order.garments[this.index].sizes.map(size => ({
+          size_id: size.id,
+          quantity: size.pivot.quantity
+      }))
+
+      Object.assign(garment, {
+        model_id: match?.model?.id || '',
+        material_id: match?.material?.id || '',
+        neck_type_id: match?.neck_type?.id || '',
+        sleeve_type_id: match?.sleeve_type?.id || '',
+        items
+      })
+    },
     getOnlyFilledOptionsKeys() {
       const keys = [
         'model_id',
@@ -107,10 +136,7 @@ export default {
       }
 
       const matches = this.garmentMatches.filter(
-        garmentMatch => this.compareOptions(
-          garmentMatch,
-          this.getOnlyFilledOptionsKeys()
-        )
+        garmentMatch => this.compareOptions(garmentMatch,this.getOnlyFilledOptionsKeys())
       )
 
       this.fillSelectOptions(matches)
@@ -149,10 +175,10 @@ export default {
       const { model, material, neck_type, sleeve_type } = matched
 
       this.form.set({
-        [`garments.${this.index}.model_id`]: model.id || '',
-        [`garments.${this.index}.material_id`]: material.id || '',
-        [`garments.${this.index}.neck_type_id`]: neck_type.id || '',
-        [`garments.${this.index}.sleeve_type_id`]: sleeve_type.id || '',
+        [`garments.${this.index}.model_id`]: model?.id || '',
+        [`garments.${this.index}.material_id`]: material?.id || '',
+        [`garments.${this.index}.neck_type_id`]: neck_type?.id || '',
+        [`garments.${this.index}.sleeve_type_id`]: sleeve_type?.id || '',
       })
 
       this.evaluateOptions()
@@ -233,12 +259,15 @@ export default {
       <div class="col-3">
         <AppSimpleSelect
           :id="`garments.${index}.model_id`"
-          v-model="form.garments[index].model_id"
+          :value="form.garments[index].model_id"
           :name="`garments.${index}.model_id`"
           :options="models"
           label-prop="name"
           placeholder="Selecione um modelo"
           :select-class="['form-select-sm', {'is-valid': matched && formGarment.model_id}]"
+          @input="form.set({
+            [`garments[${index}].model_id`]: $event
+          })"
           @change="evaluateOptions('model')"
         >
           Modelo
@@ -247,13 +276,16 @@ export default {
       <div class="col-3">
         <AppSimpleSelect
           :id="`garments.${index}.material_id`"
-          v-model="form.garments[index].material_id"
+          :value="form.garments[index].material_id"
           :disabled="!materials.length"
           :name="`garments.${index}.material_id`"
           :options="materials"
           label-prop="name"
           placeholder="Selecione um material"
           :select-class="['form-select-sm', {'is-valid': matched && formGarment.material_id}]"
+          @input="form.set({
+            [`garments[${index}].material_id`]: $event
+          })"
           @change="evaluateOptions('material')"
         >
           Material
@@ -262,13 +294,16 @@ export default {
       <div class="col-3">
         <AppSimpleSelect
           :id="`garments.${index}.neck_type_id`"
-          v-model="form.garments[index].neck_type_id"
+          :value="form.garments[index].neck_type_id"
           :disabled="!neckTypes.length"
           :name="`garments.${index}.neck_type_id`"
           :options="neckTypes"
           label-prop="name"
           placeholder="Selecione um tipo"
           :select-class="['form-select-sm', {'is-valid': matched && formGarment.neck_type_id}]"
+          @input="form.set({
+            [`garments[${index}].neck_type_id`]: $event
+          })"
           @change="evaluateOptions('neck_type')"
         >
           Tipo de gola
@@ -277,13 +312,16 @@ export default {
       <div class="col-3">
         <AppSimpleSelect
           :id="`garments.${index}.sleeve_type_id`"
-          v-model="form.garments[index].sleeve_type_id"
+          :value="form.garments[index].sleeve_type_id"
           :disabled="!sleeveTypes.length"
           :name="`garments.${index}.sleeve_type_id`"
           :options="sleeveTypes"
           label-prop="name"
           placeholder="Selecione um tipo"
           :select-class="['form-select-sm', {'is-valid': matched && formGarment.sleeve_type_id}]"
+          @input="form.set({
+            [`garments[${index}].sleeve_type_id`]: $event
+          })"
           @change="evaluateOptions('sleeve_type')"
         >
           Tipo de manga

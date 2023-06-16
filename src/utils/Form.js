@@ -1,10 +1,11 @@
 import Errors from './Errors'
 import { cloneDeep, set, get } from 'lodash-es'
+import { deepFreeze } from './helpers'
 
 class Form {
   constructor (data) {
     this.originalData = data
-    this.originalStructure = cloneDeep(data)
+    this.originalStructure = deepFreeze(cloneDeep({...data}))
     this.errors = new Errors()
     this.fields = []
 

@@ -1,19 +1,30 @@
 <script>
-import { faPlus } from '@fortawesome/free-solid-svg-icons';
+import { faEdit } from '@fortawesome/free-solid-svg-icons';
 import GarmentMatchForm from './GarmentMatchForm.vue';
+
+import { form } from './GarmentMatchForm.vue'
 
 export default {
   components: {
     GarmentMatchForm
   },
+  props: {
+    match: {
+      type: Object,
+      default: () => ({})
+    }
+  },
   data: () => ({
     icons: {
-      faPlus
+      faEdit
     }
   }),
   methods: {
     onSuccess () {
-      this.$emit('success')
+      this.$emit('hide')
+    },
+    onHide () {
+      form.reset()
     }
   }
 }
@@ -21,22 +32,24 @@ export default {
 
 <template>
   <AppModal
-    id="garmentMatchModalNew"
+    id="garmentMatchModalEdit"
     v-bind="$attrs"
-    color="success"
+    color="primary"
     modal-dialog-class="modal-lg"
     v-on="$listeners"
+    @hide="onHide"
   >
     <template #title>
       <FontAwesomeIcon
-        :icon="icons.faPlus"
+        :icon="icons.faEdit"
         fixed-width
       />
-      Nova combinação
+      Editar combinação
     </template>
     <template #body>
       <GarmentMatchForm
         v-if="$attrs.value"
+        :match="match"
         @success="onSuccess"
       />
     </template>
