@@ -121,7 +121,6 @@ fragment ClothingTypesParts on Order {
     key
     name
     is_hidden
-    commission
     quantity
     value
     total_value

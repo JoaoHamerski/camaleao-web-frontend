@@ -3,23 +3,22 @@ fragment ClothingTypeParts on ClothingType {
   key
   name
   is_hidden
-  commission
 }
 
-query GetClothingTypes ($is_hidden: Boolean) {
-  clothingTypes (is_hidden: $is_hidden) {
+query GetClothingTypes($is_hidden: Boolean) {
+  clothingTypes(is_hidden: $is_hidden) {
     ...ClothingTypeParts
   }
 }
 
-mutation CreateClothingType ($input: ClothingTypeInput!) {
-  clothingTypeCreate (input: $input) {
+mutation CreateClothingType($input: ClothingTypeInput!) {
+  clothingTypeCreate(input: $input) {
     id
   }
 }
 
-mutation UpdateClothingType ($id: ID! $input: ClothingTypeInput!) {
-  clothingTypeUpdate (id: $id input: $input) {
+mutation UpdateClothingType($id: ID!, $input: ClothingTypeInput!) {
+  clothingTypeUpdate(id: $id, input: $input) {
     ...ClothingTypeParts
   }
 }

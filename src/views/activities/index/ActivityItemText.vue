@@ -24,7 +24,6 @@ const ICONS_MAP = {
   shipping_companies: faTruck,
   branches: faBuilding,
   clothing_types: faTshirt,
-  commission_users: faBox,
   configs_orders: faBoxes
 }
 

@@ -29,12 +29,6 @@ import {
 } from '@fortawesome/free-solid-svg-icons'
 
 const ITEMS = {
-  PRODUCAO: {
-    title: 'Produção',
-    icon: faBox,
-    route: { name: 'production.index' },
-    condition: () => canView(ROLES.COSTURA, ROLES.ESTAMPA)
-  },
   CLIENTE: {
     title: 'Cliente',
     icon: faUsers,
@@ -243,12 +237,6 @@ const ITEMS = {
       )
     }
   },
-  PRODUCAO_USUARIOS: {
-    title: 'Produção',
-    icon: faBox,
-    route: { name: 'production-users.index' },
-    condition: () => canView(ROLES.GERENCIA)
-  },
   MINHA_CONTA: {
     title: 'Minha conta',
     icon: faUser,
@@ -268,13 +256,11 @@ const ITEMS = {
 }
 
 export default [
-  ITEMS.PRODUCAO,
   ITEMS.CLIENTE,
   ITEMS.PEDIDOS,
   ITEMS.CAIXA_DIARIO,
   ITEMS.LINHA_DE_PRODUCAO,
   ITEMS.FINANCEIRO,
-  ITEMS.PRODUCAO_USUARIOS,
   ITEMS.GERENCIAMENTO,
   ITEMS.OUTROS,
   ITEMS.MINHA_CONTA,
