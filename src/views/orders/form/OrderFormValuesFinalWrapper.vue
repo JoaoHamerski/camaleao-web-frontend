@@ -36,8 +36,13 @@ const getExtraSizeValues = (garment) => {
   }, 0)
 }
 
-const findValuePerUnit = (match, quantity) => {
+const getValuePerUnit = (match, quantity) => {
   const values = match.values
+
+  if (match.unique_value) {
+    return match.unique_value
+  }
+
   const value = values.find(
     value => (+value.start <= quantity && +value.end >= quantity)
       || !value.end
@@ -63,7 +68,7 @@ const getClothTotalValue = (garment) => {
   }
 
   const quantity = getClothQuantity(garment)
-  const value = findValuePerUnit(garment.match, quantity)
+  const value = getValuePerUnit(garment.match, quantity)
   const extraSizeValues = getExtraSizeValues(garment)
   const totalCloth = (+quantity * +value).toFixed(2)
   const totalValue = (+totalCloth + +extraSizeValues).toFixed(2)

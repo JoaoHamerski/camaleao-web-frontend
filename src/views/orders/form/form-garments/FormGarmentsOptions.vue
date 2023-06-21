@@ -71,20 +71,35 @@ export default {
   },
   methods: {
     get,
-    populateForm() {
-      const garment = this.form.garments[this.index]
-      const match = this.order.garments[this.index].match
-      const items = this.order.garments[this.index].sizes.map(size => ({
-          size_id: size.id,
-          quantity: size.pivot.quantity
-      }))
+    getPopulatedItems (garment) {
+      if (garment.individual_names) {
+        return garment.individual_names.map(item => ({
+          name: item.name,
+          number: item.number,
+          size_id: item.size_id
+        }))
+      }
 
-      Object.assign(garment, {
+      return garment.sizes.map(size => ({
+          size_id: size.id,
+          quantity: `${size.pivot.quantity}`
+      }))
+    },
+    populateForm() {
+      const garmentForm = this.form.garments[this.index]
+      const garment = this.order.garments[this.index]
+      const match = garment.match
+      const items = this.getPopulatedItems(garment)
+      const itemsPropName = garment.individual_names
+        ? 'items_individual' : 'items'
+
+      Object.assign(garmentForm, {
+        individual_names: !!garment.individual_names,
         model_id: match?.model?.id || '',
         material_id: match?.material?.id || '',
         neck_type_id: match?.neck_type?.id || '',
         sleeve_type_id: match?.sleeve_type?.id || '',
-        items
+        [itemsPropName]: items
       })
     },
     getOnlyFilledOptionsKeys() {

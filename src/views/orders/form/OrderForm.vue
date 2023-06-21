@@ -77,8 +77,7 @@ export default {
     isOrderPreRegistered: {
       type: Boolean,
       default: false
-    },
-
+    }
   },
   data () {
     return {
@@ -128,8 +127,21 @@ export default {
         id: uniqueId()
       })
     },
-    onNewGarmentSize ({ garmentIndex }) {
+    onNewGarmentSize ({ garmentIndex, isIndividual }) {
+      if (isIndividual) {
+        this.form.garments[garmentIndex].items_individual.push({...DEFAULT_GARMENT_INDIVIDUAL_ITEM})
+        return
+      }
+
       this.form.garments[garmentIndex].items.push({...DEFAULT_GARMENT_ITEM})
+    },
+    onDeleteGarmentSize({ garmentIndex, index, isIndividual}) {
+      if (isIndividual) {
+        this.form.garments[garmentIndex].items_individual.splice(index, 1)
+        return
+      }
+
+      this.form.garments[garmentIndex].items.splice(index, 1)
     },
     onDuplicateGarment ({indexToClone}) {
       const duplicate = cloneDeep(this.form.garments[indexToClone])
@@ -143,9 +155,6 @@ export default {
     },
     onDeleteGarment({indexToDelete}) {
       this.form.garments.splice(indexToDelete, 1)
-    },
-    onDeleteGarmentSize({ garmentIndex, index}) {
-      this.form.garments[garmentIndex].items.splice(index, 1)
     },
     getFile (item) {
       return item.base64 || item
@@ -165,7 +174,7 @@ export default {
       form.size_paths = map(form.size_paths, this.getFile)
       form.payment_voucher_paths = map(form.payment_voucher_paths, this.getFile)
       form.garments = this.getFormattedGarments()
-
+      console.log(form.garments)
       return form
     },
     async update () {
@@ -177,8 +186,7 @@ export default {
           variables: {
             id: this.order.id,
             input: { ...data }
-          },
-          refetchQueries: [GetDailyCashDetailedFlow, GetDailyCashBalance]
+          }
         })
 
         this.$helpers.clearCacheFrom({ fieldName: 'weeklyProduction' })

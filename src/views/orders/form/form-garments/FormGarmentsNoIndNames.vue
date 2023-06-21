@@ -44,7 +44,8 @@ export default {
   methods: {
     newItem () {
       this.$emit('new-garment-size', {
-        garmentIndex: this.garmentIndex
+        garmentIndex: this.garmentIndex,
+        isIndividual: false
       })
     },
     deleteItem (index) {
@@ -54,7 +55,8 @@ export default {
 
       this.$emit('delete-garment-size', {
         garmentIndex: this.garmentIndex,
-        index
+        index,
+        isIndividual: false
       })
     }
   }

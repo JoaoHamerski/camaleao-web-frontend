@@ -1,13 +1,13 @@
 <script>
 import { getUniqueValues } from './FormGarments.vue';
 
-// import FormGarmentsIndNames from './FormGarmentsIndNames.vue';
+import FormGarmentsIndNames from './FormGarmentsIndNames.vue';
 import FormGarmentsNoIndNames from './FormGarmentsNoIndNames.vue'
 import FormGarmentsOptions from './FormGarmentsOptions.vue';
 
 export default {
   components: {
-    // FormGarmentsIndNames,
+    FormGarmentsIndNames,
     FormGarmentsNoIndNames,
     FormGarmentsOptions
   },
@@ -92,11 +92,14 @@ export default {
           </small>
         </template>
         <template #body>
-          <!-- <FormGarmentsIndNames
+          <FormGarmentsIndNames
             v-if="garment.individual_names"
             v-bind="{garmentIndex: index, match, form}"
-          /> -->
+            @new-garment-size="onNewGarmentSize"
+            @delete-garment-size="onDeleteGarmentSize"
+          />
           <FormGarmentsNoIndNames
+            v-else
             v-bind="{garmentIndex: index, match, form}"
             @delete-garment-size="onDeleteGarmentSize"
             @new-garment-size="onNewGarmentSize"

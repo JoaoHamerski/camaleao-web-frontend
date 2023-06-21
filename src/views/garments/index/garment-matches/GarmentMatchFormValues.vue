@@ -2,7 +2,7 @@
 import { form } from './GarmentMatchForm.vue'
 import { faPlus, faTrashAlt } from '@fortawesome/free-solid-svg-icons'
 import { maskCurrencyBRL, maskInteger } from '@/utils/masks';
-import { debounce, isEmpty } from 'lodash-es';
+import { debounce } from 'lodash-es';
 
 const isFirstItem = (index) => index === 0
 const isLastItem = (values, index) => index === values.length - 1
@@ -36,6 +36,10 @@ export default {
     match: {
       type: Object,
       default: () => ({})
+    },
+    isEdit: {
+      type: Boolean,
+      default: false
     }
   },
   data: () => ({
@@ -60,13 +64,18 @@ export default {
     }
   },
   mounted () {
-    if (!isEmpty(this.match)) {
+    if (this.isEdit) {
       this.populateForm()
     }
   },
   methods: {
     populateForm() {
       const values = this.match.values
+
+      if (this.match.unique_value) {
+        return
+      }
+
       const formattedValues = values.map(({start, end, value}) => ({
         start,
         end,

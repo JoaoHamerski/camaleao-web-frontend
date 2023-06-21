@@ -48,7 +48,17 @@ export default {
       return !isEmpty(this.match)
     }
   },
+  mounted () {
+    if (this.isEdit) {
+      this.populateForm()
+    }
+  },
   methods: {
+    populateForm() {
+      if (this.match.unique_value) {
+        this.form.is_unique_value = true
+      }
+    },
     async store (input) {
       await this.$apollo.mutate({
         mutation: CreateGarmentMatch,
@@ -123,8 +133,13 @@ export default {
           <GarmentMatchFormValues
             v-if="!form.is_unique_value"
             :match="match"
+            :is-edit="isEdit"
           />
-          <GarmentMatchFormUniqueValue v-else />
+          <GarmentMatchFormUniqueValue
+            v-else
+            :match="match"
+            :is-edit="isEdit"
+          />
         </div>
       </template>
     </AppContainer>

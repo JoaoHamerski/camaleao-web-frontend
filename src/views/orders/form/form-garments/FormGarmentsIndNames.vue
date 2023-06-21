@@ -43,17 +43,22 @@ export default {
     }
   },
   methods: {
-    newIndividualNameItem () {
-      this.form.garments[this.garmentIndex].items_individual.push({
-        ...DEFAULT_GARMENT_INDIVIDUAL_ITEM
+    newItem () {
+      this.$emit('new-garment-size', {
+        garmentIndex: this.garmentIndex,
+        isIndividual: true
       })
     },
-    deleteIndividualNameItem (index) {
+    deleteItem (index) {
       if (this.isDeleteDisabled) {
         return
       }
 
-      this.form.garments[this.garmentIndex].items_individual.splice(index, 1)
+      this.$emit('delete-garment-size', {
+        garmentIndex: this.garmentIndex,
+        index,
+        isIndividual: true
+      })
     }
   }
 }
@@ -65,10 +70,10 @@ export default {
       <div class="col-4 small">
         Nome
       </div>
-      <div class="col-3 small">
+      <div class="col-2 small">
         Tamanho
       </div>
-      <div class="col-3 small">
+      <div class="col-2 small">
         Número
       </div>
     </div>
@@ -81,18 +86,21 @@ export default {
       <div class="col-4">
         <AppInput
           :id="`garments.${index}.name`"
-          v-model="form.garments[garmentIndex].items_individual[index].name"
+          :value="form.garments[garmentIndex].items_individual[index].name"
           :name="`garments.${index}.name`"
           input-class="form-control-sm"
           placeholder="Digite o nome..."
           :default-margin="false"
+          @input="form.set({
+            [`garments[${garmentIndex}].items_individual[${index}].name`]: $event
+          })"
         />
       </div>
 
-      <div class="col-3">
+      <div class="col-2">
         <AppSimpleSelect
           :id="`garments.${index}.size`"
-          v-model="form.garments[garmentIndex].items_individual[index].size_id"
+          :value="form.garments[garmentIndex].items_individual[index].size_id"
           :name="`garments.${index}.size`"
           :options="sizes"
           label-prop="name"
@@ -100,18 +108,24 @@ export default {
           placeholder="Selecione um tam."
           remove-default-margin
           :disabled="!sizes.length"
+          @input="form.set({
+            [`garments[${garmentIndex}].items_individual[${index}].size_id`]: $event
+          })"
         />
       </div>
 
-      <div class="col-3 align-self-end">
+      <div class="col-2 align-self-end">
         <AppInput
           :id="`garments.${index}.number`"
-          v-model="form.garments[garmentIndex].items_individual[index].number"
+          :value="form.garments[garmentIndex].items_individual[index].number"
           :name="`garments.${index}.number`"
           input-class="form-control-sm"
           :default-margin="false"
           placeholder="Digite o núm..."
           :mask="maskInteger"
+          @input="form.set({
+            [`garments[${garmentIndex}].items_individual[${index}].number`]: $event
+          })"
         />
       </div>
 
@@ -123,7 +137,7 @@ export default {
           btn-class="btn-sm"
           class="me-2"
           :icon="icons.faPlus"
-          @click.prevent="newIndividualNameItem"
+          @click.prevent="newItem"
         />
 
         <AppButton
@@ -133,7 +147,7 @@ export default {
           btn-class="btn-sm"
           :icon="icons.faTrashAlt"
           :disabled="isDeleteDisabled"
-          @click.prevent="deleteIndividualNameItem(index)"
+          @click.prevent="deleteItem(index)"
         />
       </div>
     </div>

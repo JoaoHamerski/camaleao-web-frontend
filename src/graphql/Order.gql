@@ -26,6 +26,7 @@ fragment OrderParts on Order {
   has_order_control
   final_status
   reminder
+  has_individual_names
 }
 
 fragment OrderSimplifiedParts on Order {
@@ -162,6 +163,14 @@ fragment GarmentsParts on Order {
           value
         }
       }
+    }
+
+    individual_names {
+      id
+      name
+      number
+      size
+      size_id
     }
 
     quantity

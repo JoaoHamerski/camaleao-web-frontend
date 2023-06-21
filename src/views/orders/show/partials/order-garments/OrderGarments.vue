@@ -1,4 +1,11 @@
 <script>
+export const filledNames = (garment) => {
+  const keys = ['model', 'material', 'neck_type', 'sleeve_type']
+  const names = keys.map(key => garment.match[key]?.name || null)
+
+  return names.filter(name => !!name)
+}
+
 export default {
   props: {
     garments: {
@@ -7,12 +14,7 @@ export default {
     },
   },
   methods: {
-    matchNames (garment) {
-      const keys = ['model', 'material', 'neck_type', 'sleeve_type']
-      const names = keys.map(key => garment.match[key]?.name || null)
-
-      return names.filter(name => !!name)
-    }
+    filledNames
   }
 }
 </script>
@@ -38,7 +40,7 @@ export default {
         <td>
           <ul class="list-group list-group-sm">
             <li
-              v-for="name in matchNames(garment)"
+              v-for="name in filledNames(garment)"
               :key="name"
               class="list-group-item small"
             >
@@ -46,8 +48,6 @@ export default {
             </li>
           </ul>
         </td>
-
-
 
         <td>
           <ul class="list-group list-group-sm">
