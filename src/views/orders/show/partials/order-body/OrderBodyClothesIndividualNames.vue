@@ -35,35 +35,38 @@ export default {
       Nomes nas roupas
     </template>
     <template #body>
-      <table class="table table-sm">
+      <table class="table table-bordered table-sm">
         <thead>
-          <tr>
+          <tr class="table-primary">
             <th>Nome</th>
             <th>Tamanho</th>
             <th>Número</th>
           </tr>
         </thead>
         <tbody>
-          <template v-for="garment in garmentsWithNames">
-            <tr
-              :key="`garment__${garment.id}`"
-              class="table-primary"
-            >
-              <td
-                colspan="3"
-                class="text-center fw-bold"
+          <template v-for="(garment, index) in order.garments">
+            <template v-if="garment.individual_names">
+              <tr
+                :key="`garment__${garment.id}`"
+                class="table-secondary"
               >
-                {{ filledNames(garment).join(' - ') }}
-              </td>
-            </tr>
-            <tr
-              v-for="garmentName in garment.individual_names"
-              :key="`garmentName__${garmentName.id}`"
-            >
-              <td>{{ garmentName.name || 'N/A' }}</td>
-              <td>{{ garmentName.size || 'N/A' }}</td>
-              <td>{{ garmentName.number || 'N/A' }}</td>
-            </tr>
+                <td
+                  colspan="3"
+                  class="fw-bold text-center small"
+                >
+                  <span class="me-1 text-primary">[{{ index + 1 }}] </span>
+                  {{ filledNames(garment).join(' - ') }}
+                </td>
+              </tr>
+              <tr
+                v-for="(garmentName) in garment.individual_names"
+                :key="`garmentName__${garment.id}__${garmentName.id}`"
+              >
+                <td>{{ garmentName.name || 'N/A' }}</td>
+                <td>{{ garmentName.size || 'N/A' }}</td>
+                <td>{{ garmentName.number || 'N/A' }}</td>
+              </tr>
+            </template>
           </template>
         </tbody>
       </table>

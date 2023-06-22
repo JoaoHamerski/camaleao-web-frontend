@@ -174,7 +174,7 @@ export default {
       form.size_paths = map(form.size_paths, this.getFile)
       form.payment_voucher_paths = map(form.payment_voucher_paths, this.getFile)
       form.garments = this.getFormattedGarments()
-      console.log(form.garments)
+
       return form
     },
     async update () {

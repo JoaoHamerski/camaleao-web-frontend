@@ -49,7 +49,12 @@ export default {
         awaitRefetchQueries: true
       })
 
+      this.$toast.success(id ? 'Atualizado!' : 'Registrado!')
+
       this.$emit('cancel-new-item')
+      this.isEdit = {
+        id: ''
+      }
     },
     onEditClick({ id }) {
       this.isEdit.id = id
@@ -83,6 +88,7 @@ export default {
           <GarmentItemForm
             :item="_item"
             :item-query-name="item.queryName"
+            :submit="submit"
             @cancel="onCancelEdit"
           />
         </template>

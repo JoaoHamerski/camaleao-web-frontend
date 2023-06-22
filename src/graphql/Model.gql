@@ -11,3 +11,10 @@ mutation CreateModel($input: ModelInput) {
     name
   }
 }
+
+mutation UpdateModel($id: ID!, $input: ModelInput) {
+  modelUpdate(id: $id, input: $input) {
+    id
+    name
+  }
+}

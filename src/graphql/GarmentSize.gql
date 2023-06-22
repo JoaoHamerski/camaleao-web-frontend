@@ -11,3 +11,10 @@ mutation CreateGarmentSize($input: GarmentSizeInput) {
     name
   }
 }
+
+mutation UpdateGarmentSize($id: ID, $input: GarmentSizeInput) {
+  garmentSizeUpdate(id: $id, input: $input) {
+    id
+    name
+  }
+}

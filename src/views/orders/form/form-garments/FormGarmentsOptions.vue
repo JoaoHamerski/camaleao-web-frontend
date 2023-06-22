@@ -57,7 +57,7 @@ export default {
       this.populateForm()
     }
 
-    const filledFields = this.getOnlyFilledOptionsKeys()
+    const filledFields = await this.getOnlyFilledOptionsKeys()
 
     if (!filledFields.length) {
       this.materials = []
@@ -88,6 +88,11 @@ export default {
     populateForm() {
       const garmentForm = this.form.garments[this.index]
       const garment = this.order.garments[this.index]
+
+      if (!garment) {
+        return
+      }
+
       const match = garment.match
       const items = this.getPopulatedItems(garment)
       const itemsPropName = garment.individual_names
@@ -102,13 +107,14 @@ export default {
         [itemsPropName]: items
       })
     },
-    getOnlyFilledOptionsKeys() {
+    async getOnlyFilledOptionsKeys() {
       const keys = [
         'model_id',
         'material_id',
         'neck_type_id',
         'sleeve_type_id'
       ]
+      await this.$nextTick()
 
       return keys.filter(key => !isEmpty(this.formGarment[key]))
     },
@@ -137,11 +143,12 @@ export default {
 
       for (const field of fields) {
         const fieldCamelPlural = camelCase(field) + 's'
+        const values = getUniqueValues(matches, field)
 
-        this[fieldCamelPlural] = getUniqueValues(matches, field)
+        this[fieldCamelPlural] = values
       }
     },
-    evaluateOptions (field = null) {
+    async evaluateOptions (field = null) {
       this.$emit('matched', null)
       this.matched = null
       this.possibleMatch = null
@@ -150,9 +157,13 @@ export default {
         this.resetFormOptions()
       }
 
+      const filledOptionsKey = await this.getOnlyFilledOptionsKeys()
+
       const matches = this.garmentMatches.filter(
-        garmentMatch => this.compareOptions(garmentMatch,this.getOnlyFilledOptionsKeys())
+        garmentMatch => this.compareOptions(garmentMatch, filledOptionsKey)
       )
+
+      await this.$nextTick()
 
       this.fillSelectOptions(matches)
 
@@ -166,6 +177,11 @@ export default {
     },
     onMatchFound () {
       this.matched = this.possibleMatch
+
+      if (this.possibleMatch === null) {
+        return
+      }
+
       this.$emit('matched', this.matched)
       this.possibleMatch = null
     },

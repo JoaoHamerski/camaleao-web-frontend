@@ -47,6 +47,7 @@ export default {
         />
         <OrderGarments
           :garments="order.garments"
+          :has-individual-items="order.has_individual_names"
           class="mt-3"
         />
       </div>

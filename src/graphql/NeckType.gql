@@ -11,3 +11,10 @@ mutation CreateNeckType($input: NeckTypeInput) {
     name
   }
 }
+
+mutation UpdateNeckType($id: ID, $input: NeckTypeInput) {
+  neckTypeUpdate(id: $id, input: $input) {
+    id
+    name
+  }
+}

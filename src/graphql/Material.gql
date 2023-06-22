@@ -11,3 +11,10 @@ mutation CreateMaterial($input: MaterialInput) {
     name
   }
 }
+
+mutation UpdateMaterial($id: ID, $input: MaterialInput) {
+  materialUpdate(id: $id, input: $input) {
+    id
+    name
+  }
+}

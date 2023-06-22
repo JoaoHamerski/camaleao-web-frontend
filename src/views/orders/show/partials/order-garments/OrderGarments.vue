@@ -8,6 +8,10 @@ export const filledNames = (garment) => {
 
 export default {
   props: {
+    hasIndividualItems: {
+      type: Boolean,
+      required: true
+    },
     garments: {
       type: Array,
       required: true
@@ -19,10 +23,14 @@ export default {
 }
 </script>
 
+<!-- eslint-disable vue/no-v-html -->
 <template>
   <table class="table">
     <thead>
       <tr>
+        <th v-if="hasIndividualItems">
+          Item
+        </th>
         <th>
           Roupa
         </th>
@@ -34,9 +42,17 @@ export default {
     </thead>
     <tbody>
       <tr
-        v-for="garment in garments"
+        v-for="(garment, index) in garments"
         :key="garment.id"
       >
+        <td
+          v-if="hasIndividualItems"
+          class="align-middle text-center"
+        >
+          <span class="fw-bold text-primary">
+            {{ index + 1 }}
+          </span>
+        </td>
         <td>
           <ul class="list-group list-group-sm">
             <li
@@ -56,7 +72,11 @@ export default {
               :key="size.pivot.id"
               class="list-group-item"
             >
-              <b>{{ size.name }}</b> ({{ $helpers.toBRL(size.pivot.value) }}): <b>{{ size.pivot.quantity }}</b> peças
+              <b>{{ size.name }}</b>
+              <template v-if="size.pivot.value">
+                ({{ $helpers.toBRL(size.pivot.value) }}):
+              </template>:
+              <b>{{ size.pivot.quantity }}</b> peças
             </li>
           </ul>
           <div

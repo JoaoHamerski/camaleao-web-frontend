@@ -132,6 +132,7 @@ fragment GarmentsParts on Order {
   garments {
     id
     match {
+      id
       model {
         id
         name

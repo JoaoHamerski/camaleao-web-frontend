@@ -1,8 +1,8 @@
-import { GetModels, CreateModel } from '@/graphql/Model.gql'
-import { GetMaterials, CreateMaterial } from '@/graphql/Material.gql'
-import { GetNeckTypes, CreateNeckType } from '@/graphql/NeckType.gql'
-import { GetSleeveTypes, CreateSleeveType } from '@/graphql/SleeveType.gql'
-import { GetGarmentSizes, CreateGarmentSize } from '@/graphql/GarmentSize.gql'
+import { GetModels, CreateModel, UpdateModel } from '@/graphql/Model.gql'
+import { GetMaterials, CreateMaterial, UpdateMaterial } from '@/graphql/Material.gql'
+import { GetNeckTypes, CreateNeckType, UpdateNeckType } from '@/graphql/NeckType.gql'
+import { GetSleeveTypes, CreateSleeveType, UpdateSleeveType } from '@/graphql/SleeveType.gql'
+import { GetGarmentSizes, CreateGarmentSize, UpdateGarmentSize } from '@/graphql/GarmentSize.gql'
 
 import { getQueryName } from '@/utils/helpers'
 
@@ -19,6 +19,7 @@ export const TYPES_MAP = {
     name: 'Modelos',
     query: GetModels,
     createMutation: CreateModel,
+    updateMutation: UpdateModel,
     get queryName () {
       return getQueryName(this.query)
     }
@@ -27,6 +28,7 @@ export const TYPES_MAP = {
     name: 'Materiais',
     query: GetMaterials,
     createMutation: CreateMaterial,
+    updateMutation: UpdateMaterial,
     get queryName () {
       return getQueryName(this.query)
     }
@@ -35,6 +37,7 @@ export const TYPES_MAP = {
     name: 'Tipos de gola',
     query: GetNeckTypes,
     createMutation: CreateNeckType,
+    updateMutation: UpdateNeckType,
     get queryName () {
       return getQueryName(this.query)
     }
@@ -43,6 +46,7 @@ export const TYPES_MAP = {
     name: 'Tipos de manga',
     query: GetSleeveTypes,
     createMutation: CreateSleeveType,
+    updateMutation: UpdateSleeveType,
     get queryName () {
       return getQueryName(this.query)
     }
@@ -51,6 +55,7 @@ export const TYPES_MAP = {
     name: 'Tamanhos',
     query: GetGarmentSizes,
     createMutation: CreateGarmentSize,
+    updateMutation: UpdateGarmentSize,
     get queryName () {
       return getQueryName(this.query)
     }

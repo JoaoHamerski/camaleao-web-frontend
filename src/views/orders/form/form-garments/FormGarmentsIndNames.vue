@@ -1,7 +1,6 @@
 <script>
 import { faPlus, faTrashAlt } from '@fortawesome/free-solid-svg-icons';
 import { maskInteger } from '@/utils/masks';
-import { DEFAULT_GARMENT_INDIVIDUAL_ITEM } from '../OrderForm.vue'
 import { isEmpty } from 'lodash-es';
 
 export default {

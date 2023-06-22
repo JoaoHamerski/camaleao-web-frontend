@@ -11,3 +11,10 @@ mutation CreateSleeveType($input: SleeveTypeInput) {
     name
   }
 }
+
+mutation UpdateSleeveType($id: ID, $input: SleeveTypeInput) {
+  sleeveTypeUpdate(id: $id, input: $input) {
+    id
+    name
+  }
+}
