@@ -2,10 +2,6 @@
     "name": {
         "text": "Nome"
     },
-    "commission": {
-        "text": "Comissão",
-        "format": "currencyBRL"
-    },
     "is_hidden": {
         "text": "Exibição",
         "type": "boolean",

@@ -1,4 +1,5 @@
 <script>
+import { faCalendarAlt } from '@fortawesome/free-solid-svg-icons';
 import { maskDate } from '@/utils/masks'
 
 export default {
@@ -10,7 +11,10 @@ export default {
   },
   data () {
     return {
-      maskDate
+      maskDate,
+      icons: {
+        faCalendarAlt
+      }
     }
   }
 }
@@ -19,6 +23,10 @@ export default {
 <template>
   <AppContainer class="mt-3">
     <template #title>
+      <FontAwesomeIcon
+        :icon="icons.faCalendarAlt"
+        fixed-width
+      />
       Datas
     </template>
 

@@ -1,17 +1,28 @@
 <script>
+import { faFileContract } from '@fortawesome/free-solid-svg-icons'
+
 export default {
   props: {
     form: {
       type: Object,
       required: true
     }
-  }
+  },
+  data: () => ({
+    icons: {
+      faFileContract
+    }
+  })
 }
 </script>
 
 <template>
   <AppContainer>
     <template #title>
+      <FontAwesomeIcon
+        :icon="icons.faFileContract"
+        fixed-width
+      />
       Informações básicas
     </template>
     <template #body>

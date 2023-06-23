@@ -1,0 +1,20 @@
+query GetSleeveTypes {
+  sleeveTypes {
+    id
+    name
+  }
+}
+
+mutation CreateSleeveType($input: SleeveTypeInput) {
+  sleeveTypeCreate(input: $input) {
+    id
+    name
+  }
+}
+
+mutation UpdateSleeveType($id: ID, $input: SleeveTypeInput) {
+  sleeveTypeUpdate(id: $id, input: $input) {
+    id
+    name
+  }
+}

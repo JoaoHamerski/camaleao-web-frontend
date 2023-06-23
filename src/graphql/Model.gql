@@ -1,0 +1,20 @@
+query GetModels {
+  models {
+    id
+    name
+  }
+}
+
+mutation CreateModel($input: ModelInput) {
+  modelCreate(input: $input) {
+    id
+    name
+  }
+}
+
+mutation UpdateModel($id: ID!, $input: ModelInput) {
+  modelUpdate(id: $id, input: $input) {
+    id
+    name
+  }
+}

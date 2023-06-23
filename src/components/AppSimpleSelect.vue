@@ -48,12 +48,16 @@ export default {
       type: [String, Number],
       default: ''
     },
+    disabled: {
+      type: Boolean,
+      default: false
+    },
     options: {
       type: Array,
       default: () => []
     },
     selectClass: {
-      type: String,
+      type: [String, Array],
       default: ''
     },
     hint: {
@@ -125,12 +129,14 @@ export default {
     >
       <select
         :id="id"
+        :disabled="disabled"
         :value="value"
         :name="name"
         :multiple="multiple"
         class="form-select"
         :class="[error && 'is-invalid', selectClass]"
-        @change="$emit('input', $event.target.value)"
+        @input="$emit('input', $event.target.value)"
+        @change="$emit('change', $event.target.value)"
       >
         <option
           v-if="!hideDefaultOption && !multiple"
@@ -140,7 +146,7 @@ export default {
         </option>
         <option
           v-for="(option, index) in options"
-          :key="index"
+          :key="`${name}__${index}`"
           :value="getValue(option)"
         >
           {{ renderLabel(option) }}

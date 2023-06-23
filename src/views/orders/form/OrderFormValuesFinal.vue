@@ -4,10 +4,6 @@ import { GetVias } from '@/graphql/Via.gql'
 
 export default {
   props: {
-    finalValue: {
-      type: [String, Number],
-      required: true
-    },
     form: {
       type: Object,
       required: true
@@ -15,7 +11,11 @@ export default {
     isEdit: {
       type: Boolean,
       default: false
-    }
+    },
+    finalValue: {
+      type: [String, Number],
+      default: ''
+    },
   },
   apollo: {
     vias: {
@@ -26,7 +26,7 @@ export default {
     return {
       vias: [],
       hasDownPayment: false,
-      maskCurrencyBRL: maskCurrencyBRL({ numeralPositiveOnly: true })
+      maskCurrencyBRL: maskCurrencyBRL({ numeralPositiveOnly: true }),
     }
   },
 }
@@ -58,9 +58,7 @@ export default {
             :mask="maskCurrencyBRL"
             :error="form.errors.get('down_payment')"
             optional
-            @input="form.set({
-              down_payment: $event
-            })"
+            @input="form.set({down_payment: $event})"
           >
             Entrada
           </AppInput>
@@ -73,9 +71,7 @@ export default {
             label-prop="name"
             :error="form.errors.get('payment_via_id')"
             :disabled="!hasDownPayment"
-            @input="form.set({
-              payment_via_id: $event
-            })"
+            @input="form.set({payment_via_id: $event})"
           >
             Via da entrada
           </AppSimpleSelect>
@@ -91,9 +87,7 @@ export default {
           name="shipping_value"
           numeric
           optional
-          @input="form.set({
-            shipping_value: $event
-          })"
+          @input="form.set({shipping_value: $event})"
         >
           Frete
         </AppInput>
@@ -107,9 +101,7 @@ export default {
           :error="form.errors.get('discount')"
           optional
           numeric
-          @input="form.set({
-            discount: $event
-          })"
+          @input="form.set({discount: $event})"
         >
           Desconto
         </AppInput>

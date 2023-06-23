@@ -4,35 +4,31 @@ import auth from '@/middleware/auth'
 import middlewarePipeline from '@/router/middlewarePipeline'
 import store from '@/store'
 import roles from '@/constants/roles'
-
-import authRoutes from '@/views/auth/routes'
-import clientsRoutes from '@/views/clients/routes'
-import ordersRoutes from '@/views/orders/routes'
-import dailyCashRoutes from '@/views/daily-cash/routes'
-import cashFlowRoutes from '@/views/cash-flow/routes'
-import expensesRoutes from '@/views/expenses/routes'
-import usersRoutes from '@/views/users/routes'
-import citiesRoutes from '@/views/cities/routes'
-import branchesRoutes from '@/views/branches/routes'
-import clothingTypesRoutes from '@/views/clothing-types/routes'
-import productionRoutes from '@/views/production/routes'
-import productionUsersRoutes from '@/views/production-users/routes'
-import myAccountRoutes from '@/views/my-account/routes'
-import weeklyProductionRoutes from '@/views/weekly-calendar/routes'
-import activitiesRoutes from '@/views/activities/routes'
-import statusRoutes from '@/views/status/routes'
-import productionTrackRoutes from '@/views/production-track/routes'
-import sectoresRoutes from '@/views/sectors/routes'
-import bankEntriesRoutes from '@/views/bank-entries/routes'
-import entriesRoutes from '@/views/entries/routes'
-import receiptGeneratorRoutes from '@/views/receipt-generator/routes'
-import productivityPanelRoutes from '@/views/productivity-panel/routes'
-import budgetGeneratorRoutes from '@/views/budget-generator/routes'
-import bankMirrorRoutes from '@/views/bank-mirror/routes'
+import { flatMap } from 'lodash-es'
 
 import ErrorNotFound from '@/views/_errors/ErrorNotFound.vue'
 
 Vue.use(VueRouter)
+
+const routes = import.meta.glob('../views/**/routes.js', {
+  eager: true,
+  import: 'default'
+})
+
+const NOT_FOUND_ROUTE = {
+  path: '/:pathMatch(.*)*',
+  component: ErrorNotFound
+}
+
+const STARTING_ROUTE = {
+  path: '/',
+  meta: {
+    middleware: [auth]
+  },
+  beforeEnter: async (to, from, next) => {
+    next(getStartingRoute())
+  }
+}
 
 const isUserFromProduction = (user) => {
   const productionRoles = [roles.ESTAMPA, roles.COSTURA]
@@ -44,75 +40,37 @@ const isUserFromDesign = (user) => {
   return roles.DESIGN === +user.role.id
 }
 
-const routes = [
-  {
-    path: '/',
-    meta: {
-      middleware: [auth]
-    },
-    beforeEnter: async (to, from, next) => {
-      const authUser = store.getters['auth/authUser']
+const getStartingRoute = () => {
+  const authUser = store.getters['auth/authUser']
 
-      if (isUserFromProduction(authUser)) {
-        next({name: 'production.index'})
-        return
-      }
+  if (isUserFromProduction(authUser)) {
+    return {name: 'production.index'}
+  }
 
-      if (isUserFromDesign(authUser)) {
-        next({name: 'weekly-calendar.print.index'})
-        return
-      }
+  if (isUserFromDesign(authUser)) {
+    return {name: 'weekly-calendar.print.index'}
+  }
 
-      next({name: 'clients.index'})
-    }
-  },
-  ...activitiesRoutes,
-  ...authRoutes,
-  ...branchesRoutes,
-  ...cashFlowRoutes,
-  ...citiesRoutes,
-  ...clientsRoutes,
-  ...clothingTypesRoutes,
-  ...dailyCashRoutes,
-  ...expensesRoutes,
-  ...myAccountRoutes,
-  ...ordersRoutes,
-  ...productionRoutes,
-  ...productionUsersRoutes,
-  ...usersRoutes,
-  ...weeklyProductionRoutes,
-  ...statusRoutes,
-  ...productionTrackRoutes,
-  ...sectoresRoutes,
-  ...bankEntriesRoutes,
-  ...entriesRoutes,
-  ...receiptGeneratorRoutes,
-  ...productivityPanelRoutes,
-  ...budgetGeneratorRoutes,
-  ...bankMirrorRoutes
-]
-
-if (import.meta.env.MODE === 'development') {
-  routes.push({
-    path: '/testes',
-    component: () => import('@/views/TheTest.vue')
-  })
+  return {name: 'clients.index'}
 }
-
-routes.push({
-  path: '/:pathMatch(.*)*', component: ErrorNotFound
-})
 
 const router = new VueRouter({
   mode: 'history',
-  routes
+  routes: [
+    STARTING_ROUTE,
+    ...flatMap(routes),
+    NOT_FOUND_ROUTE
+  ]
 })
 
 router.beforeEach((to, from, next) => {
   const { middleware, roles } = to.meta
   const context = { from, next, roles }
 
-  store.commit('SET_ERROR', null)
+  if (store.state.error !== null) {
+    store.commit('SET_ERROR', null)
+  }
+
   store.commit('SET_IS_PAGE_LOADING', true)
 
   if (!middleware) {

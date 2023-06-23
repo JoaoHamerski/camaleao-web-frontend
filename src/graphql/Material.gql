@@ -1,0 +1,20 @@
+query GetMaterials {
+  materials {
+    id
+    name
+  }
+}
+
+mutation CreateMaterial($input: MaterialInput) {
+  materialCreate(input: $input) {
+    id
+    name
+  }
+}
+
+mutation UpdateMaterial($id: ID, $input: MaterialInput) {
+  materialUpdate(id: $id, input: $input) {
+    id
+    name
+  }
+}

@@ -89,6 +89,10 @@ export default {
     numeric: {
       type: Boolean,
       default: false
+    },
+    autoClearError: {
+      type: Boolean,
+      default: true
     }
   },
   data () {

@@ -9,7 +9,6 @@ const SUBJECT_TYPES = [
   { text: 'Clientes', value: 'Client' },
   { text: 'Pedidos', value: 'Order' },
   { text: 'Pagamentos', value: 'Payment' },
-  { text: 'Comissões', value: 'CommissionUser' },
   { text: 'Despesas', value: 'Expense' },
   { text: 'Cidades', value: 'City' },
   { text: 'Filiais', value: 'Branch' },

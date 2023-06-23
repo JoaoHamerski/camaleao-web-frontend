@@ -30,6 +30,7 @@ function MaskedInputElement (h, context, events) {
 
   return (
     <input
+      data-disable-clear-error={!context.autoClearError}
       class={context.inputClasses}
       value={context.value}
       name={context.name}

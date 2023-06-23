@@ -44,6 +44,7 @@ export default {
   apollo: {
     order: {
       query: GetOrder,
+      fetchPolicy: 'no-cache',
       variables () {
         const { clientKey, orderKey } = this.$route.params
 
@@ -82,7 +83,7 @@ export default {
   },
   computed: {
     isLoading () {
-      return !!this.$apollo.queries.order.loading
+      return isEmpty(this.order)
     }
   },
   methods: {

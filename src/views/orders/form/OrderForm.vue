@@ -2,27 +2,52 @@
 
 import Form from '@/utils/Form'
 import { formatDatetime } from '@/utils/formatters'
-import { map, pick } from 'lodash-es'
+import { map, pick, cloneDeep, uniqueId, omit, isEmpty } from 'lodash-es'
 import { CreateOrder, UpdateOrder } from '@/graphql/Order.gql'
 import { handleError } from '@/utils/forms'
-import { GetDailyCashDetailedFlow, GetDailyCashBalance } from '@/graphql/DailyCash.gql'
 import { GetClothingTypes } from '@/graphql/ClothingType.gql'
 
 import OrderFormClient from './OrderFormClient.vue'
 import OrderFormBasicInfo from './OrderFormBasicInfo.vue'
-import OrderFormValues from './OrderFormValues.vue'
 import OrderFormDates from './OrderFormDates.vue'
 import OrderFormFiles from './OrderFormFiles.vue'
+import FormGarments from './form-garments/FormGarments.vue'
+import OrderFormValuesFinalWrapper from './OrderFormValuesFinalWrapper.vue'
+
+const OrderFormClothingTypes = () => import('./OrderFormClothingTypes.vue')
 
 const NUMBER_OF_QUERIES = 1
+
+export const DEFAULT_GARMENT_INDIVIDUAL_ITEM = {
+  name: '', size_id: '', number: ''
+}
+
+export const DEFAULT_GARMENT_ITEM = {
+   size_id: '', quantity: '',
+}
+
+export const DEFAULT_GARMENT = {
+  id: uniqueId(),
+  individual_names: false,
+  model_id: '',
+  material_id: '',
+  neck_type_id: '',
+  sleeve_type_id: '',
+  items: [{ ...DEFAULT_GARMENT_ITEM }],
+  items_individual: [{ ...DEFAULT_GARMENT_INDIVIDUAL_ITEM }],
+  match: null,
+  total: ''
+}
 
 export default {
   components: {
     OrderFormClient,
     OrderFormBasicInfo,
-    OrderFormValues,
+    OrderFormClothingTypes,
     OrderFormDates,
-    OrderFormFiles
+    OrderFormFiles,
+    OrderFormValuesFinalWrapper,
+    FormGarments,
   },
   apollo: {
     clothingTypes: {
@@ -44,10 +69,6 @@ export default {
     }
   },
   props: {
-    isEdit: {
-      type: Boolean,
-      default: false
-    },
     order: {
       type: Object,
       default: () => {}
@@ -59,9 +80,6 @@ export default {
   },
   data () {
     return {
-      isLoading: false,
-      queriesLoading: NUMBER_OF_QUERIES,
-      clothingTypes: [],
       form: new Form({
         name: '',
         code: '',
@@ -70,14 +88,28 @@ export default {
         down_payment: 'R$ ',
         shipping_value: 'R$ ',
         payment_via_id: '',
-        seam_date: '',
-        print_date: '',
         delivery_date: '',
         clothing_types: [],
         art_paths: [],
         size_paths: [],
-        payment_voucher_paths: []
-      })
+        payment_voucher_paths: [],
+        garments: [{...cloneDeep(DEFAULT_GARMENT)}],
+      }),
+      isLoading: false,
+      queriesLoading: NUMBER_OF_QUERIES,
+      clothingTypes: [],
+    }
+  },
+  computed: {
+    isEdit () {
+      return !isEmpty(this.order)
+    },
+    hasClothingTypes () {
+      if (!this.isEdit) {
+        return false
+      }
+
+      return !!this.order.clothing_types.length
     }
   },
   watch: {
@@ -88,8 +120,50 @@ export default {
     }
   },
   methods: {
+    onNewGarment () {
+      this.form.garments.push({
+        ...cloneDeep(DEFAULT_GARMENT),
+        id: uniqueId()
+      })
+    },
+    onNewGarmentSize ({ garmentIndex, isIndividual }) {
+      if (isIndividual) {
+        this.form.garments[garmentIndex].items_individual.push({...DEFAULT_GARMENT_INDIVIDUAL_ITEM})
+        return
+      }
+
+      this.form.garments[garmentIndex].items.push({...DEFAULT_GARMENT_ITEM})
+    },
+    onDeleteGarmentSize({ garmentIndex, index, isIndividual}) {
+      if (isIndividual) {
+        this.form.garments[garmentIndex].items_individual.splice(index, 1)
+        return
+      }
+
+      this.form.garments[garmentIndex].items.splice(index, 1)
+    },
+    onDuplicateGarment ({indexToClone}) {
+      const duplicate = cloneDeep(this.form.garments[indexToClone])
+      const newIndex = this.form.garments.length
+
+      this.onNewGarment()
+
+      this.$nextTick(() => {
+        Object.assign(this.form.garments[newIndex], omit(duplicate, ['id']))
+      })
+    },
+    onDeleteGarment({indexToDelete}) {
+      this.form.garments.splice(indexToDelete, 1)
+    },
     getFile (item) {
       return item.base64 || item
+    },
+    getFormattedGarments () {
+      return this.form.garments.map(garment => ({
+        ...omit(garment, [
+          'id', 'open', 'total', 'match'
+        ])
+      }))
     },
     getFormattedForm () {
       const form = { ...this.form.data() }
@@ -98,6 +172,7 @@ export default {
       form.art_paths = map(form.art_paths, this.getFile)
       form.size_paths = map(form.size_paths, this.getFile)
       form.payment_voucher_paths = map(form.payment_voucher_paths, this.getFile)
+      form.garments = this.getFormattedGarments()
 
       return form
     },
@@ -110,8 +185,7 @@ export default {
           variables: {
             id: this.order.id,
             input: { ...data }
-          },
-          refetchQueries: [GetDailyCashDetailedFlow, GetDailyCashBalance]
+          }
         })
 
         this.$helpers.clearCacheFrom({ fieldName: 'weeklyProduction' })
@@ -121,7 +195,7 @@ export default {
       }
     },
     async create () {
-      const data = this.getFormattedForm()
+      const input = this.getFormattedForm()
       const { clientKey } = this.$route.params
 
       try {
@@ -129,9 +203,8 @@ export default {
           mutation: CreateOrder,
           variables: {
             client_id: clientKey,
-            input: { ...data }
-          },
-          refetchQueries: [GetDailyCashDetailedFlow, GetDailyCashBalance]
+            input
+          }
         })
 
         this.$helpers.clearCacheFrom([
@@ -153,8 +226,6 @@ export default {
         'code',
         'discount',
         'shipping_value',
-        'seam_date',
-        'print_date',
         'delivery_date',
         'art_paths',
         'size_paths',
@@ -172,18 +243,18 @@ export default {
         : this.$helpers.toBRL(fields.shipping_value)
 
       fields.price = this.$helpers.toBRL(fields.price)
-      fields.seam_date = formatDatetime(fields.seam_date)
-      fields.print_date = formatDatetime(fields.print_date)
       fields.delivery_date = formatDatetime(fields.delivery_date)
 
       for (const field in fields) {
         this.form[field] = fields[field]
       }
 
-      this.populateClothingTypes(order.clothing_types)
+      if (order.clothing_types.length) {
+        this.populateClothingTypes(order.clothing_types)
+      }
     },
     async onSubmit () {
-      this.isLoading = true
+      // this.isLoading = true
 
       if (this.isEdit) {
         await this.update()
@@ -234,7 +305,29 @@ export default {
       class="mb-3"
     />
 
-    <OrderFormValues
+    <template v-if="!hasClothingTypes">
+      <FormGarments
+        v-if="!hasClothingTypes"
+        :form="form"
+        :order="order"
+        :is-edit="isEdit"
+        class="mb-3"
+        @new-garment="onNewGarment"
+        @new-garment-size="onNewGarmentSize"
+        @delete-garment-size="onDeleteGarmentSize"
+        @duplicate-garment="onDuplicateGarment"
+        @delete-garment="onDeleteGarment"
+      />
+
+      <OrderFormValuesFinalWrapper
+        v-if="!hasClothingTypes"
+        :form="form"
+        class="mb-3"
+      />
+    </template>
+
+    <OrderFormClothingTypes
+      v-else
       v-bind="{order, form, isEdit, isOrderPreRegistered, clothingTypes}"
       class="mb-3"
     />

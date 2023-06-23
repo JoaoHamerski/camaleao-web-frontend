@@ -1,0 +1,71 @@
+fragment GarmentMatchParts on GarmentMatch {
+  id
+  model {
+    id
+    name
+  }
+
+  material {
+    id
+    name
+  }
+
+  neck_type {
+    id
+    name
+  }
+
+  sleeve_type {
+    id
+    name
+  }
+
+  neck_type {
+    id
+    name
+  }
+
+  values {
+    id
+    value
+    start
+    end
+  }
+
+  sizes {
+    id
+    name
+    pivot {
+      ... on GarmentMatchGarmentSize {
+        id
+        value
+      }
+    }
+  }
+
+  unique_value
+}
+
+query GetGarmentMatches {
+  garmentMatches {
+    ...GarmentMatchParts
+  }
+}
+
+mutation CreateGarmentMatch($input: GarmentMatchInput) {
+  garmentMatchCreate(input: $input) {
+    ...GarmentMatchParts
+  }
+}
+
+mutation UpdateGarmentMatch($id: ID!, $input: GarmentMatchInput) {
+  garmentMatchUpdate(id: $id, input: $input) {
+    ...GarmentMatchParts
+  }
+}
+
+mutation DeleteGarmentMatch($id: ID!) {
+  garmentMatchDelete(id: $id) {
+    id
+  }
+}

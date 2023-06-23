@@ -12,7 +12,6 @@ import {
   faCog,
   faCity,
   faBuilding,
-  faTshirt,
   faUser,
   faListAlt,
   faSignOutAlt,
@@ -25,16 +24,11 @@ import {
   faThLarge,
   faColumns,
   faDolly,
-  faFileInvoiceDollar
+  faFileInvoiceDollar,
+  faFileAlt
 } from '@fortawesome/free-solid-svg-icons'
 
 const ITEMS = {
-  PRODUCAO: {
-    title: 'Produção',
-    icon: faBox,
-    route: { name: 'production.index' },
-    condition: () => canView(ROLES.COSTURA, ROLES.ESTAMPA)
-  },
   CLIENTE: {
     title: 'Cliente',
     icon: faUsers,
@@ -155,7 +149,7 @@ const ITEMS = {
         this.USUARIOS,
         this.CIDADES,
         this.FILIAIS,
-        this.TIPOS_DE_ROUPAS,
+        this.FORMULARIO_DE_PEDIDO,
         this.STATUS,
         this.SETORES,
         this.ENTRADAS_BANCARIAS
@@ -179,11 +173,14 @@ const ITEMS = {
       route: { name: 'branches.index' },
       condition: () => canView(ROLES.GERENCIA)
     },
-    TIPOS_DE_ROUPAS: {
-      title: 'Tipos de roupas',
-      icon: faTshirt,
-      route: { name: 'clothing-types.index' },
-      condition: () => canView(ROLES.GERENCIA)
+    FORMULARIO_DE_PEDIDO: {
+      title: 'Formulário de pedido',
+      icon: faFileAlt,
+      route: { name: 'garments.index' },
+      condition: () => canView(ROLES.GERENCIA),
+      style: {
+        fontSize: '.85rem'
+      }
     },
     STATUS: {
       title: 'Status',
@@ -240,12 +237,6 @@ const ITEMS = {
       )
     }
   },
-  PRODUCAO_USUARIOS: {
-    title: 'Produção',
-    icon: faBox,
-    route: { name: 'production-users.index' },
-    condition: () => canView(ROLES.GERENCIA)
-  },
   MINHA_CONTA: {
     title: 'Minha conta',
     icon: faUser,
@@ -265,13 +256,11 @@ const ITEMS = {
 }
 
 export default [
-  ITEMS.PRODUCAO,
   ITEMS.CLIENTE,
   ITEMS.PEDIDOS,
   ITEMS.CAIXA_DIARIO,
   ITEMS.LINHA_DE_PRODUCAO,
   ITEMS.FINANCEIRO,
-  ITEMS.PRODUCAO_USUARIOS,
   ITEMS.GERENCIAMENTO,
   ITEMS.OUTROS,
   ITEMS.MINHA_CONTA,

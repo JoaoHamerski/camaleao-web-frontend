@@ -1,5 +1,5 @@
 <script lang="jsx">
-import { get, map } from 'lodash-es'
+import { get, map, uniqueId } from 'lodash-es'
 import classNames from 'classnames'
 
 import TableCell from './TableCell.vue'
@@ -49,10 +49,10 @@ const tableCellContent = (h, context, header, item) => {
 }
 
 const renderTableCell = (h, context, item) => {
-  return map(context.headers, (header, index) => {
+  return map(context.headers, (header) => {
     return (
       <TableCell
-        key={index}
+        key={uniqueId()}
         vOn:clicked={() => { context.redirectTo(item) }}
         isUsingSlot={context.hasSlot(`items.${header.value}`)}
         hasRowLinks={context.hasRowLinks}
