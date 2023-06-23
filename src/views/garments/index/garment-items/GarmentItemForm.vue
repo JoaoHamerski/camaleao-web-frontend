@@ -5,7 +5,7 @@ import { handleError } from '@/utils/forms'
 import { isEmpty } from 'lodash-es'
 
 const INPUT_SIZE_MASK = {
-  blocks: [2],
+  blocks: [3],
   uppercase: true
 }
 
