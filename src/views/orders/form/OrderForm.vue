@@ -5,7 +5,6 @@ import { formatDatetime } from '@/utils/formatters'
 import { map, pick, cloneDeep, uniqueId, omit, isEmpty } from 'lodash-es'
 import { CreateOrder, UpdateOrder } from '@/graphql/Order.gql'
 import { handleError } from '@/utils/forms'
-import { GetDailyCashDetailedFlow, GetDailyCashBalance } from '@/graphql/DailyCash.gql'
 import { GetClothingTypes } from '@/graphql/ClothingType.gql'
 
 import OrderFormClient from './OrderFormClient.vue'
@@ -306,23 +305,26 @@ export default {
       class="mb-3"
     />
 
-    <FormGarments
-      :form="form"
-      :order="order"
-      :is-edit="isEdit"
-      class="mb-3"
-      @new-garment="onNewGarment"
-      @new-garment-size="onNewGarmentSize"
-      @delete-garment-size="onDeleteGarmentSize"
-      @duplicate-garment="onDuplicateGarment"
-      @delete-garment="onDeleteGarment"
-    />
+    <template v-if="!hasClothingTypes">
+      <FormGarments
+        v-if="!hasClothingTypes"
+        :form="form"
+        :order="order"
+        :is-edit="isEdit"
+        class="mb-3"
+        @new-garment="onNewGarment"
+        @new-garment-size="onNewGarmentSize"
+        @delete-garment-size="onDeleteGarmentSize"
+        @duplicate-garment="onDuplicateGarment"
+        @delete-garment="onDeleteGarment"
+      />
 
-    <OrderFormValuesFinalWrapper
-      v-if="!hasClothingTypes"
-      :form="form"
-      class="mb-3"
-    />
+      <OrderFormValuesFinalWrapper
+        v-if="!hasClothingTypes"
+        :form="form"
+        class="mb-3"
+      />
+    </template>
 
     <OrderFormClothingTypes
       v-else

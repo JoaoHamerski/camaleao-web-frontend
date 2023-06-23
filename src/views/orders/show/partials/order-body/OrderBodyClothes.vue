@@ -1,14 +1,14 @@
 <script>
 const OrderClothingTypes = () => import('../OrderClothingTypes.vue')
 import OrderGarments from '../order-garments/OrderGarments.vue'
-import OrderBodyClothesIndividualNames from './OrderBodyClothesIndividualNames.vue';
+import OrderBodyIndividualNames from '../order-individual-names/OrderBodyIndividualNames.vue';
 import { faTshirt } from '@fortawesome/free-solid-svg-icons';
 
 export default {
   components: {
     OrderClothingTypes,
     OrderGarments,
-    OrderBodyClothesIndividualNames
+    OrderBodyIndividualNames
   },
   props: {
     order: {
@@ -46,13 +46,14 @@ export default {
           class="mt-3"
         />
         <OrderGarments
+          v-else
           :garments="order.garments"
           :has-individual-items="order.has_individual_names"
           class="mt-3"
         />
       </div>
       <div v-if="order.has_individual_names">
-        <OrderBodyClothesIndividualNames :order="order" />
+        <OrderBodyIndividualNames :order="order" />
       </div>
     </template>
   </AppContainer>
