@@ -1,9 +1,5 @@
 <script>
 import { ConfirmBankMirrorEntry } from '@/graphql/Entry.gql'
-import { GetCashFlowEntries } from '@/graphql/CashFlow.gql'
-import { GetExpenses } from '@/graphql/Expense.gql'
-import { GetDailyCash } from '@/graphql/DailyCash.gql'
-import { apolloClientInstance } from '@/vue-apollo'
 
 import { faPlus, faCheck } from '@fortawesome/free-solid-svg-icons'
 import { get } from 'lodash-es'

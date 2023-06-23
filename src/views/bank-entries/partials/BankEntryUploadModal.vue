@@ -1,6 +1,6 @@
 <script>
 import { faUpload } from '@fortawesome/free-solid-svg-icons'
-import { GetBankEntries, UploadBankEntry } from '@/graphql/BankEntry.gql'
+import { UploadBankEntry } from '@/graphql/BankEntry.gql'
 
 export default {
   props: {

@@ -74,7 +74,7 @@ export default {
       const garments = this.order.garments
       const garmentsCount = garments.length
 
-      for (const i of Array.from({length: garmentsCount - 1})) {
+      for (const _ of Array.from({length: garmentsCount - 1})) {
         this.onNewItem(false)
       }
     },

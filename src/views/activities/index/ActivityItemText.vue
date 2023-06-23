@@ -9,7 +9,6 @@ import {
   faTruck,
   faBuilding,
   faTshirt,
-  faBox
 } from '@fortawesome/free-solid-svg-icons'
 import { formatDatetime } from '@/utils/formatters'
 

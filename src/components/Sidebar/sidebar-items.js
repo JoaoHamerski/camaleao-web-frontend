@@ -4,7 +4,6 @@ import store from '@/store'
 import {
   faBoxes,
   faUsers,
-  faBox,
   faCashRegister,
   faCalendarAlt,
   faDollarSign,

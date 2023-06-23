@@ -1,6 +1,6 @@
 <script>
 import { faQuestionCircle } from '@fortawesome/free-solid-svg-icons'
-import { GetBranches, CreateBranch, UpdateBranch } from '@/graphql/Branch.gql'
+import { CreateBranch, UpdateBranch } from '@/graphql/Branch.gql'
 import { GetCities } from '@/graphql/City.gql'
 import { handleError, handleSuccess } from '@/utils/forms'
 import { filter, map } from 'lodash-es'
