@@ -85,7 +85,6 @@ export default {
         code: '',
         client_id: '',
         discount: 'R$ ',
-        down_payment: 'R$ ',
         shipping_value: 'R$ ',
         payment_via_id: '',
         delivery_date: '',

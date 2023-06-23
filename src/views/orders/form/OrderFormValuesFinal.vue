@@ -34,50 +34,6 @@ export default {
 
 <template>
   <div class="mt-3">
-    <div
-      v-if="!isEdit"
-      class="row"
-    >
-      <div class="form-group">
-        <AppCheckbox
-          id="hasDownPaymentCheckbox"
-          v-model="hasDownPayment"
-          name="hasDownPaymentCheckbox"
-        >
-          Pagamento de entrada
-        </AppCheckbox>
-      </div>
-      <template v-if="hasDownPayment">
-        <div
-          class="col-12 col-sm"
-        >
-          <AppInput
-            id="down_payment"
-            :value="form.down_payment"
-            name="down_payment"
-            :mask="maskCurrencyBRL"
-            :error="form.errors.get('down_payment')"
-            optional
-            @input="form.set({down_payment: $event})"
-          >
-            Entrada
-          </AppInput>
-        </div>
-        <div class="col-12 col-sm">
-          <AppSimpleSelect
-            :value="form.payment_via_id"
-            name="payment_via_id"
-            :options="vias"
-            label-prop="name"
-            :error="form.errors.get('payment_via_id')"
-            :disabled="!hasDownPayment"
-            @input="form.set({payment_via_id: $event})"
-          >
-            Via da entrada
-          </AppSimpleSelect>
-        </div>
-      </template>
-    </div>
     <div class="row">
       <div class="col-6 col-sm">
         <AppInput
