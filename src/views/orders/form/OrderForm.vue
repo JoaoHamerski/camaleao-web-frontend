@@ -254,7 +254,7 @@ export default {
       }
     },
     async onSubmit () {
-      // this.isLoading = true
+      this.isLoading = true
 
       if (this.isEdit) {
         await this.update()
