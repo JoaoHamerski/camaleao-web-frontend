@@ -291,7 +291,19 @@ export default {
 </script>
 
 <template>
+  <div
+    v-if="queriesLoading"
+    class="text-center my-5"
+  >
+    <div
+      class="spinner-grow text-primary"
+      role="status"
+    >
+      <span class="visually-hidden">Loading...</span>
+    </div>
+  </div>
   <AppForm
+    v-else
     :on-submit="onSubmit"
     :form="form"
   >

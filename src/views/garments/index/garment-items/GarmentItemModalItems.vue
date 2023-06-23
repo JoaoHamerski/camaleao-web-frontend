@@ -37,6 +37,11 @@ export default {
       faEdit
     }
   }),
+  computed: {
+    isQueryLoading () {
+      return this.$apollo.queries.items.loading
+    }
+  },
   methods: {
     async submit (id = null, input) {
       const mutation = id ? this.item.updateMutation : this.item.createMutation
@@ -70,7 +75,13 @@ export default {
 </script>
 
 <template>
-  <div>
+  <div
+    v-if="isQueryLoading"
+    class="py-5"
+  >
+    <AppLoading />
+  </div>
+  <div v-else>
     <ul class="list-group">
       <div
         v-if="!items.length && !newItem"

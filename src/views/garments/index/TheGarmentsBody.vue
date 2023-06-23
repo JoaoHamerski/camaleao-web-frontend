@@ -7,11 +7,11 @@ export default {
   apollo: {
     garmentMatches: {
       query: GetGarmentMatches,
-      fetchPolicy: 'no-cache'
+      fetchPolicy: 'no-cache',
     }
   },
   data: () => ({
-    garmentMatches: [],
+    garmentMatches: ['empty'],
     icons: {
       faEdit,
       faTrashAlt
@@ -19,7 +19,7 @@ export default {
   }),
   computed: {
     isGarmentMatchesLoading () {
-      return !!this.$apollo.queries.garmentMatches.loading
+      return this.garmentMatches[0] === 'empty'
     },
     headers () {
       return [
@@ -47,12 +47,13 @@ export default {
   <div class="position-relative">
     <div
       v-if="isGarmentMatchesLoading"
-      class="py-4"
+      class="py-5"
     >
       <AppLoading />
     </div>
 
     <AppTable
+      v-else
       :headers="headers"
       :items="garmentMatches"
     >

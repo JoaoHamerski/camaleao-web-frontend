@@ -49,7 +49,7 @@ export default {
       faTshirt,
       faTrashAlt
     },
-    garmentMatches: []
+    garmentMatches: ['empty']
   }),
   computed: {
     navItems () {
@@ -58,8 +58,8 @@ export default {
         value: 'nav-' + item.id
       }))
     },
-    isClothMatchesLoading () {
-      return !!this.$apollo.queries.garmentMatches.loading
+    isGarmentMatchesLoading () {
+      return this.garmentMatches[0] === 'empty'
     },
     optionsListeners () {
       return {
@@ -112,7 +112,6 @@ export default {
 
 <template>
   <div class="position-relative">
-    <AppLoading v-if="isClothMatchesLoading" />
     <AppContainer>
       <template #title>
         <FontAwesomeIcon
@@ -122,8 +121,19 @@ export default {
         Roupas
       </template>
       <template #body>
+        <div
+          v-if="isGarmentMatchesLoading"
+          class="text-center my-5"
+        >
+          <div
+            class="spinner-grow text-primary"
+            role="status"
+          >
+            <span class="visually-hidden">Loading...</span>
+          </div>
+        </div>
         <AppNavPills
-          v-if="garmentMatches.length"
+          v-else-if="!isGarmentMatchesLoading && garmentMatches.length"
           v-model="activeItem"
           :items="navItems"
           no-fill
