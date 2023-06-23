@@ -184,6 +184,9 @@ export default {
 
       this.$emit('matched', this.matched)
       this.possibleMatch = null
+      this.$nextTick(() => {
+        this.$forceUpdate()
+      })
     },
     filledFieldsMatch () {
       if (!this.possibleMatch) {
