@@ -83,15 +83,16 @@ export default {
     >
       <div class="col-3">
         <AppSimpleSelect
-          :id="`garments.${index}.size`"
+          :id="`garments.${garmentIndex}.items.${index}.size_id`"
           :value="form.garments[garmentIndex].items[index].size_id"
-          :name="`garments.${index}.size`"
+          :name="`garments.${garmentIndex}.items.${index}.size_id`"
           :options="sizes"
           label-prop="name"
           select-class="form-select-sm"
           placeholder="Selecione um tam."
           remove-default-margin
           :disabled="!sizes.length"
+          :error="form.errors.has(`garments.${garmentIndex}.items.${index}.size_id`)"
           @input="form.set({
             [`garments[${garmentIndex}].items[${index}].size_id`]: $event
           })"
@@ -100,12 +101,13 @@ export default {
 
       <div class="col-2">
         <AppInput
-          :id="`garments.${index}.quantity`"
+          :id="`garments.${garmentIndex}.items.${index}.quantity`"
           :value="form.garments[garmentIndex].items[index].quantity"
-          :name="`garments.${index}.quantity`"
+          :name="`garments.${garmentIndex}.items.${index}.quantity`"
           input-class="form-control-sm"
           :default-margin="false"
           :mask="maskInteger"
+          :error="form.errors.has(`garments.${garmentIndex}.items.${index}.quantity`)"
           @input="form.set({
             [`garments[${garmentIndex}].items[${index}].quantity`]: $event
           })"

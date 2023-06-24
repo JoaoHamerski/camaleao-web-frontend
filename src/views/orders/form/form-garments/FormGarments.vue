@@ -144,7 +144,12 @@ export default {
             v-for="garment in form.garments"
             #[`headers.nav-${garment.id}`]="{ item }"
           >
-            <div :key="garment.id">
+            <div
+              :key="garment.id"
+              :class="{
+                'text-success': garment.total
+              }"
+            >
               <div>
                 {{ item.text }}
                 <span v-if="garment.total">

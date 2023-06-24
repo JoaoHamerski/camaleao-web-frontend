@@ -1,5 +1,5 @@
 <script>
-import { isEmpty, isNil, isPlainObject, first } from 'lodash-es'
+import { isEmpty, isNil, isPlainObject, first, isBoolean } from 'lodash-es'
 
 export default {
   props: {
@@ -74,6 +74,7 @@ export default {
     }
   },
   methods: {
+    isBoolean,
     getValue (option) {
       if (isPlainObject(first(this.options))) {
         return option[this.valueProp]
@@ -155,7 +156,7 @@ export default {
       <slot name="append" />
     </div>
     <div
-      v-if="error"
+      v-if="error && !isBoolean(error)"
       class="small text-danger mb-1"
     >
       {{ error }}
