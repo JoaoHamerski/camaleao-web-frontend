@@ -180,7 +180,7 @@ export default {
       Novo intervalo
     </a>
 
-    <div class="row small fw-bold mt-2">
+    <div class="row d-none d-lg-flex small fw-bold mt-2">
       <div class="col-2">
         Unid.
       </div>
@@ -198,24 +198,31 @@ export default {
       <div
         v-if="index === form.values.length - 1"
         :key="`last-item-${index}`"
-        class="row align-items-baseline"
+        class="row flex-column flex-lg-row align-items-baseline g-0"
       >
-        <div class="col-2">
-          <hr class="pb-0 mb-1">
+        <div class="horizontal-line d-block d-lg-none">
+          <span class="small text-secondary fw-bold text-center">
+            Intervalo final
+          </span>
         </div>
-        <div class="col-1 small text-nowrap">
-          mais de
+        <div class="row col align-items-baseline g-0">
+          <div class="col-4 col-lg-5 g-0">
+            <hr class="pb-0 mb-1">
+          </div>
+          <div class="col-3 col-lg-2 small text-nowrap text-center">
+            mais de
+          </div>
+          <div class="col-5">
+            <AppInput
+              :id="`values.${index}.start`"
+              :value="getEndValue()"
+              :name="`values.${index}.start`"
+              :mask="maskInteger"
+              disabled
+            />
+          </div>
         </div>
-        <div class="col-2">
-          <AppInput
-            :id="`values.${index}.start`"
-            :value="getEndValue()"
-            :name="`values.${index}.start`"
-            :mask="maskInteger"
-            disabled
-          />
-        </div>
-        <div class="col-1 text-center">
+        <div class="col-1 text-center d-none d-lg-block">
           =
         </div>
         <div class="col">
@@ -228,57 +235,61 @@ export default {
           />
         </div>
       </div>
-
       <div
         v-else
         :key="index"
-        class="row align-items-baseline"
+        class="row flex-column flex-lg-row align-items-baseline g-0"
       >
-        <div class="col-2">
-          <AppInput
-            :id="`values.${index}.start`"
-            :value="getStartValue(index)"
-            :name="`values.${index}.start`"
-            disabled
-            :mask="maskInteger"
-          />
+        <div class="horizontal-line d-block d-lg-none">
+          <span class="small text-secondary fw-bold text-center">Intervalo {{ index + 1 }}</span>
         </div>
-        <div class="col-1 small text-center">
-          até
+        <div class="row col align-items-baseline g-0">
+          <div class="col-5">
+            <AppInput
+              :id="`values.${index}.start`"
+              :value="getStartValue(index)"
+              :name="`values.${index}.start`"
+              disabled
+              :mask="maskInteger"
+            />
+          </div>
+          <div class="col-2 small text-center">
+            até
+          </div>
+          <div class="col-5">
+            <AppInput
+              :id="`values.${index}.end`"
+              v-model="form.values[index].end"
+              :name="`values.${index}.end`"
+              :mask="maskInteger"
+              :error="form.errors.get(`values.${index}.end`)"
+              :auto-clear-error="false"
+            />
+          </div>
         </div>
-        <div class="col-2">
-          <AppInput
-            :id="`values.${index}.end`"
-            v-model="form.values[index].end"
-            :name="`values.${index}.end`"
-            :mask="maskInteger"
-            :error="form.errors.get(`values.${index}.end`)"
-            :auto-clear-error="false"
-          />
-        </div>
-        <div class="col-1 text-center">
+        <div class="col-1 d-none d-lg-block text-center">
           =
         </div>
-        <div class="col">
-          <AppInput
-            :id="`values.${index}.value`"
-            v-model="form.values[index].value"
-            :name="`values.${index}.value`"
-            :mask="maskCurrencyBRL"
-            :error="form.errors.get(`values.${index}.value`)"
-          />
-        </div>
-        <div
-          class="col-1"
-        >
-          <AppButton
-            btn-class="btn-sm"
-            outlined
-            color="danger"
-            :icon="icons.faTrashAlt"
-            :disabled="isDeleteItemDisabled(index)"
-            @click.prevent="onDeleteClick(index)"
-          />
+        <div class="row col g-0">
+          <div class="col">
+            <AppInput
+              :id="`values.${index}.value`"
+              v-model="form.values[index].value"
+              :name="`values.${index}.value`"
+              :mask="maskCurrencyBRL"
+              :error="form.errors.get(`values.${index}.value`)"
+            />
+          </div>
+          <div class="col-2 col-lg-1 text-end ms-0 ms-lg-2">
+            <AppButton
+              btn-class="btn-sm"
+              outlined
+              color="danger"
+              :icon="icons.faTrashAlt"
+              :disabled="isDeleteItemDisabled(index)"
+              @click.prevent="onDeleteClick(index)"
+            />
+          </div>
         </div>
       </div>
     </template>

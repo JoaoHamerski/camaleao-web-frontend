@@ -73,7 +73,7 @@ export default {
 
 <template>
   <div>
-    <div class="row position-relative">
+    <div class="row flex-column flex-lg-row position-relative">
       <AppLoading v-if="isQueriesLoading" />
       <div class="col">
         <AppSimpleSelect

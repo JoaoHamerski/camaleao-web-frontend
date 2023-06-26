@@ -68,13 +68,13 @@ export default {
       Escolha como os tamanhos irão aparecer quando essa combinação for selecionada
     </div>
     <div class="row small fw-bold">
-      <div class="col-3">
+      <div class="col-4 col-md-3">
         Tamanho
       </div>
-      <div class="col-3">
+      <div class="col-4 col-md-3">
         Adição de <span class="text-secondary">(opcional)</span>
       </div>
-      <div class="col-2">
+      <div class="col-4 col-md-2">
         Exibir
         <FontAwesomeIcon
           v-tippy
@@ -98,7 +98,7 @@ export default {
         :key="size.id"
         class="row d-flex align-items-baseline"
       >
-        <div class="col-3">
+        <div class="col-4 col-md-3">
           <AppInput
             :id="`sizes.${index}.name`"
             disabled
@@ -106,7 +106,7 @@ export default {
             :name="`sizes.${index}.name`"
           />
         </div>
-        <div class="col-3">
+        <div class="col-4 col-md-3">
           <AppInput
             :id="`sizes.${index}.value`"
             v-model="form.sizes[index].value"
@@ -115,7 +115,7 @@ export default {
             :mask="maskCurrencyBRL"
           />
         </div>
-        <div class="col-2">
+        <div class="col-4 col-md-2">
           <AppCheckboxSwitch
             :id="`sizes.${index}.is_shown`"
             v-model="form.sizes[index].is_shown"

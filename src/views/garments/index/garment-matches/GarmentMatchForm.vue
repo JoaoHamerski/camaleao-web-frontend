@@ -160,6 +160,7 @@ export default {
           btn-class="fw-bold btn-lg w-50"
           type="submit"
           :loading="isLoading"
+          block
         >
           SALVAR
         </AppButton>

@@ -65,7 +65,7 @@ export default {
 
 <template>
   <div>
-    <div class="row">
+    <div class="row d-none d-md-flex">
       <div class="col-4 small">
         Nome
       </div>
@@ -80,56 +80,65 @@ export default {
     <div
       v-for="(_, index) in form.garments[garmentIndex].items_individual"
       :key="index"
-      class="row align-items-end mb-2"
+      class="row flex-column flex-md-row mb-2"
     >
-      <div class="col-4">
-        <AppInput
-          :id="`garments.${index}.name`"
-          :value="form.garments[garmentIndex].items_individual[index].name"
-          :name="`garments.${index}.name`"
-          input-class="form-control-sm"
-          placeholder="Digite o nome..."
-          :default-margin="false"
-          @input="form.set({
-            [`garments[${garmentIndex}].items_individual[${index}].name`]: $event
-          })"
-        />
+      <div class="row col gx-4 gx-md-3 col-md-4 mb-1 mb-md-0">
+        <span class="small col-4 d-block d-md-none text-nowrap">Nome: </span>
+        <div class="col">
+          <AppInput
+            :id="`garments.${index}.name`"
+            :value="form.garments[garmentIndex].items_individual[index].name"
+            :name="`garments.${index}.name`"
+            input-class="form-control-sm"
+            placeholder="Digite o nome..."
+            :default-margin="false"
+            @input="form.set({
+              [`garments[${garmentIndex}].items_individual[${index}].name`]: $event
+            })"
+          />
+        </div>
       </div>
 
-      <div class="col-2">
-        <AppSimpleSelect
-          :id="`garments.${garmentIndex}.items.${index}.size_id`"
-          :value="form.garments[garmentIndex].items_individual[index].size_id"
-          :name="`garments.${garmentIndex}.items.${index}.size_id`"
-          :options="sizes"
-          label-prop="name"
-          select-class="form-select-sm"
-          placeholder="Selecione um tam."
-          remove-default-margin
-          :disabled="!sizes.length"
-          :error="form.errors.has(`garments.${garmentIndex}.items.${index}.size_id`)"
-          @input="form.set({
-            [`garments[${garmentIndex}].items_individual[${index}].size_id`]: $event
-          })"
-        />
+      <div class="row col gx-4 gx-md-3 col-md-2 mb-1 mb-md-0">
+        <span class="small col-4 d-block d-md-none text-nowrap">Tamanho: </span>
+        <div class="col">
+          <AppSimpleSelect
+            :id="`garments.${garmentIndex}.items.${index}.size_id`"
+            :value="form.garments[garmentIndex].items_individual[index].size_id"
+            :name="`garments.${garmentIndex}.items.${index}.size_id`"
+            :options="sizes"
+            label-prop="name"
+            select-class="form-select-sm"
+            placeholder="Selecione um tam."
+            remove-default-margin
+            :disabled="!sizes.length"
+            :error="form.errors.has(`garments.${garmentIndex}.items.${index}.size_id`)"
+            @input="form.set({
+              [`garments[${garmentIndex}].items_individual[${index}].size_id`]: $event
+            })"
+          />
+        </div>
       </div>
 
-      <div class="col-2 align-self-end">
-        <AppInput
-          :id="`garments.${index}.number`"
-          :value="form.garments[garmentIndex].items_individual[index].number"
-          :name="`garments.${index}.number`"
-          input-class="form-control-sm"
-          :default-margin="false"
-          placeholder="Digite o núm..."
-          :mask="maskInteger"
-          @input="form.set({
-            [`garments[${garmentIndex}].items_individual[${index}].number`]: $event
-          })"
-        />
+      <div class="row col gx-4 gx-md-3 col-md-2 mb-1 mb-md-0">
+        <span class="small col-4 d-block d-md-none text-nowrap">Núm.:</span>
+        <div class="col">
+          <AppInput
+            :id="`garments.${index}.number`"
+            :value="form.garments[garmentIndex].items_individual[index].number"
+            :name="`garments.${index}.number`"
+            input-class="form-control-sm"
+            :default-margin="false"
+            placeholder="Digite o núm..."
+            :mask="maskInteger"
+            @input="form.set({
+              [`garments[${garmentIndex}].items_individual[${index}].number`]: $event
+            })"
+          />
+        </div>
       </div>
 
-      <div class="col-2">
+      <div class="col col-md-2 mb-3 mb-md-0">
         <AppButton
           type="button"
           color="success"

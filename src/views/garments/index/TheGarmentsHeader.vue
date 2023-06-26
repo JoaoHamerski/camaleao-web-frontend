@@ -28,7 +28,7 @@ export default {
     </template>
 
     <template #body>
-      <div class="row mb-3">
+      <div class="row flex-column flex-md-row mb-3">
         <div class="col">
           <AppButton
             block

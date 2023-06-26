@@ -288,9 +288,9 @@ export default {
     </div>
 
     <div
-      class="row"
+      class="row flex-column flex-md-row"
     >
-      <div class="col-3">
+      <div class="col col-md-3">
         <AppSimpleSelect
           :id="`garments.${index}.model_id`"
           :value="form.garments[index].model_id"
@@ -307,7 +307,7 @@ export default {
           Modelo
         </AppSimpleSelect>
       </div>
-      <div class="col-3">
+      <div class="col col-md-3">
         <AppSimpleSelect
           :id="`garments.${index}.material_id`"
           :value="form.garments[index].material_id"
@@ -325,7 +325,7 @@ export default {
           Material
         </AppSimpleSelect>
       </div>
-      <div class="col-3">
+      <div class="col col-md-3">
         <AppSimpleSelect
           :id="`garments.${index}.neck_type_id`"
           :value="form.garments[index].neck_type_id"
@@ -340,10 +340,12 @@ export default {
           })"
           @change="evaluateOptions('neck_type')"
         >
-          Tipo de gola
+          <span class="text-nowrap">
+            Tipo de gola
+          </span>
         </AppSimpleSelect>
       </div>
-      <div class="col-3">
+      <div class="col col-md-3">
         <AppSimpleSelect
           :id="`garments.${index}.sleeve_type_id`"
           :value="form.garments[index].sleeve_type_id"
@@ -358,13 +360,15 @@ export default {
           })"
           @change="evaluateOptions('sleeve_type')"
         >
-          Tipo de manga
+          <div class="text-nowrap">
+            Tipo de manga
+          </div>
         </AppSimpleSelect>
       </div>
     </div>
     <div
       v-if="possibleMatch"
-      class="col-6"
+      class="col col-md-6"
     >
       <div class="small text-success fw-bold">
         Apenas uma combinação possível (<a
