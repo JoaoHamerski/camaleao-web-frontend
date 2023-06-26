@@ -48,6 +48,17 @@ export default {
       return this.form.garments[this.index]
     },
   },
+  watch: {
+    formGarment: {
+      handler (form) {
+        this.form.errors.clear(`garments.${this.index}.match_id`)
+        this.form.set({
+          [`garments.${this.index}.match_id`]: form?.match?.id || ''
+        })
+      },
+      deep: true
+    }
+  },
   async mounted () {
     this.evaluateOptions()
     await this.$nextTick()
@@ -99,6 +110,7 @@ export default {
         ? 'items_individual' : 'items'
 
       Object.assign(garmentForm, {
+        match_id: match?.id || '',
         individual_names: !!garment.individual_names,
         model_id: match?.model?.id || '',
         material_id: match?.material?.id || '',
@@ -129,6 +141,7 @@ export default {
       this.matched = null
 
       this.form.set({
+        [`garments.${this.index}.match_id`]: '',
         [`garments.${this.index}.material_id`]: '',
         [`garments.${this.index}.neck_type_id`]: '',
         [`garments.${this.index}.sleeve_type_id`]: '',
@@ -206,9 +219,10 @@ export default {
     },
     onFillWithMatchedClick () {
       const matched = this.possibleMatch
-      const { model, material, neck_type, sleeve_type } = matched
+      const { id, model, material, neck_type, sleeve_type } = matched
 
       this.form.set({
+        [`garments.${this.index}.id`]: id || '',
         [`garments.${this.index}.model_id`]: model?.id || '',
         [`garments.${this.index}.material_id`]: material?.id || '',
         [`garments.${this.index}.neck_type_id`]: neck_type?.id || '',
@@ -225,6 +239,9 @@ export default {
     },
     onDeleteClick () {
       this.$emit('delete', this.index)
+    },
+    onOptionChange () {
+
     }
   }
 }
@@ -289,6 +306,7 @@ export default {
 
     <div
       class="row flex-column flex-md-row"
+      @change.capture="onOptionChange"
     >
       <div class="col col-md-3">
         <AppSimpleSelect
@@ -299,6 +317,7 @@ export default {
           label-prop="name"
           placeholder="Selecione um modelo"
           :select-class="['form-select-sm', {'is-valid': matched && formGarment.model_id}]"
+          :error="form.errors.get(`garments.${index}.match_id`)"
           @input="form.set({
             [`garments[${index}].model_id`]: $event
           })"

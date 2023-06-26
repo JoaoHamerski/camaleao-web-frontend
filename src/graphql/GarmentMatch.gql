@@ -44,10 +44,11 @@ fragment GarmentMatchParts on GarmentMatch {
   }
 
   unique_value
+  deleted_at
 }
 
-query GetGarmentMatches($trashed: Trashed) {
-  garmentMatches(trashed: $trashed) {
+query GetGarmentMatches($order_id: ID) {
+  garmentMatches(order_id: $order_id) {
     ...GarmentMatchParts
   }
 }

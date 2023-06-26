@@ -185,11 +185,14 @@ export default {
         Unid.
       </div>
       <div class="col-1" />
-      <div class="col-2">
+
+      <div class="col-2 ms-2">
         Unid.
       </div>
+
       <div class="col-1" />
-      <div class="col">
+
+      <div class="col ms-2">
         Valor
       </div>
     </div>

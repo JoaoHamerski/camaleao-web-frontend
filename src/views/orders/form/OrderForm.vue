@@ -36,6 +36,7 @@ export const DEFAULT_GARMENT = {
   items: [{ ...DEFAULT_GARMENT_ITEM }],
   items_individual: [{ ...DEFAULT_GARMENT_INDIVIDUAL_ITEM }],
   match: null,
+  match_id: '',
   total: ''
 }
 

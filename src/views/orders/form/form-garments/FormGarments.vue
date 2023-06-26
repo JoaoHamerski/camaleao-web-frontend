@@ -34,8 +34,10 @@ export default {
       query: GetGarmentMatches,
       fetchPolicy: 'no-cache',
       variables () {
-        return {
-          trashed: this.isEdit ? 'WITH' : 'WITHOUT'
+        if (this.isEdit) {
+          return {
+            order_id: this.order.id
+          }
         }
       },
       async result () {
