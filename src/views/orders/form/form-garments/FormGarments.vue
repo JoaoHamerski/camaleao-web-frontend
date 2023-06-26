@@ -33,6 +33,11 @@ export default {
     garmentMatches: {
       query: GetGarmentMatches,
       fetchPolicy: 'no-cache',
+      variables () {
+        return {
+          trashed: this.isEdit ? 'WITH' : 'WITHOUT'
+        }
+      },
       async result () {
         await this.$nextTick()
 

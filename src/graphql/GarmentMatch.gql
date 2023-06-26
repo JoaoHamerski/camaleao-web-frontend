@@ -46,8 +46,8 @@ fragment GarmentMatchParts on GarmentMatch {
   unique_value
 }
 
-query GetGarmentMatches {
-  garmentMatches {
+query GetGarmentMatches($trashed: Trashed) {
+  garmentMatches(trashed: $trashed) {
     ...GarmentMatchParts
   }
 }
