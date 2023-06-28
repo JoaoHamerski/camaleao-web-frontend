@@ -147,8 +147,9 @@ export default {
         </option>
         <option
           v-for="(option, index) in options"
-          :key="`${name}__${index}`"
+          :key="option.id ? `${name}__${option.id}` : `${name}__${index}`"
           :value="getValue(option)"
+          :disabled="option.disabled ?? false"
         >
           {{ renderLabel(option) }}
         </option>

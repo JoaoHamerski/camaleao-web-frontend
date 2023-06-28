@@ -1,62 +1,31 @@
 <script>
-import { GetGarmentMatches } from '@/graphql/GarmentMatch.gql'
-import { faTshirt, faTrashAlt } from  '@fortawesome/free-solid-svg-icons'
-import { uniqBy } from 'lodash-es'
+import { faTshirt } from '@fortawesome/free-solid-svg-icons';
 
-import FormGarmentsItem from './FormGarmentsItem.vue'
-
-export const getUniqueValues = (items, prop) => uniqBy(
-  items.map(item => item[prop])
-    .filter(item => item !== null),
-    'id'
-)
+import FormGarmentItem from './FormGarmentItem.vue'
 
 export default {
   components: {
-    FormGarmentsItem
+    FormGarmentItem
   },
   props: {
+    form: {
+      type: Object,
+      required: true
+    },
     order: {
       type: Object,
       default: () => ({})
     },
-    isEdit: {
-      type: Boolean,
-      default: false
-    },
-    form: {
-      type: Object,
-      required: true
-    }
-  },
-  apollo: {
     garmentMatches: {
-      query: GetGarmentMatches,
-      fetchPolicy: 'no-cache',
-      variables () {
-        if (this.isEdit) {
-          return {
-            order_id: this.order.id
-          }
-        }
-      },
-      async result () {
-        await this.$nextTick()
-
-        if (this.isEdit) {
-          this.populateForm()
-        }
-      }
+      type: Array,
+      default: () => []
     }
   },
   data: () => ({
-    match: null,
     activeItem: 0,
     icons: {
-      faTshirt,
-      faTrashAlt
-    },
-    garmentMatches: ['empty']
+      faTshirt
+    }
   }),
   computed: {
     navItems () {
@@ -65,120 +34,73 @@ export default {
         value: 'nav-' + item.id
       }))
     },
-    isGarmentMatchesLoading () {
-      return this.garmentMatches[0] === 'empty'
-    },
-    optionsListeners () {
-      return {
-        new: () => this.onNewItem(true),
-        duplicate: this.onDuplicateItem,
-        delete: this.onDeleteItem
-      }
-    }
   },
   methods: {
-    populateForm() {
-      const garments = this.order.garments
-      const garmentsCount = garments.length
-
-      for (const _ of Array.from({length: garmentsCount - 1})) {
-        this.onNewItem(false)
-      }
-    },
-    onNewItem (focusNewItem = true) {
+    onNewGarment () {
       this.$emit('new-garment')
-
-      if (focusNewItem) {
-        this.activeItem = this.form.garments.length - 1
-      }
+      this.activeItem = this.form.garments.length - 1
+    },
+    onDuplicateGarment (event) {
+      this.$emit('duplicate-garment', event)
+      this.activeItem = this.form.garments.length - 1
+    },
+    onDeleteGarment (event) {
+      this.$emit('delete-garment', event)
+      this.activeItem = this.activeItem === 0
+        ? 0
+        : this.activeItem - 1
     },
     onNewGarmentSize (event) {
       this.$emit('new-garment-size', event)
     },
-    onDeleteGarmentSize(event) {
+    onDeleteGarmentSize (event) {
       this.$emit('delete-garment-size', event)
-    },
-    onDuplicateItem (indexToClone) {
-      this.$emit('duplicate-garment', {indexToClone})
-      this.activeItem = this.form.garments.length - 1
-    },
-    onDeleteItem (index) {
-      if (this.form.garments.length <= 1) {
-        return
-      }
-
-      this.activeItem = index === 0
-        ? index
-        : index - 1
-
-      this.$emit('delete-garment', {indexToDelete: index})
     }
   }
 }
 </script>
 
 <template>
-  <div class="position-relative">
-    <AppContainer>
-      <template #title>
-        <FontAwesomeIcon
-          :icon="icons.faTshirt"
-          fixed-width
-        />
-        Roupas
-      </template>
-      <template #body>
-        <div
-          v-if="isGarmentMatchesLoading"
-          class="text-center my-5"
+  <AppContainer>
+    <template #title>
+      <FontAwesomeIcon
+        :icon="icons.faTshirt"
+        fixed-width
+      />
+      Roupas
+    </template>
+    <template #body>
+      <AppNavPills
+        v-model="activeItem"
+        :items="navItems"
+        no-fill
+        tabs-style
+        header-class="small"
+      >
+        <template
+          v-for="garment in form.garments"
+          #[`headers.nav-${garment.id}`]="{ item }"
         >
-          <div
-            class="spinner-grow text-primary"
-            role="status"
-          >
-            <span class="visually-hidden">Loading...</span>
+          <div :key="garment.id">
+            {{ item.text }}
           </div>
-        </div>
-        <AppNavPills
-          v-else-if="!isGarmentMatchesLoading && garmentMatches.length"
-          v-model="activeItem"
-          :items="navItems"
-          no-fill
-          tabs-style
-          header-class="small"
-        >
-          <template
-            v-for="garment in form.garments"
-            #[`headers.nav-${garment.id}`]="{ item }"
-          >
-            <div
-              :key="garment.id"
-              :class="{
-                'text-success': garment.total
-              }"
-            >
-              <div>
-                {{ item.text }}
-                <span v-if="garment.total">
-                  ({{ $helpers.toBRL(garment.total) }})
-                </span>
-              </div>
-            </div>
-          </template>
+        </template>
 
-          <template
-            v-for="(garment, index) in form.garments"
-            #[`nav-${garment.id}`]
-          >
-            <FormGarmentsItem
-              :key="garment.id"
-              v-bind="{ index, garment, garmentMatches, optionsListeners, order, form }"
-              @new-garment-size="onNewGarmentSize"
-              @delete-garment-size="onDeleteGarmentSize"
-            />
-          </template>
-        </AppNavPills>
-      </template>
-    </AppContainer>
-  </div>
+        <template
+          v-for="(garment, index) in form.garments"
+          #[`nav-${garment.id}`]
+        >
+          <FormGarmentItem
+            :key="garment.id"
+            v-bind="{ garment, index, garmentMatches, order, form }"
+            @new-garment="onNewGarment"
+            @duplicate-garment="onDuplicateGarment"
+            @delete-garment="onDeleteGarment"
+            @new-garment-size="onNewGarmentSize"
+            @delete-garment-size="onDeleteGarmentSize"
+          />
+        </template>
+      </AppNavPills>
+    </template>
+  </AppContainer>
 </template>
