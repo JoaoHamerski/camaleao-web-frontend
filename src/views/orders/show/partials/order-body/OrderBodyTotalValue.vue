@@ -42,12 +42,12 @@ export default {
         {
           label: 'FRETE: ',
           text: this.$helpers.toBRL(shippingValue, false, true),
-          is_shown: !!this.shipping_value
+          is_shown: this.shipping_value !== null
         },
         {
           label: 'DESCONTO: ',
           text: this.$helpers.toBRL(-discount),
-          is_shown: !!this.discount
+          is_shown: this.discount !== null
         },
       ]
     },
