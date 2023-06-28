@@ -1,29 +1,13 @@
 <script>
 import Form from '@/utils/Form'
-import Vue from 'vue'
 import { maskCurrencyBRL,  } from '@/utils/masks'
 import { CreateGarmentMatch, UpdateGarmentMatch } from '@/graphql/GarmentMatch.gql'
-
 import GarmentMatchFormValues from './GarmentMatchFormValues.vue'
 import GarmentMatchFormMatches from './GarmentMatchFormMatches.vue'
 import GarmentMatchFormSizes from './GarmentMatchFormSizes.vue'
 import GarmentMatchFormUniqueValue from './GarmentMatchFormUniqueValue.vue'
 import { handleError, handleSuccess } from '@/utils/forms'
 import { isEmpty } from 'lodash-es'
-
-export const form = Vue.observable(new Form({
-  is_unique_value: false,
-  unique_value: 'R$ ',
-  model_id: '',
-  material_id: '',
-  neck_type_id: '',
-  sleeve_type_id: '',
-  values: [
-    {start: '0', end: '', value: 'R$ ',},
-    {start: '', end: '', value: 'R$ '},
-  ],
-  sizes: []
-}))
 
 export default {
   components: {
@@ -40,7 +24,19 @@ export default {
   },
   data: () => ({
     maskCurrencyBRL: maskCurrencyBRL(),
-    form,
+    form: new Form({
+      is_unique_value: false,
+      unique_value: 'R$ ',
+      model_id: '',
+      material_id: '',
+      neck_type_id: '',
+      sleeve_type_id: '',
+      values: [
+        {start: '0', end: '', value: 'R$ ',},
+        {start: '', end: '', value: 'R$ '},
+      ],
+      sizes: []
+    }),
     isLoading: false
   }),
   computed: {
@@ -88,12 +84,21 @@ export default {
             : 'Combinação criada!'
         })
 
-        this.form.reset()
       } catch (error) {
         handleError(this, error)
       }
 
       this.isLoading = false
+    },
+    newValueInterval() {
+      const indexToInsert = this.form.values.length - 1
+
+      this.form.values.splice(indexToInsert, 0, {
+        start: '', end: '', value: ''
+      })
+    },
+    deleteValueInterval(index) {
+      this.form.values.splice(index, 1)
     }
   }
 }
@@ -110,6 +115,7 @@ export default {
       </template>
       <template #body>
         <GarmentMatchFormMatches
+          :form="form"
           :match="match"
           :is-edit="isEdit"
         />
@@ -132,11 +138,15 @@ export default {
 
           <GarmentMatchFormValues
             v-if="!form.is_unique_value"
+            :form="form"
             :match="match"
             :is-edit="isEdit"
+            @new-interval="newValueInterval"
+            @delete-interval="deleteValueInterval"
           />
           <GarmentMatchFormUniqueValue
             v-else
+            :form="form"
             :match="match"
             :is-edit="isEdit"
           />
@@ -149,7 +159,10 @@ export default {
         Tamanhos
       </template>
       <template #body>
-        <GarmentMatchFormSizes :match="match" />
+        <GarmentMatchFormSizes
+          :form="form"
+          :match="match"
+        />
       </template>
     </AppContainer>
 

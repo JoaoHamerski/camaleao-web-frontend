@@ -1,7 +1,6 @@
 <script>
 import { faQuestionCircle } from '@fortawesome/free-solid-svg-icons'
 import { GetGarmentSizes } from '@/graphql/GarmentSize.gql'
-import { form } from './GarmentMatchForm.vue'
 import { maskCurrencyBRL } from '@/utils/masks'
 import { isEmpty } from 'lodash-es'
 
@@ -17,7 +16,9 @@ export default {
           is_shown: true
         }))
 
-        form.sizes = [...sizes]
+        this.form.set({
+          sizes: [...sizes]
+        })
 
         if (!isEmpty(this.match)) {
           this.populateForm()
@@ -26,18 +27,21 @@ export default {
     },
   },
   props: {
+    form: {
+      type: Object,
+      required: true
+    },
     match: {
       type: Object,
       default: () => ({})
     }
   },
   data: () => ({
+    garmentSizes: [],
     maskCurrencyBRL: maskCurrencyBRL(),
     icons: {
       faQuestionCircle
     },
-    form,
-    garmentSizes: []
   }),
   computed: {
     isGarmentSizesLoading () {
@@ -109,16 +113,22 @@ export default {
         <div class="col-4 col-md-3">
           <AppInput
             :id="`sizes.${index}.value`"
-            v-model="form.sizes[index].value"
+            :value="form.sizes[index].value"
             :disabled="!size.is_shown"
             :name="`sizes.${index}.value`"
             :mask="maskCurrencyBRL"
+            @input="form.set({
+              [`sizes.${index}.value`]: $event
+            })"
           />
         </div>
         <div class="col-4 col-md-2">
           <AppCheckboxSwitch
             :id="`sizes.${index}.is_shown`"
-            v-model="form.sizes[index].is_shown"
+            :value="form.sizes[index].is_shown"
+            @input="form.set({
+              [`sizes.${index}.is_shown`]: $event
+            })"
           />
         </div>
       </div>

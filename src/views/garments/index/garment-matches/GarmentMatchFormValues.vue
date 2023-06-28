@@ -1,5 +1,4 @@
 <script>
-import { form } from './GarmentMatchForm.vue'
 import { faPlus, faTrashAlt } from '@fortawesome/free-solid-svg-icons'
 import { maskCurrencyBRL, maskInteger } from '@/utils/masks';
 import { debounce } from 'lodash-es';
@@ -33,6 +32,10 @@ const isFirstItemValid = (value, index) => {
 
 export default {
   props: {
+    form: {
+      type: Object,
+      required: true
+    },
     match: {
       type: Object,
       default: () => ({})
@@ -53,7 +56,6 @@ export default {
       faTrashAlt,
       faPlus
     },
-    form
   }),
   watch: {
     'form.values': {
@@ -82,7 +84,7 @@ export default {
         value: this.$helpers.toBRL(value)
       }))
 
-      this.form.values = formattedValues
+      this.form.set({values: formattedValues})
     },
     getStartValue(index) {
       const previousValue = getPreviousValue(this.form.values, index)
@@ -107,19 +109,15 @@ export default {
     isDeleteItemDisabled (index) {
       return isFirstItem(index) || isLastItem(this.form.values, index)
     },
-    onDeleteClick (index) {
+    onDeleteIntervalClick (index) {
       if (this.isDeleteItemDisabled(index)) {
         return
       }
 
-      this.form.values.splice(index, 1)
+      this.$emit('delete-interval', index)
     },
     onNewIntervalClick () {
-      const indexToInsert = this.form.values.length - 1
-
-      this.form.values.splice(indexToInsert, 0, {
-        start: '', end: '', value: ''
-      })
+      this.$emit('new-interval')
     },
     validate (value, index) {
       const previousItem = getPreviousValue(this.form.values, index)
@@ -231,10 +229,13 @@ export default {
         <div class="col">
           <AppInput
             :id="`values.${index}.value.`"
-            v-model="form.values[index].value"
+            :value="form.values[index].value"
             :name="`values.${index}.value`"
             :mask="maskCurrencyBRL"
             :error="form.errors.get(`values.${index}.value`)"
+            @input="form.set({
+              [`values.${index}.value`]: $event
+            })"
           />
         </div>
       </div>
@@ -262,11 +263,14 @@ export default {
           <div class="col-5">
             <AppInput
               :id="`values.${index}.end`"
-              v-model="form.values[index].end"
+              :value="form.values[index].end"
               :name="`values.${index}.end`"
               :mask="maskInteger"
               :error="form.errors.get(`values.${index}.end`)"
               :auto-clear-error="false"
+              @input="form.set({
+                [`values.${index}.end`]: $event
+              })"
             />
           </div>
         </div>
@@ -277,10 +281,13 @@ export default {
           <div class="col">
             <AppInput
               :id="`values.${index}.value`"
-              v-model="form.values[index].value"
+              :value="form.values[index].value"
               :name="`values.${index}.value`"
               :mask="maskCurrencyBRL"
               :error="form.errors.get(`values.${index}.value`)"
+              @input="form.set({
+                [`values.${index}.value`]: $event
+              })"
             />
           </div>
           <div class="col-2 col-lg-1 text-end ms-0 ms-lg-2">
@@ -290,7 +297,7 @@ export default {
               color="danger"
               :icon="icons.faTrashAlt"
               :disabled="isDeleteItemDisabled(index)"
-              @click.prevent="onDeleteClick(index)"
+              @click.prevent="onDeleteIntervalClick(index)"
             />
           </div>
         </div>

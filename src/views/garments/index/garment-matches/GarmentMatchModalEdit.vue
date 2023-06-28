@@ -2,8 +2,6 @@
 import { faEdit } from '@fortawesome/free-solid-svg-icons';
 import GarmentMatchForm from './GarmentMatchForm.vue';
 
-import { form } from './GarmentMatchForm.vue'
-
 export default {
   components: {
     GarmentMatchForm
@@ -22,9 +20,6 @@ export default {
   methods: {
     onSuccess () {
       this.$emit('hide')
-    },
-    onHide () {
-      form.reset()
     }
   }
 }
@@ -37,7 +32,6 @@ export default {
     color="primary"
     modal-dialog-class="modal-lg"
     v-on="$listeners"
-    @hide="onHide"
   >
     <template #title>
       <FontAwesomeIcon

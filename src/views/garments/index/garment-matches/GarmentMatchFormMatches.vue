@@ -1,6 +1,4 @@
 <script>
-import { form } from './GarmentMatchForm.vue'
-
 import { GetModels } from '@/graphql/Model.gql'
 import { GetMaterials } from '@/graphql/Material.gql'
 import { GetNeckTypes } from '@/graphql/NeckType.gql'
@@ -14,6 +12,10 @@ export default {
     sleeveTypes: { query: GetSleeveTypes }
   },
   props: {
+    form: {
+      type: Object,
+      required: true
+    },
     isEdit: {
       type: Boolean,
       default: false
@@ -24,7 +26,6 @@ export default {
     }
   },
   data: () => ({
-    form,
     models: [],
     materials: [],
     neckTypes: [],
@@ -42,7 +43,7 @@ export default {
         return false
       }
 
-      return form.errors.get('model_id')
+      return this.form.errors.get('model_id')
     }
   },
   watch: {
@@ -62,10 +63,12 @@ export default {
     populateForm () {
       const { model, material, neck_type, sleeve_type } = this.match
 
-      form.model_id = model?.id || ''
-      form.material_id = material?.id || ''
-      form.neck_type_id = neck_type?.id || ''
-      form.sleeve_type_id = sleeve_type?.id || ''
+      this.form.set({
+        model_id: model?.id || '',
+        material_id: material?.id || '',
+        neck_type_id: neck_type?.id || '',
+        sleeve_type_id: sleeve_type?.id || ''
+      })
     }
   }
 }
@@ -78,11 +81,12 @@ export default {
       <div class="col">
         <AppSimpleSelect
           id="model_id"
-          v-model="form.model_id"
+          :value="form.model_id"
           name="model_id"
           :options="models"
           label-prop="name"
           :error="getModelError"
+          @input="form.set({model_id: $event})"
         >
           Modelo
         </AppSimpleSelect>
@@ -90,12 +94,13 @@ export default {
       <div class="col">
         <AppSimpleSelect
           id="material_id"
-          v-model="form.material_id"
+          :value="form.material_id"
           name="material_id"
           optional
           :options="materials"
           label-prop="name"
           :error="form.errors.get('material_id')"
+          @input="form.set({material_id: $event})"
         >
           Material
         </AppSimpleSelect>
@@ -103,12 +108,13 @@ export default {
       <div class="col">
         <AppSimpleSelect
           id="neck_type_id"
-          v-model="form.neck_type_id"
+          :value="form.neck_type_id"
           name="neck_type_id"
           optional
           :options="neckTypes"
           label-prop="name"
           :error="form.errors.get('neck_type_id')"
+          @input="form.set({neck_type_id: $event})"
         >
           Tipo de gola
         </AppSimpleSelect>
@@ -116,12 +122,13 @@ export default {
       <div class="col">
         <AppSimpleSelect
           id="sleeve_type_id"
-          v-model="form.sleeve_type_id"
+          :value="form.sleeve_type_id"
           name="sleeve_type_id"
           optional
           :options="sleeveTypes"
           label-prop="name"
           :error="form.errors.get('sleeve_type_id')"
+          @input="form.set({sleeve_type_id: $event})"
         >
           Tipo de manga
         </AppSimpleSelect>
