@@ -131,13 +131,16 @@ export default {
         return filtered[0]
       }
 
-      const isAllSame = filtered.every((match, index) => {
-        return filtered[index].model?.id === match.model?.id
-          && filtered[index].material?.id === match.material?.id
-          && filtered[index].neck_type?.id === match.neck_type?.id
-          && filtered[index].sleeve_type?.id === match.sleeve_type?.id
+      const isAllSame = filtered.every((match) => {
+        return filtered.every(_match => {
+          return match.model?.id === _match.model?.id
+            && match.material?.id === _match.material?.id
+            && match.neck_type?.id === _match.neck_type?.id
+            && match.sleeve_type?.id === _match.sleeve_type?.id
+        })
       })
 
+      console.log(isAllSame)
       return isAllSame ? filtered[0] : null
     },
     onOptionsChanged () {
