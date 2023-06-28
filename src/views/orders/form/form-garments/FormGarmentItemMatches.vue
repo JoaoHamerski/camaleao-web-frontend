@@ -140,8 +140,13 @@ export default {
         })
       })
 
-      console.log(filtered)
-      return isAllSame ? filtered[0] : null
+      if (isAllSame) {
+        const match = filtered.find(match => match.deleted_at)
+        console.log(match)
+        return match
+      }
+
+      return null
     },
     onOptionsChanged () {
       const filtered = this.filterGarmentMatches()
