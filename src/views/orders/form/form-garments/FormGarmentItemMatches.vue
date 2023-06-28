@@ -142,8 +142,8 @@ export default {
 
       if (isAllSame) {
         const match = filtered.find(match => match.deleted_at)
-        console.log(match)
-        return match
+
+        return match ?? filtered[0]
       }
 
       return null
