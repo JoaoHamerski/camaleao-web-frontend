@@ -131,6 +131,7 @@ export default {
       this.possibleMatch = null
       this.$emit('matched', null)
 
+      console.log(filtered)
       if (filtered.length === 1) {
         this.possibleMatch = filtered[0]
       }
