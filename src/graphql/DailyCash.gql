@@ -1,7 +1,7 @@
 #import "./_PaginatorFragment.gql"
 #import "./PaymentExpense.gql"
 
-query GetDailyCash (
+query GetDailyCash(
   $first: Int!
   $page: Int
   $orderBy: [QueryDailyCashOrderByOrderByClause!]
@@ -68,19 +68,16 @@ query GetDailyCashBalance {
   }
 }
 
-query GetDailyCashBalancePendenciesOrders (
+query GetDailyCashBalancePendenciesOrders(
   $first: Int!
   $page: Int
   $date: String!
 ) {
-  dailyCashBalancePendenciesOrders (
+  dailyCashBalancePendenciesOrders(
     first: $first
     page: $page
-    date: $date,
-    orderBy: {
-      column: PRINT_DATE,
-      order: DESC
-    }
+    date: $date
+    orderBy: { column: PRINT_DATE, order: DESC }
   ) {
     paginatorInfo {
       ...PaginatorSimpleParts
@@ -111,8 +108,8 @@ query GetDailyCashBalancePendenciesOrders (
   }
 }
 
-query GetDailyCashDetailedFlow ($page: Int! $date: String) {
-  dailyCashDetailedFlow (page: $page date: $date) {
+query GetDailyCashDetailedFlow($page: Int!, $date: String) {
+  dailyCashDetailedFlow(page: $page, date: $date) {
     date
     total_price
     shirts_total
