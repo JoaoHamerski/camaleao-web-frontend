@@ -33,7 +33,7 @@ export default {
         text: `ITEM ${index + 1}`,
         value: 'nav-' + item.id
       }))
-    },
+    }
   },
   methods: {
     onNewGarment () {
@@ -81,8 +81,16 @@ export default {
           v-for="garment in form.garments"
           #[`headers.nav-${garment.id}`]="{ item }"
         >
-          <div :key="garment.id">
+          <div
+            :key="garment.id"
+            :class="{
+              'text-success': garment.total
+            }"
+          >
             {{ item.text }}
+            <template v-if="garment.total">
+              ({{ $helpers.toBRL(garment.total) }})
+            </template>
           </div>
         </template>
 

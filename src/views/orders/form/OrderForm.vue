@@ -35,6 +35,7 @@ export const DEFAULT_GARMENT = {
   sleeve_type_id: '',
   items: [{ ...DEFAULT_GARMENT_ITEM }],
   items_individual: [{ ...DEFAULT_GARMENT_INDIVIDUAL_ITEM }],
+  match: null,
   match_id: '',
   total: ''
 }
@@ -150,7 +151,7 @@ export default {
     getFormattedGarments () {
       return this.form.garments.map(garment => ({
         ...omit(garment, [
-          'id', 'total'
+          'id', 'total', 'match'
         ])
       }))
     },

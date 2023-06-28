@@ -61,6 +61,7 @@ export default {
     onMatchFound (match) {
       this.match = match
       this.form.set({
+        [`garments.${this.index}.match`]: match ? match : null,
         [`garments.${this.index}.match_id`]: match ? match.id : '',
         [`garments.${this.index}.items`]: [{...DEFAULT_GARMENT_ITEM}],
         [`garments.${this.index}.items_individual`]: [{...DEFAULT_GARMENT_INDIVIDUAL_ITEM}]
