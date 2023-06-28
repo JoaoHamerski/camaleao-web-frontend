@@ -140,7 +140,6 @@ export default {
         })
       })
 
-      console.log(isAllSame)
       return isAllSame ? filtered[0] : null
     },
     onOptionsChanged () {
