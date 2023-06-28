@@ -32,6 +32,7 @@ export default {
       const shippingValue = this.order.shipping_value
       const discount = this.order.discount
 
+      console.log(this.shipping_value)
       return [
         {
           label: 'TOTAL ROUPAS: ',
@@ -42,12 +43,12 @@ export default {
         {
           label: 'FRETE: ',
           text: this.$helpers.toBRL(shippingValue, false, true),
-          is_shown: this.shipping_value !== null
+          is_shown: !!shippingValue
         },
         {
           label: 'DESCONTO: ',
           text: this.$helpers.toBRL(-discount),
-          is_shown: this.discount !== null
+          is_shown: !!discount
         },
       ]
     },
