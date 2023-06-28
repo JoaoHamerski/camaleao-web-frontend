@@ -53,6 +53,17 @@ export default {
 
 <template>
   <div>
+    <div class="row">
+      <div class="col-3 small">
+        Tamanho
+      </div>
+      <div class="col-3 small">
+        Nome
+      </div>
+      <div class="col-2 small">
+        Número
+      </div>
+    </div>
     <template v-for="(item, index) in form.garments[garmentIndex].items_individual">
       <div
         :key="index"

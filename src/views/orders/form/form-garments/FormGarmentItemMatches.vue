@@ -1,6 +1,6 @@
 <script>
 import { faSyncAlt } from '@fortawesome/free-solid-svg-icons';
-import { camelCase, isEmpty, isEqual, map, remove, uniqBy } from 'lodash-es';
+import { camelCase, isEmpty, map, uniqBy } from 'lodash-es';
 
 import FormGarmentItemMatchesPossible from './FormGarmentItemMatchesPossible.vue';
 

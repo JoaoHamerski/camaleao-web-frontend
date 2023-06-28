@@ -14,7 +14,6 @@ import OrderFormDates from './OrderFormDates.vue'
 import OrderFormFiles from './OrderFormFiles.vue'
 import FormGarments from './form-garments/FormGarments.vue'
 import OrderFormValuesFinalWrapper from './OrderFormValuesFinalWrapper.vue'
-import GarmentMatchFormSizes from '@/views/garments/index/garment-matches/GarmentMatchFormSizes.vue'
 
 const OrderFormClothingTypes = () => import('./OrderFormClothingTypes.vue')
 
