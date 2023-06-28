@@ -25,7 +25,7 @@ export default {
       return this.order.original_price - (this.order.shipping_value || 0)
     },
     showTotalClothes () {
-      return this.order.discount || this.order.shippingValue
+      return this.order.discount || this.order.shipping_value
     },
     totalValueSubItems () {
       const totalGarments = this.totalGarments
