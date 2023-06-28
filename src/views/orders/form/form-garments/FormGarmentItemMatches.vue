@@ -126,15 +126,26 @@ export default {
         return this.formGarment[entity + '_id'] === possibleMatch[entity].id
       })
     },
+    getPossibleMatch(filtered) {
+      if (filtered.length === 1) {
+        return filtered[0]
+      }
+
+      const isAllSame = filtered.every((match, index) => {
+        return filtered[index].model?.id === match.model?.id
+          && filtered[index].material?.id === match.material?.id
+          && filtered[index].neck_type?.id === match.neck_type?.id
+          && filtered[index].sleeve_type?.id === match.sleeve_type?.id
+      })
+
+      return isAllSame ? filtered[0] : null
+    },
     onOptionsChanged () {
       const filtered = this.filterGarmentMatches()
       this.possibleMatch = null
       this.$emit('matched', null)
 
-      console.log(filtered)
-      if (filtered.length === 1) {
-        this.possibleMatch = filtered[0]
-      }
+      this.possibleMatch = this.getPossibleMatch(filtered)
 
       if (this.isExactMatch(this.possibleMatch)) {
         this.onExactMatchFound(this.possibleMatch)
