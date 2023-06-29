@@ -51,6 +51,8 @@ export default {
             Conforme você seleciona outras opções, todas os campos irão se atualizar para refletir as opções disponíveis.
           </li>
           <li>Caso apenas uma combinação seja possível, o sistema irá sugerir essa combinação para você usar e auto-preencher os campos.</li>
+          <li>Quando você selecionar uma combinação que exista e seja válida, os campos irão ficar verdes, e a seção para escolher os tamanhos irá aparecer.</li>
+          <li>Se os campos não estiverem verdes, é porque nenhuma combinação válida ou que exista foi selecionada, você pode conferir as combinações clicando em <b>Combinações</b>.</li>
         </ol>
       </div>
 
