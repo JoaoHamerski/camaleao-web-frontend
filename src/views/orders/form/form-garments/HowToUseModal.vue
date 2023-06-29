@@ -69,7 +69,7 @@ export default {
               :icon="icons.faCaretRight"
               fixed-width
             />
-            Para que serve o botão Reset?
+            Para que serve o botão Resetar?
           </h6>
         </template>
         <template #body>
