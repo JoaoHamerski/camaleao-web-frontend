@@ -1,0 +1,3 @@
+mutation ReorderGarmentOption($input: GarmentOptionReorderInput!) {
+  garmentOptionReorder(input: $input)
+}

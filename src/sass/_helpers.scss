@@ -93,10 +93,6 @@ $color in $theme-colors {
   cursor: grab;
   transition: color .2s;
   color: $secondary;
-
-  &:hover {
-    color: $primary  !important;
-  }
 }
 
 .smooth-scroll {
