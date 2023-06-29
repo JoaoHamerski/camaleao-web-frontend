@@ -1,10 +1,12 @@
 <script>
-import { faLightbulb } from '@fortawesome/free-solid-svg-icons';
+import { faLightbulb, faCaretRight } from '@fortawesome/free-solid-svg-icons';
 
 export default {
   data: () => ({
+    collapse1: false,
     icons: {
-      faLightbulb
+      faLightbulb,
+      faCaretRight
     }
   })
 }
@@ -35,7 +37,7 @@ export default {
       </div>
 
       <div>
-        <h6 class="fw-bold">
+        <h6 class="fw-bold text-primary">
           Como usar
         </h6>
         <ol class="small">
@@ -56,14 +58,58 @@ export default {
         </ol>
       </div>
 
-      <div>
-        <h6 class="fw-bold">
-          Por que eu não é possível selecionar qualquer opção nos campos?
-        </h6>
-        <div class="small">
-          Somente o administrador registra as opções e combinações, pois junto com elas são registrados os valores das roupas, que são automaticamente computados.
-        </div>
-      </div>
+      <AppCollapsible
+        :value="false"
+        hide-arrow
+        class="mb-3"
+      >
+        <template #header>
+          <h6 class="fw-bold link-primary">
+            <FontAwesomeIcon
+              :icon="icons.faCaretRight"
+              fixed-width
+            />
+            Para que serve o botão Reset?
+          </h6>
+        </template>
+        <template #body>
+          <div
+            class="small"
+            style="text-align: justify;"
+          >
+            Conforme descrito no item 3 acima, em <b>Como usar</b>,
+            conforme você seleciona as opções,
+            todos campos são atualizados,
+            e as opções que não fazem parte de uma possível combinação ficam cinzas (indisponíveis),
+            caso queira voltar elas ao normal, você pode usar a opção <b>Reset</b>.
+          </div>
+        </template>
+      </AppCollapsible>
+
+      <AppCollapsible
+        :value="false"
+        hide-arrow
+      >
+        <template #header>
+          <h6
+            class="fw-bold link-primary"
+          >
+            <FontAwesomeIcon
+              :icon="icons.faCaretRight"
+              fixed-width
+            />
+            Por que eu não é possível selecionar qualquer opção nos campos?
+          </h6>
+        </template>
+        <template #body>
+          <div
+            class="small"
+            style="text-align: justify;"
+          >
+            Somente o administrador registra as opções e combinações, pois junto com elas são registrados os valores das roupas, que são automaticamente computados.
+          </div>
+        </template>
+      </AppCollapsible>
 
       <div class="text-end mt-3">
         <AppButton
