@@ -37,6 +37,12 @@ export default {
     },
     onDeleteGarmentSize (event) {
       this.$emit('delete-garment-size', event)
+    },
+    onIndividualNamesChange (event) {
+      this.form.errors.clear('*')
+      this.form.set({
+        [`garments.${this.garmentIndex}.individual_names`]: event
+      })
     }
   }
 }
@@ -48,9 +54,7 @@ export default {
       <AppCheckboxSwitch
         :id="`garments.${garmentIndex}.inidividual_names`"
         :value="form.garments[garmentIndex].individual_names"
-        @input="form.set({
-          [`garments.${garmentIndex}.individual_names`]: $event
-        })"
+        @input="onIndividualNamesChange"
       >
         Nomes individuais
       </AppCheckboxSwitch>

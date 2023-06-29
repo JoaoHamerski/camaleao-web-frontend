@@ -2,14 +2,12 @@
 import { DEFAULT_GARMENT_ITEM, DEFAULT_GARMENT_INDIVIDUAL_ITEM } from '../OrderForm.vue'
 
 import FormGarmentItemOptions from './FormGarmentItemOptions.vue'
-import FormGarmentItemTip from './FormGarmentItemTip.vue'
 import FormGarmentItemMatches from './FormGarmentItemMatches.vue';
 import FormGarmentItemSizes from './FormGarmentItemSizes.vue';
 
 export default {
   components: {
     FormGarmentItemOptions,
-    FormGarmentItemTip,
     FormGarmentItemMatches,
     FormGarmentItemSizes
   },
@@ -66,6 +64,12 @@ export default {
         [`garments.${this.index}.items`]: [{...DEFAULT_GARMENT_ITEM}],
         [`garments.${this.index}.items_individual`]: [{...DEFAULT_GARMENT_INDIVIDUAL_ITEM}]
       })
+    },
+    onHowToUse () {
+      this.$emit('how-to-use')
+    },
+    onShowMatches () {
+      this.$emit('show-matches')
     }
   }
 }
@@ -79,9 +83,9 @@ export default {
       @new-garment="onNewGarment"
       @duplicate-garment="onDuplicateGarment"
       @delete-garment="onDeleteGarment"
+      @how-to-use="onHowToUse"
+      @show-matches="onShowMatches"
     />
-
-    <FormGarmentItemTip class="mb-3" />
 
     <FormGarmentItemMatches
       v-bind="{ index, form, garmentMatches, matched }"

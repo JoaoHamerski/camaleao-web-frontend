@@ -2,10 +2,14 @@
 import { faTshirt } from '@fortawesome/free-solid-svg-icons';
 
 import FormGarmentItem from './FormGarmentItem.vue'
+import HowToUseModal from './HowToUseModal.vue';
+import MatchesAvailableModal from './MatchesAvailableModal.vue'
 
 export default {
   components: {
-    FormGarmentItem
+    FormGarmentItem,
+    HowToUseModal,
+    MatchesAvailableModal
   },
   props: {
     form: {
@@ -23,6 +27,8 @@ export default {
   },
   data: () => ({
     activeItem: 0,
+    howToUseModal: false,
+    showMatchesModal: false,
     icons: {
       faTshirt
     }
@@ -55,6 +61,12 @@ export default {
     },
     onDeleteGarmentSize (event) {
       this.$emit('delete-garment-size', event)
+    },
+    onHowToUse () {
+      this.howToUseModal = true
+    },
+    onShowMatches () {
+      this.showMatchesModal = true
     }
   }
 }
@@ -70,6 +82,12 @@ export default {
       Roupas
     </template>
     <template #body>
+      <HowToUseModal v-model="howToUseModal" />
+      <MatchesAvailableModal
+        v-model="showMatchesModal"
+        :matches="garmentMatches"
+      />
+
       <AppNavPills
         v-model="activeItem"
         :items="navItems"
@@ -106,6 +124,8 @@ export default {
             @delete-garment="onDeleteGarment"
             @new-garment-size="onNewGarmentSize"
             @delete-garment-size="onDeleteGarmentSize"
+            @how-to-use="onHowToUse"
+            @show-matches="onShowMatches"
           />
         </template>
       </AppNavPills>

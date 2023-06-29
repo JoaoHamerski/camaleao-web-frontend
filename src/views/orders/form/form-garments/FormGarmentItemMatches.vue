@@ -54,6 +54,9 @@ export default {
   computed: {
     formGarment () {
       return this.form.garments[this.index]
+    },
+    modelError () {
+      return this.form.errors.get(`garments.${this.index}.match_id`)
     }
   },
   beforeMount() {
@@ -194,6 +197,14 @@ export default {
 
 <template>
   <div>
+    <AppAlert
+      v-if="form.errors.has(`garments.${index}.match_id`)"
+      dismissible
+      small
+      color="danger"
+    >
+      {{ form.errors.get(`garments.${index}.match_id`) }}
+    </AppAlert>
     <span
       class="link-primary clickable fw-bold small"
       @click.prevent="resetFormMatch(true)"

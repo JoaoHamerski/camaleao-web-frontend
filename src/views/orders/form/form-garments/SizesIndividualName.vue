@@ -79,6 +79,7 @@ export default {
             placeholder="Selecione um tam."
             select-class="form-select-sm"
             remove-default-margin
+            :error="form.errors.has(`garments.${garmentIndex}.items.${index}.size_id`)"
             @input="form.set({
               [`garments.${garmentIndex}.items_individual.${index}.size_id`]: $event
             })"
