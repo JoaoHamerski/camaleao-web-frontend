@@ -81,7 +81,7 @@ export default {
             conforme você seleciona as opções,
             todos campos são atualizados,
             e as opções que não fazem parte de uma possível combinação ficam cinzas (indisponíveis),
-            caso queira voltar elas ao normal, você pode usar a opção <b>Reset</b>.
+            caso queira voltar elas ao normal, você pode usar a opção <b>Resetar</b>.
           </div>
         </template>
       </AppCollapsible>
