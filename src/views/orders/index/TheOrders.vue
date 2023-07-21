@@ -4,6 +4,7 @@ import { DateTime } from 'luxon'
 import { faBoxes } from '@fortawesome/free-solid-svg-icons'
 import { GetOrdersSimplified } from '@/graphql/Order.gql'
 import { QUERIES } from './constants'
+import roles from '@/constants/roles'
 
 import TheOrdersTable from './TheOrdersTable.vue'
 import SearchInput from './partials/SearchInput.vue'
@@ -38,6 +39,7 @@ export default {
   data () {
     return {
       code: '',
+      roles,
       buttonSelected: 'priority',
       params: {
         page: 1,
@@ -219,7 +221,10 @@ export default {
       @filter-orders="onFilterOrders"
     />
 
-    <OrderSizesReportCard class="mb-3 " />
+    <OrderSizesReportCard
+      v-if="$helpers.canView(roles.GERENCIA, roles.ATENDIMENTO)"
+      class="mb-3 "
+    />
 
     <SortButtons
       v-model="buttonSelected"
