@@ -19,7 +19,7 @@ export default {
     id="orderSizesReportCard"
     color="success"
     collapsible
-    :collapsed="false"
+    :collapsed="true"
   >
     <template #header>
       <h6 class="fw-bold mb-0">
