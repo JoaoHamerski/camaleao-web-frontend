@@ -309,6 +309,10 @@ query GetOrderByPaymentUid($where: QueryPaymentWhereWhereConditions) {
   }
 }
 
+query GetOrderSizesReportUrl($input: OrdersSizesReportInput!) {
+  ordersSizesReport(input: $input)
+}
+
 mutation UpdateOrder($id: ID!, $input: OrderInput!) {
   orderUpdate(id: $id, input: $input) {
     ...OrderType

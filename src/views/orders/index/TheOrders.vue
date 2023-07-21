@@ -6,18 +6,18 @@ import { GetOrdersSimplified } from '@/graphql/Order.gql'
 import { QUERIES } from './constants'
 
 import TheOrdersTable from './TheOrdersTable.vue'
-import FilterSearchInput from './partials/FilterSearchInput.vue'
-import FilterSortButtons from './partials/FilterSortButtons.vue'
-import FilterGeneralCard from './partials/FilterGeneralCard.vue'
+import SearchInput from './partials/SearchInput.vue'
+import SortButtons from './partials/SortButtons.vue'
+import GeneralFilterCard from './partials/GeneralFilterCard.vue'
 import OrdersQuestionIconTippy from '@/views/orders/partials/OrdersQuestionIconTippy.vue'
-import FilterPrintDateReportCard from './partials/FilterPrintDateReportCard.vue'
+import OrderSizesReportCard from './partials/OrderSizesReportCard.vue'
 
 export default {
   components: {
-    FilterGeneralCard,
-    FilterPrintDateReportCard,
-    FilterSortButtons,
-    FilterSearchInput,
+    GeneralFilterCard,
+    OrderSizesReportCard,
+    SortButtons,
+    SearchInput,
     TheOrdersTable,
     OrdersQuestionIconTippy
   },
@@ -213,24 +213,21 @@ export default {
 
 <template>
   <div class="mx-auto py-5">
-    <FilterGeneralCard
+    <GeneralFilterCard
       class="mb-2"
       @report-generated="onReportGenerated"
       @filter-orders="onFilterOrders"
     />
 
-    <FilterPrintDateReportCard
-      class="mb-2"
-      @report-generated="onReportGenerated"
-    />
+    <OrderSizesReportCard class="mb-3 " />
 
-    <FilterSortButtons
+    <SortButtons
       v-model="buttonSelected"
       class="mb-3"
       @filter-changed="onFilterButtonsChanged"
     />
 
-    <FilterSearchInput
+    <SearchInput
       v-model="code"
       class="mb-3"
       @search="onCodeSearch"

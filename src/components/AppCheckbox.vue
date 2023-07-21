@@ -6,7 +6,7 @@ export default {
       required: true
     },
     value: {
-      type: Boolean,
+      type: [Boolean, Array],
       default: false
     },
     defaultMargin: {
