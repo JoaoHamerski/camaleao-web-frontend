@@ -1,7 +1,6 @@
 <script>
 import { faPlus, faSync} from '@fortawesome/free-solid-svg-icons'
-import { GetStatus, SyncStatus } from '@/graphql/Status.gql'
-import { GetAuthUserSectors, GetOrdersBySector} from '@/graphql/OrderControl.gql'
+import { GetStatus } from '@/graphql/Status.gql'
 
 import ModalStatusNew from '../partials/ModalStatusNew.vue'
 import ModalStatusAvailable from '../partials/ModalStatusAvailable.vue'
@@ -53,26 +52,6 @@ export default {
     },
     onWeeklyCalendarStatusClick () {
       this.modalWeeklyCalendarStatus = true
-    },
-    async onSyncClick () {
-      this.isSyncLoading = true
-
-      try {
-        await this.$apollo.mutate({
-          mutation: SyncStatus,
-          refetchQueries: [
-            GetAuthUserSectors,
-            GetOrdersBySector
-          ],
-          awaitRefetchQueries: true
-        })
-
-        this.$toast.success('Sincronizado!')
-      } catch (error) {
-        this.$toast.error('Ops! Algo deu errado!')
-      }
-
-      this.isSyncLoading = false
     }
   }
 }
@@ -107,21 +86,6 @@ export default {
     </AppButton>
 
     <div class="mt-2 mt-sm-0">
-      <AppButton
-        v-tippy="{
-          placement: 'bottom'
-        }"
-        class="me-2"
-        :block="$isMobile"
-        btn-class="fw-bold"
-        :icon="icons.faSync"
-        :loading="isSyncLoading"
-        :content="syncMessage"
-        @click="onSyncClick"
-      >
-        Sincronizar
-      </AppButton>
-
       <AppButton
         btn-class="fw-bold"
         class="me-2"

@@ -141,7 +141,6 @@ export default {
       </template>
       <template #body>
         <AppLoading v-show="isLoading" />
-
         <div class="mx-3 mb-2 d-flex flex-column">
           <div class="d-flex">
             <AppCheckboxSwitch
@@ -163,10 +162,10 @@ export default {
             </AppButton>
           </div>
           <div
-            v-show="reorder"
-            class="small text-secondary "
+            v-if="isReorderLoading"
+            class="small text-secondary mt-2"
           >
-            Use o botão <b>sincronizar</b> após concluir a reordenação.
+            Os pedidos estão sendo sincronizados com a nova ordenação...
           </div>
         </div>
 
