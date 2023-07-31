@@ -36,9 +36,9 @@ const isUserFromProduction = (user) => {
   return productionRoles.includes(+user.role.id)
 }
 
-const isUserFromDesign = (user) => {
-  return roles.DESIGN === +user.role.id
-}
+const isUserFromDesign = (user) => roles.DESIGN === +user.role.id
+const isUserFromGerencia = (user) => roles.GERENCIA === +user.role.id
+
 
 const getStartingRoute = () => {
   const authUser = store.getters['auth/authUser']
@@ -49,6 +49,10 @@ const getStartingRoute = () => {
 
   if (isUserFromDesign(authUser)) {
     return {name: 'weekly-calendar.print.index'}
+  }
+
+  if (isUserFromGerencia(authUser)) {
+    return {name: 'dashboard.index'}
   }
 
   return {name: 'clients.index'}

@@ -1,0 +1,15 @@
+query GetSalesAmount {
+  dashboardSalesAmount {
+    current {
+      day
+      week
+      month
+    }
+
+    previous {
+      day
+      week
+      month
+    }
+  }
+}
