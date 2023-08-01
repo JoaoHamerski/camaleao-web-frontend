@@ -13,3 +13,20 @@ query GetSalesAmount {
     }
   }
 }
+
+query GetCitiesSalesAmount($month: SalesAmountCityMonth) {
+  dashboardSalesAmountCities(month: $month) {
+    city {
+      id
+      name
+      state {
+        id
+        abbreviation
+      }
+    }
+
+    amount
+    shirts_count
+    orders_count
+  }
+}

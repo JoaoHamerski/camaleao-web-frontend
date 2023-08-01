@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div class="fw-bold text-uppercase text-secondary">
+    <div class="fw-bold text-secondary">
       <slot name="label" />
     </div>
     <div>

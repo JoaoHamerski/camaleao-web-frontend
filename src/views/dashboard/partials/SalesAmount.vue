@@ -3,7 +3,8 @@ import {
   faDollarSign,
   faCalendarDay,
   faCalendarWeek,
-  faCalendarAlt
+  faCalendarAlt,
+  faExclamationCircle
 } from '@fortawesome/free-solid-svg-icons'
 
 import { GetSalesAmount } from '@/graphql/Dashboard.gql'
@@ -26,7 +27,8 @@ export default {
       faDollarSign,
       faCalendarDay,
       faCalendarWeek,
-      faCalendarAlt
+      faCalendarAlt,
+      faExclamationCircle
     }
   }),
   methods: {
@@ -47,7 +49,7 @@ export default {
     <template #body>
       <div
         v-if="!isEmpty(dashboardSalesAmount)"
-        class="row"
+        class="row mb-3"
       >
         <div class="col">
           <SalesAmountItem
@@ -75,6 +77,13 @@ export default {
             :icon="icons.faCalendarAlt"
           />
         </div>
+      </div>
+      <div class="text-secondary extra-small">
+        <FontAwesomeIcon
+          :icon="icons.faExclamationCircle"
+          fixed-width
+        />
+        Dados baseados na data de cadastro dos pedidos.
       </div>
     </template>
   </AppContainer>

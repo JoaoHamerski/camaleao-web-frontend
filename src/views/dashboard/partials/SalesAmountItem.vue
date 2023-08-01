@@ -31,7 +31,7 @@ export default {
         fixed-width
         class="text-primary"
       />
-      {{ label }}
+      <span class="text-uppercase">{{ label }}</span>
     </template>
     <template #text>
       {{ $helpers.toBRL(value) }}

@@ -1,13 +1,16 @@
 <script>
-import SalesAmount from '../partials/SalesAmount.vue'
 import { faChartBar } from '@fortawesome/free-solid-svg-icons';
+
+import SalesAmount from '../partials/SalesAmount.vue'
+import SalesAmountCities from '../partials/SalesAmountCities.vue';
 
 export default {
   metaInfo: {
     title: 'Dashboard'
   },
   components: {
-    SalesAmount
+    SalesAmount,
+    SalesAmountCities
   },
   data: () => ({
     icons: {
@@ -30,7 +33,8 @@ export default {
         </h6>
       </template>
       <template #body>
-        <SalesAmount />
+        <SalesAmount class="mb-3" />
+        <SalesAmountCities class="mb-3" />
       </template>
     </AppCard>
   </div>
