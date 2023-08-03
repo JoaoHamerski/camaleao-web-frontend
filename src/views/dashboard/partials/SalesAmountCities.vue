@@ -80,7 +80,7 @@ export default {
       <div class="row mb-3">
         <SalesAmountCitiesItem
           v-for="item in featuredCities"
-          :key="item.id"
+          :key="`city_${item.city.id}`"
           class="col"
           :item="item"
         />

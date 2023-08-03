@@ -3,6 +3,8 @@ import { faChartBar } from '@fortawesome/free-solid-svg-icons';
 
 import SalesAmount from '../partials/SalesAmount.vue'
 import SalesAmountCities from '../partials/SalesAmountCities.vue';
+import SalesAmountModels from '../partials/SalesAmountModels.vue';
+import ClientsSegmentation from '../partials/ClientsSegmentation.vue';
 
 export default {
   metaInfo: {
@@ -10,7 +12,9 @@ export default {
   },
   components: {
     SalesAmount,
-    SalesAmountCities
+    SalesAmountCities,
+    SalesAmountModels,
+    ClientsSegmentation
   },
   data: () => ({
     icons: {
@@ -35,6 +39,8 @@ export default {
       <template #body>
         <SalesAmount class="mb-3" />
         <SalesAmountCities class="mb-3" />
+        <SalesAmountModels class="mb-3" />
+        <ClientsSegmentation class="mb-3" />
       </template>
     </AppCard>
   </div>

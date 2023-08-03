@@ -30,3 +30,36 @@ query GetCitiesSalesAmount($month: SalesAmountCityMonth) {
     orders_count
   }
 }
+
+query GetModelsSalesAmount {
+  dashboardSalesAmountModels {
+    model {
+      id
+      name
+    }
+
+    amount
+    shirts_count
+    sales_percentage
+  }
+}
+
+query GetClientsSegmentation {
+  dashboardClientsSegmentation {
+    new_clients {
+      amount
+      amount_pre_registered
+      shirts_count
+      orders_count
+      orders_count_pre_registered
+    }
+
+    recurrent_clients {
+      amount
+      amount_pre_registered
+      shirts_count
+      orders_count
+      orders_count_pre_registered
+    }
+  }
+}

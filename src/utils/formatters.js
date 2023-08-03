@@ -32,6 +32,14 @@ export const formatPhone = (str) => {
   return format(str, patterns[str.length])
 }
 
+export const formatNumber = (str) => {
+  return accounting.formatNumber(str, {
+    decimal: ',',
+    thousand: '.',
+    precision: str % 1 !== 0 ? 2 : 0
+  })
+}
+
 export const formatCurrencyBRL = (str, highlightNumerator = false, appendPlus = false) => {
   const formatted = accounting.formatMoney(str, {
     symbol: 'R$',

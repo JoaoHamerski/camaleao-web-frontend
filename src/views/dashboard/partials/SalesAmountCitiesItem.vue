@@ -54,7 +54,7 @@ export default {
             :icon="icons.faBoxes"
             fixed-width
           />
-          {{ item.orders_count }}
+          {{ $helpers.toNumber(item.orders_count) }}
         </span>
         <span class="mx-2">-</span>
         <span>
@@ -62,7 +62,7 @@ export default {
             :icon="icons.faTshirt"
             fixed-width
           />
-          {{ item.shirts_count }}
+          {{ $helpers.toNumber(item.shirts_count) }}
         </span>
       </div>
     </template>

@@ -56,7 +56,7 @@ export default {
     >
       <SalesAmountCitiesRemainingListItem
         v-for="item in computedItems"
-        :key="item.id"
+        :key="`city_${item.city.id}`"
         :item="item"
       />
     </ul>

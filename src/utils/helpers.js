@@ -9,7 +9,7 @@ import store from '@/store'
 import router from '@/router'
 
 import { map, isObject, isNil, flattenDeep } from 'lodash-es'
-import { formatCurrencyBRL } from '@/utils/formatters'
+import { formatCurrencyBRL, formatNumber } from '@/utils/formatters'
 
 import * as accounting from 'accounting-js'
 
@@ -18,6 +18,10 @@ const fallback = (object, prop, fallbackString = 'N/A') => {
     return object || fallbackString
   }
   return isNil(object) ? fallbackString : object[prop]
+}
+
+const toNumber = (str) => {
+  return formatNumber(str)
 }
 
 const toBRL = (str, highlightNumerator = false, appendPlus = false) => {
@@ -301,5 +305,6 @@ export default {
   clearCacheFrom,
   plural,
   openInNewTab,
-  unformatCurrencyBRL
+  unformatCurrencyBRL,
+  toNumber
 }
