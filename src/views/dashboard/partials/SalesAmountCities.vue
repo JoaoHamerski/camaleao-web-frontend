@@ -68,7 +68,6 @@ export default {
     <template #body>
       <div
         v-show="isLoading"
-        class="py-5"
       >
         <AppLoading />
       </div>
