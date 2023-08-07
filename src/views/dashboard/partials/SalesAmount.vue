@@ -31,6 +31,11 @@ export default {
       faExclamationCircle
     }
   }),
+  computed: {
+    isLoading () {
+      return !!this.$apollo.queries.dashboardSalesAmount.loading
+    }
+  },
   methods: {
     isEmpty
   }
@@ -48,10 +53,17 @@ export default {
     </template>
     <template #body>
       <div
+        v-show="isLoading"
+        class="py-5"
+      >
+        <AppLoading />
+      </div>
+
+      <div
         v-if="!isEmpty(dashboardSalesAmount)"
         class="row mb-3"
       >
-        <div class="col">
+        <div class="col-12 col-md mb-2 mb-md-0">
           <SalesAmountItem
             label="Dia"
             :value="dashboardSalesAmount.current.day"
@@ -60,7 +72,7 @@ export default {
           />
         </div>
 
-        <div class="col">
+        <div class="col-12 col-md mb-2 mb-md-0">
           <SalesAmountItem
             label="Semana"
             :value="dashboardSalesAmount.current.week"
@@ -69,7 +81,7 @@ export default {
           />
         </div>
 
-        <div class="col">
+        <div class="col-12 col-md">
           <SalesAmountItem
             label="Mês"
             :value="dashboardSalesAmount.current.month"

@@ -20,7 +20,12 @@ export default {
       faTshirt,
       faExclamationCircle
     }
-  })
+  }),
+  computed: {
+    isLoading () {
+      return !!this.$apollo.queries.dashboardSalesAmountModels.loading
+    }
+  }
 }
 </script>
 
@@ -35,7 +40,14 @@ export default {
     </template>
 
     <template #body>
-      <div class="row row-cols-4 mb-3">
+      <div
+        v-show="isLoading"
+        class="py-5"
+      >
+        <AppLoading />
+      </div>
+
+      <div class="row row-cols row-cols-md-4 mb-3">
         <SalesAmountModelsItem
           v-for="item in dashboardSalesAmountModels"
           :key="`model_${item.model.id}`"
@@ -43,11 +55,12 @@ export default {
           class="mb-3"
         />
       </div>
+
       <div class="extra-small text-secondary">
         <FontAwesomeIcon
           :icon="icons.faExclamationCircle"
           fixed-width
-        /> Dados baseados em todos os pedidos com modelos cadastrados.
+        /> Dados baseados em todos os pedidos com modelos cadastrados desde o início.
       </div>
     </template>
   </AppContainer>

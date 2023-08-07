@@ -21,6 +21,11 @@ export default {
       faExclamationCircle
     }
   }),
+  computed: {
+    isLoading () {
+      return !!this.$apollo.queries.dashboardClientsSegmentation.loading
+    }
+  },
   methods: {
     isEmpty
   }
@@ -39,8 +44,14 @@ export default {
 
     <template #body>
       <div
+        v-show="isLoading"
+        class="py-5"
+      >
+        <AppLoading />
+      </div>
+      <div
         v-if="!isEmpty(dashboardClientsSegmentation)"
-        class="row row-cols-4 mb-3"
+        class="row row-cols row-cols-md-4 mb-3"
       >
         <ClientsSegmentationItem
           label="Novos clientes"

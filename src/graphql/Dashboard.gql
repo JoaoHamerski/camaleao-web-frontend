@@ -63,3 +63,37 @@ query GetClientsSegmentation {
     }
   }
 }
+
+fragment DashboardProductionStatusData on DashboardProductionStatus {
+  orders_count {
+    day
+    week
+    last_week
+  }
+
+  receipt {
+    day
+    week
+    last_week
+  }
+}
+
+query GetMonthProduction {
+  dashboardProduction {
+    estampados {
+      ...DashboardProductionStatusData
+    }
+
+    costurados {
+      ...DashboardProductionStatusData
+    }
+
+    month_production {
+      orders_count
+      receipt
+    }
+
+    late_orders
+    waiting_for_withdrawal_orders
+  }
+}

@@ -5,6 +5,7 @@ import SalesAmount from '../partials/SalesAmount.vue'
 import SalesAmountCities from '../partials/SalesAmountCities.vue';
 import SalesAmountModels from '../partials/SalesAmountModels.vue';
 import ClientsSegmentation from '../partials/ClientsSegmentation.vue';
+import MonthProduction from '../partials/MonthProduction.vue'
 
 export default {
   metaInfo: {
@@ -14,7 +15,8 @@ export default {
     SalesAmount,
     SalesAmountCities,
     SalesAmountModels,
-    ClientsSegmentation
+    ClientsSegmentation,
+    MonthProduction
   },
   data: () => ({
     icons: {
@@ -25,7 +27,7 @@ export default {
 </script>
 
 <template>
-  <div class="mt-5">
+  <div class="my-5">
     <AppCard>
       <template #header>
         <h6 class="fw-bold mb-0">
@@ -41,6 +43,7 @@ export default {
         <SalesAmountCities class="mb-3" />
         <SalesAmountModels class="mb-3" />
         <ClientsSegmentation class="mb-3" />
+        <MonthProduction class="mb-3" />
       </template>
     </AppCard>
   </div>

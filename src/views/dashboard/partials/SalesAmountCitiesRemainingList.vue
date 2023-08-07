@@ -64,13 +64,25 @@ export default {
 </template>
 
 <style scoped lang="scss">
+  @import "@/sass/_bootstrap-utilities";
+
   .list-group {
     display: grid;
-    grid-template-columns: repeat(5, 1fr);
-
     .list-group-item {
       border: 1px solid rgba(0, 0, 0, .15);
       border-collapse: collapse;
     }
   }
+
+  .list-group {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  @include media-breakpoint-up(md) {
+    .list-group {
+      grid-template-columns: repeat(5, 1fr);
+    }
+  }
+
+
 </style>

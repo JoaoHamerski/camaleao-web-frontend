@@ -29,6 +29,9 @@ export default {
     },
   }),
   computed: {
+    isLoading () {
+      return !!this.$apollo.queries.dashboardSalesAmountCities.loading
+    },
     featuredCities () {
       const cities = [...this.dashboardSalesAmountCities];
 
@@ -63,6 +66,13 @@ export default {
     </template>
 
     <template #body>
+      <div
+        v-show="isLoading"
+        class="py-5"
+      >
+        <AppLoading />
+      </div>
+
       <div class="small mb-2">
         <span
           class="link-primary clickable me-2"
@@ -81,7 +91,7 @@ export default {
         <SalesAmountCitiesItem
           v-for="item in featuredCities"
           :key="`city_${item.city.id}`"
-          class="col"
+          class="col-12 col-md mb-2 mb-md-0"
           :item="item"
         />
       </div>
