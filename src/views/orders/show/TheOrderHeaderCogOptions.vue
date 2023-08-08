@@ -122,13 +122,13 @@ export default {
 
     <div class="dropdown-divider" />
 
-    <!-- <AppDropdownItem
+    <AppDropdownItem
       :disabled-message="isOrderClosed && 'Não é possível alterar status de pedidos fechados.'"
       :icon="icons.faExchangeAlt"
       text="Alterar status"
       icon-color="primary"
       @click="onChangeStatusClick"
-    /> -->
+    />
 
     <AppDropdownItem
       :disabled-message="!isOrderPaid && 'Não é possível fechar pedidos com pendência financeira.'"
