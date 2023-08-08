@@ -11,7 +11,12 @@ export default {
   },
   apollo: {
     dashboardClientsSegmentation: {
-      query: GetClientsSegmentation
+      query: GetClientsSegmentation,
+      variables () {
+        return {
+          date: this.date
+        }
+      }
     }
   },
   data: () => ({
@@ -19,11 +24,19 @@ export default {
     icons: {
       faUsers,
       faExclamationCircle
-    }
+    },
+    date: 'MONTH'
   }),
   computed: {
     isLoading () {
       return !!this.$apollo.queries.dashboardClientsSegmentation.loading
+    },
+    datesOptions () {
+      return [
+        { text: 'MÊS', value: 'MONTH' },
+        { text: 'ANO', value: 'YEAR' },
+        { text: 'GERAL', value: 'ALL_TIME' },
+      ]
     }
   },
   methods: {
@@ -43,12 +56,18 @@ export default {
     </template>
 
     <template #body>
-      <div
-        v-show="isLoading"
-        class="py-5"
-      >
+      <div v-show="isLoading">
         <AppLoading />
       </div>
+
+      <div>
+        <AppLinksList
+          v-model="date"
+          :options="datesOptions"
+          class="mb-2"
+        />
+      </div>
+
       <div
         v-if="!isEmpty(dashboardClientsSegmentation)"
         class="row row-cols row-cols-md-4 mb-3"
@@ -68,7 +87,7 @@ export default {
           :icon="icons.faExclamationCircle"
           fixed-width
         />
-        Dados baseados em clientes e pedidos cadastrados desde o início.
+        Dados baseados em clientes e pedidos cadastrados baseado na data de cadastro dos pedidos.
       </div>
     </template>
   </AppContainer>

@@ -41,6 +41,12 @@ export default {
       const cities = [...this.dashboardSalesAmountCities]
 
       return cities.splice(4)
+    },
+    monthsOptions () {
+      return [
+        { text: 'MÊS ATUAL', value: 'CURRENT'},
+        { text: 'MÊS ANTERIOR', value: 'PREVIOUS'},
+      ]
     }
   },
   methods: {
@@ -72,19 +78,11 @@ export default {
         <AppLoading />
       </div>
 
-      <div class="small mb-2">
-        <span
-          class="link-primary clickable me-2"
-          :class="{'fw-bold': month === 'CURRENT'}"
-          @click.prevent="setMonth('CURRENT')"
-        >MÊS ATUAL</span>
-        <span class="mx-2">|</span>
-        <span
-          class="link-primary clickable"
-          :class="{'fw-bold': month === 'PREVIOUS'}"
-          @click.prevent="setMonth('PREVIOUS')"
-        >MÊS ANTERIOR</span>
-      </div>
+      <AppLinksList
+        v-model="month"
+        :options="monthsOptions"
+        class="mb-2"
+      />
 
       <div class="row mb-3">
         <SalesAmountCitiesItem

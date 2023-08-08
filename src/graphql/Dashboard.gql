@@ -31,8 +31,8 @@ query GetCitiesSalesAmount($month: SalesAmountCityMonth) {
   }
 }
 
-query GetModelsSalesAmount {
-  dashboardSalesAmountModels {
+query GetModelsSalesAmount($date: SalesAmountModelDates!) {
+  dashboardSalesAmountModels(date: $date) {
     model {
       id
       name
@@ -44,8 +44,8 @@ query GetModelsSalesAmount {
   }
 }
 
-query GetClientsSegmentation {
-  dashboardClientsSegmentation {
+query GetClientsSegmentation($date: ClientSegmentationDates!) {
+  dashboardClientsSegmentation(date: $date) {
     new_clients {
       amount
       amount_pre_registered
