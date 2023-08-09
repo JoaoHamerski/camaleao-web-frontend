@@ -84,7 +84,10 @@ export default {
         class="mb-2"
       />
 
-      <div class="row mb-3">
+      <div
+        v-if="featuredCities.length"
+        class="row mb-3"
+      >
         <SalesAmountCitiesItem
           v-for="item in featuredCities"
           :key="`city_${item.city.id}`"
@@ -92,8 +95,17 @@ export default {
           :item="item"
         />
       </div>
+      <div
+        v-else
+        class="small text-secondary text-center py-4"
+      >
+        Nenhum dado encontrado
+      </div>
 
-      <div class="mb-3">
+      <div
+        v-if="remainingCities.length"
+        class="mb-3"
+      >
         <SalesAmountCitiesRemainingList :items="remainingCities" />
       </div>
 
