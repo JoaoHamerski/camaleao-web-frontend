@@ -11,10 +11,12 @@ import { GetSalesAmount } from '@/graphql/Dashboard.gql'
 import { isEmpty } from 'lodash-es'
 
 import SalesAmountItem from './SalesAmountItem.vue'
+import SalesAmountChart from './SalesAmountChart.vue'
 
 export default {
   components: {
-    SalesAmountItem
+    SalesAmountItem,
+    SalesAmountChart
   },
   apollo: {
     dashboardSalesAmount: {
@@ -89,6 +91,9 @@ export default {
             :icon="icons.faCalendarAlt"
           />
         </div>
+      </div>
+      <div>
+        <SalesAmountChart />
       </div>
       <div class="text-secondary extra-small">
         <FontAwesomeIcon
