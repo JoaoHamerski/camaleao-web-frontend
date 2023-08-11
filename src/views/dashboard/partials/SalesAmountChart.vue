@@ -74,7 +74,7 @@ export default {
           label: 'Mês anterior',
           data: previousMonthAmounts,
           fill: true,
-          borderColor: 'rgb(97, 179, 255)'
+          borderColor: 'rgb(255, 97, 97)'
         }]
       }
     }
