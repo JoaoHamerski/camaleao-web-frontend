@@ -3,12 +3,11 @@ import { GetAmountSalesChart } from '@/graphql/Dashboard.gql'
 
 import { Line as LineChart } from 'vue-chartjs'
 import { Chart as ChartJS, Tooltip, CategoryScale, LinearScale, PointElement, LineElement, Legend } from 'chart.js'
+import zoomPlugin from 'chartjs-plugin-zoom'
 
-
-ChartJS.register(CategoryScale, Legend, Tooltip, LinearScale, PointElement, LineElement)
+ChartJS.register(CategoryScale, Legend, Tooltip, LinearScale, PointElement, LineElement, zoomPlugin)
 
 export default {
-  name: 'BarChart',
   components: { LineChart },
   apollo: {
     dashboardSalesAmountChart: {
@@ -28,6 +27,22 @@ export default {
           }
         },
         plugins: {
+          zoom: {
+            limits: {
+              y: {min: 0},
+            },
+            pan: {
+              enabled: true,
+              mode: 'y',
+              modifierKey: 'alt'
+            },
+            zoom: {
+              drag: {
+                enabled: true
+              },
+              mode: 'y'
+            }
+          },
           legend: {
             labels: {
               padding: 20,
@@ -54,7 +69,7 @@ export default {
   computed: {
     chartStyle () {
       return {
-        height: '200px'
+        height: '235px'
       }
     },
     isLoading () {
@@ -78,17 +93,30 @@ export default {
         }]
       }
     }
+  },
+  methods: {
+    onResetZoomClick () {
+      //
+    }
   }
 }
 </script>
 
 <template>
-  <div v-if="!isLoading">
-    <LineChart
-      id="my-chart-id"
-      :options="chartOptions"
-      :data="chartData"
-      :style="chartStyle"
-    />
+  <div>
+    <div v-if="!isLoading">
+      <LineChart
+        id="line-chart"
+        ref="line"
+        :options="chartOptions"
+        :data="chartData"
+        :style="chartStyle"
+      />
+    </div>
+    <!-- <a
+      href="#"
+      class="extra-small mt-3 text-decoration-none"
+      @click.prevent="onResetZoomClick"
+    >Resetar zoom</a> -->
   </div>
 </template>
