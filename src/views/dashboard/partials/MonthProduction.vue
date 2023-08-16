@@ -9,6 +9,8 @@ import {
   faBoxes,
   faDolly
 } from '@fortawesome/free-solid-svg-icons';
+import { DateTime } from 'luxon'
+import { reverse } from 'lodash-es'
 
 import MonthProductionItem from './MonthProductionItem.vue';
 import DashboardItem from './DashboardItem.vue';
@@ -22,11 +24,17 @@ export default {
   },
   apollo: {
     dashboardProduction: {
-      query: GetMonthProduction
+      query: GetMonthProduction,
+      variables () {
+        return {
+          production_date: this.production_date
+        }
+      }
     }
   },
   data: () => ({
     dashboardProduction: {},
+    production_date: DateTime.now().toFormat('yyyy-MM'),
     icons: {
       faTshirt,
       faCut,
@@ -37,6 +45,20 @@ export default {
     }
   }),
   computed: {
+    selectDates () {
+      const dates = []
+      const startDate = DateTime.now().minus({ months: 12})
+      const endDate = DateTime.now()
+
+      for (let date = startDate; date <= endDate; date = date.plus({months: 1})) {
+        dates.push({
+          value: date.toFormat('yyyy-MM'),
+          text: date.toFormat('MM/yy')
+        })
+      }
+
+      return reverse(dates)
+    },
     isLoading () {
       return !!this.$apollo.queries.dashboardProduction.loading
     }
@@ -116,6 +138,14 @@ export default {
               </div>
             </template>
           </DashboardItem>
+          <AppSimpleSelect
+            v-model="production_date"
+            select-class="form-select-sm"
+            name="production_select"
+            label-prop="text"
+            value-prop="value"
+            :options="selectDates"
+          />
         </div>
 
         <div>

@@ -92,8 +92,8 @@ fragment DashboardProductionStatusData on DashboardProductionStatus {
   }
 }
 
-query GetMonthProduction {
-  dashboardProduction {
+query GetMonthProduction($production_date: String) {
+  dashboardProduction(production_date: $production_date) {
     estampados {
       ...DashboardProductionStatusData
     }
