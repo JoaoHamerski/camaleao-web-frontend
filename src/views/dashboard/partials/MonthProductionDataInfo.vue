@@ -36,7 +36,7 @@ export default {
       <li>
         <b>Estampados e Costurados</b>: Pedidos que foram marcados com os respectivos status no período indicado, independente de quando foram cadastrados.
       </li>
-      <li><b>Produção do mês</b>: Pedidos que foram marcados com o status no <b>Disponível para retirada</b> no período indicado.</li>
+      <li><b>Produção do mês</b>: Pedidos que foram marcados com o status no <b>Costurados e embalados</b> no período indicado.</li>
       <li><b>Pedidos atrasados</b>: Pedidos com status <b>Disponível para retirada</b> com a <b>Data de entrega</b> anterior a hoje.</li>
       <li><b>Aguardando retirada</b>: Pedidos com status <b>Disponível para retirada</b> porém que não possuem o status <b>Entregue</b> desde o início.</li>
     </ul>
