@@ -28,8 +28,8 @@ query GetAmountSalesChart {
   }
 }
 
-query GetCitiesSalesAmount($month: SalesAmountCityMonth) {
-  dashboardSalesAmountCities(month: $month) {
+query GetCitiesSalesAmount($date: String) {
+  dashboardSalesAmountCities(date: $date) {
     city {
       id
       name

@@ -1,27 +1,30 @@
 <script>
 import { GetCitiesSalesAmount } from '@/graphql/Dashboard.gql'
 import { faCity, faExclamationCircle } from '@fortawesome/free-solid-svg-icons';
+import { DateTime } from 'luxon'
 
 import SalesAmountCitiesItem from './SalesAmountCitiesItem.vue'
 import SalesAmountCitiesRemainingList from './SalesAmountCitiesRemainingList.vue';
+import SalesAmountCitiesDatesSelect from './SalesAmountCitiesDatesSelect.vue';
 
 export default {
   components: {
     SalesAmountCitiesItem,
-    SalesAmountCitiesRemainingList
+    SalesAmountCitiesRemainingList,
+    SalesAmountCitiesDatesSelect
   },
   apollo: {
     dashboardSalesAmountCities: {
       query: GetCitiesSalesAmount,
       variables () {
         return {
-          month: this.month
+          date: this.date,
         }
       }
     }
   },
   data: () => ({
-    month: 'CURRENT',
+    date: DateTime.now().toFormat('yyyy-MM'),
     dashboardSalesAmountCities: [],
     icons: {
       faCity,
@@ -50,6 +53,9 @@ export default {
     }
   },
   methods: {
+    onDateChanged (date) {
+      this.date = date
+    },
     setMonth (month) {
       if (month === this.month) {
         return
@@ -78,11 +84,12 @@ export default {
         <AppLoading />
       </div>
 
-      <AppLinksList
-        v-model="month"
-        :options="monthsOptions"
-        class="mb-2"
-      />
+      <div class="col col-md-3">
+        <SalesAmountCitiesDatesSelect
+          :value="date"
+          @date-changed="onDateChanged"
+        />
+      </div>
 
       <div
         v-if="featuredCities.length"
