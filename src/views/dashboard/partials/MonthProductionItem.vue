@@ -1,5 +1,6 @@
 <script>
 import DashboardItem from './DashboardItem.vue'
+import { faBoxes, faTshirt } from '@fortawesome/free-solid-svg-icons';
 
 export default {
   components: {
@@ -10,7 +11,13 @@ export default {
       type: Object,
       required: true
     }
-  }
+  },
+  data: () => ({
+    icons: {
+      faBoxes,
+      faTshirt
+    }
+  })
 }
 </script>
 
@@ -27,12 +34,29 @@ export default {
     </template>
     <template #text-secondary>
       <div>
-        Semana: {{ $helpers.toNumber(item.orders_count.week) }}
-        <span v-if="item.receipt.week">({{ $helpers.toBRL(item.receipt.week) }})</span>
+        <span>Semana: </span>
+        <span>
+          <FontAwesomeIcon
+            :icon="icons.faBoxes"
+            fixed-width
+          />
+          {{ $helpers.toNumber(item.orders_count.week) }}
+        </span>
+
+        <span class="mx-2">|</span>
+
+        <span>{{ $helpers.toBRL(item.receipt.week) }}</span>
       </div>
       <div>
-        S. anterior: {{ $helpers.toNumber(item.orders_count.last_week) }}
-        <span v-if="item.receipt.last_week">({{ $helpers.toBRL(item.receipt.last_week) }})</span>
+        <span>S. anterior: </span>
+        <span><FontAwesomeIcon
+                :icon="icons.faBoxes"
+                fixed-width
+              />
+          {{ $helpers.toNumber(item.orders_count.last_week) }}
+        </span>
+        <span class="mx-2">|</span>
+        <span>{{ $helpers.toBRL(item.receipt.last_week) }}</span>
       </div>
     </template>
   </DashboardItem>
