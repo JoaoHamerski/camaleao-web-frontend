@@ -2,10 +2,10 @@
 import { GetAmountSalesChart } from '@/graphql/Dashboard.gql'
 
 import { Line as LineChart } from 'vue-chartjs'
-import { Chart as ChartJS, Tooltip, CategoryScale, LinearScale, PointElement, LineElement, Legend } from 'chart.js'
+import { Chart as ChartJS, Tooltip, CategoryScale, LinearScale, PointElement, LineElement, Legend, Filler } from 'chart.js'
 import zoomPlugin from 'chartjs-plugin-zoom'
 
-ChartJS.register(CategoryScale, Legend, Tooltip, LinearScale, PointElement, LineElement, zoomPlugin)
+ChartJS.register(CategoryScale, Legend, Tooltip, LinearScale, PointElement, LineElement, zoomPlugin, Filler)
 
 export default {
   components: { LineChart },

@@ -18,7 +18,7 @@ export default {
       type: Object,
       required: true,
     },
-    concludedStatus: {
+    linkedStatus: {
       type: Array,
       required: true
     },
@@ -30,9 +30,9 @@ export default {
   computed: {
     getProgressBarWidth () {
       const hasNextStatus = !!this.status.next_status
-      const concludedStatusIds = map(this.concludedStatus, 'id')
+      const linkedStatusIds = map(this.linkedStatus, 'id')
       const sectorStatusIds = map(this.status.items, 'id')
-      const matched = concludedStatusIds.filter(
+      const matched = linkedStatusIds.filter(
         id => sectorStatusIds.includes(id)
       )
 
@@ -92,13 +92,13 @@ export default {
           v-for="_status in status.items"
           :key="_status.id"
           :status="_status"
-          :concluded-status="concludedStatus"
+          :concluded-status="linkedStatus"
           @step-click="stepToStatus"
         />
         <ProductionTrackNavItems
           v-if="status.next_status"
           :status="status.next_status"
-          :concluded-status="concludedStatus"
+          :concluded-status="linkedStatus"
           @step-click="stepToStatus"
         />
       </ul>

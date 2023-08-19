@@ -119,7 +119,7 @@ export default {
               v-tippy
               fixed-width
               :icon="icons.faQuestionCircle"
-              content="Nome no Controle de Produção"
+              content="Nome no Painel de Produtividade"
             />
           </div>
         </template>

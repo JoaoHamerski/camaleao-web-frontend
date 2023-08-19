@@ -173,7 +173,7 @@ export default {
       :error="form.errors.get('alias')"
       hint="Caso deixe em branco, será o mesmo de ESTEIRA DE PRODUÇÃO"
     >
-      Nome do setor no CONTROLE DE PRODUÇÃO
+      Nome do setor no PAINEL DE PRODUTIVIDADE
     </AppInput>
 
     <AppSelect

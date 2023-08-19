@@ -32,7 +32,6 @@ export default {
       const shippingValue = this.order.shipping_value
       const discount = this.order.discount
 
-      console.log(this.shipping_value)
       return [
         {
           label: 'TOTAL ROUPAS: ',

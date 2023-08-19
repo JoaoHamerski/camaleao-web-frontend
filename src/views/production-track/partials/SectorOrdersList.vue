@@ -97,7 +97,7 @@ export default {
           <SectorOrdersListStatus
             :order="order"
             :status="status"
-            :concluded-status="order.concluded_status"
+            :linked-status="order.linked_status"
             @loading="onStatusLoading"
           />
         </div>

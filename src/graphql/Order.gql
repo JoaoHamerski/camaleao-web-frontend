@@ -89,10 +89,11 @@ fragment OrderClientParts on Order {
   }
 }
 
-fragment OrderConcludedStatusParts on Order {
-  concluded_status {
+fragment OrderLinkedStatus on Order {
+  linked_status {
     id
     text
+    order
     sector {
       id
       name
@@ -103,7 +104,8 @@ fragment OrderConcludedStatusParts on Order {
         id
         name
       }
-      created_at
+      is_confirmed
+      confirmed_at
     }
   }
 }
@@ -112,6 +114,7 @@ fragment StatusParts on Order {
   status {
     id
     text
+    order
     is_available
   }
 }
@@ -229,7 +232,7 @@ fragment OrderType on Order {
   ...ClothingTypesParts
   ...PaymentsPart
   ...NotesParts
-  ...OrderConcludedStatusParts
+  ...OrderLinkedStatus
   ...GarmentsParts
 }
 
@@ -319,8 +322,16 @@ mutation UpdateOrder($id: ID!, $input: OrderInput!) {
   }
 }
 
-mutation UpdateOrderStatus($id: ID!, $status_id: ID!) {
-  orderUpdateStatus(id: $id, status_id: $status_id) {
+mutation UpdateOrderStatus(
+  $id: ID!
+  $status_id: ID!
+  $override_option: OrderUpdateStatusOverrideOptions
+) {
+  orderUpdateStatus(
+    id: $id
+    status_id: $status_id
+    override_option: $override_option
+  ) {
     ...OrderType
   }
 }

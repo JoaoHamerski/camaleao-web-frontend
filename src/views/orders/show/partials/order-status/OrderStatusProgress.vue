@@ -13,26 +13,20 @@ export default {
       required: true
     }
   },
-  apollo: {
-    status: {
-      query: GetStatus
-    }
-  },
   data () {
     return {
       icons: {
         faTasks
       },
-      status: []
     }
   },
   computed: {
-    concludedStatus () {
+    status () {
       if (this.order.closed_at) {
         return JSON.parse(this.order.final_status)
       }
 
-      return this.order.concluded_status
+      return this.order.linked_status
     }
   }
 }
@@ -57,15 +51,13 @@ export default {
             v-for="_status in status"
             :key="_status.id"
             :status="_status"
-            :concluded-status="concludedStatus"
           />
         </template>
         <template v-else>
           <OrderStatusProgressItem
-            v-for="_status in concludedStatus"
+            v-for="_status in status"
             :key="_status.id"
             :status="_status"
-            :concluded-status="concludedStatus"
           />
         </template>
       </ul>

@@ -10,7 +10,7 @@ fragment OrdersBySectorParts on Order {
   delivery_date
   states
   total_owing
-  concluded_status {
+  linked_status {
     id
     text
     pivot {
@@ -19,8 +19,8 @@ fragment OrdersBySectorParts on Order {
         name
       }
 
-      is_auto_concluded
-      created_at
+      is_confirmed
+      confirmed_at
     }
   }
 

@@ -1,16 +1,17 @@
 <script>
 import { faExchangeAlt } from '@fortawesome/free-solid-svg-icons'
-
-import { GetStatus } from '@/graphql/Status.gql'
 import { GetOrder, UpdateOrderStatus } from '@/graphql/Order.gql'
-
 import { handleError, handleSuccess } from '@/utils/forms'
 
+import ModalOrderStatusHeader from './ModalOrderStatusHeader.vue'
+import ModalOrderStatusOptions from './ModalOrderStatusOptions.vue'
+import ModalOrderStatusOverrideDates from './ModalOrderStatusOverrideDates.vue'
+
 export default {
-  apollo: {
-    status: {
-      query: GetStatus
-    }
+  components: {
+    ModalOrderStatusHeader,
+    ModalOrderStatusOptions,
+    ModalOrderStatusOverrideDates
   },
   props: {
     order: {
@@ -28,19 +29,49 @@ export default {
         faExchangeAlt
       },
       isLoading: false,
-      status: [],
-      selected: this.order.status.id
+      selectedStatus: this.order.status.id,
+      overrideOption: null,
+      overrideStatus: []
     }
   },
   computed: {
-    clientKey () {
-      return this.$route.params.clientKey
+    status () {
+      return this.order.linked_status
     },
-    orderKey () {
-      return this.$route.params.orderKey
+    hasOverrideDates () {
+      return !!this.overrideStatus.length
     }
   },
   methods: {
+    onOptionChange () {
+      const selectedStatus = this.status.find((s) => s.id === this.selectedStatus)
+      const orderStatus = this.order.status
+
+      if (selectedStatus.order > orderStatus.order) {
+        const status = this.getStatusBetween(orderStatus, selectedStatus)
+
+        if (status.some(s => s.pivot.confirmed_at)) {
+          this.overrideStatus = status
+          this.overrideOption = 'KEEP'
+          return
+        }
+      }
+
+      this.overrideStatus = []
+    },
+    getStatusBetween(statusA, statusB) {
+      const status = this.status
+
+      const statusAIndex = status.findIndex((s) => s.id === statusA.id)
+      const statusBIndex = status.findIndex((s) => s.id === statusB.id)
+
+      const statusBetween = status.slice(statusAIndex, statusBIndex)
+
+      statusBetween.push(statusB)
+      statusBetween.shift()
+
+      return statusBetween
+    },
     async updateStatus () {
       this.isLoading = true
 
@@ -49,7 +80,8 @@ export default {
           mutation: UpdateOrderStatus,
           variables: {
             id: this.order.id,
-            status_id: this.selected
+            status_id: this.selectedStatus,
+            override_option: this.overrideOption
           },
           refetchQueries: [GetOrder],
           awaitRefetchQueries: true
@@ -57,7 +89,7 @@ export default {
 
         handleSuccess(this, { message: 'Status alterado!' })
       } catch (error) {
-        handleError(this, error)
+          handleError(this, error)
       }
 
       this.isLoading = false
@@ -84,45 +116,23 @@ export default {
 
     <template #body>
       <div class="mb-4">
-        <div class="text-center mb-3">
-          <div class="text-secondary small">
-            STATUS ATUAL
-          </div>
-          <h5
-            class="fw-bold"
-            :class="order.status.avaliable ? 'text-success' : 'text-warning'"
-          >
-            {{ order.status.text }}
-          </h5>
-        </div>
+        <ModalOrderStatusHeader :status="order.status" />
 
-        <h6 class="fw-bold">
-          Alterar para:
-        </h6>
-        <div
-          v-for="(option, index) in status"
-          :key="option.id"
-          class="form-check"
-        >
-          <input
-            :id="`radio__${option.id}__id`"
-            v-model="selected"
-            :value="option.id"
-            class="form-check-input"
-            type="radio"
-            :name="`radio__${option.id}__name`"
-            :checked="selected === order.status.id"
-          >
-          <label
-            class="form-check-label"
-            :for="`radio__${option.id}__id`"
-          >
-            {{ index + 1 }}. {{ option.text }}
-          </label>
-        </div>
+        <ModalOrderStatusOptions
+          v-model="selectedStatus"
+          :status="order.linked_status"
+          @input="onOptionChange"
+        />
       </div>
 
-      <div class="row">
+      <div v-if="hasOverrideDates">
+        <ModalOrderStatusOverrideDates
+          v-model="overrideOption"
+          :status="overrideStatus"
+        />
+      </div>
+
+      <div class="row mt-3">
         <div class="col">
           <AppButton
             :loading="isLoading"

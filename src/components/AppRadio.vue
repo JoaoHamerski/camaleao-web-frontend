@@ -1,4 +1,6 @@
 <script>
+import { isString } from 'lodash-es'
+
 export default {
   props: {
     name: {
@@ -10,7 +12,7 @@ export default {
       default: ''
     },
     labelProp: {
-      type: String,
+      type: [String, Function],
       default: 'label'
     },
     valueProp: {
@@ -32,6 +34,10 @@ export default {
     defaultMargin: {
       type: Boolean,
       default: true
+    },
+    labelClass: {
+      type: [Function, String],
+      default: ''
     }
   },
   computed: {
@@ -44,6 +50,22 @@ export default {
     },
     hasError () {
       return this.error !== ''
+    }
+  },
+  methods: {
+    getLabelClass(option) {
+      if (isString(this.labelClass)) {
+        return this.labelClass
+      }
+
+      return this.labelClass(option)
+    },
+    getLabel(option, index) {
+      if (isString(this.labelProp)) {
+        return option[this.labelProp]
+      }
+
+      return this.labelProp(option, index)
     }
   }
 }
@@ -67,7 +89,7 @@ export default {
       :class="alignmentClass"
     >
       <input
-        :id="`radio_${option.id || index}`"
+        :id="`radio__${name}__${option.id || index}`"
         class="form-check-input"
         :class="hasError && 'is-invalid'"
         type="radio"
@@ -78,10 +100,10 @@ export default {
         @change="$emit('input', $event.target.value)"
       >
       <label
-        class="form-check-label"
-        :for="`radio_${option.id || index}`"
+        :class="['form-check-label', getLabelClass(option)]"
+        :for="`radio__${name}__${option.id || index}`"
       >
-        {{ option[labelProp] }}
+        {{ getLabel(option, index) }}
       </label>
     </div>
     <div
