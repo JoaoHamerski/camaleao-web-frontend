@@ -11,7 +11,7 @@ export default {
     ProductionPanelOrdersTable
   },
   props: {
-    sectorPieces: {
+    sectorData: {
       type: Object,
       required: true
     },
@@ -29,19 +29,19 @@ export default {
   },
   computed: {
     sector () {
-      return this.sectorPieces.sector
+      return this.sectorData.sector
     },
-    pieces () {
-      return this.sectorPieces.pieces
+    periods () {
+      return this.sectorData.orders_on_periods
     },
-    selectedDate () {
-      return this.sectorPieces.selectedDate
+    selectedPeriod () {
+      return this.sectorData.selectedPeriod
     },
     orders () {
-      return this.pieces[this.selectedDate]?.current_orders?.data || []
+      return this.periods[this.selectedPeriod]?.current_orders?.data || []
     },
     pagination () {
-      return this.pieces[this.selectedDate]?.current_orders?.paginatorInfo || {}
+      return this.periods[this.selectedPeriod]?.current_orders?.paginatorInfo || {}
     },
     sectorName () {
       if (isEmpty(this.sector.alias)) {
@@ -53,10 +53,10 @@ export default {
   },
   methods: {
     isEmpty,
-    onDateSelected ({ date }) {
-      this.$emit('date-selected', {
+    onPeriodChanged ({ period }) {
+      this.$emit('period-changed', {
         sector: this.sector,
-        date
+        period
       })
     },
     onBackClick () {
@@ -80,9 +80,9 @@ export default {
 
     <div class="col col-sm-4 my-3">
       <ProductionPanelDaysCount
-        :pieces="pieces"
-        :selected-date="selectedDate"
-        @date-selected="onDateSelected"
+        :orders-on-periods="periods"
+        :selected-period="selectedPeriod"
+        @period-changed="onPeriodChanged"
       />
     </div>
 

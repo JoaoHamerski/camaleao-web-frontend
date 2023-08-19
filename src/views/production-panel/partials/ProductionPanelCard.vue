@@ -13,11 +13,11 @@ export default {
       type: Object,
       required: true
     },
-    pieces: {
+    ordersOnPeriods: {
       type: Object,
       required: true
     },
-    selectedDate: {
+    selectedPeriod: {
       type: String,
       required: true
     }
@@ -37,9 +37,9 @@ export default {
         sector: this.sector
       })
     },
-    onDateSelected ({ date }) {
-      this.$emit('date-selected', {
-        date,
+    onPeriodChanged ({ period }) {
+      this.$emit('period-changed', {
+        period,
         sector: this.sector
       })
     }
@@ -57,16 +57,16 @@ export default {
     </template>
     <template #body>
       <ProductionPanelOrdersList
-        :orders="pieces[selectedDate].current_orders.data"
-        :total="pieces[selectedDate].current_orders.paginatorInfo.total"
+        :orders="ordersOnPeriods[selectedPeriod].current_orders.data"
+        :total="ordersOnPeriods[selectedPeriod].current_orders.paginatorInfo.total"
         @show-sector="onShowSector"
       />
     </template>
     <template #footer>
       <ProductionPanelDaysCount
-        :pieces="pieces"
-        :selected-date="selectedDate"
-        @date-selected="onDateSelected"
+        :orders-on-periods="ordersOnPeriods"
+        :selected-period="selectedPeriod"
+        @period-changed="onPeriodChanged"
       />
     </template>
   </AppCard>

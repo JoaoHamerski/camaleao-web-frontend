@@ -1,7 +1,7 @@
 <script>
 import { faColumns } from '@fortawesome/free-solid-svg-icons'
 
-import ProductionPanelBody from './ProductionPanelBody.vue'
+import ProductionPanelBody from '@/views/production-panel/partials/ProductionPanelBody.vue'
 
 export default {
   components: {

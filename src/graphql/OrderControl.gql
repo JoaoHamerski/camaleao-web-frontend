@@ -79,7 +79,7 @@ query GetOrdersBySector(
   }
 }
 
-fragment PiecesDayParts on SectorPiecesCurrentPrevious {
+fragment SectorOrdersPart on SectorOrders {
   current_orders(first: $first, page: $page) {
     paginatorInfo {
       ...PaginatorSimpleParts
@@ -95,27 +95,27 @@ fragment PiecesDayParts on SectorPiecesCurrentPrevious {
     }
   }
 
-  current
-  previous
+  current_count
+  previous_count
 }
 
-query GetSectorsPieces($first: Int!, $page: Int) {
-  sectorsPieces {
+query GetProductionPanel($first: Int!, $page: Int) {
+  productionPanel {
     sector {
       id
       name
       alias
     }
 
-    pieces {
+    orders_on_periods {
       day {
-        ...PiecesDayParts
+        ...SectorOrdersPart
       }
       week {
-        ...PiecesDayParts
+        ...SectorOrdersPart
       }
       month {
-        ...PiecesDayParts
+        ...SectorOrdersPart
       }
     }
   }

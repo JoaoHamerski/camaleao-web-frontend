@@ -1,6 +1,6 @@
 <script>
 import { faColumns } from '@fortawesome/free-solid-svg-icons'
-import ProductionPanelBody from '@/views/production-track/partials/ProductionPanelBody.vue'
+import ProductionPanelBody from '../partials/ProductionPanelBody.vue'
 
 export default {
   metaInfo: {

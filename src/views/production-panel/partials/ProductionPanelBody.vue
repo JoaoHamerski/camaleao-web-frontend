@@ -1,19 +1,19 @@
 <script>
-import { GetSectorsPieces } from '@/graphql/OrderControl.gql'
+import { GetProductionPanel } from '@/graphql/OrderControl.gql'
 import { isEmpty } from 'lodash-es'
 import { faSyncAlt } from '@fortawesome/free-solid-svg-icons'
 
 import ProductionPanelCard from '../partials/ProductionPanelCard.vue'
-import ProductionPanelAllOrders from '../partials/ProductionPanelAllOrders.vue'
+import ProductionPanelExpandedCard from '../partials/ProductionPanelExpandedCard.vue'
 
 export default {
   components: {
     ProductionPanelCard,
-    ProductionPanelAllOrders
+    ProductionPanelExpandedCard
   },
   apollo: {
-    sectorsPieces: {
-      query: GetSectorsPieces,
+    productionPanel: {
+      query: GetProductionPanel,
       variables () {
         return {
           first: 10,
@@ -21,14 +21,14 @@ export default {
         }
       },
       update (data) {
-        return data.sectorsPieces.map(sectorPieces => {
-          const selectedDate = this.sectorPiecesDisplayed && this.sectorDisplayed.id === sectorPieces.sector.id
-            ? this.sectorPiecesDisplayed.selectedDate
+        return data.productionPanel.map(data => {
+          const selectedPeriod = this.sectorSelected && this.sectorDisplayed.id === data.sector.id
+            ? this.sectorSelected.selectedPeriod
             : 'day'
 
           return {
-            ...sectorPieces,
-            selectedDate
+            ...data,
+            selectedPeriod
           }
         })
       }
@@ -38,49 +38,49 @@ export default {
     return {
       page: 1,
       sectorDisplayed: {},
-      sectorsPieces: [],
+      productionPanel: [],
       icons: {
         faSyncAlt
       }
     }
   },
   computed: {
-    sectorPiecesDisplayed () {
+    sectorSelected () {
       if (isEmpty(this.sectorDisplayed)) {
-        return false
+        return null
       }
 
-      const sectorPieces = this.getSectorProductionPanel(this.sectorDisplayed)
+      const sector = this.findSector(this.sectorDisplayed)
 
-      return sectorPieces
+      return sector
     },
     loading () {
-      return !!this.$apollo.queries.sectorsPieces.loading
+      return !!this.$apollo.queries.productionPanel.loading
     }
   },
   methods: {
     isEmpty,
     refresh () {
-      this.$apollo.queries.sectorsPieces.refetch()
+      this.$apollo.queries.productionPanel.refetch()
     },
     onCloseAllOrders () {
       this.sectorDisplayed = {}
       this.page = 1
     },
-    getSectorProductionPanel(sector) {
-      return this.sectorsPieces.find(
-        sectorPieces => sectorPieces.sector.id === sector.id
+    findSector(sector) {
+      return this.productionPanel.find(
+        data => data.sector.id === sector.id
       )
     },
     onShowSector ({ sector }) {
       this.sectorDisplayed = sector
     },
-    onDateSelected ({date, sector}) {
-      const sectorPieces = this.getSectorProductionPanel(sector)
+    onPeriodChanged ({period, sector: sectorToFind}) {
+      const sector = this.findSector(sectorToFind)
 
       this.page = 1
 
-      sectorPieces.selectedDate = date
+      sector.selectedPeriod = period
     }
   }
 }
@@ -94,7 +94,7 @@ export default {
       enter="fadeIn"
       mode="out-in"
     >
-      <div v-if="!sectorPiecesDisplayed">
+      <div v-if="!sectorSelected">
         <AppButton
           class="mb-2"
           :icon="icons.faSyncAlt"
@@ -105,25 +105,25 @@ export default {
           class="row row-cols-1 row-cols-sm-3"
         >
           <div
-            v-for="sectorPieces in sectorsPieces"
-            :key="sectorPieces.sector.id"
+            v-for="data in productionPanel"
+            :key="data.sector.id"
           >
             <ProductionPanelCard
-              :selected-date="sectorPieces.selectedDate"
-              :sector="sectorPieces.sector"
-              :pieces="sectorPieces.pieces"
-              @date-selected="onDateSelected"
+              :selected-period="data.selectedPeriod"
+              :sector="data.sector"
+              :orders-on-periods="data.orders_on_periods"
+              @period-changed="onPeriodChanged"
               @show-sector="onShowSector"
             />
           </div>
         </div>
       </div>
-      <ProductionPanelAllOrders
+      <ProductionPanelExpandedCard
         v-else
-        :sector-pieces="sectorPiecesDisplayed"
+        :sector-data="sectorSelected"
         :page.sync="page"
         @close-all-orders="onCloseAllOrders"
-        @date-selected="onDateSelected"
+        @period-changed="onPeriodChanged"
       />
     </AppTransition>
   </div>
