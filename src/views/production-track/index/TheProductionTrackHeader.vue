@@ -36,15 +36,15 @@ export default {
 
 <template>
   <div class="card mb-2">
-    <div class="card-header d-flex justify-content-between bg-primary text-white fw-bold">
-      <div>
+    <div class="card-header d-flex flex-column flex-md-row justify-content-between bg-primary text-white fw-bold">
+      <div class="mb-2 mb-md-0">
         <FontAwesomeIcon
           :icon="icons.faTasks"
           fixed-width
         />
         Esteira de Produção
       </div>
-      <div>
+      <div class="d-flex justify-content-between justify-content-md-start">
         <AppButton
           v-if="$helpers.canView(roles.GERENCIA)"
           :icon="icons.faTshirt"

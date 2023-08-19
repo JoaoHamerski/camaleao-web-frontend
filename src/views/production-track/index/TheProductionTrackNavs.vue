@@ -96,11 +96,11 @@ export default {
             v-if="$helpers.canView(roles.GERENCIA)"
             class="d-flex flex-column bg-white justify-content-between"
           >
-            <span class="fw-bold text-primary text-nowrap">
+            <span class="fw-bold text-primary text-nowrap mt-2">
               <FontAwesomeIcon :icon="icons.faTshirt" />
               {{ sector.quantity_count }}
             </span>
-            <span class="fw-bold text-success text-nowrap">
+            <span class="fw-bold text-success text-nowrap mb-2">
               <FontAwesomeIcon :icon="icons.faHandHoldingUsd" />
               {{ $helpers.toBRL(sector.pendency_total) }}
             </span>
