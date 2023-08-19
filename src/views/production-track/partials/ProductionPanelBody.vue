@@ -3,13 +3,13 @@ import { GetSectorsPieces } from '@/graphql/OrderControl.gql'
 import { isEmpty } from 'lodash-es'
 import { faSyncAlt } from '@fortawesome/free-solid-svg-icons'
 
-import PiecesBySectorCard from '../partials/PiecesBySectorCard.vue'
-import PiecesBySectorAllOrders from '../partials/PiecesBySectorAllOrders.vue'
+import ProductionPanelCard from '../partials/ProductionPanelCard.vue'
+import ProductionPanelAllOrders from '../partials/ProductionPanelAllOrders.vue'
 
 export default {
   components: {
-    PiecesBySectorCard,
-    PiecesBySectorAllOrders
+    ProductionPanelCard,
+    ProductionPanelAllOrders
   },
   apollo: {
     sectorsPieces: {
@@ -50,7 +50,7 @@ export default {
         return false
       }
 
-      const sectorPieces = this.getSectorPiecesBySector(this.sectorDisplayed)
+      const sectorPieces = this.getSectorProductionPanel(this.sectorDisplayed)
 
       return sectorPieces
     },
@@ -67,7 +67,7 @@ export default {
       this.sectorDisplayed = {}
       this.page = 1
     },
-    getSectorPiecesBySector(sector) {
+    getSectorProductionPanel(sector) {
       return this.sectorsPieces.find(
         sectorPieces => sectorPieces.sector.id === sector.id
       )
@@ -76,7 +76,7 @@ export default {
       this.sectorDisplayed = sector
     },
     onDateSelected ({date, sector}) {
-      const sectorPieces = this.getSectorPiecesBySector(sector)
+      const sectorPieces = this.getSectorProductionPanel(sector)
 
       this.page = 1
 
@@ -108,7 +108,7 @@ export default {
             v-for="sectorPieces in sectorsPieces"
             :key="sectorPieces.sector.id"
           >
-            <PiecesBySectorCard
+            <ProductionPanelCard
               :selected-date="sectorPieces.selectedDate"
               :sector="sectorPieces.sector"
               :pieces="sectorPieces.pieces"
@@ -118,7 +118,7 @@ export default {
           </div>
         </div>
       </div>
-      <PiecesBySectorAllOrders
+      <ProductionPanelAllOrders
         v-else
         :sector-pieces="sectorPiecesDisplayed"
         :page.sync="page"

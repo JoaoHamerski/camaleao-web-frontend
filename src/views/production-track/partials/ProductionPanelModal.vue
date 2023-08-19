@@ -1,11 +1,11 @@
 <script>
 import { faColumns } from '@fortawesome/free-solid-svg-icons'
 
-import PiecesBySectorBody from './PiecesBySectorBody.vue'
+import ProductionPanelBody from './ProductionPanelBody.vue'
 
 export default {
   components: {
-    PiecesBySectorBody
+    ProductionPanelBody
   },
   props: {
     value: {
@@ -25,7 +25,7 @@ export default {
 <template>
   <AppModal
     v-bind="$attrs"
-    id="piecesBySectorModal"
+    id="ProductionPanelModal"
     :value="value"
     modal-dialog-class="modal-xl"
     v-on="$listeners"
@@ -39,7 +39,7 @@ export default {
     </template>
 
     <template #body>
-      <PiecesBySectorBody v-if="value" />
+      <ProductionPanelBody v-if="value" />
     </template>
   </AppModal>
 </template>

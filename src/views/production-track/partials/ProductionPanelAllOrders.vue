@@ -2,13 +2,13 @@
 import { faArrowCircleLeft } from '@fortawesome/free-solid-svg-icons'
 import { isEmpty } from 'lodash-es'
 
-import PiecesBySectorDaysCount from './PiecesBySectorDaysCount.vue'
-import PiecesBySectorOrdersTable from './PiecesBySectorOrdersTable.vue'
+import ProductionPanelDaysCount from './ProductionPanelDaysCount.vue'
+import ProductionPanelOrdersTable from './ProductionPanelOrdersTable.vue'
 
 export default {
   components: {
-    PiecesBySectorDaysCount,
-    PiecesBySectorOrdersTable
+    ProductionPanelDaysCount,
+    ProductionPanelOrdersTable
   },
   props: {
     sectorPieces: {
@@ -79,14 +79,14 @@ export default {
     </h5>
 
     <div class="col col-sm-4 my-3">
-      <PiecesBySectorDaysCount
+      <ProductionPanelDaysCount
         :pieces="pieces"
         :selected-date="selectedDate"
         @date-selected="onDateSelected"
       />
     </div>
 
-    <PiecesBySectorOrdersTable
+    <ProductionPanelOrdersTable
       :orders="orders"
       class="my-2"
     />

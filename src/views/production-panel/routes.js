@@ -3,17 +3,17 @@ import Layout from '@/views/MainLayout.vue'
 import roles from '@/constants/roles'
 import role from '@/middleware/role'
 
-const TheProductivityPanel = () => import(
-  /* webpackChunkName: "productivity-panel" */
+const TheProductionPanel = () => import(
+  /* webpackChunkName: "production-panel" */
   /* webpackPrefetch: true */
-  './index/TheProductivityPanel.vue'
+  './index/TheProductionPanel.vue'
 )
 
 const children = [
   {
-    name: 'productivity-panel.index',
+    name: 'production-panel.index',
     path: '/painel-de-produtividade',
-    component: TheProductivityPanel,
+    component: TheProductionPanel,
     meta: {
       middleware: [role],
       roles: [roles.GERENCIA]
@@ -23,7 +23,7 @@ const children = [
 
 export default [
   {
-    name: 'productivity-panel',
+    name: 'production-panel',
     path: '/',
     component: Layout,
     children

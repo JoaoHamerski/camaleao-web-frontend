@@ -1,13 +1,13 @@
 <script>
 import { faColumns } from '@fortawesome/free-solid-svg-icons'
-import PiecesBySectorBody from '@/views/production-track/partials/PiecesBySectorBody.vue'
+import ProductionPanelBody from '@/views/production-track/partials/ProductionPanelBody.vue'
 
 export default {
   metaInfo: {
     title: 'Painel de Produtividade'
   },
   components: {
-    PiecesBySectorBody
+    ProductionPanelBody
   },
   data () {
     return {
@@ -31,7 +31,7 @@ export default {
       </h6>
     </template>
     <template #body>
-      <PiecesBySectorBody />
+      <ProductionPanelBody />
     </template>
   </AppCard>
 </template>

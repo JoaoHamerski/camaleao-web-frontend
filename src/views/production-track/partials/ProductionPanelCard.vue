@@ -1,12 +1,12 @@
 <script>
 import { isEmpty } from 'lodash-es'
-import PiecesBySectorOrdersList from './PiecesBySectorOrdersList.vue'
-import PiecesBySectorDaysCount from './PiecesBySectorDaysCount.vue'
+import ProductionPanelOrdersList from './ProductionPanelOrdersList.vue'
+import ProductionPanelDaysCount from './ProductionPanelDaysCount.vue'
 
 export default {
   components: {
-    PiecesBySectorOrdersList,
-    PiecesBySectorDaysCount
+    ProductionPanelOrdersList,
+    ProductionPanelDaysCount
   },
   props: {
     sector: {
@@ -56,14 +56,14 @@ export default {
       <b>{{ sectorName }}</b>
     </template>
     <template #body>
-      <PiecesBySectorOrdersList
+      <ProductionPanelOrdersList
         :orders="pieces[selectedDate].current_orders.data"
         :total="pieces[selectedDate].current_orders.paginatorInfo.total"
         @show-sector="onShowSector"
       />
     </template>
     <template #footer>
-      <PiecesBySectorDaysCount
+      <ProductionPanelDaysCount
         :pieces="pieces"
         :selected-date="selectedDate"
         @date-selected="onDateSelected"

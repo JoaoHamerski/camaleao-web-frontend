@@ -6,15 +6,15 @@ import {
 } from '@fortawesome/free-solid-svg-icons'
 import roles from '@/constants/roles'
 
-import PiecesBySectorModal from '../partials/PiecesBySectorModal.vue'
+import ProductionPanelModal from '../partials/ProductionPanelModal.vue'
 
 export default {
   components: {
-    PiecesBySectorModal
+    ProductionPanelModal
   },
   data () {
     return {
-      piecesBySectorModal: false,
+      ProductionPanelModal: false,
       roles,
       icons: {
         faTasks,
@@ -24,8 +24,8 @@ export default {
     }
   },
   methods: {
-    piecesBySectorClick () {
-      this.piecesBySectorModal = true
+    ProductionPanelClick () {
+      this.ProductionPanelModal = true
     },
     onRefreshClick () {
       this.$emit('refresh')
@@ -51,7 +51,7 @@ export default {
           color="light"
           class="me-2"
           btn-class="text-primary btn-sm fw-bold"
-          @click="piecesBySectorClick"
+          @click="ProductionPanelClick"
         >
           Painel de Produtividade
         </AppButton>
@@ -65,7 +65,7 @@ export default {
     </div>
 
     <template v-if="$helpers.canView(roles.GERENCIA)">
-      <PiecesBySectorModal v-model="piecesBySectorModal" />
+      <ProductionPanelModal v-model="ProductionPanelModal" />
     </template>
   </div>
 </template>

@@ -56,7 +56,6 @@ const ITEMS = {
   LINHA_DE_PRODUCAO: {
     title: 'Linha de produção',
     icon: faDolly,
-    route: { name: 'production-track.index' },
     condition: () => canView(
       ROLES.GERENCIA,
       ROLES.ATENDIMENTO,
@@ -99,7 +98,7 @@ const ITEMS = {
     PAINEL_DE_PRODUTIVIDADE: {
       title: 'Painel de Produtividade',
       icon: faColumns,
-      route: { name: 'productivity-panel.index' },
+      route: { name: 'production-panel.index' },
       style: {
         fontSize: '.85rem',
         whiteSpace: 'nowrap'

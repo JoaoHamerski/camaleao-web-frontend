@@ -1,9 +1,9 @@
 <script>
-import PiecesBySectorOrdersTable from './PiecesBySectorOrdersTable.vue'
+import ProductionPanelOrdersTable from './ProductionPanelOrdersTable.vue'
 
 export default {
   components: {
-    PiecesBySectorOrdersTable
+    ProductionPanelOrdersTable
   },
   props: {
     orders: {
@@ -46,7 +46,7 @@ export default {
       </template>
     </div>
 
-    <PiecesBySectorOrdersTable
+    <ProductionPanelOrdersTable
       v-show="hasOrders"
       :orders="orders"
     />
