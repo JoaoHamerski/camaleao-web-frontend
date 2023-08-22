@@ -1,5 +1,4 @@
 <script>
-import { GetStatus } from '@/graphql/Status.gql'
 import OrderStatusProgressItem from './OrderStatusProgressItem.vue'
 import  { faTasks } from '@fortawesome/free-solid-svg-icons'
 

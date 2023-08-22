@@ -1,6 +1,5 @@
 <script>
 import { faListUl } from '@fortawesome/free-solid-svg-icons';
-import { sortBy } from 'lodash-es';
 
 export default {
   props: {
