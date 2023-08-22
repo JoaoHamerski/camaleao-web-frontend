@@ -93,6 +93,9 @@ export default {
     },
     onOpenModal (event) {
       this.$emit('open-modal', event)
+    },
+    onToggleSuccess () {
+      this.$emit('toggle-success')
     }
   }
 }
@@ -150,6 +153,7 @@ export default {
             isOrderPaid
           }"
           @open-modal="onOpenModal"
+          @toggle-success="onToggleSuccess"
         />
       </div>
     </div>

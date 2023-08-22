@@ -87,6 +87,9 @@ export default {
     }
   },
   methods: {
+    refreshOrder () {
+      this.$apollo.queries.order.refetch()
+    },
     openModal (modal) {
       this[modal].value = true
     },
@@ -121,6 +124,7 @@ export default {
     },
     onPaymentCreated () {
       this.closeModal('modalOrderPayment')
+      this.refreshOrder()
     },
     onStatusUpdated () {
       this.closeModal('modalOrderStatus')
@@ -208,6 +212,7 @@ export default {
           isReportLoading: modalOrderReport.loading
         }"
         @open-modal="onOpenModal"
+        @toggle-success="refreshOrder"
       />
     </div>
 

@@ -38,6 +38,7 @@ export default {
   },
   data () {
     return {
+      isToggleLoading: false,
       icons: {
         faEdit,
         faTrashAlt,
@@ -51,6 +52,8 @@ export default {
     async toggleOrder () {
       const isOrderOpen = this.order.closed_at === null
 
+      this.isToggleLoading = true
+
       try {
         await this.$apollo.mutate({
           mutation: ToggleOrder,
@@ -58,6 +61,8 @@ export default {
             id: this.order.id
           }
         })
+
+        this.$emit('toggle-success')
 
         this.$toast.success(
           isOrderOpen
@@ -67,6 +72,8 @@ export default {
       } catch (error) {
         this.$toast.error('Ops! Algo deu errado.')
       }
+
+      this.isToggleLoading = false
     },
     redirectToOrderEdit () {
       const { clientKey, orderKey } = this.$route.params
@@ -105,6 +112,7 @@ export default {
     aria-labelledby="dropdownOptions"
     @click.stop
   >
+    <AppLoading v-if="isToggleLoading" />
     <AppDropdownItem
       :disabled-message="isOrderClosed && 'Não é possível editar pedidos fechados.'"
       :icon="icons.faEdit"
