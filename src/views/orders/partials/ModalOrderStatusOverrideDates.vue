@@ -16,8 +16,8 @@ export default {
     },
     radioOptions () {
       return [
-        {label: 'Mantê-los com a data que está', value: 'KEEP'},
         {label: 'Atualizá-los para agora', value: 'UPDATE'},
+        {label: 'Mantê-los com a data que está', value: 'KEEP'},
       ]
     },
     tableHeaders () {
@@ -49,16 +49,15 @@ export default {
     <div class="small text-secondary mb-3">
       É possível que eles tenham sido auto-cancelados devido a alterações gerais nos status do sistema.
     </div>
-    <div class="fw-bold small">
-      O que você gostaria de fazer:
-      <div>
-        <AppRadio
-          :value="value"
-          name="override-option"
-          :options="radioOptions"
-          @input="onInputChange"
-        />
-      </div>
+    <div class="small">
+      <AppRadio
+        :value="value"
+        name="override-option"
+        :options="radioOptions"
+        @input="onInputChange"
+      >
+        O que você gostaria de fazer:
+      </AppRadio>
     </div>
   </div>
 </template>

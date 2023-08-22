@@ -17,7 +17,7 @@ export default {
       type: Boolean,
       default: false
     },
-    status: {
+    sectorStatus: {
       type: Object,
       default: () => ({})
     },
@@ -96,7 +96,7 @@ export default {
           <SectorOrdersListInfo :order="order" />
           <SectorOrdersListStatus
             :order="order"
-            :status="status"
+            :sector-status="sectorStatus"
             :linked-status="order.linked_status"
             @loading="onStatusLoading"
           />

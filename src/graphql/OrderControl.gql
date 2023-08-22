@@ -13,6 +13,7 @@ fragment OrdersBySectorParts on Order {
   linked_status {
     id
     text
+    order
     pivot {
       user {
         id
@@ -27,6 +28,7 @@ fragment OrdersBySectorParts on Order {
   status {
     id
     text
+    order
   }
 
   client {
@@ -48,11 +50,13 @@ query GetAuthUserSectors {
       status {
         id
         text
+        order
       }
     }
     next_status {
       id
       text
+      order
     }
   }
 }
@@ -121,8 +125,16 @@ query GetProductionPanel($first: Int!, $page: Int) {
   }
 }
 
-mutation StepToStatus($orderId: ID!, $statusId: ID!) {
-  stepToStatus(order_id: $orderId, status_id: $statusId) {
+mutation StepToStatus(
+  $orderId: ID!
+  $statusId: ID!
+  $overrideOption: OrderUpdateStatusOverrideOptions
+) {
+  stepToStatus(
+    order_id: $orderId
+    status_id: $statusId
+    override_option: $overrideOption
+  ) {
     ...OrdersBySectorParts
   }
 }

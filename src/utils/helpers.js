@@ -289,6 +289,20 @@ export const  deepFreeze = (o) => {
   return o;
 };
 
+const getStatusBetween = (statusA, statusB, statusList) => {
+  const status = statusList
+
+  const statusAIndex = status.findIndex((s) => s.id === statusA.id)
+  const statusBIndex = status.findIndex((s) => s.id === statusB.id)
+
+  const statusBetween = status.slice(statusAIndex, statusBIndex)
+
+  statusBetween.push(statusB)
+  statusBetween.shift()
+
+  return statusBetween
+}
+
 export default {
   fallback,
   toBRL,
@@ -306,5 +320,6 @@ export default {
   plural,
   openInNewTab,
   unformatCurrencyBRL,
-  toNumber
+  toNumber,
+  getStatusBetween
 }

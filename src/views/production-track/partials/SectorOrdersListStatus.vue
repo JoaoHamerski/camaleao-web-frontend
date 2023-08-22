@@ -8,10 +8,12 @@ import {
 import { map } from 'lodash-es'
 
 import ProductionTrackNavItems from './ProductionTrackNavItems.vue'
+import ModalOrderStatusOverrideDates from '@/views/orders/partials/ModalOrderStatusOverrideDates.vue'
 
 export default {
   components: {
-    ProductionTrackNavItems
+    ProductionTrackNavItems,
+    ModalOrderStatusOverrideDates
   },
   props: {
     order: {
@@ -22,26 +24,48 @@ export default {
       type: Array,
       required: true
     },
-    status: {
+    sectorStatus: {
       type: Object,
       required: true
     }
   },
+  data: () => ({
+    overridingStatus: [],
+    preConfirmedStatus: null,
+    overridingStatusOption: 'UPDATE'
+  }),
   computed: {
+    confirmedStatus () {
+      return this.linkedStatus.filter(status => status.pivot.is_confirmed)
+    },
     getProgressBarWidth () {
-      const hasNextStatus = !!this.status.next_status
-      const linkedStatusIds = map(this.linkedStatus, 'id')
-      const sectorStatusIds = map(this.status.items, 'id')
-      const matched = linkedStatusIds.filter(
+      const hasNextStatus = !!this.sectorStatus.next_status
+      const confirmedStatusIds = map(this.confirmedStatus, 'id')
+      const sectorStatusIds = map(this.sectorStatus.items, 'id')
+      const matchedStatus = confirmedStatusIds.filter(
         id => sectorStatusIds.includes(id)
       )
 
-      return (100 * matched.length) / (sectorStatusIds.length + (hasNextStatus ? 1 : 0))
-    }
+      return (100 * matchedStatus.length) / (sectorStatusIds.length + (hasNextStatus ? 1 : 0))
+    },
   },
   methods: {
-    async stepToStatus (status) {
+    getStatusOverriding (statusA, statusB) {
+      const status = this.$helpers.getStatusBetween(statusA, statusB, this.linkedStatus)
+
+      return status.filter(s => s.pivot.confirmed_at)
+    },
+    async stepToStatus (status, viaContinueButton = false) {
       const order = this.order
+      const statusWithPivot = this.linkedStatus.find(s => s.id === status.id)
+
+      const overridingStatus = this.getStatusOverriding(order.status, statusWithPivot)
+
+      if (overridingStatus.length && !viaContinueButton) {
+        this.preConfirmedStatus = status
+        this.overridingStatus = overridingStatus
+        return
+      }
 
       this.$emit('loading', {
         id: this.order.id,
@@ -53,7 +77,8 @@ export default {
           mutation: StepToStatus,
           variables: {
             orderId: order.id,
-            statusId: status.id
+            statusId: statusWithPivot.id,
+            overrideOption: this.overridingStatusOption
           },
           refetchQueries: [
             GetOrdersBySector,
@@ -66,6 +91,9 @@ export default {
           id: this.order.id,
           value: false
         })
+
+        this.overridingStatus = []
+        this.preConfirmedStatus = null
 
         this.$toast.success('Status atualizado!')
       } catch (error) {
@@ -89,19 +117,45 @@ export default {
       <div class="step-progress-bar-placeholder" />
       <ul class="step-progress w-100 table-responsive">
         <ProductionTrackNavItems
-          v-for="_status in status.items"
+          v-for="_status in sectorStatus.items"
           :key="_status.id"
           :status="_status"
-          :concluded-status="linkedStatus"
+          :confirmed-status="confirmedStatus"
+          :pre-confirmed-status="preConfirmedStatus"
           @step-click="stepToStatus"
         />
         <ProductionTrackNavItems
-          v-if="status.next_status"
-          :status="status.next_status"
-          :concluded-status="linkedStatus"
+          v-if="sectorStatus.next_status"
+          :pre-confirmed-status="preConfirmedStatus"
+          :status="sectorStatus.next_status"
+          :confirmed-status="confirmedStatus"
           @step-click="stepToStatus"
         />
       </ul>
+      <AppContainer
+        v-if="overridingStatus.length"
+        class="mt-3 mb-2"
+      >
+        <template #title>
+          Conflito de data de confirmação
+        </template>
+        <template #body>
+          <div class="small">
+            <ModalOrderStatusOverrideDates
+              v-model="overridingStatusOption"
+              :status="overridingStatus"
+            />
+          </div>
+          <div>
+            <AppButton
+              btn-class="btn-sm fw-bold"
+              @click.prevent="stepToStatus(preConfirmedStatus, true)"
+            >
+              Continuar
+            </AppButton>
+          </div>
+        </template>
+      </AppContainer>
     </div>
   </div>
 </template>
@@ -142,6 +196,41 @@ export default {
 
     .step {
       z-index: 20;
+
+      .step-label {
+        margin-top: .85rem;
+        text-transform: uppercase;
+        font-weight: bold;
+        color: $secondary;
+        font-size: .8rem;
+      }
+
+      .step-number {
+        position: relative;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        font-weight: bold;
+        line-height: 0;
+        width: 2.5rem;
+        height: 2.5rem;
+        border-radius: 100% ;
+        background-color: white;
+        border: 2px solid lighten($secondary, 30%);
+        color: $secondary;
+
+
+        &:before {
+          content: '';
+          position: absolute;
+          width: 3px;
+          height: 8px;
+          bottom: -8px;
+          border-bottom-left-radius: 1.5rem;
+          border-bottom-right-radius: 1.5rem;
+          background: lighten($secondary, 30%);
+        }
+      }
 
       .step-info {
         font-size: .8rem;
@@ -191,39 +280,21 @@ export default {
         }
       }
 
-      .step-label {
-        margin-top: .85rem;
-        text-transform: uppercase;
-        font-weight: bold;
-        color: $secondary;
-        font-size: .8rem;
-      }
 
-      .step-number {
-        position: relative;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        font-weight: bold;
-        line-height: 0;
-        width: 2.5rem;
-        height: 2.5rem;
-        border-radius: 100% ;
-        background-color: white;
-        border: 2px solid lighten($secondary, 30%);
-        color: $secondary;
-
-
-        &:before {
-          content: '';
-          position: absolute;
-          width: 3px;
-          height: 8px;
-          bottom: -8px;
-          border-bottom-left-radius: 1.5rem;
-          border-bottom-right-radius: 1.5rem;
-          background: lighten($secondary, 30%);
+      &.step-pre-confirmed {
+        .step-label {
+          color: $success;
         }
+
+        .step-number {
+          color: $success;
+          border-color: $success;
+
+          &:before {
+            background: $success;
+          }
+        }
+
       }
     }
   }

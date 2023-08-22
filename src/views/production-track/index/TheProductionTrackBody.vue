@@ -41,7 +41,7 @@ export default {
     }
   },
   computed: {
-    getSectorStatus () {
+    sectorStatus () {
       const sector = this.sectors.filter(sector => sector.id === this.sector.id)[0]
 
       return {
@@ -100,7 +100,7 @@ export default {
       <SectorOrdersList
         v-else
         :can-close-orders="sector.can_close_sector_orders"
-        :status="getSectorStatus"
+        :sector-status="sectorStatus"
         :orders="ordersBySector.data"
       />
 

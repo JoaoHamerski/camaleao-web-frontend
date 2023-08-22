@@ -48,29 +48,16 @@ export default {
       const orderStatus = this.order.status
 
       if (selectedStatus.order > orderStatus.order) {
-        const status = this.getStatusBetween(orderStatus, selectedStatus)
+        const status = this.$helpers.getStatusBetween(orderStatus, selectedStatus, this.status)
 
         if (status.some(s => s.pivot.confirmed_at)) {
           this.overrideStatus = status
-          this.overrideOption = 'KEEP'
+          this.overrideOption = 'UPDATE'
           return
         }
       }
 
       this.overrideStatus = []
-    },
-    getStatusBetween(statusA, statusB) {
-      const status = this.status
-
-      const statusAIndex = status.findIndex((s) => s.id === statusA.id)
-      const statusBIndex = status.findIndex((s) => s.id === statusB.id)
-
-      const statusBetween = status.slice(statusAIndex, statusBIndex)
-
-      statusBetween.push(statusB)
-      statusBetween.shift()
-
-      return statusBetween
     },
     async updateStatus () {
       this.isLoading = true

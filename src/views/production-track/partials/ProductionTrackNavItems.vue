@@ -9,9 +9,13 @@ export default {
       type: Object,
       required: true
     },
-    concludedStatus: {
+    confirmedStatus: {
       type: Array,
       required: true
+    },
+    preConfirmedStatus: {
+      type: Object,
+      default: () => ({})
     }
   },
   data () {
@@ -23,40 +27,63 @@ export default {
       }
     }
   },
-  methods: {
-    get,
-    formatDatetime,
-    isStepConfirmable(status) {
-      const concludedStatusIds = map(this.concludedStatus, 'id')
+  computed:{
+    isStepPreConfirmed () {
+      if (!this.preConfirmedStatus) {
+        return false
+      }
 
-      if (concludedStatusIds.includes(status.id)) {
+      return this.status.order <= this.preConfirmedStatus.order
+    },
+    isStepConfirmable () {
+      const concludedStatusIds = map(this.confirmedStatus, 'id')
+
+      if (concludedStatusIds.includes(this.status.id)) {
         return false
       }
 
       return true
     },
-    isStepConfirmed(status) {
-      return this.concludedStatus.some(concluded => {
-        return concluded.id === status.id
-      })
+    isStepConfirmed () {
+      return this.confirmedStatus.some(confirmed => confirmed.id === this.status.id)
     },
+    itemClass () {
+      if (this.isStepConfirmed) {
+        return 'step-confirmed'
+      }
+
+      if (this.isStepPreConfirmed) {
+        return 'step-pre-confirmed'
+      }
+
+      if (this.isStepConfirmable) {
+        return 'step-confirmable'
+      }
+
+
+      return ''
+    }
+  },
+  methods: {
+    get,
+    formatDatetime,
     onStepClick (status) {
-      if (this.isStepConfirmed(status)) {
+      if (this.isStepConfirmed) {
         return
       }
 
       this.$emit('step-click', status)
     },
     getConcludedStatus(props = null) {
-      const concludedStatus = this.concludedStatus.find(
+      const confirmedStatus = this.confirmedStatus.find(
         _status => _status.id === this.status.id
       )
 
       if (props) {
-        return get(concludedStatus, props)
+        return get(confirmedStatus, props)
       }
 
-      return concludedStatus
+      return confirmedStatus
     },
   }
 }
@@ -65,10 +92,7 @@ export default {
 <template>
   <li
     class="step w-100"
-    :class="{
-      'step-confirmed': isStepConfirmed(status),
-      'step-confirmable': isStepConfirmable(status)
-    }"
+    :class="itemClass"
   >
     <div
       class="step-number"
@@ -81,7 +105,7 @@ export default {
     <div class="step-label">
       {{ status.text }}
     </div>
-    <template v-if="isStepConfirmed(status)">
+    <template v-if="isStepConfirmed">
       <div
         v-if="getConcludedStatus('pivot.created_at')"
         class="step-info"
