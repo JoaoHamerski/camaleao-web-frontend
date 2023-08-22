@@ -107,7 +107,7 @@ export default {
     </div>
     <template v-if="isStepConfirmed">
       <div
-        v-if="getConcludedStatus('pivot.created_at')"
+        v-if="getConcludedStatus('pivot.confirmed_at')"
         class="step-info"
       >
         <FontAwesomeIcon
@@ -116,7 +116,7 @@ export default {
         />
         {{
           formatDatetime(
-            getConcludedStatus('pivot.created_at'),
+            getConcludedStatus('pivot.confirmed_at'),
             "dd/LL 'às' HH:mm"
           )
         }}
