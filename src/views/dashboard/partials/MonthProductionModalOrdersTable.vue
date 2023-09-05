@@ -31,7 +31,8 @@ export default {
         headers.push({
           text: 'Cadastro em',
           value: 'created_at',
-          format: 'datetime'
+          format: 'datetime',
+          formatting: 'dd/mm/yyyy'
         })
       }
 

@@ -5,6 +5,7 @@ import { GetDashboardProductionOrders } from '@/graphql/Dashboard.gql'
 import MonthProductionModalOrdersTable from './MonthProductionModalOrdersTable.vue'
 import MonthProductionItemPeriods from './MonthProductionItemPeriods.vue'
 import MonthProductionItemData from './MonthProductionItemData.vue'
+import { isEmpty } from 'lodash-es';
 
 const TYPES = {
   ESTAMPADOS: { label: 'Estampados no dia' },
@@ -71,7 +72,7 @@ export default {
   }),
   computed: {
     isLoading () {
-      return this.$apollo.queries.orders.loading
+      return this.orders.paginatorInfo.currentPage !== this.page || isEmpty(this.orders.paginatorInfo)
     }
   }
 }

@@ -28,8 +28,11 @@ export default {
         <div class>
           {{ status.text }}
         </div>
-        <div class="text-secondary extra-small">
-          {{ formatDatetime(status.pivot.confirmed_at) }}
+        <div
+          v-if="status.pivot.confirmed_at"
+          class="text-secondary extra-small"
+        >
+          {{ formatDatetime(status.pivot.confirmed_at, 'dd/MM/yyyy mm:ss') }}
         </div>
       </li>
     </ul>
