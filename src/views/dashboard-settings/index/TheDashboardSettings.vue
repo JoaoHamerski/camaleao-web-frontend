@@ -46,7 +46,10 @@ export default {
 
     <template #body>
       <AppLoading v-show="isQueryLoading" />
-      <DashboardProductionSettings :status="status" />
+      <DashboardProductionSettings
+        v-if="!isQueryLoading"
+        :status="status"
+      />
     </template>
   </AppCard>
 </template>

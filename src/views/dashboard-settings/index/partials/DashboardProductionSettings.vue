@@ -1,6 +1,5 @@
 <script>
 import Form from '@/utils/Form';
-import { parse } from 'dotenv';
 import { handleError } from '@/utils/forms';
 import { ChangeDashboardProductionSettings } from '@/graphql/Dashboard.gql'
 import { GetConfig } from '@/graphql/Config.gql'
