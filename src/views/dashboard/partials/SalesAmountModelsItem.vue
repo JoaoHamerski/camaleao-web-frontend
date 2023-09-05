@@ -38,7 +38,9 @@ export default {
     </template>
 
     <template #text>
-      {{ $helpers.toBRL(item.amount) }}
+      <h5 class="text-success fw-bold mb-0">
+        {{ $helpers.toBRL(item.amount) }}
+      </h5>
     </template>
 
     <template #text-secondary>

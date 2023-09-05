@@ -37,9 +37,9 @@ export default {
     </template>
 
     <template #text>
-      <div>
+      <h5 class="fw-bold text-success">
         {{ $helpers.toBRL(data.amount) }}
-      </div>
+      </h5>
     </template>
 
     <template #text-secondary>

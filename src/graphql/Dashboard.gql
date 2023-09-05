@@ -1,3 +1,4 @@
+#import "./_PaginatorFragment.gql"
 query GetSalesAmount {
   dashboardSalesAmount {
     current {
@@ -78,36 +79,91 @@ query GetClientsSegmentation($date: ClientSegmentationDates!) {
   }
 }
 
-fragment DashboardProductionStatusData on DashboardProductionStatus {
-  orders_count {
-    day
-    week
-    last_week
+fragment DashboardProductionDataParts on DashboardProductionData {
+  orders_count
+  shirts_count
+  receipt
+}
+
+fragment DashboardProductionOfDayParts on DashboardProductionOfDay {
+  day {
+    ...DashboardProductionDataParts
   }
 
-  receipt {
-    day
-    week
-    last_week
+  week {
+    ...DashboardProductionDataParts
+  }
+
+  last_week {
+    ...DashboardProductionDataParts
   }
 }
 
-query GetMonthProduction($production_date: String) {
+query GetDashboardProduction($production_date: String!) {
   dashboardProduction(production_date: $production_date) {
     estampados {
-      ...DashboardProductionStatusData
+      ...DashboardProductionOfDayParts
     }
 
     costurados {
-      ...DashboardProductionStatusData
+      ...DashboardProductionOfDayParts
     }
 
     month_production {
-      orders_count
-      receipt
+      ...DashboardProductionDataParts
     }
 
-    late_orders
-    waiting_for_withdrawal_orders
+    late_orders {
+      ...DashboardProductionDataParts
+    }
+
+    waiting_for_withdrawal_orders {
+      ...DashboardProductionDataParts
+    }
+  }
+}
+
+mutation ChangeDashboardProductionSettings(
+  $settings: DashboardProductionSettings!
+) {
+  dashboardProductionSettings(settings: $settings)
+}
+
+query GetDashboardProductionOrders(
+  $type: DashboardProductionOrdersTypes!
+  $production_date: String
+  $first: Int!
+  $page: Int
+) {
+  dashboardProductionOrders(
+    type: $type
+    production_date: $production_date
+    first: $first
+    page: $page
+  ) {
+    paginatorInfo {
+      ...PaginatorSimpleParts
+    }
+
+    data {
+      id
+      code
+      price
+      quantity
+      delivery_date
+      created_at
+      linked_status {
+        id
+        text
+        pivot {
+          is_confirmed
+          confirmed_at
+        }
+      }
+
+      client {
+        id
+      }
+    }
   }
 }

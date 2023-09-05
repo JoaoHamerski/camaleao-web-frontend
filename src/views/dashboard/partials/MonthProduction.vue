@@ -1,5 +1,5 @@
 <script>
-import { GetMonthProduction } from '@/graphql/Dashboard.gql'
+import { GetDashboardProduction } from '@/graphql/Dashboard.gql'
 import { isEmpty } from 'lodash-es';
 import {
   faTshirt,
@@ -12,19 +12,21 @@ import {
 import { DateTime } from 'luxon'
 import { reverse } from 'lodash-es'
 
-import MonthProductionItem from './MonthProductionItem.vue';
-import DashboardItem from './DashboardItem.vue';
+import MonthProductionModal from './MonthProductionModal.vue';
 import MonthProductionDataInfo from './MonthProductionDataInfo.vue'
+import MonthProductionItemPeriods from './MonthProductionItemPeriods.vue';
+import MonthProductionItemData from './MonthProductionItemData.vue'
 
 export default {
   components: {
-    MonthProductionItem,
-    DashboardItem,
-    MonthProductionDataInfo
+    MonthProductionDataInfo,
+    MonthProductionItemPeriods,
+    MonthProductionItemData,
+    MonthProductionModal
   },
   apollo: {
     dashboardProduction: {
-      query: GetMonthProduction,
+      query: GetDashboardProduction,
       variables () {
         return {
           production_date: this.production_date
@@ -35,6 +37,12 @@ export default {
   data: () => ({
     dashboardProduction: {},
     production_date: DateTime.now().toFormat('yyyy-MM'),
+    modal: {
+      type: '',
+      value: false,
+      productionDate: '',
+      data: {}
+    },
     icons: {
       faTshirt,
       faCut,
@@ -64,7 +72,16 @@ export default {
     }
   },
   methods: {
-    isEmpty
+    isEmpty,
+    onItemLabelClick (type) {
+      if (type === 'MONTH_PRODUCTION') {
+        this.modal.productionDate = this.production_date
+      }
+
+      this.modal.type = type
+      this.modal.value = true
+      this.modal.data = this.dashboardProduction[type.toLowerCase()]
+    }
   }
 }
 </script>
@@ -80,6 +97,13 @@ export default {
     </template>
 
     <template #body>
+      <MonthProductionModal
+        v-model="modal.value"
+        :type="modal.type"
+        :production-date="modal.productionDate"
+        :data="modal.data"
+      />
+
       <div
         v-show="isLoading"
         class="py-5"
@@ -92,99 +116,111 @@ export default {
         class="production-items"
       >
         <div>
-          <MonthProductionItem :item="dashboardProduction.estampados">
+          <MonthProductionItemPeriods :item="dashboardProduction.estampados">
             <template #label>
-              <FontAwesomeIcon
-                :icon="icons.faTshirt"
-                fixed-width
-                class="text-primary"
-              />
-              Estampados no dia
+              <span
+                class="link-primary clickable ms-1"
+                @click.prevent="onItemLabelClick('ESTAMPADOS')"
+              >
+                <FontAwesomeIcon
+                  :icon="icons.faTshirt"
+                  fixed-width
+                />
+                Estampados no dia
+              </span>
             </template>
-          </MonthProductionItem>
+          </MonthProductionItemPeriods>
         </div>
 
         <div>
-          <MonthProductionItem :item="dashboardProduction.costurados">
+          <MonthProductionItemPeriods :item="dashboardProduction.costurados">
             <template #label>
-              <FontAwesomeIcon
-                :icon="icons.faCut"
-                fixed-width
-                class="text-primary"
-              />
-              Costurados no dia
+              <span
+                class="link-primary clickable ms-1"
+                @click.prevent="onItemLabelClick('COSTURADOS')"
+              >
+                <FontAwesomeIcon
+                  :icon="icons.faCut"
+                  fixed-width
+                />
+                Costurados no dia
+              </span>
             </template>
-          </MonthProductionItem>
+          </MonthProductionItemPeriods>
         </div>
 
         <div>
-          <DashboardItem>
+          <MonthProductionItemData
+            :item="dashboardProduction.month_production"
+          >
             <template #label>
-              <FontAwesomeIcon
-                :icon="icons.faBoxes"
-                fixed-width
-                class="text-primary"
-              />
-              Produção no mês
+              <span
+                class="link-primary clickable ms-1"
+                @click.prevent="onItemLabelClick('MONTH_PRODUCTION')"
+              >
+                <FontAwesomeIcon
+                  :icon="icons.faBoxes"
+                  fixed-width
+                />
+                Produção no mês
+              </span>
             </template>
-            <template #text>
-              <h1 class="fw-bold">
-                {{ $helpers.toNumber(dashboardProduction.month_production.orders_count) }}
-              </h1>
-            </template>
-            <template #text-secondary>
-              <div v-if="dashboardProduction.month_production.receipt">
-                Receita: {{ $helpers.toBRL(dashboardProduction.month_production.receipt) }}
+            <template #append>
+              <div>
+                <AppSimpleSelect
+                  v-model="production_date"
+                  select-class="form-select-sm"
+                  name="production_select"
+                  label-prop="text"
+                  value-prop="value"
+                  :options="selectDates"
+                />
               </div>
             </template>
-          </DashboardItem>
-          <AppSimpleSelect
-            v-model="production_date"
-            select-class="form-select-sm"
-            name="production_select"
-            label-prop="text"
-            value-prop="value"
-            :options="selectDates"
-          />
+          </MonthProductionItemData>
         </div>
 
         <div>
-          <DashboardItem>
+          <MonthProductionItemData
+            color="danger"
+            :item="dashboardProduction.late_orders"
+          >
             <template #label>
-              <FontAwesomeIcon
-                :icon="icons.faTruck"
-                fixed-width
-                class="text-primary"
-              />
-              Pedidos atrasados
+              <span
+                class="link-primary clickable ms-1"
+                @click.prevent="onItemLabelClick('LATE_ORDERS')"
+              >
+                <FontAwesomeIcon
+                  :icon="icons.faTruck"
+                  fixed-width
+                />
+                Pedidos atrasados
+              </span>
             </template>
-            <template #text>
-              <h1 class="text-danger fw-bold">
-                {{ $helpers.toNumber(dashboardProduction.late_orders) }}
-              </h1>
-            </template>
-          </DashboardItem>
+          </MonthProductionItemData>
         </div>
 
         <div>
-          <DashboardItem>
+          <MonthProductionItemData
+            :item="dashboardProduction.waiting_for_withdrawal_orders"
+          >
             <template #label>
-              <FontAwesomeIcon
-                :icon="icons.faTruckLoading"
-                fixed-width
-                class="text-primary"
-              />
-              Aguardando retirada
+              <span
+                class="link-primary clickable ms-1"
+                @click.prevent="onItemLabelClick('WAITING_FOR_WITHDRAWAL_ORDERS')"
+              >
+                <FontAwesomeIcon
+                  :icon="icons.faDolly"
+                  fixed-width
+                />
+                Aguardando retirada
+              </span>
             </template>
-            <template #text>
-              <h1 class="fw-bold">
-                {{ $helpers.toNumber(dashboardProduction.waiting_for_withdrawal_orders) }}
-              </h1>
-            </template>
-          </DashboardItem>
+          </MonthProductionItemData>
         </div>
       </div>
-      <div>
+
+      <div class="mt-3">
         <MonthProductionDataInfo />
       </div>
     </template>
@@ -197,11 +233,13 @@ export default {
 .production-items {
   display: grid;
   grid-template-columns: repeat(5, 1fr);
+  gap: 1rem;
 }
 
 @include media-breakpoint-down (sm) {
   .production-items {
     grid-template-columns: repeat(1, 1fr);
+
     div {
       margin-bottom: .5rem;
     }

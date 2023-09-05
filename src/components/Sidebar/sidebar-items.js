@@ -157,7 +157,8 @@ const ITEMS = {
         this.FORMULARIO_DE_PEDIDO,
         this.STATUS,
         this.SETORES,
-        this.ENTRADAS_BANCARIAS
+        this.ENTRADAS_BANCARIAS,
+        this.DASHBOARD
       ]
     },
     USUARIOS: {
@@ -203,6 +204,12 @@ const ITEMS = {
       title: 'Entradas bancárias',
       icon: faHandHoldingUsd,
       route: { name: 'bank-entries.index' },
+      condition: () => canView(ROLES.GERENCIA)
+    },
+    DASHBOARD: {
+      title: 'Dashboard',
+      icon: faChartBar,
+      route: { name: 'dashboard-settings.index' },
       condition: () => canView(ROLES.GERENCIA)
     }
   },

@@ -34,7 +34,9 @@ export default {
       <span class="text-uppercase">{{ label }}</span>
     </template>
     <template #text>
-      {{ $helpers.toBRL(value) }}
+      <h5 class="text-success fw-bold">
+        {{ $helpers.toBRL(value) }}
+      </h5>
     </template>
     <template #text-secondary>
       Anterior: <b>{{ $helpers.toBRL(previousValue) }}</b>
