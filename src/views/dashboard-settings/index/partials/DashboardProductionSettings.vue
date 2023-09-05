@@ -1,6 +1,6 @@
 <script>
 import Form from '@/utils/Form';
-import { handleError } from '@/utils/forms';
+import { handleError, handleSuccess } from '@/utils/forms';
 import { ChangeDashboardProductionSettings } from '@/graphql/Dashboard.gql'
 import { GetConfig } from '@/graphql/Config.gql'
 
@@ -39,6 +39,11 @@ export default {
       delivered_id: ''
     })
   }),
+  computed: {
+    isQueryLoading () {
+      return this.$apollo.queries.productionSettings.loading
+    }
+  },
   methods: {
     populateForm() {
       Object.assign(this.form, {...this.productionSettings})
@@ -55,6 +60,7 @@ export default {
             settings: input
           }
         })
+        handleSuccess(this, { message: 'Atualizado!'})
       } catch (error) {
         handleError(this, error)
       }
@@ -71,6 +77,7 @@ export default {
       Produção
     </template>
     <template #body>
+      <AppLoading v-if="isQueryLoading" />
       <AppForm
         :form="form"
         :on-submit="onSubmit"
