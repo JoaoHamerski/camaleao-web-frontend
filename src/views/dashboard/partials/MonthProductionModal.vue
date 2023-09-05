@@ -74,6 +74,12 @@ export default {
     isLoading () {
       return this.orders.paginatorInfo.currentPage !== this.page || isEmpty(this.orders.paginatorInfo)
     }
+  },
+  methods: {
+    onModalHidden () {
+      this.orders.data = [],
+      this.orders.paginatorInfo = {}
+    }
   }
 }
 </script>
@@ -85,6 +91,7 @@ export default {
     v-bind="$attrs"
     modal-dialog-class="modal-lg"
     v-on="$listeners"
+    @hidden="onModalHidden"
   >
     <template #title>
       <FontAwesomeIcon

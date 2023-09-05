@@ -81,6 +81,11 @@ export default {
       this.modal.type = type
       this.modal.value = true
       this.modal.data = this.dashboardProduction[type.toLowerCase()]
+    },
+    onModalHidden () {
+      this.modal.type = ''
+      this.modal.data = {}
+      this.modal.productionDate = ''
     }
   }
 }
@@ -102,6 +107,7 @@ export default {
         :type="modal.type"
         :production-date="modal.productionDate"
         :data="modal.data"
+        @hidden="onModalHidden"
       />
 
       <div
