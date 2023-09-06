@@ -32,7 +32,7 @@ export default {
           text: 'Cadastro em',
           value: 'created_at',
           format: 'datetime',
-          formatting: 'dd/mm/yyyy'
+          formatting: 'dd/MM/yyyy'
         })
       }
 
