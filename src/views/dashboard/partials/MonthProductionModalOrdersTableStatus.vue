@@ -32,7 +32,7 @@ export default {
           v-if="status.pivot.confirmed_at"
           class="text-secondary extra-small"
         >
-          {{ formatDatetime(status.pivot.confirmed_at, 'dd/MM/yyyy mm:ss') }}
+          {{ formatDatetime(status.pivot.confirmed_at, 'dd/MM/yyyy HH:mm') }}
         </div>
       </li>
     </ul>
