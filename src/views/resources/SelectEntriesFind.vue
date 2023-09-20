@@ -35,7 +35,7 @@ export default {
           where: {AND: [
             {
               column: "IS_CANCELED",
-              operator: 'equals',
+              operator: '=',
               value: false
             },
             {
