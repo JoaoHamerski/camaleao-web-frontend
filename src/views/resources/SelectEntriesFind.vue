@@ -34,11 +34,6 @@ export default {
           first: 10,
           where: {AND: [
             {
-              column: "IS_CANCELED",
-              operator: '=',
-              value: false
-            },
-            {
               column: 'VALUE',
               operator: this.isExpense ? 'LT' : 'GT',
               value: 0
