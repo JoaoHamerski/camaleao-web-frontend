@@ -19,6 +19,7 @@ export default {
             }]
           }
         },
+        fetchPolicy: 'no-cache',
         skip() {
           return this.skip
         }
@@ -32,7 +33,8 @@ export default {
     return {
       ordersBySector: {
         data: [],
-        paginatorInfo: {}
+        paginatorInfo: {},
+        nothing: true
       },
       page: 1,
       sectors: [],
@@ -50,7 +52,8 @@ export default {
       }
     },
     isLoading () {
-      return !!this.$apollo.queries.ordersBySector.loading
+      return this.page !== this.ordersBySector.paginatorInfo.currentPage
+        || this.ordersBySector.nothing === true
     }
   },
   watch: {
