@@ -2,7 +2,6 @@
 import SVGInject from '@iconfu/svg-inject'
 import HeaderbarBurgerButton from './HeaderbarBurgerButton.vue'
 import HeaderbarBackButton from './HeaderbarBackButton.vue'
-import { faLinkedin } from '@fortawesome/free-brands-svg-icons'
 
 export default {
   components: {
@@ -15,11 +14,6 @@ export default {
       default: null
     }
   },
-  data: () => ({
-    icons: {
-      faLinkedin
-    }
-  }),
   computed: {
     isSidebarActive () {
       return this.$store.getters['sidebar/isSidebarActive']
@@ -58,13 +52,14 @@ export default {
           @click="toggleSidebarState"
         />
         <div
-          class="logo ms-sm-2 mx-auto clickable"
+          class="logo col-4 ms-sm-2 mx-auto clickable"
           @click="redirectToHome"
         >
-          <h3 class="text-primary fw-bold">
-            <FontAwesomeIcon :icon="icons.faLinkedin" />
-            LinkedIn
-          </h3>
+          <img
+            class="img-fluid"
+            src="@/assets/images/logo-brand.svg"
+            @load="SVGInject($event.target)"
+          >
         </div>
       </div>
       <div class="text-right">
