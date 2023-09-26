@@ -21,6 +21,11 @@ export default {
       return this.image[0]
     }
   },
+  mounted () {
+    setTimeout(() => {
+      this.$refs[`viewer_${this.orderId}`].$refs.viewer.$viewer.options.toolbar['print'] = () => this.print()
+    }, 100);
+  },
   methods: {
     print() {
       const win = window.open('')
@@ -46,12 +51,7 @@ export default {
       win.focus()
     },
     openImage() {
-      const ref = this.$refs[`viewer_${this.orderId}`]
-      const viewer = ref.$refs.viewer.$viewer
-
-      viewer.options.toolbar['print'] = () => this.print()
-
-      viewer.show()
+      this.$refs[`viewer_${this.orderId}`].$refs.viewer.$viewer.show()
     }
   }
 }
