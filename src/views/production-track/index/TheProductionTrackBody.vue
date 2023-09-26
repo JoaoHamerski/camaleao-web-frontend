@@ -7,22 +7,22 @@ import SectorOrdersList from '../partials/SectorOrdersList.vue'
 export default {
   apollo: {
     ordersBySector: {
-        query: GetOrdersBySector,
-        variables() {
-          return {
-            first: 10,
-            page: this.page,
-            sectorId: this.sector.id,
-            order_by: [{
-              column: 'DELIVERY_DATE',
-              order: 'ASC'
-            }]
-          }
-        },
-        fetchPolicy: 'no-cache',
-        skip() {
-          return this.skip
+      query: GetOrdersBySector,
+      variables() {
+        return {
+          first: 10,
+          page: this.page,
+          sectorId: this.sector.id,
+          order_by: [{
+            column: 'DELIVERY_DATE',
+            order: 'ASC'
+          }]
         }
+      },
+      fetchPolicy: 'no-cache',
+      skip() {
+        return this.skip
+      }
     }
   },
   components: {
