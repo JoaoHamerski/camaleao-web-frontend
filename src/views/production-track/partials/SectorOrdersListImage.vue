@@ -51,8 +51,15 @@ export default {
       const ref = this.$refs[`viewer_${this.orderId}`]
       const viewer = ref.$refs.viewer.$viewer
 
-      viewer.options.toolbar.print = () => this.print()
-      viewer.show()
+      viewer.options.toolbar['print'] = () => this.print()
+
+      setTimeout(() => {
+        viewer.show()
+      }, 100)
+
+      setTimeout(() => {
+        delete viewer.options.toolbar.print
+      }, 150)
     }
   }
 }
@@ -65,6 +72,7 @@ export default {
       :ref="`viewer_${orderId}`"
       :image="{src: orderImage, alt: 'Imagem da arte'}"
       :extra-toolbar="['print']"
+      :print="print"
     >
       <VueLoadImage>
         <img
