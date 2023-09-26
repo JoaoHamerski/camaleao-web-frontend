@@ -45,10 +45,10 @@ export default {
 
       win.focus()
     },
-    openImage(event, index) {
+    openImage(event, orderImage) {
       event.stopPropagation()
 
-      const ref = this.$refs[`viewer_${index}`]
+      const ref = this.$refs[`viewer_${orderImage}`]
       const viewer = ref.$refs.viewer.$viewer
 
       viewer.options.toolbar.print = () => this.print()
@@ -62,7 +62,7 @@ export default {
   <div class="d-flex h-100 justify-content-center align-items-center">
     <AppViewer
       v-if="orderImage"
-      :ref="`viewer_${index}`"
+      :ref="`viewer_${orderImage}`"
       :image="{src: orderImage, alt: 'Imagem da arte'}"
       :extra-toolbar="['print']"
     >
