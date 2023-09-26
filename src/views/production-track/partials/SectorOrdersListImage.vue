@@ -6,6 +6,10 @@ export default {
     VueLoadImage
   },
   props: {
+    index: {
+      type: Number,
+      required: true
+    },
     image: undefined
   },
   computed: {
@@ -16,6 +20,40 @@ export default {
 
       return this.image[0]
     }
+  },
+  methods: {
+    print() {
+      const win = window.open('')
+
+      win.document.write(`
+        <html>
+          <head>
+            <title>${this.orderImage}</title>
+            <style>
+              @media print { @page { size: landscape } }
+            </style>
+          </head>
+          <body>
+            <img
+              src="${this.orderImage}"
+              alt="Imagem da arte"
+              onload="window.print();window.close()"
+            />
+          </body>
+        </html>
+      `)
+
+      win.focus()
+    },
+    openImage(event, index) {
+      event.stopPropagation()
+
+      const ref = this.$refs[`viewer_${index}`]
+      const viewer = ref.$refs.viewer.$viewer
+
+      viewer.options.toolbar.print = () => this.print()
+      viewer.show()
+    }
   }
 }
 </script>
@@ -24,14 +62,18 @@ export default {
   <div class="d-flex h-100 justify-content-center align-items-center">
     <AppViewer
       v-if="orderImage"
+      :ref="`viewer_${index}`"
+      :image="{src: orderImage, alt: 'Imagem da arte'}"
       :extra-toolbar="['print']"
     >
       <VueLoadImage>
         <img
+          :key="orderImage"
           slot="image"
           class="img-fluid img-thumbnail clickable"
           :src="orderImage"
           alt="Imagem da arte"
+          @click="e => openImage(e, index)"
         >
         <div
           slot="preloader"

@@ -82,7 +82,7 @@ export default {
 <template>
   <div>
     <div
-      v-for="order in orders"
+      v-for="(order, index) in orders"
       :key="order.id"
       class="card mb-1"
     >
@@ -90,7 +90,11 @@ export default {
 
       <div class="card-body position-relative card-sector-body p-1 row flex-column flex-sm-row gx-2">
         <div class="col col-sm-3">
-          <SectorOrdersListImage :image="order.art_paths" />
+          <SectorOrdersListImage
+            :key="`image_${order.id}`"
+            :index="index"
+            :image="order.art_paths"
+          />
         </div>
         <div class="col">
           <SectorOrdersListInfo :order="order" />
