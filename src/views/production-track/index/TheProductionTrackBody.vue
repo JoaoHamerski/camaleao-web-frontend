@@ -42,6 +42,7 @@ export default {
       },
       page: 1,
       sectors: [],
+      sector: {},
       skip: true,
       isLoading2: false,
     }
