@@ -19,6 +19,10 @@ export default {
           }]
         }
       },
+      result() {
+        // Uma baita gambiarra
+        this.isLoading2 = false
+      },
       fetchPolicy: 'no-cache',
       skip() {
         return this.skip
@@ -40,6 +44,7 @@ export default {
       sectors: [],
       sector: {},
       skip: true,
+      isLoading2: false,
     }
   },
   computed: {
@@ -54,11 +59,16 @@ export default {
     isLoading () {
       return this.page !== this.ordersBySector.paginatorInfo.currentPage
         || this.ordersBySector.nothing === true
-    }
+        || this.isLoading2
+    },
   },
   watch: {
     page () {
       this.$refs.scrollableDiv.scrollTop = 0
+    },
+    sector (sector) {
+      // Uma baita gambiarra
+      this.isLoading2 = true
     }
   },
   methods: {
