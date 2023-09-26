@@ -1,7 +1,6 @@
 <script>
 import 'viewerjs/dist/viewer.css'
 import { directive as viewer } from 'v-viewer'
-// import { component as Viewer } from 'v-viewer'
 
 export const config = {
   inline: false,
@@ -20,9 +19,6 @@ export const config = {
 }
 
 export default {
-  // components: {
-  //   Viewer
-  // },
   directives: {
     viewer: viewer()
   },
@@ -40,9 +36,6 @@ export default {
     return {
       config
     }
-  },
-  methods: {
-
   }
 }
 </script>
