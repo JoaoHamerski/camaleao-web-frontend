@@ -75,7 +75,7 @@ export default {
           class="img-fluid img-thumbnail clickable"
           :src="orderImage"
           alt="Imagem da arte"
-          @click="openImage"
+          @click.prevent.stop="openImage"
         >
         <div
           slot="preloader"
