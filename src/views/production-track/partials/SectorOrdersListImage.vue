@@ -20,33 +20,6 @@ export default {
 
       return this.image[0]
     }
-  },
-  methods: {
-    print() {
-      const win = window.open('')
-
-      win.document.write(`
-        <style>
-          @media print { @page { size: landscape } }
-        </style>
-        <img
-          src="${this.orderImage}"
-          alt="Imagem da arte"
-          onload="window.print(); window.close()"
-        />
-      `)
-
-      win.document.close()
-      win.focus()
-    },
-    openImage() {
-      const viewer = this.$refs[`viewer_${this.orderId}`].$refs.viewer.$viewer
-
-      viewer.options.toolbar['print'] = () => this.print()
-      viewer.images[0] = this.$refs.image
-
-      viewer.show()
-    }
   }
 }
 </script>
@@ -66,7 +39,6 @@ export default {
           class="img-fluid img-thumbnail clickable"
           :src="orderImage"
           alt="Imagem da arte"
-          @click.prevent.stop="openImage"
         >
         <div
           slot="preloader"

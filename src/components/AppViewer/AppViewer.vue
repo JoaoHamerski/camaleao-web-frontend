@@ -32,6 +32,32 @@ export default {
     return {
       config
     }
+  },
+  mounted () {
+    if (this.extraToolbar.includes('print')) {
+      this.config.toolbar['print'] = () => this.print()
+    }
+  },
+  methods: {
+    print() {
+      const win = window.open('')
+
+      const imageUrl = document.querySelector('.viewer-container.viewer-in .viewer-canvas img').src
+
+      win.document.write(`
+        <style>
+          @media print { @page { size: landscape } }
+        </style>
+        <img
+          src="${imageUrl}"
+          alt="Imagem da arte"
+          onload="window.print(); window.close()"
+        />
+      `)
+
+      win.document.close()
+      win.focus()
+    },
   }
 }
 </script>
