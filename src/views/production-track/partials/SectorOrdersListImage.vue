@@ -51,10 +51,8 @@ export default {
       const ref = this.$refs[`viewer_${this.orderId}`]
       const viewer = ref.$refs.viewer.$viewer
 
-      this.$nextTick(() => {
-        viewer.options.toolbar.print = () => this.print()
-        viewer.show()
-      })
+      viewer.options.toolbar.print = () => this.print()
+      viewer.show()
     }
   }
 }
