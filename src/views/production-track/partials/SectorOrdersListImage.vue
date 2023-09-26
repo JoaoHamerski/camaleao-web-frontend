@@ -53,7 +53,6 @@ export default {
 
       viewer.options.toolbar.print = () => this.print()
       viewer.show()
-      delete viewer.options.toolbar.print
     }
   }
 }
