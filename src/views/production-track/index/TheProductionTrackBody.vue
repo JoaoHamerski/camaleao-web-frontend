@@ -42,7 +42,6 @@ export default {
       },
       page: 1,
       sectors: [],
-      sector: {},
       skip: true,
       isLoading2: false,
     }
@@ -66,7 +65,7 @@ export default {
     page () {
       this.$refs.scrollableDiv.scrollTop = 0
     },
-    sector (sector) {
+    sector () {
       // Uma baita gambiarra
       this.isLoading2 = true
     }

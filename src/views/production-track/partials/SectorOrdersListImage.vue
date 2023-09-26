@@ -51,9 +51,12 @@ export default {
 
       viewer.options.toolbar['print'] = () => this.print()
 
-      setTimeout(() => {
-        viewer.show()
-      }, 100)
+      this.$forceUpdate()
+      this.$nextTick(() => {
+        setTimeout(() => {
+          viewer.show()
+        }, 100)
+      })
     }
   }
 }
