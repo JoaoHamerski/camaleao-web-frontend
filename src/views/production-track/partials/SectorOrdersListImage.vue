@@ -52,14 +52,8 @@ export default {
       const viewer = ref.$refs.viewer.$viewer
 
       viewer.options.toolbar['print'] = () => this.print()
+      viewer.show()
 
-      setTimeout(() => {
-        viewer.show()
-      }, 100)
-
-      setTimeout(() => {
-        delete viewer.options.toolbar.print
-      }, 150)
     }
   }
 }
