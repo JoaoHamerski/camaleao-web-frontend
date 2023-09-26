@@ -45,9 +45,7 @@ export default {
 
       win.focus()
     },
-    openImage(event) {
-      event.stopPropagation()
-
+    openImage() {
       const ref = this.$refs[`viewer_${this.orderId}`]
       const viewer = ref.$refs.viewer.$viewer
 
