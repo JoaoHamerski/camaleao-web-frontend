@@ -48,7 +48,7 @@ export default {
     openImage() {
       this.$refs[`viewer_${this.orderId}`].$refs.viewer.$viewer.options.toolbar['print'] = () => this.print()
 
-      setInterval(() => {
+      setTimeout(() => {
         this.$refs[`viewer_${this.orderId}`].$refs.viewer.$viewer.show()
       }, 100)
     }
