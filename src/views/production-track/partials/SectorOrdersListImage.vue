@@ -6,8 +6,8 @@ export default {
     VueLoadImage
   },
   props: {
-    index: {
-      type: Number,
+    orderId: {
+      type: [String, Number],
       required: true
     },
     image: undefined
@@ -45,10 +45,10 @@ export default {
 
       win.focus()
     },
-    openImage(event, orderImage) {
+    openImage(event) {
       event.stopPropagation()
 
-      const ref = this.$refs[`viewer_${orderImage}`]
+      const ref = this.$refs[`viewer_${this.orderId}`]
       const viewer = ref.$refs.viewer.$viewer
 
       viewer.options.toolbar.print = () => this.print()
@@ -62,7 +62,7 @@ export default {
   <div class="d-flex h-100 justify-content-center align-items-center">
     <AppViewer
       v-if="orderImage"
-      :ref="`viewer_${orderImage}`"
+      :ref="`viewer_${orderId}`"
       :image="{src: orderImage, alt: 'Imagem da arte'}"
       :extra-toolbar="['print']"
     >
@@ -73,7 +73,7 @@ export default {
           class="img-fluid img-thumbnail clickable"
           :src="orderImage"
           alt="Imagem da arte"
-          @click="e => openImage(e, index)"
+          @click="openImage"
         >
         <div
           slot="preloader"
