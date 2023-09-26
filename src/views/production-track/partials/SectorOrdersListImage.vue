@@ -50,10 +50,8 @@ export default {
 
       setTimeout(() => {
         this.$refs[`viewer_${this.orderId}`].$refs.viewer.$viewer.show()
+        this.$refs[`viewer_${this.orderId}`].$refs.viewer.$viewer.options.toolbar['print'] = ''
       }, 100)
-
-
-      this.$refs[`viewer_${this.orderId}`].$refs.viewer.$viewer.options.toolbar['print'] = ''
     }
   }
 }
