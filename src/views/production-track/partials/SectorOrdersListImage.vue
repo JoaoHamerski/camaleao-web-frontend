@@ -26,32 +26,26 @@ export default {
       const win = window.open('')
 
       win.document.write(`
-        <html>
-          <head>
-            <title>${this.orderImage}</title>
-            <style>
-              @media print { @page { size: landscape } }
-            </style>
-          </head>
-          <body>
-            <img
-              src="${this.orderImage}"
-              alt="Imagem da arte"
-              onload="window.print();window.close()"
-            />
-          </body>
-        </html>
+        <style>
+          @media print { @page { size: landscape } }
+        </style>
+        <img
+          src="${this.orderImage}"
+          alt="Imagem da arte"
+          onload="window.print(); window.close()"
+        />
       `)
 
+      win.document.close()
       win.focus()
     },
     openImage() {
-      this.$refs[`viewer_${this.orderId}`].$refs.viewer.$viewer.options.toolbar['print'] = () => this.print()
+      const viewer = this.$refs[`viewer_${this.orderId}`].$refs.viewer.$viewer
 
-      setTimeout(() => {
-        this.$refs[`viewer_${this.orderId}`].$refs.viewer.$viewer.show()
-        this.$refs[`viewer_${this.orderId}`].$refs.viewer.$viewer.options.toolbar['print'] = ''
-      }, 100)
+      viewer.options.toolbar['print'] = () => this.print()
+      viewer.images[0] = this.$refs.image
+
+      viewer.show()
     }
   }
 }
@@ -62,12 +56,11 @@ export default {
     <AppViewer
       v-if="orderImage"
       :ref="`viewer_${orderId}`"
-      :image="{src: orderImage, alt: 'Imagem da arte'}"
       :extra-toolbar="['print']"
-      :print="print"
     >
       <VueLoadImage>
         <img
+          ref="image"
           :key="orderImage"
           slot="image"
           class="img-fluid img-thumbnail clickable"

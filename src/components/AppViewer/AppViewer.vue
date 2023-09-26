@@ -23,14 +23,6 @@ export default {
     viewer: viewer()
   },
   props: {
-    print: {
-      type: Function,
-       default: () => {}
-    },
-    image: {
-      type: Object,
-      default: () => ({src: '', alt: ''})
-    },
     extraToolbar: {
       type: Array,
       default: () => [],
