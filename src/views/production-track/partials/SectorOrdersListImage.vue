@@ -52,7 +52,13 @@ export default {
       const viewer = ref.$refs.viewer.$viewer
 
       viewer.options.toolbar.print = () => this.print()
-      viewer.show()
+
+      console.log(ref)
+      console.log(viewer)
+
+      this.$nextTick(() => {
+        viewer.show()
+      })
     }
   }
 }
