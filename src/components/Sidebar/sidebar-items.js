@@ -117,7 +117,8 @@ const ITEMS = {
         this.ENTRADAS,
         this.DESPESAS,
         this.FLUXO_DE_CAIXA,
-        this.ESPELHO_BANCARIO
+        this.ESPELHO_BANCARIO,
+        // this.NUBANK
       ]
     },
     ENTRADAS: {
@@ -142,6 +143,11 @@ const ITEMS = {
       title: 'Espelho bancário',
       icon: faFileInvoiceDollar,
       route: { name: 'bank-mirror.index' },
+      condition: () => canView(ROLES.GERENCIA)
+    },
+    NUBANK: {
+      title: 'Nubank',
+      route: { name: 'nubank.index' },
       condition: () => canView(ROLES.GERENCIA)
     }
   },
