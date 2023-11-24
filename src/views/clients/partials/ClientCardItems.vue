@@ -2,6 +2,7 @@
 import { faEye } from '@fortawesome/free-solid-svg-icons'
 import { formatPhone } from '@/utils/formatters'
 import ClientCardItem from './ClientCardItem.vue'
+import { getUrl } from '@/utils/helpers'
 
 export default {
   components: {
@@ -47,6 +48,7 @@ export default {
   },
   methods: {
     formatPhone,
+    getUrl,
     onShowBalancesClick () {
       this.$emit('show-balances')
     }
@@ -80,7 +82,22 @@ export default {
       label="Transportadora"
       :text="$helpers.fallback(client.shipping_company, 'name')"
     />
+    <template v-if="client.client_recommended">
+      <hr>
+      <ClientCardItem
+        label="Indicação de"
+      >
+        <template #text>
+          <a
+            target="_blank"
+            :href="getUrl('clients.show', {client: client.client_recommended.id})"
+            class="text-decoration-none"
+          >{{ $helpers.fallback(client.client_recommended, 'name') }}</a>
+        </template>
+      </ClientCardItem>
+    </template>
     <hr>
+
     <ClientCardItem
       :color="client.total_owing > 0 ? 'danger' : 'success'"
       label="Total devendo"

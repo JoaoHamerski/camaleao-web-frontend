@@ -5,6 +5,8 @@ import { GetCities } from '@/graphql/City.gql'
 import { GetClientsForCityModal } from '@/graphql/Resources.gql'
 import { GetBranches } from '@/graphql/Branch.gql'
 import { GetShippingCompanies } from '@/graphql/ShippingCompany.gql'
+import { GetClients } from '@/graphql/Client.gql'
+import { formatPhone } from '@/utils/formatters'
 
 import { handleSuccess, handleError } from '@/utils/forms'
 import { maskPhone } from '@/utils/masks'
@@ -39,7 +41,7 @@ export default {
           this.loaded.shippingCompanies = true
         }
       }
-    }
+    },
   },
   props: {
     client: {
@@ -55,19 +57,23 @@ export default {
     return {
       maskPhone,
       isLoading: false,
+      isClientLoading: false,
       cities: [],
       branches: [],
       shippingCompanies: [],
+      clients: [],
       loaded: {
         cities: false,
         branches: false,
-        shippingCompanies: false
+        shippingCompanies: false,
+        clients: false
       },
       form: new Form({
         name: '',
         phone: '',
         city_id: '',
         branch_id: '',
+        recommended_client_id: ''
       })
     }
   },
@@ -90,6 +96,29 @@ export default {
     }
   },
   methods: {
+    async findClients (search) {
+      const column = search.match(/^\d/)
+        ? 'PHONE'
+        : 'NAME'
+
+      this.isClientLoading = true
+
+      const { data } = await this.$apollo.query({
+        query: GetClients,
+        variables: {
+          first: 10,
+          where: {
+            column,
+            operator: 'LIKE',
+            value: `%${search}%`
+          }
+        }
+      })
+
+      this.isClientLoading = false
+
+      this.clients = data.clients.data
+    },
     populateForm () {
       const {
         name,
@@ -125,6 +154,7 @@ export default {
       form.city_id = form.city_id?.id || ''
       form.branch_id = form.branch_id?.id || ''
       form.shipping_company_id = form.shipping_company_id?.id || ''
+      form.recommended_client_id = form.recommended_client_id?.id || ''
 
       return form
     },
@@ -191,6 +221,12 @@ export default {
       }
 
       return `${city.name} - ${state.abbreviation}`
+    },
+    customLabelClient ({name, phone}) {
+      if (!phone) {
+        return name
+      }
+      return `${name} - ${formatPhone(phone)}`
     },
     onCitySelected (city) {
       this.form.branch_id = this.branches.find(
@@ -268,6 +304,19 @@ export default {
       optional
     >
       Frete - Transportadora
+    </AppSelect>
+
+    <AppSelect
+      v-model="form.recommended_client_id"
+      name="recommended_client_id"
+      :options="clients"
+      :error="form.errors.get('recommended_client_id')"
+      optional
+      :custom-label="customLabelClient"
+      :loading="isClientLoading"
+      @search-change="findClients"
+    >
+      Cliente que indicou
     </AppSelect>
 
     <div class="row">

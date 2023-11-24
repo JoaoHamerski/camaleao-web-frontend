@@ -38,6 +38,10 @@ fragment ClientSimpleParts on Client {
   is_sponsor
   has_balance
   balance
+  client_recommended {
+    id
+    name
+  }
 }
 
 fragment ClientParts on Client {

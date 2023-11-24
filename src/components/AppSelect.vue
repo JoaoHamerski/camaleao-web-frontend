@@ -24,6 +24,10 @@ export default {
       type: String,
       default: null
     },
+    loading: {
+      type: Boolean,
+      default: false
+    },
     error: {
       type: [Boolean, String],
       default: false
@@ -106,6 +110,7 @@ export default {
           'multiselect-tags-block': tagsAsBlock,
           'is-invalid': hasError
         }"
+        :loading="loading"
         select-label="Selecionar"
         selected-label="Selecionado"
         deselect-label="Remover"
