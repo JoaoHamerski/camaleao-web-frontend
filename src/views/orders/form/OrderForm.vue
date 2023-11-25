@@ -81,9 +81,13 @@ export default {
     }
   },
   props: {
+    client: {
+      type: Object,
+      default: () => ({})
+    },
     order: {
       type: Object,
-      default: () => {}
+      default: () => ({})
     },
     isOrderPreRegistered: {
       type: Boolean,
@@ -107,6 +111,7 @@ export default {
         size_paths: [],
         payment_voucher_paths: [],
         garments: [{...cloneDeep(DEFAULT_GARMENT)}],
+        recommendation_bonus_percent: '10'
       }),
       isLoading: false,
     }
@@ -391,6 +396,7 @@ export default {
 
       <OrderFormValuesFinalWrapper
         v-if="!hasClothingTypes"
+        :client="client"
         :form="form"
         class="mb-3"
       />

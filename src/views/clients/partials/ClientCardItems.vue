@@ -82,6 +82,7 @@ export default {
       label="Transportadora"
       :text="$helpers.fallback(client.shipping_company, 'name')"
     />
+
     <template v-if="client.client_recommended">
       <hr>
       <ClientCardItem
@@ -93,6 +94,20 @@ export default {
             :href="getUrl('clients.show', {client: client.client_recommended.id})"
             class="text-decoration-none"
           >{{ $helpers.fallback(client.client_recommended, 'name') }}</a>
+        </template>
+      </ClientCardItem>
+    </template>
+
+    <template
+      v-if="client.bonus"
+    >
+      <hr>
+      <ClientCardItem
+        color="info"
+        label="Bônus"
+      >
+        <template #text>
+          {{ $helpers.toBRL(client.bonus) }}
         </template>
       </ClientCardItem>
     </template>

@@ -83,6 +83,12 @@ fragment OrderClientParts on Order {
     total_owing
     total_owing_as_sponsorship
     is_sponsor
+    client_recommended {
+      id
+      name
+      phone
+    }
+    bonus
     ...OrderClientBranchParts
     ...OrderClientCityParts
     ...OrderClientShippingCompanyParts
@@ -195,6 +201,7 @@ fragment PaymentsPart on Order {
     created_at
     is_sponsor
     is_shipping
+    is_bonus
 
     clientBalances {
       id

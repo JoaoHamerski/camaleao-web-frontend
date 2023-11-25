@@ -84,6 +84,10 @@ export default {
     form: {
       type: Object,
       required: true
+    },
+    client: {
+      type: Object,
+      default: () => ({})
     }
   },
   data: () => ({
@@ -134,6 +138,7 @@ export default {
 
     <template #body>
       <OrderFormValuesFinal
+        :client="client"
         :final-value="finalValue"
         :form="form"
       />

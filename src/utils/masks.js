@@ -36,3 +36,9 @@ export const maskInteger = (options = {}) => ({
   numeralIntegerScale: 5,
   ...options
 })
+
+export const maskPercent = () => ({
+  numeral: true,
+  numeralIntegerScale: 3,
+  numeralDecimalScale: 0
+})

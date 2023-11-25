@@ -38,9 +38,11 @@ fragment ClientSimpleParts on Client {
   is_sponsor
   has_balance
   balance
+  bonus
   client_recommended {
     id
     name
+    phone
   }
 }
 

@@ -52,6 +52,7 @@ export default {
         bank_uid: '',
         value: 'R$ ',
         credit: 'R$ ',
+        bonus: 'R$ ',
         date: '',
         payment_via_id: '',
         note: '',
@@ -59,7 +60,8 @@ export default {
         is_sponsor: false,
         is_shipping: false,
         add_rest_to_credits: false,
-        use_client_balance: false
+        use_client_balance: false,
+        use_client_bonus: false,
       }),
       maskCurrencyBRL: maskCurrencyBRL(),
       maskDate,
@@ -83,9 +85,6 @@ export default {
     },
     isFromBankEntry () {
       return !isEmpty(this.bank_entry)
-    },
-    clientHasBalance () {
-      return this.order.client.has_balance && this.order.client.balance > 0
     },
     orderRest () {
       const credit = accounting.unformat(this.form.credit, ',')
@@ -226,6 +225,10 @@ export default {
     },
     onIsShippingPaymentCheckbox () {
       this.form.add_rest_to_credits = false
+    },
+    onIsSponsorValueChange () {
+      this.form.use_client_balance = false
+      this.form.use_client_bonus = false
     }
   }
 }
@@ -266,17 +269,30 @@ export default {
           Valor de pagamento
         </template>
         <template #body>
-          <AppCheckbox
-            v-if="clientHasBalance"
-            id="clientCredit"
-            v-model="form.use_client_balance"
-            name="clientCredit"
-          >
-            Usar saldo do cliente
-          </AppCheckbox>
+          <template v-if="!form.is_sponsor">
+            <AppCheckbox
+              v-if="order.client.balance && !bank_entry"
+              id="clientCredit"
+              v-model="form.use_client_balance"
+              name="clientCredit"
+              :disabled="form.use_client_bonus"
+            >
+              Usar saldo do cliente
+            </AppCheckbox>
+            <AppCheckbox
+              v-if="order.client.bonus && !bank_entry"
+              id="clientBonus"
+              v-model="form.use_client_bonus"
+              name="clientBonus"
+              :disabled="form.use_client_balance"
+            >
+              Usar bônus do cliente
+            </AppCheckbox>
+          </template>
           <AppInput
-            v-if="form.use_client_balance"
+            v-if="form.use_client_balance && !bank_entry"
             id="credit"
+            key="credit"
             v-model="form.credit"
             name="credit"
             :error="form.errors.get('credit')"
@@ -284,20 +300,61 @@ export default {
             numeric
             :disabled="isFromBankEntry"
           >
-            Valor a ser usado (Disponível: <span class="text-success">{{ $helpers.toBRL(order.client.balance) }})</span>
+            <template #hint>
+              <template v-if="!form.is_sponsor">
+                Disponível: {{ $helpers.toBRL(order.client.balance) }}
+              </template>
+              <template v-else-if="!form.sponsorship_client_id">
+                Disponível: [selecione o patrocinador]
+              </template>
+              <template v-else>
+                Disponível: <span v-if="form.sponsorship_client_id">
+                  {{ $helpers.toBRL(form.sponsorship_client_id.balance) }}
+                </span>
+              </template>
+            </template>
+            Valor a ser usado
           </AppInput>
 
           <AppInput
+            v-if="form.use_client_bonus && !bank_entry"
+            id="bonus"
+            key="bonus"
+            v-model="form.bonus"
+            name="bonus"
+            :error="form.errors.get('bonus')"
+            :mask="maskCurrencyBRL"
+            numeric
+            :disabled="isFromBankEntry"
+          >
+            <template #hint>
+              <template v-if="!form.is_sponsor">
+                Disponível: {{ $helpers.toBRL(order.client.bonus) }}
+              </template>
+              <template v-else-if="!form.sponsorship_client_id">
+                Disponível: [selecione o patrocinador]
+              </template>
+              <template v-else>
+                Disponível: <span v-if="form.sponsorship_client_id">
+                  {{ $helpers.toBRL(form.sponsorship_client_id.bonus) }}
+                </span>
+              </template>
+            </template>
+            Valor a ser usado
+          </AppInput>
+
+          <AppInput
+            v-if="!form.use_client_balance && !form.use_client_bonus"
             id="value"
+            key="value"
             v-model="form.value"
             name="value"
             :error="form.errors.get('value')"
             :mask="maskCurrencyBRL"
             numeric
             :disabled="isFromBankEntry"
-            :optional="form.use_client_balance"
-            :label="form.use_client_balance ? 'Valor para completar' : 'Valor'"
           >
+            Valor
             <template #append>
               <AppButton
                 :disabled="isFromBankEntry"
@@ -330,6 +387,7 @@ export default {
             id="is_sponsor"
             v-model="form.is_sponsor"
             name="is_sponsor"
+            @input="onIsSponsorValueChange"
           >
             Patrocínio
           </AppCheckbox>

@@ -8,19 +8,16 @@ fragment ClientsForFormsParts on Client {
   id
   name
   phone
+  balance
+  bonus
 }
 
-query GetClientsForCityModal (
+query GetClientsForCityModal(
   $page: Int
   $where: QueryClientsWhereWhereConditions
   $orderBy: [QueryClientsOrderByOrderByClause!]
 ) {
-  clients (
-    first: 10
-    page: $page
-    where: $where
-    orderBy: $orderBy
-  ) {
+  clients(first: 10, page: $page, where: $where, orderBy: $orderBy) {
     paginatorInfo {
       currentPage
       perPage
@@ -33,15 +30,11 @@ query GetClientsForCityModal (
   }
 }
 
-query GetClientsForForm (
+query GetClientsForForm(
   $where: QueryClientsWhereWhereConditions
   $orderBy: [QueryClientsOrderByOrderByClause!]
 ) {
-  clients (
-    first: 10
-    where: $where
-    orderBy: $orderBy
-  ) {
+  clients(first: 10, where: $where, orderBy: $orderBy) {
     paginatorInfo {
       currentPage
       perPage
@@ -54,15 +47,11 @@ query GetClientsForForm (
   }
 }
 
-query GetOrdersForForm (
+query GetOrdersForForm(
   $orderBy: [QueryOrdersOrderByOrderByClause!]
   $where: QueryOrdersWhereWhereConditions
 ) {
-  orders (
-    first: 10
-    orderBy: $orderBy
-    where: $where
-  ) {
+  orders(first: 10, orderBy: $orderBy, where: $where) {
     paginatorInfo {
       currentPage
       perPage

@@ -191,6 +191,15 @@ export default {
                     content="Saldo contabilizado para o patrocinador"
                   />
                 </div>
+                <div
+                  v-if="payment.is_bonus"
+                >
+                  <div
+                    class="small text-secondary"
+                  >
+                    Bônus do cliente utilizado
+                  </div>
+                </div>
               </div>
               <div class="d-flex">
                 <OrderPaymentState

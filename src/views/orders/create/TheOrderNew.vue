@@ -76,7 +76,10 @@ export default {
       </template>
 
       <template #body>
-        <OrderForm @success="onSuccess" />
+        <OrderForm
+          :client="client"
+          @success="onSuccess"
+        />
       </template>
     </AppCard>
   </div>

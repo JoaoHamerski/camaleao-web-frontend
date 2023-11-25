@@ -41,7 +41,7 @@ export default {
           this.loaded.shippingCompanies = true
         }
       }
-    },
+    }
   },
   props: {
     client: {
@@ -66,14 +66,13 @@ export default {
         cities: false,
         branches: false,
         shippingCompanies: false,
-        clients: false
       },
       form: new Form({
         name: '',
         phone: '',
         city_id: '',
         branch_id: '',
-        recommended_client_id: ''
+        client_recommended_id: ''
       })
     }
   },
@@ -93,6 +92,11 @@ export default {
           this.populateForm()
         }
       }
+    }
+  },
+  mounted() {
+    if (!this.client?.client_recommended) {
+      this.loaded.client = true
     }
   },
   methods: {
@@ -126,7 +130,8 @@ export default {
         city,
         branch,
         shipping_company,
-        is_sponsor
+        is_sponsor,
+        client_recommended
       } = this.client
 
       this.form.name = name
@@ -147,6 +152,10 @@ export default {
           ({ id }) => shipping_company.id === id
         )
       }
+
+      if (client_recommended) {
+        this.form.client_recommended_id = client_recommended
+      }
     },
     getFormattedData () {
       const form = this.form.data()
@@ -154,7 +163,7 @@ export default {
       form.city_id = form.city_id?.id || ''
       form.branch_id = form.branch_id?.id || ''
       form.shipping_company_id = form.shipping_company_id?.id || ''
-      form.recommended_client_id = form.recommended_client_id?.id || ''
+      form.client_recommended_id = form.client_recommended_id?.id || ''
 
       return form
     },
@@ -307,10 +316,10 @@ export default {
     </AppSelect>
 
     <AppSelect
-      v-model="form.recommended_client_id"
-      name="recommended_client_id"
+      v-model="form.client_recommended_id"
+      name="client_recommended_id"
       :options="clients"
-      :error="form.errors.get('recommended_client_id')"
+      :error="form.errors.get('client_recommended_id')"
       optional
       :custom-label="customLabelClient"
       :loading="isClientLoading"
