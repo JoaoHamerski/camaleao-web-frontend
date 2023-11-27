@@ -1,0 +1,26 @@
+#import "./_PaginatorFragment.gql"
+
+query GetBonusesFromClient($id: ID!, $first: Int!, $page: Int) {
+  bonusesFromClient(id: $id, first: $first, page: $page) {
+    paginatorInfo {
+      ...PaginatorSimpleParts
+    }
+    data {
+      id
+      client {
+        id
+        name
+      }
+      order {
+        id
+        code
+        client {
+          id
+          name
+        }
+      }
+      value
+      created_at
+    }
+  }
+}

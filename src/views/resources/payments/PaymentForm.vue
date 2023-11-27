@@ -63,7 +63,7 @@ export default {
         use_client_balance: false,
         use_client_bonus: false,
       }),
-      maskCurrencyBRL: maskCurrencyBRL(),
+      maskCurrencyBRL: maskCurrencyBRL({numeralPositiveOnly: true}),
       maskDate,
       isLoading: false
     }
@@ -280,7 +280,7 @@ export default {
               Usar saldo do cliente
             </AppCheckbox>
             <AppCheckbox
-              v-if="order.client.bonus && !bank_entry"
+              v-if="order.client.bonus > 0 && !bank_entry"
               id="clientBonus"
               v-model="form.use_client_bonus"
               name="clientBonus"
@@ -386,6 +386,7 @@ export default {
           <AppCheckbox
             id="is_sponsor"
             v-model="form.is_sponsor"
+            :disabled="form.use_client_bonus || form.use_client_balance"
             name="is_sponsor"
             @input="onIsSponsorValueChange"
           >

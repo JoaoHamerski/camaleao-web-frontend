@@ -9,6 +9,7 @@ import ClientCardFooter from './ClientCardFooter.vue'
 import ClientCardNotExist from './ClientCardNotExist.vue'
 import ClientModalDelete from './ClientModalDelete.vue'
 import ClientBalancesModal from './ClientBalancesModal.vue'
+import ClientBonusesModal from './ClientBonusesModal.vue'
 
 export default {
   components: {
@@ -17,7 +18,8 @@ export default {
     ClientCardFooter,
     ClientCardNotExist,
     ClientModalDelete,
-    ClientBalancesModal
+    ClientBalancesModal,
+    ClientBonusesModal
   },
   props: {
     client: {
@@ -39,6 +41,9 @@ export default {
   },
   data () {
     return {
+      clientBonusesModal: {
+        value: false
+      },
       clientBalancesModal: {
         value: false,
         client: {}
@@ -93,6 +98,9 @@ export default {
     onShowBalances () {
       this.clientBalancesModal.client = this.client
       this.clientBalancesModal.value = true
+    },
+    onShowBonuses () {
+      this.clientBonusesModal.value = true
     }
   }
 }
@@ -124,6 +132,11 @@ export default {
         :client="clientBalancesModal.client"
       />
 
+      <ClientBonusesModal
+        v-model="clientBonusesModal.value"
+        :client="client"
+      />
+
       <ClientModalEdit
         v-model="clientModalEdit.value"
         :client="clientModalEdit.client"
@@ -139,6 +152,7 @@ export default {
       <ClientCardItems
         :client="client"
         @show-balances="onShowBalances"
+        @show-bonuses="onShowBonuses"
       />
 
       <hr>

@@ -1,5 +1,5 @@
 <script>
-import { faEye } from '@fortawesome/free-solid-svg-icons'
+import { faEye, faQuestionCircle } from '@fortawesome/free-solid-svg-icons'
 import { formatPhone } from '@/utils/formatters'
 import ClientCardItem from './ClientCardItem.vue'
 import { getUrl } from '@/utils/helpers'
@@ -17,7 +17,8 @@ export default {
   data () {
     return {
       icons: {
-        faEye
+        faEye,
+        faQuestionCircle
       }
     }
   },
@@ -51,6 +52,9 @@ export default {
     getUrl,
     onShowBalancesClick () {
       this.$emit('show-balances')
+    },
+    onShowBonusesClick () {
+      this.$emit('show-bonuses')
     }
   }
 }
@@ -107,7 +111,22 @@ export default {
         label="Bônus"
       >
         <template #text>
-          {{ $helpers.toBRL(client.bonus) }}
+          <span class="text-info me-1">{{ $helpers.toBRL(client.bonus) }}</span>
+          <span
+            class="link-primary clickable"
+            @click.prevent="onShowBonusesClick"
+          >
+            <FontAwesomeIcon :icon="icons.faEye" />
+          </span>
+          <span
+            v-if="client.bonus < 0"
+            class="ms-2"
+          >
+            <FontAwesomeIcon
+              v-tippy
+              :icon="icons.faQuestionCircle"
+              content="Quando o bônus está negativo, é porque o valor de um pedido foi alterado e diminuído após o bônus ser utilizado"
+            /></span>
         </template>
       </ClientCardItem>
     </template>
