@@ -229,6 +229,12 @@ export default {
     onIsSponsorValueChange () {
       this.form.use_client_balance = false
       this.form.use_client_bonus = false
+    },
+    onUseBalanceChange (value) {
+      if (value) {
+        this.form.add_rest_to_credits = false
+        this.form.is_sponsor = false
+      }
     }
   }
 }
@@ -276,6 +282,7 @@ export default {
               v-model="form.use_client_balance"
               name="clientCredit"
               :disabled="form.use_client_bonus"
+              @input="onUseBalanceChange"
             >
               Usar saldo do cliente
             </AppCheckbox>
@@ -285,6 +292,7 @@ export default {
               v-model="form.use_client_bonus"
               name="clientBonus"
               :disabled="form.use_client_balance"
+              @input="onUseBalanceChange"
             >
               Usar bônus do cliente
             </AppCheckbox>
@@ -371,7 +379,7 @@ export default {
               id="rest"
               v-model="form.add_rest_to_credits"
               name="rest"
-              :disabled="form.is_shipping"
+              :disabled="form.is_shipping || form.use_client_bonus || form.use_client_balance"
               :default-margin="false"
             >
               Adicionar resto ao saldo do {{ form.is_sponsor ? 'patrocinador' : 'cliente' }}
