@@ -76,7 +76,7 @@ export default {
         city_id: '',
         branch_id: '',
         client_recommended_id: '',
-        bonus: 'R$ '
+        bonus: 'R$ 0,00'
       }),
       maskCurrencyBRL: maskCurrencyBRL()
     }
