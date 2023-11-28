@@ -7,10 +7,12 @@ import { GetBranches } from '@/graphql/Branch.gql'
 import { GetShippingCompanies } from '@/graphql/ShippingCompany.gql'
 import { GetClients } from '@/graphql/Client.gql'
 import { formatPhone } from '@/utils/formatters'
+import { GetOrder } from '@/graphql/Order.gql'
 
 import { handleSuccess, handleError } from '@/utils/forms'
-import { maskPhone } from '@/utils/masks'
+import { maskCurrencyBRL, maskPhone } from '@/utils/masks'
 import Form from '@/utils/Form'
+import roles from '@/constants/roles'
 
 export default {
   apollo: {
@@ -62,6 +64,7 @@ export default {
       branches: [],
       shippingCompanies: [],
       clients: [],
+      roles,
       loaded: {
         cities: false,
         branches: false,
@@ -72,8 +75,10 @@ export default {
         phone: '',
         city_id: '',
         branch_id: '',
-        client_recommended_id: ''
-      })
+        client_recommended_id: '',
+        bonus: 'R$ '
+      }),
+      maskCurrencyBRL: maskCurrencyBRL()
     }
   },
   computed: {
@@ -131,12 +136,14 @@ export default {
         branch,
         shipping_company,
         is_sponsor,
-        client_recommended
+        client_recommended,
+        bonus
       } = this.client
 
       this.form.name = name
       this.form.phone = phone
       this.form.is_sponsor = !!is_sponsor
+      this.form.bonus = this.$helpers.toBRL(bonus)
 
       if (city) {
         this.form.city_id = this.cities.find(({ id }) => city.id === id)
@@ -191,7 +198,8 @@ export default {
       try {
         await this.$apollo.mutate({
           mutation: UpdateClient,
-          variables: { id: this.client.id, input }
+          variables: { id: this.client.id, input },
+          refetchQueries: [GetOrder]
         })
 
         handleSuccess(this, { message: 'Cliente atualizado!' })
@@ -328,6 +336,15 @@ export default {
       Cliente que indicou
     </AppSelect>
 
+    <AppInput
+      v-if="isEdit && $helpers.canView(roles.GERENCIA)"
+      v-model="form.bonus"
+      name="bonus"
+      placeholder="Alterar bônus do cliente..."
+      :mask="maskCurrencyBRL"
+    >
+      Bônus
+    </AppInput>
     <div class="row">
       <div class="col">
         <AppButton
