@@ -56,9 +56,10 @@ export default {
           @click="redirectToHome"
         >
           <img
+            src="@/assets/images/logo.png"
+            alt=""
             class="img-fluid"
-            src="@/assets/images/logo-brand.svg"
-            @load="SVGInject($event.target)"
+            style="margin-top: -1rem;"
           >
         </div>
       </div>

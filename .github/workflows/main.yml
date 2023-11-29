@@ -44,7 +44,7 @@ jobs:
           git init
           git add .
           git commit -m "Deploy"
-          git push -f https://${{ secrets.ACCESS_TOKEN }}@github.com/JoaoHamerski/camaleao-web-frontend.git master:deploy
+          git push -f https://${{ secrets.ACCESS_TOKEN }}@github.com/JoaoHamerski/camaleao-web-frontend.git master:deploy-flash
 
       - name: Deploy to server
         uses: appleboy/ssh-action@master
@@ -58,4 +58,4 @@ jobs:
             cd flashcomunicacao.com
             rm -rf {*,.*}
             git clone git@github.com-camaleao-web-frontend:JoaoHamerski/camaleao-web-frontend.git .
-            git checkout deploy
+            git checkout deploy-flash

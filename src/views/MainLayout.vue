@@ -5,9 +5,9 @@ import ProgressBar from '@/components/ProgressBar.vue'
 
 export default {
   metaInfo: {
-    titleTemplate: '%s | Camaleão Web',
+    titleTemplate: '%s | Flash Comunicação',
     meta: [
-      {name: 'title', content: 'Camaleão Camisas Interno'}
+      {name: 'title', content: 'Flash Comunicação Interno'}
     ]
   },
   components: {
