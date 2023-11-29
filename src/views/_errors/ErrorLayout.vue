@@ -20,13 +20,6 @@ export default {
 </script>
 <template>
   <div class="h-100 bg-dark">
-    <div class="py-5">
-      <img
-        class="camaleao-svg img-fluid"
-        src="@/assets/images/logo.svg"
-        @load="SVGInject($event.target)"
-      >
-    </div>
     <div class="message-wrapper d-flex justify-content-center align-items-center">
       <div class="page-text ">
         <h3 class="text-center fw-bold text-camaleao">
