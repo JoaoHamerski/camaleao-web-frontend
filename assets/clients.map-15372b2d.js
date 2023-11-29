@@ -1,0 +1,1 @@
+const e={text:"Nome",link:!0,method:"getClientUrl"},t={text:"Telefone",format:"phone"},n={name:e,phone:t,"branchCity.name":{text:"Filial"},"city.name":{text:"Cidade"},"shippingCompany.name":{text:"Transportadora"}};export{n as default,e as name,t as phone};

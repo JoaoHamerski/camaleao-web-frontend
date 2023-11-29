@@ -1,0 +1,1 @@
+const t={text:"Descrição"},e={text:"Valor",format:"currencyBRL"},a={text:"Data",format:"datetime"},o={description:t,value:e,"type.name":{text:"Tipo"},"via.name":{text:"Via"},"productType.name":{text:"Produto"},date:a};export{a as date,o as default,t as description,e as value};

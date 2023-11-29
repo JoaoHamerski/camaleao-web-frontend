@@ -1,0 +1,1 @@
+import{h as t}from"./has-81565ca3.js";const i={props:{files:{type:Array,default:()=>[]},alt:{type:String,default:null},col:{type:[String,Number],default:"3"},maxFileSize:{type:Number,default:null}},methods:{getKey(e){return t(e,"key")?e.key:e},isInvalid({size:e}){return this.maxFileSize===null?!1:e>this.maxFileSize}}};export{i as v};
