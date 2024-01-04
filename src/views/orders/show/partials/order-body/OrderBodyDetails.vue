@@ -94,6 +94,12 @@ export default {
             {{ $helpers.fallback(formatDatetime(order.delivery_date)) }}
           </div>
         </div>
+        <!-- <div>
+          <b class="small text-secondary">Cadastrado por</b>
+          <div>
+            {{ order.user.name }}
+          </div>
+        </div> -->
       </div>
     </template>
   </AppContainer>

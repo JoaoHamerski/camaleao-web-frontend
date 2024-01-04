@@ -43,11 +43,6 @@ export default {
     showReminder () {
       return this.isOrderPreRegistered && this.order.reminder
     },
-    /**
-     * Compatibilidade com versão antiga do sistema,
-     * só exibe a tabela de tipos de roupas
-     * se a quantidade não existir (pre-registro) ou houver tipos de roupas
-     */
   },
   methods: {
     formatDatetime

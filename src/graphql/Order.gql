@@ -185,6 +185,10 @@ fragment OrderType on Order {
   ...NotesParts
   ...OrderLinkedStatus
   ...OrderProductsParts
+  user {
+    id
+    name
+  }
 }
 
 query GetOrdersSimplified(
