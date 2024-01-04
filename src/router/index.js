@@ -43,19 +43,16 @@ const isUserFromGerencia = (user) => roles.GERENCIA === +user.role.id
 const getStartingRoute = () => {
   const authUser = store.getters['auth/authUser']
 
-  if (isUserFromProduction(authUser)) {
-    return {name: 'production.index'}
-  }
+  return {name: 'dashboard.index'}
+  // if (isUserFromProduction(authUser)) {
+  //   return {name: 'production.index'}
+  // }
 
-  if (isUserFromDesign(authUser)) {
-    return {name: 'weekly-calendar.print.index'}
-  }
+  // if (isUserFromDesign(authUser)) {
+  //   return {name: 'weekly-calendar.print.index'}
+  // }
 
-  if (isUserFromGerencia(authUser)) {
-    return {name: 'dashboard.index'}
-  }
 
-  return {name: 'clients.index'}
 }
 
 const router = new VueRouter({
