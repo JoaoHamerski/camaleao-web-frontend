@@ -1,79 +1,19 @@
 <script>
 import { faFileInvoiceDollar } from '@fortawesome/free-solid-svg-icons'
-import { sumBy } from 'lodash-es'
-
+// import { sumBy } from 'lodash-es'
+import { unformatCurrencyBRL } from '@/utils/helpers'
 import OrderFormValuesFinal from './OrderFormValuesFinal.vue'
 
-const validIndividualItems = (item) => item.size_id
-const validItems = (item) => item.size_id && item.quantity
-
-const validGarment = (garment) => {
-  if (!garment.match) {
-    return false
-  }
-
-  return garment.individual_names
-    ? garment.items_individual.some(validIndividualItems)
-    : garment.items.some(validItems)
+const validProduct = (product) => {
+  return product.quantity && unformatCurrencyBRL(product.value)
 }
 
-const getExtraSizeValues = (garment) => {
-  const match = garment.match
-  const sizes = match.sizes
-
-  if (!garment.individual_names) {
-    return garment.items.reduce((total, item) => {
-      const size = sizes.find(size => size.id === item.size_id)
-
-      return +(+(size?.pivot?.value || 0) * +item.quantity).toFixed(2) + +total
-    }, 0)
-  }
-
-  return garment.items_individual.reduce((total, item) => {
-    const size = sizes.find(size => size.id === item.size_id)
-
-    return +(+(size?.pivot?.value || 0) + total).toFixed(2)
-  }, 0)
-}
-
-const getValuePerUnit = (match, quantity) => {
-  const values = match.values
-
-  if (match.unique_value) {
-    return match.unique_value
-  }
-
-  const value = values.find(
-    value => (+value.start <= quantity && +value.end >= quantity)
-      || !value.end
-  )
-
-  return +value.value
-}
-
-const getClothQuantity = (garment) => {
-  if (garment.individual_names) {
-    const items = garment.items_individual.filter(validIndividualItems)
-    return items.length
-  }
-
-  const items = garment.items.filter(validItems)
-
-  return sumBy(items, (item) => +item.quantity)
-}
-
-const getClothTotalValue = (garment) => {
-  if (!validGarment(garment)) {
+const getProductValue = (product) => {
+  if (!validProduct(product)) {
     return 0
   }
 
-  const quantity = getClothQuantity(garment)
-  const value = getValuePerUnit(garment.match, quantity)
-  const extraSizeValues = getExtraSizeValues(garment)
-  const totalCloth = (+quantity * +value).toFixed(2)
-  const totalValue = (+totalCloth + +extraSizeValues).toFixed(2)
-
-  return +totalValue
+  return (product.quantity * unformatCurrencyBRL(product.value)).toFixed(2)
 }
 
 export default {
@@ -94,31 +34,28 @@ export default {
     icons: {
       faFileInvoiceDollar
     },
-    totalGarmentsValue: ''
+    totalProductsValue: ''
   }),
   computed: {
     finalValue () {
       const discount = this.$helpers.unformatCurrencyBRL(this.form.discount)
       const shippingValue = this.$helpers.unformatCurrencyBRL(this.form.shipping_value)
-      const total = (+this.totalGarmentsValue + +shippingValue).toFixed(2)
+      const total = (+this.totalProductsValue + +shippingValue).toFixed(2)
 
       return this.$helpers.toBRL((+total - +discount).toFixed(2))
     },
-    garments () {
-      return this.form.garments
+    products () {
+      return this.form.product_items
     }
   },
   watch: {
     form: {
       handler () {
-        const result = this.garments.reduce((total, garment) => {
-            const clothTotal = getClothTotalValue(garment)
-            garment.total = clothTotal
-
-            return (+clothTotal + +total).toFixed(2)
+        const result = this.products.reduce((total, product) => {
+          return (+total + +getProductValue(product)).toFixed(2)
         }, 0)
 
-        this.totalGarmentsValue = result
+        this.totalProductsValue = result
       },
       deep: true
     }

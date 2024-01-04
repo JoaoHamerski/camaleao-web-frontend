@@ -9,7 +9,7 @@ import OrderFiles from './partials/order-files/OrderFiles.vue'
 import OrderStatusProgress from './partials/order-status/OrderStatusProgress.vue'
 import OrderActivities from './partials/OrderActivities.vue'
 import OrderBodyDetails from './partials/order-body/OrderBodyDetails.vue'
-import OrderBodyClothes from './partials/order-body/OrderBodyClothes.vue'
+import OrderBodyProducts from './partials/order-body/OrderBodyProducts.vue'
 import OrderBodyTotalValue from './partials/order-body/OrderBodyTotalValue.vue'
 
 export default {
@@ -21,7 +21,7 @@ export default {
     OrderStatusProgress,
     OrderActivities,
     OrderBodyDetails,
-    OrderBodyClothes,
+    OrderBodyProducts,
     OrderBodyTotalValue
   },
   props: {
@@ -62,7 +62,7 @@ export default {
     </OrderReminder>
 
     <OrderBodyDetails :order="order" />
-    <OrderBodyClothes :order="order" />
+    <OrderBodyProducts :order="order" />
     <OrderBodyTotalValue :order="order" />
 
     <OrderStatusProgress

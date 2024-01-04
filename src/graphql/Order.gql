@@ -125,71 +125,6 @@ fragment StatusParts on Order {
   }
 }
 
-fragment ClothingTypesParts on Order {
-  clothing_types {
-    id
-    key
-    name
-    is_hidden
-    quantity
-    value
-    total_value
-  }
-}
-
-fragment GarmentsParts on Order {
-  garments {
-    id
-    match {
-      id
-      model {
-        id
-        name
-      }
-
-      material {
-        id
-        name
-      }
-
-      neck_type {
-        id
-        name
-      }
-
-      sleeve_type {
-        id
-        name
-      }
-    }
-
-    sizes {
-      id
-      name
-      pivot {
-        ... on GarmentGarmentSize {
-          id
-          quantity
-          value
-        }
-      }
-    }
-
-    individual_names {
-      id
-      name
-      number
-      size
-      size_id
-    }
-
-    quantity
-    value
-    sizes_value
-    value_per_unit
-  }
-}
-
 fragment PaymentsPart on Order {
   payments {
     id
@@ -232,15 +167,24 @@ fragment NotesParts on Order {
   }
 }
 
+fragment OrderProductsParts on Order {
+  products {
+    id
+    description
+    quantity
+    unity
+    value
+  }
+}
+
 fragment OrderType on Order {
   ...OrderParts
   ...OrderClientParts
   ...StatusParts
-  ...ClothingTypesParts
   ...PaymentsPart
   ...NotesParts
   ...OrderLinkedStatus
-  ...GarmentsParts
+  ...OrderProductsParts
 }
 
 query GetOrdersSimplified(

@@ -160,7 +160,6 @@ const ITEMS = {
         this.USUARIOS,
         this.CIDADES,
         this.FILIAIS,
-        this.FORMULARIO_DE_PEDIDO,
         this.STATUS,
         this.SETORES,
         this.ENTRADAS_BANCARIAS,
@@ -185,15 +184,15 @@ const ITEMS = {
       route: { name: 'branches.index' },
       condition: () => canView(ROLES.GERENCIA)
     },
-    FORMULARIO_DE_PEDIDO: {
-      title: 'Formulário de pedido',
-      icon: faFileAlt,
-      route: { name: 'garments.index' },
-      condition: () => canView(ROLES.GERENCIA),
-      style: {
-        fontSize: '.85rem'
-      }
-    },
+    // FORMULARIO_DE_PEDIDO: {
+    //   title: 'Formulário de pedido',
+    //   icon: faFileAlt,
+    //   route: { name: 'garments.index' },
+    //   condition: () => canView(ROLES.GERENCIA),
+    //   style: {
+    //     fontSize: '.85rem'
+    //   }
+    // },
     STATUS: {
       title: 'Status',
       icon: faCheckCircle,

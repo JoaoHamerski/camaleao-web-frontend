@@ -21,21 +21,21 @@ export default {
     totalValue () {
       return this.$helpers.toBRL(this.order.price, true)
     },
-    totalGarments () {
+    totalProducts () {
       return this.order.original_price - (this.order.shipping_value || 0)
     },
     showTotalClothes () {
       return this.order.discount || this.order.shipping_value
     },
     totalValueSubItems () {
-      const totalGarments = this.totalGarments
+      const totalProducts = this.totalProducts
       const shippingValue = this.order.shipping_value
       const discount = this.order.discount
 
       return [
         {
-          label: 'TOTAL ROUPAS: ',
-          text: this.$helpers.toBRL(totalGarments),
+          label: 'TOTAL PRODUTOS: ',
+          text: this.$helpers.toBRL(totalProducts),
           is_shown: !!this.showTotalClothes,
           class: 'text-primary'
         },
