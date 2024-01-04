@@ -11,7 +11,7 @@ const children = [
     component: TheDashboard,
     meta: {
       middleware: [role],
-      roles: [roles.GERENCIA]
+      roles: [roles.GERENCIA, roles.ATENDIMENTO, roles.COSTURA, roles.DESIGN, roles.ESTAMPA]
     }
   }
 ]

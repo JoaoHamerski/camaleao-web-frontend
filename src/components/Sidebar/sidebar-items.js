@@ -24,7 +24,6 @@ import {
   faColumns,
   faDolly,
   faFileInvoiceDollar,
-  faFileAlt,
   faChartBar
 } from '@fortawesome/free-solid-svg-icons'
 
@@ -33,7 +32,7 @@ const ITEMS = {
     title: 'Dashboard',
     icon:  faChartBar,
     route: { name: 'dashboard.index' },
-    condition: () => canView(ROLES.GERENCIA)
+    // condition: () => canView(ROLES.GERENCIA)
   },
   CLIENTE: {
     title: 'Cliente',

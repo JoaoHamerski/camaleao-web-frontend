@@ -52,7 +52,8 @@ export default {
           @click="toggleSidebarState"
         />
         <div
-          class="logo col-4 ms-sm-2 mx-auto clickable"
+          style="max-width: 230px;"
+          class="logo ms-sm-2 mx-auto clickable"
           @click="redirectToHome"
         >
           <img
