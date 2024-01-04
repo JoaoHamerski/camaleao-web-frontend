@@ -38,7 +38,9 @@ export default {
         aria-valuemin="0"
         aria-valuemax="100"
         :style="{width: monthSale.percentage + '%'}"
-      />
+      >
+        {{ monthSale.percentage }}%
+      </div>
     </div>
   </div>
 </template>
