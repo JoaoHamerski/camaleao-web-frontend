@@ -151,7 +151,7 @@ export default {
 
       this.form.product_items = this.order.products.map((product, index) => ({
         id: product.id,
-        item: index,
+        item: index + 1,
         description: product.description,
         quantity: product.quantity.toString(),
         value: this.$helpers.toBRL(product.value),
