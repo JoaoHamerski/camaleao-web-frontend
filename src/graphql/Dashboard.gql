@@ -79,6 +79,17 @@ query GetClientsSegmentation($date: ClientSegmentationDates!) {
   }
 }
 
+query GetDashboardMonthSalesUsers {
+  dashboardMonthSalesUsers {
+    user {
+      id
+      name
+    }
+    total
+    percentage
+  }
+}
+
 fragment DashboardProductionDataParts on DashboardProductionData {
   orders_count
   shirts_count
