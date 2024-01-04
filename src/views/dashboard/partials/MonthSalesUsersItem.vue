@@ -32,7 +32,7 @@ export default {
       style="height: 22px;"
     >
       <div
-        class="progress-bar"
+        class="progress-bar fw-bold"
         role="progressbar"
         aria-valuenow="0"
         aria-valuemin="0"
