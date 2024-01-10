@@ -139,7 +139,8 @@ export default {
         item: index + 1,
         description: product.description,
         quantity: product.quantity.toString(),
-        value: this.$helpers.toBRL(product.value),
+        value: this.$helpers.toBRL(Math.abs(product.value)),
+        valueRaw: product.value,
         unity: product.unity,
         errors: []
       }
@@ -168,8 +169,8 @@ export default {
         delivery_date: formatDatetime(fields.delivery_date)
       })
 
-      this.form.product_items = this.order.products.map(this.mapProductItems)
-      this.form.direct_cost_items = this.order.products.map(this.mapProductItems)
+      this.form.product_items = this.order.products.map(this.mapProductItems).filter(({ valueRaw }) => valueRaw > 0)
+      this.form.direct_cost_items = this.order.products.map(this.mapProductItems).filter(({ valueRaw }) => valueRaw < 0)
     },
     async onSubmit () {
       this.isLoading = true

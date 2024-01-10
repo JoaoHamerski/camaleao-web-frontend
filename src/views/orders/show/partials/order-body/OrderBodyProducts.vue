@@ -34,7 +34,7 @@ export default {
   }),
   computed: {
     totalValues () {
-      return this.order.products.reduce(
+      return this.order.products.filter(({ value }) => value > 0).reduce(
         (total, product) => +total + +(product.value * product.quantity).toFixed(),
       0)
     }
@@ -60,7 +60,7 @@ export default {
       <AppTable
         table-class="table-sm"
         :headers="headers"
-        :items="order.products"
+        :items="order.products.filter(({ value }) => value > 0)"
       >
         <template #[`items.description`]="{ item }">
           <div
