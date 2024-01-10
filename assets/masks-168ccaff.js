@@ -1,0 +1,1 @@
+const a={date:!0,delimiter:"/",datePattern:["d","m","Y"]},r={phone:!0,phoneRegionCode:"br"},n=(e={})=>({prefix:"R$ ",numeral:!0,numeralDecimalMark:",",delimiter:".",numeralDecimalScale:2,...e}),t=(e={})=>({numeral:!0,delimiter:".",numeralIntegerScale:5,...e}),m=()=>({numeral:!0,numeralIntegerScale:3,numeralDecimalScale:0});export{n as a,t as b,r as c,m as d,a as m};

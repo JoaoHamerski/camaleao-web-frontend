@@ -1,0 +1,1 @@
+const t={text:"Valor",format:"currencyBRL"},e={text:"Data",format:"datetime"},a={text:"Anotação"},o={text:"Confirmaçao",type:"boolean",handle:{null:"Pendente",true:"Confirmado",false:"Rejeitado"}},n={value:t,date:e,note:a,is_confirmed:o,"via.name":{text:"Via"}};export{e as date,n as default,o as is_confirmed,a as note,t as value};

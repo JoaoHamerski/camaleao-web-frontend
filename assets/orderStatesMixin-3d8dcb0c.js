@@ -1,0 +1,1 @@
+const r={computed:{isOrderPreRegistered(){var e;return(e=this.order)!=null&&e.states?this.order.states.includes("PRE-REGISTERED"):!0},isOrderClosed(){var e;return(e=this.order)!=null&&e.states?this.order.states.includes("CLOSED"):!1},isOrderPaid(){var e;return(e=this.order)!=null&&e.states?this.order.states.includes("PAID"):!1}}};export{r as o};

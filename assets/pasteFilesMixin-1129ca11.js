@@ -1,0 +1,1 @@
+const a={methods:{async onPasteEvent(s){try{const t=s.clipboardData.items,e=await this.getBase64Files(t);"transferedItems"in this&&(this.transferedItems=e),"afterPaste"in this&&this.afterPaste(e)}catch{this.$toast.error("Não foi possível detectar um arquivo na área de transferência.")}}}};export{a as p};
