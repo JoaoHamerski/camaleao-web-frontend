@@ -3,7 +3,7 @@ import VueRouter from 'vue-router'
 import auth from '@/middleware/auth'
 import middlewarePipeline from '@/router/middlewarePipeline'
 import store from '@/store'
-import roles from '@/constants/roles'
+// import roles from '@/constants/roles'
 import { flatMap } from 'lodash-es'
 
 import ErrorNotFound from '@/views/_errors/ErrorNotFound.vue'
@@ -30,18 +30,18 @@ const STARTING_ROUTE = {
   }
 }
 
-const isUserFromProduction = (user) => {
-  const productionRoles = [roles.ESTAMPA, roles.COSTURA]
+// const isUserFromProduction = (user) => {
+//   const productionRoles = [roles.ESTAMPA, roles.COSTURA]
 
-  return productionRoles.includes(+user.role.id)
-}
+//   return productionRoles.includes(+user.role.id)
+// }
 
-const isUserFromDesign = (user) => roles.DESIGN === +user.role.id
-const isUserFromGerencia = (user) => roles.GERENCIA === +user.role.id
+// const isUserFromDesign = (user) => roles.DESIGN === +user.role.id
+// const isUserFromGerencia = (user) => roles.GERENCIA === +user.role.id
 
 
 const getStartingRoute = () => {
-  const authUser = store.getters['auth/authUser']
+  // const authUser = store.getters['auth/authUser']
 
   return {name: 'dashboard.index'}
   // if (isUserFromProduction(authUser)) {
@@ -51,8 +51,6 @@ const getStartingRoute = () => {
   // if (isUserFromDesign(authUser)) {
   //   return {name: 'weekly-calendar.print.index'}
   // }
-
-
 }
 
 const router = new VueRouter({

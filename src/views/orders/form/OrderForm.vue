@@ -5,6 +5,7 @@ import { formatDatetime } from '@/utils/formatters'
 import { map, pick, isEmpty, uniqueId } from 'lodash-es'
 import { CreateOrder, UpdateOrder } from '@/graphql/Order.gql'
 import { handleError } from '@/utils/forms'
+import { faBoxOpen, faHandHoldingUsd } from '@fortawesome/free-solid-svg-icons'
 
 import OrderFormClient from './OrderFormClient.vue'
 import OrderFormBasicInfo from './OrderFormBasicInfo.vue'
@@ -49,6 +50,10 @@ export default {
   },
   data () {
     return {
+      icons: {
+        faBoxOpen,
+        faHandHoldingUsd
+      },
       form: new Form({
         name: '',
         code: '',
@@ -61,7 +66,8 @@ export default {
         size_paths: [],
         payment_voucher_paths: [],
         recommendation_bonus_percent: '10',
-        product_items: [{ ...PRODUCT_ITEM}]
+        product_items: [{ ...PRODUCT_ITEM}],
+        direct_cost_items: [{ ...PRODUCT_ITEM}]
       }),
       isLoading: false,
     }
@@ -90,6 +96,9 @@ export default {
       form.product_items = map(form.product_items, product => pick(product, [
         'description', 'quantity', 'value', 'unity'
       ]))
+      form.direct_cost_items = map(form.direct_cost_items, product => pick(product, [
+        'description', 'quantity', 'value', 'unity'
+      ]))
 
       return form
     },
@@ -109,7 +118,6 @@ export default {
     async create () {
       const input = this.getFormattedForm()
       const { clientKey } = this.$route.params
-      console.log(input)
       const { data: { orderCreate: { id } } } = await this.$apollo.mutate({
         mutation: CreateOrder,
         variables: {
@@ -124,6 +132,17 @@ export default {
       ])
 
       this.$emit('success', { orderId: id, clientId: clientKey })
+    },
+    mapProductItems (product, index) {
+      return {
+        id: product.id,
+        item: index + 1,
+        description: product.description,
+        quantity: product.quantity.toString(),
+        value: this.$helpers.toBRL(product.value),
+        unity: product.unity,
+        errors: []
+      }
     },
     populateForm () {
       const fields = pick(this.order, [
@@ -149,15 +168,8 @@ export default {
         delivery_date: formatDatetime(fields.delivery_date)
       })
 
-      this.form.product_items = this.order.products.map((product, index) => ({
-        id: product.id,
-        item: index + 1,
-        description: product.description,
-        quantity: product.quantity.toString(),
-        value: this.$helpers.toBRL(product.value),
-        unity: product.unity,
-        errors: []
-      }))
+      this.form.product_items = this.order.products.map(this.mapProductItems)
+      this.form.direct_cost_items = this.order.products.map(this.mapProductItems)
     },
     async onSubmit () {
       this.isLoading = true
@@ -184,25 +196,25 @@ export default {
 
       this.form[field].splice(index, 1)
     },
-    onNewProductClick () {
-      this.form.product_items.push({
+    onNewProductClick (prop) {
+      this.form[prop].push({
         ...PRODUCT_ITEM,
         id: uniqueId('_new'),
-        item: this.form.product_items.length + 1,
+        item: this.form[prop].length + 1,
       })
     },
-    onDeleteProductClick (productItem) {
-      if (this.form.product_items.length === 1) {
+    onDeleteProductClick (productItem, prop) {
+      if (this.form[prop].length === 1) {
         return
       }
 
-      const indexToDelete = this.form.product_items.findIndex(
-        ({item}) => item === productItem.item
+      const indexToDelete = this.form[prop].findIndex(
+        ({id}) => id == productItem.id
       )
 
-      this.form.product_items.splice(indexToDelete, 1)
+      this.form[prop].splice(indexToDelete, 1)
 
-      this.form.product_items.forEach((product, index) => {
+      this.form[prop].forEach((product, index) => {
         product.item = index + 1
       })
     }
@@ -227,8 +239,21 @@ export default {
     <OrderValues
       :form="form"
       class="mb-3"
-      @new-item="onNewProductClick"
-      @delete-item="onDeleteProductClick"
+      label="Produtos"
+      prop="product_items"
+      :icon="icons.faBoxOpen"
+      @new-item="onNewProductClick('product_items')"
+      @delete-item="onDeleteProductClick($event, 'product_items')"
+    />
+
+    <OrderValues
+      :form="form"
+      class="mb-3"
+      label="Custo direto"
+      prop="direct_cost_items"
+      :icon="icons.faHandHoldingUsd"
+      @new-item="onNewProductClick('direct_cost_items')"
+      @delete-item="onDeleteProductClick($event, 'direct_cost_items')"
     />
 
     <OrderFormValuesFinalWrapper

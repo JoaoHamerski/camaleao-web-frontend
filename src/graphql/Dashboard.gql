@@ -85,8 +85,14 @@ query GetDashboardMonthSalesUsers {
       id
       name
     }
-    total
-    percentage
+    direct_cost_items {
+      total
+      percentage
+    }
+    products {
+      total
+      percentage
+    }
   }
 }
 

@@ -1,5 +1,5 @@
 <script>
-import { faPlus, faTrashAlt, faBoxOpen } from '@fortawesome/free-solid-svg-icons'
+import { faPlus, faTrashAlt } from '@fortawesome/free-solid-svg-icons'
 import BudgetFormProductsHeader from '@/views/budget-generator/partials/BudgetFormProductsHeader.vue'
 
 import { maskCurrencyBRL, maskInteger } from '@/utils/masks'
@@ -22,6 +22,18 @@ export default {
     form: {
       type: Object,
       required: true
+    },
+    prop: {
+      type: String,
+      required: true
+    },
+    label: {
+      type: String,
+      required: true
+    },
+    icon: {
+      type: Object,
+      required: true
     }
   },
   data () {
@@ -32,16 +44,15 @@ export default {
       icons: {
         faPlus,
         faTrashAlt,
-        faBoxOpen
       }
     }
   },
   computed: {
     isDeleteProductDisabled () {
-      return this.form.product_items.length === 1
+      return this.form[this.prop].length === 1
     },
     getTotal () {
-      const total = this.form.product_items.reduce((sum, item) => {
+      const total = this.form[this.prop].reduce((sum, item) => {
         const value = this.$helpers.unformatCurrencyBRL(item.value)
 
         if (!item.quantity || !value) {
@@ -76,23 +87,23 @@ export default {
       return `${item.abbr.toUpperCase()} - ${item.name}`
     },
     getProductItem (id, prop = null) {
-      const index = this.form.product_items.findIndex(
+      const index = this.form[this.prop].findIndex(
         (product) => id === product.id
       )
 
       if (prop) {
-        return this.form.product_items[index][prop]
+        return this.form[this.prop][index][prop]
       }
 
-      return this.form.product_items[index]
+      return this.form[this.prop][index]
     },
     setFormById(id, prop, value) {
-      const index = this.form.product_items.findIndex(
+      const index = this.form[this.prop].findIndex(
         (product) => id === product.id
       )
 
       this.form.set({
-        [`product_items.${index}.${prop}`]: value
+        [`${this.prop}.${index}.${prop}`]: value
       })
     },
     hasError (productItem, prop) {
@@ -106,32 +117,32 @@ export default {
   <AppContainer>
     <template #title>
       <FontAwesomeIcon
-        :icon="icons.faBoxOpen"
+        :icon="icon"
         fixed-width
         class="me-1"
       />
-      <span>Produtos</span>
+      <span>{{ label }}</span>
     </template>
     <template #body>
       <BudgetFormProductsHeader />
 
-      <template v-for="(productItem) in form.product_items">
+      <template v-for="(productItem) in form[prop]">
         <div
           :key="productItem.id"
           class="row"
         >
           <div class="col-1">
             <AppInput
-              :id="`product_items.${productItem.id}.item`"
-              :name="`product_items.${productItem.id}.item`"
+              :id="`${prop}.${productItem.id}.item`"
+              :name="`${prop}.${productItem.id}.item`"
               disabled
               :value="getProductItem(productItem.id, 'item')"
             />
           </div>
           <div class="col-3">
             <AppInput
-              :id="`product_items.${productItem.id}.description`"
-              :name="`product_items.${productItem.id}.description`"
+              :id="`${prop}.${productItem.id}.description`"
+              :name="`${prop}.${productItem.id}.description`"
               :value="getProductItem(productItem.id, 'description')"
               :error="hasError(productItem, 'description')"
               @input="setFormById(productItem.id, 'description', $event)"
@@ -139,8 +150,8 @@ export default {
           </div>
           <div class="col-2">
             <AppSimpleSelect
-              :id="`product_items.${productItem.id}.unity`"
-              :name="`product_items.${productItem.id}.unity`"
+              :id="`${prop}.${productItem.id}.unity`"
+              :name="`${prop}.${productItem.id}.unity`"
               :value="getProductItem(productItem.id, 'unity')"
               :options="UNITIES"
               :label-prop="unityLabelProp"
@@ -151,8 +162,8 @@ export default {
           </div>
           <div class="col-1">
             <AppInput
-              :id="`product_items.${productItem.id}.quantity`"
-              :name="`product_items.${productItem.id}.quantity`"
+              :id="`${prop}.${productItem.id}.quantity`"
+              :name="`${prop}.${productItem.id}.quantity`"
               :value="getProductItem(productItem.id, 'quantity')"
               :error="hasError(productItem, 'quantity')"
               :mask="maskInteger"
@@ -161,8 +172,8 @@ export default {
           </div>
           <div class="col-2">
             <AppInput
-              :id="`product_items.${productItem.id}.value`"
-              :name="`product_items.${productItem.id}.value`"
+              :id="`${prop}.${productItem.id}.value`"
+              :name="`${prop}.${productItem.id}.value`"
               :value="getProductItem(productItem.id, 'value')"
               :error="hasError(productItem, 'value')"
               :mask="maskCurrencyBRL"
@@ -171,8 +182,8 @@ export default {
           </div>
           <div class="col-2">
             <AppInput
-              :id="`product_items.${productItem.id}.total`"
-              :name="`product_items.${productItem.id}.total`"
+              :id="`${prop}.${productItem.id}.total`"
+              :name="`${prop}.${productItem.id}.total`"
               :value="getTotalRow(getProductItem(productItem.id))"
               disabled
             />
@@ -188,6 +199,19 @@ export default {
           </div>
         </div>
       </template>
+      <div class="row align-items-baseline">
+        <div class="col-9 text-end fw-bold">
+          TOTAL
+        </div>
+        <div class="col-2">
+          <AppInput
+            :id="`${prop}.total_final`"
+            :name="`${prop}.total_final`"
+            :value="getTotal"
+            disabled
+          />
+        </div>
+      </div>
 
       <div class="text-center">
         <AppButton
