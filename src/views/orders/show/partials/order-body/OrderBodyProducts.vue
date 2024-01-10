@@ -88,7 +88,7 @@ export default {
         </template>
 
         <template #bodyAppend>
-          <tr class="table-primary">
+          <tr :class="isDirectCost ? 'table-danger' : 'table-primary'">
             <td
               colspan="4"
               class="text-end fw-bold"
