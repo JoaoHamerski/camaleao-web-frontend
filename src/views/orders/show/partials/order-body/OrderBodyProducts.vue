@@ -1,5 +1,5 @@
 <script>
-import { faBoxOpen } from '@fortawesome/free-solid-svg-icons';
+import { faBoxOpen, faHandHoldingUsd } from '@fortawesome/free-solid-svg-icons';
 
 const UNITIES = [
   { abbr: 'un', name: 'Unidade' },
@@ -17,12 +17,17 @@ export default {
     order: {
       type: Object,
       required: true
+    },
+    isDirectCost: {
+      type: Boolean,
+      default: false
     }
   },
   data: () => ({
     UNITIES,
     icons: {
-      faBoxOpen
+      faBoxOpen,
+      faHandHoldingUsd
     },
     headers: [
       {text: 'Descrição', value: 'description'},
@@ -34,8 +39,8 @@ export default {
   }),
   computed: {
     totalValues () {
-      return this.order.products.filter(({ value }) => value > 0).reduce(
-        (total, product) => +total + +(product.value * product.quantity).toFixed(),
+      return this.order.products.filter(({ value }) => this.isDirectCost ? value < 0 : value > 0).reduce(
+        (total, product) => Math.abs(total) + Math.abs((product.value * product.quantity).toFixed()),
       0)
     }
   },
@@ -51,17 +56,20 @@ export default {
   <AppContainer class="mt-3">
     <template #title>
       <FontAwesomeIcon
-        :icon="icons.faBoxOpen"
+        :icon="isDirectCost ? icons.faHandHoldingUsd : icons.faBoxOpen"
         fixed-width
       />
-      Produtos
+      {{ isDirectCost ? 'Custo direto' : 'Produtos' }}
     </template>
     <template #body>
       <AppTable
         table-class="table-sm"
         :headers="headers"
-        :items="order.products.filter(({ value }) => value > 0)"
+        :items="order.products.filter(({ value }) => isDirectCost ? value < 0 : value > 0)"
       >
+        <template #[`items.value`]="{ item }">
+          {{ Math.abs(item.value) }}
+        </template>
         <template #[`items.description`]="{ item }">
           <div
             class="text-wrap"
@@ -76,7 +84,7 @@ export default {
           >{{ item.unity.toUpperCase() }}</span>
         </template>
         <template #[`items.total`]="{ item }">
-          {{ $helpers.toBRL((item.value * item.quantity).toFixed(2)) }}
+          {{ $helpers.toBRL(Math.abs((item.value * item.quantity).toFixed(2))) }}
         </template>
 
         <template #bodyAppend>

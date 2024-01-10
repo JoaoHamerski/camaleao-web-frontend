@@ -171,6 +171,15 @@ export default {
 
       this.form.product_items = this.order.products.map(this.mapProductItems).filter(({ valueRaw }) => valueRaw > 0)
       this.form.direct_cost_items = this.order.products.map(this.mapProductItems).filter(({ valueRaw }) => valueRaw < 0)
+
+      if (!this.form.product_items.length) {
+        this.form.product_items.push({...PRODUCT_ITEM})
+      }
+
+      if (!this.form.direct_cost_items.length) {
+        this.form.direct_cost_items.push({...PRODUCT_ITEM})
+      }
+
     },
     async onSubmit () {
       this.isLoading = true

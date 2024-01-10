@@ -58,6 +58,10 @@ export default {
 
     <OrderBodyDetails :order="order" />
     <OrderBodyProducts :order="order" />
+    <OrderBodyProducts
+      :order="order"
+      is-direct-cost
+    />
     <OrderBodyTotalValue :order="order" />
 
     <OrderStatusProgress
